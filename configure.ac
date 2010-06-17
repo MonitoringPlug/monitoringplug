@@ -74,5 +74,6 @@ AC_SUBST(EXTRASUBDIRS)
 
 AC_CONFIG_FILES([Makefile
                  lib/Makefile
+                 dummy/Makefile
                  tests/Makefile])
 AC_OUTPUT
