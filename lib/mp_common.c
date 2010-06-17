@@ -22,9 +22,11 @@
 
 #include "mp_common.h"
 
+#include <signal.h>:w
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <signal.h>
 
 unsigned int mp_timeout = 10;
 unsigned int mp_verbose = 0;

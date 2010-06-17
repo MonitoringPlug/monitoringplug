@@ -21,9 +21,10 @@
  */
 
 #include "mp_common.h"
-#include <stdlib.h>
 #include <check.h>
 #include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #include "main.h"
 
@@ -49,18 +50,18 @@ static struct string_return test_net_name_case[] = {
 START_TEST (test_is_integer) {
     char teststring[20];
     
-    sprintf(teststring, "%.0f", (double) INT_MAX + 1);
+    sprintf(teststring, "%'.0f", (double) INT_MAX + 1);
     fail_unless (is_integer(teststring) == 0,
-        "is_integer(%.0f) faild1", teststring);
-    sprintf(teststring, "%.0f", (double) INT_MAX);
+        "is_integer(%s) faild1", teststring);
+    sprintf(teststring, "%'.0f", (double) INT_MAX);
     fail_unless (is_integer(teststring) == 1,
-        "is_integer(%.0f) faild2", teststring);
-    sprintf(teststring, "%.0f", (double) INT_MIN);
+        "is_integer(%s) faild2", teststring);
+    sprintf(teststring, "%'.0f", (double) INT_MIN);
     fail_unless (is_integer(teststring) == 1,
-        "is_integer(%.0f) faild3", teststring);
-    sprintf(teststring, "%.0f", (double) INT_MIN - 1);
+        "is_integer(%s) faild3", teststring);
+    sprintf(teststring, "%'.0f", (double) INT_MIN - 1);
     fail_unless (is_integer(teststring) == 0,
-        "is_integer(%.0f) faild4", teststring);
+        "is_integer(%s) faild4", teststring);
 }
 END_TEST
 
@@ -92,9 +93,12 @@ Suite* make_lib_check_suite(void) {
     
     Suite *s = suite_create ("Check");
     
-    /* Range test case */
+    /* String test case */
+    TCase *tc_str = tcase_create ("String");
+    tcase_add_test(tc_str, test_is_integer);
+    
+    /* Network test case */
     TCase *tc_net = tcase_create ("Network");
-    tcase_add_test(tc_net, test_is_integer);
     tcase_add_loop_test(tc_net, test_net_addr, 0, 4);
 #ifdef USE_IPV6
     tcase_add_loop_test(tc_net, test_net_addr6, 0, 4);

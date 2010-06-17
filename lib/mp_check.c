@@ -37,9 +37,10 @@ int is_integer(const char *number) {
     if (!number || (strspn (number, "-0123456789 ") != strlen (number)))
         return FALSE;
 
+    errno = 0;
     n = strtol(number, NULL, 10);
 
-    if (errno != ERANGE && n >= INT_MIN && n <= INT_MAX)
+    if (errno != ERANGE && n > INT_MIN && n < INT_MAX)
         return TRUE;
     else
         return FALSE;
@@ -47,17 +48,17 @@ int is_integer(const char *number) {
 
 int is_hostname(const char *address) {
     char *addr, *part;
-    
+
     addr = strdup(address);
-    
+
     while (part = strsep(&addr, ".")) {
         size_t len;
-        
+
         len = strlen(part);
-        
+
         if (len == 0)
             return FALSE;
-        
+
         if(strspn (part, "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
             "abcdefghijklmnopqrstuvwxyz"
             "0123456789-_") != len)
@@ -67,14 +68,14 @@ int is_hostname(const char *address) {
 }
 
 int is_hostaddr(const char *address) {
-    
+
     struct addrinfo hints;
     struct addrinfo *res;
 
     memset (&hints, 0, sizeof (hints));
     hints.ai_family = AF_INET;
     hints.ai_flags = AI_NUMERICHOST;
-    
+
     if (getaddrinfo(address, NULL, &hints, &res) == 0)
         return TRUE;
 #ifdef USE_IPV6

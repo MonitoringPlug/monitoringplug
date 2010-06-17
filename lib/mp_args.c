@@ -46,8 +46,6 @@ int setCritCrit(thresholds *threshold, char *str) {
 int parse_range_string(range *range, char *str, int multiplier) {
     char *eptr, *end_str, *start_str;
     double tmp;
-    
-    printf("parse_range_string(%s)\n", str);
         
     /* Set defaults */
     range->start = 0;
@@ -68,9 +66,6 @@ int parse_range_string(range *range, char *str, int multiplier) {
         end_str = start_str;
         start_str = NULL;
     }
-    
-    
-    printf(" '%s' : '%s'\n", start_str, end_str);
     
     if (start_str != NULL) {
         if (start_str[0] == '~') {
@@ -144,17 +139,17 @@ double parse_multiplier_string(char *str) {
         case 'G':
                 return 1073741824;
         case 't':
-                return 1000000000000;
+                return 1000000000000LL;
         case 'T':
-                return 1099511627776;
+                return 1099511627776LL;
         case 'p':
-                return 1000000000000000;
+                return 1000000000000000LL;
         case 'P':
-                return 1125899906842624;
+                return 1125899906842624LL;
         case 'e':
-                return 1000000000000000000;
+                return 1000000000000000000LL;
         case 'E':
-                return 1152921504606846976;
+                return 1152921504606846976LL;
     }
     return 1;
 }
@@ -168,8 +163,6 @@ double parse_multiplier_string(char *str) {
  * w,week => 604800
  */
 double parse_time_multiplier_string(char *str) {
-    
-    printf("parse_time_multiplier_string(%s)\n", str);
     
     switch (str[0]) {
         /* Time */

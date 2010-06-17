@@ -19,6 +19,8 @@ AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AC_PROG_RANLIB
 
+AC_C_CONST
+
 EXTRASUBDIRS=
 
 # Checks for libraries.
@@ -65,6 +67,7 @@ AC_TYPE_SIZE_T
 # Checks for library functions.
 AC_FUNC_MALLOC
 AC_FUNC_STRTOD
+AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([alarm memset strdup strerror strspn strstr strtol])
 
 AC_SUBST(EXTRASUBDIRS)
