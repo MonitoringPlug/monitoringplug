@@ -69,10 +69,10 @@ enum {
 /**
  *  helper functions
  */
-int setWarn(thresholds *my_threshold, char *str, int multiplier);
-int setCrit(thresholds *my_threshold, char *str, int multiplier);
-int setWarnTime(thresholds *my_threshold, char *str);
-int setCritTime(thresholds *my_threshold, char *str);
+int setWarn(thresholds **my_threshold, char *str, int multiplier);
+int setCrit(thresholds **my_threshold, char *str, int multiplier);
+int setWarnTime(thresholds **my_threshold, char *str);
+int setCritTime(thresholds **my_threshold, char *str);
 int parse_range_string(range *range, char *str, int multiplier);
 
 /**
@@ -144,6 +144,14 @@ void print_thresholds(const char *threshold_name, thresholds *my_threshold);
 #define  MP_ARGS_CASE_CRIT case 'w': \
             crit = optarg; \
             break; \
+/** getopt case for warning time */
+#define  MP_ARGS_CASE_WARN_TIME(TRASH) case 'w': \
+            setWarnTime(&TRASH, optarg); \
+            break;
+/** getopt case for critical time */
+#define  MP_ARGS_CASE_CRIT_TIME(TRASH) case 'c': \
+            setCritTime(&TRASH, optarg); \
+            break;
 
 /** argument helps for help, version and verbose */
 #define MP_ARGS_HELP_DEF "\n\

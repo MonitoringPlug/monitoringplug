@@ -25,6 +25,7 @@ EXTRASUBDIRS=
 
 # Checks for libraries.
 PKG_CHECK_MODULES([CHECK], [check >= 0.9.4],,[AC_MSG_WARN([Skipping check])])
+PKG_CHECK_MODULES(LDNS, libldns,[EXTRASUBDIRS="$EXTRASUBDIRS dns"],[AC_MSG_WARN([Skipping ldns])])
 
 # IPv6 Option
 AC_ARG_WITH([ipv6],
@@ -131,6 +132,7 @@ AC_SUBST(EXTRASUBDIRS)
 
 AC_CONFIG_FILES([Makefile
                  lib/Makefile
+                 dns/Makefile
                  dummy/Makefile
                  tests/Makefile])
 AC_OUTPUT

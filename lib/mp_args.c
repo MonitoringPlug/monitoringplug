@@ -29,20 +29,40 @@
  *  helper functions
  */
 
-int setWarn(thresholds *threshold, char *str, int multiplier) {
-    return parse_range_string(threshold->warning, str, multiplier);
+int setWarn(thresholds **threshold, char *str, int multiplier) {
+    if(*threshold == NULL)
+        *threshold = (thresholds *) malloc(sizeof(thresholds));
+    if((*threshold)->warning == NULL)
+        (*threshold)->warning = (range *) malloc(sizeof(range));
+
+    return parse_range_string((*threshold)->warning, str, multiplier);
 }
 
-int setCrit(thresholds *threshold, char *str, int multiplier) {
-    return parse_range_string(threshold->critical, str, multiplier);
+int setCrit(thresholds **threshold, char *str, int multiplier) {
+    if(*threshold == NULL)
+        *threshold = (thresholds *) malloc(sizeof(thresholds));
+    if((*threshold)->critical == NULL)
+        (*threshold)->critical = (range *) malloc(sizeof(range));
+        
+    return parse_range_string((*threshold)->critical, str, multiplier);
 }
 
-int setWarnTime(thresholds *threshold, char *str) {
-    return parse_range_string(threshold->warning, str, TIME);
+int setWarnTime(thresholds **threshold, char *str) {
+    if(*threshold == NULL)
+        *threshold = (thresholds *) malloc(sizeof(thresholds));
+    if((*threshold)->warning == NULL)
+        (*threshold)->warning = (range *) malloc(sizeof(range));
+        
+    return parse_range_string((*threshold)->warning, str, TIME);
 }
 
-int setCritTime(thresholds *threshold, char *str) {
-    return parse_range_string(threshold->critical, str, TIME);
+int setCritTime(thresholds **threshold, char *str) {
+    if(*threshold == NULL)
+        *threshold = (thresholds *) malloc(sizeof(thresholds));
+    if((*threshold)->critical == NULL)
+        (*threshold)->critical = (range *) malloc(sizeof(range));
+        
+    return parse_range_string((*threshold)->critical, str, TIME);
 }
 
 int parse_range_string(range *range, char *str, int multiplier) {
@@ -188,7 +208,6 @@ int check_range(double value, range *my_range) {
         return (my_range->alert_on == OUTSIDE);
 
     return my_range->alert_on == INSIDE;
-
 }
 
 int get_status(double value, thresholds *my_thresholds) {
