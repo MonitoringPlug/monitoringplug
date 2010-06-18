@@ -34,72 +34,66 @@ const char *progusage = "[-t <timeout>]";
 #include <stdio.h>
 #include <stdlib.h>
 
-//void print_usage (void);
-
 int main (int argc, char **argv) {
+    /* Set signal handling and alarm */
+    if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
+        exit(STATE_CRITICAL);
 
-   /* Set signal handling and alarm */
-   if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
-      exit(STATE_CRITICAL);
+    if (process_arguments (argc, argv) == 1)
+        exit(STATE_CRITICAL);
 
-   if (process_arguments (argc, argv) == 1)
-      exit(STATE_CRITICAL);
+    alarm (mp_timeout);
 
-   alarm (mp_timeout);
+    if (mp_verbose) {
+        printf("Timeout: %d\n", mp_timeout);
+        printf("Sleep:   %d\n", mp_timeout*2);
+    }
 
-   if (mp_verbose) {
-      printf("Timeout: %d\n", mp_timeout);
-      printf("Sleep:   %d\n", mp_timeout*2);
-   }
+    sleep(mp_timeout*2);
 
-   sleep(mp_timeout*2);
-
-   exit(STATE_OK);
+    ok("check_timeout ended.");
 }
 
 int process_arguments (int argc, char **argv) {
-   int c;
-   int option = 0;
+    int c;
+    int option = 0;
 
-   static struct option longopts[] = {
-      MP_ARGS_HELP,
-      MP_ARGS_VERS,
-      MP_ARGS_VERB,
-      MP_ARGS_TIMEOUT,
-      MP_ARGS_END
-   };
+    static struct option longopts[] = {
+        MP_ARGS_HELP,
+        MP_ARGS_VERS,
+        MP_ARGS_VERB,
+        MP_ARGS_TIMEOUT,
+        MP_ARGS_END
+    };
 
-//   if ( argc < 2)
-//      return 1;
+    while (1) {
+        c = getopt_long (argc, argv, "hVvt:", longopts, &option);
 
-   while (1) {
-      c = getopt_long (argc, argv, "hVvt:", longopts, &option);
+        if (c == -1 || c == EOF)
+            break;
 
-      if (c == -1 || c == EOF)
-	 break;
+        switch (c) {
+            MP_ARGS_CASE_DEF
+            MP_ARGS_CASE_TIMEOUT
+        }
+    }
 
-      switch (c) {
-	 MP_ARGS_CASE_DEF
-	 MP_ARGS_CASE_TIMEOUT
-      }
-   }
-
-   return(OK);
+    return(OK);
 }
 
 void print_help (void) {
-   print_revision();
-   print_copyright();
+    print_revision();
+    print_copyright();
 
-   printf("\n");
+    printf("\n");
 
-   printf("This plugin simulate a plugin timeout.");
+    printf("This plugin simulate a plugin timeout.");
 
-   printf("\n\n");
+    printf("\n\n");
 
-   print_usage();
+    print_usage();
 
-   printf(MP_ARGS_HELP_DEF);
-   printf(MP_ARGS_HELP_TIMEOUT);
+    printf(MP_ARGS_HELP_DEF);
+    printf(MP_ARGS_HELP_TIMEOUT);
 }
 
