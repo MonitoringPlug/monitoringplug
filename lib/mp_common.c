@@ -22,7 +22,7 @@
 
 #include "mp_common.h"
 
-#include <signal.h>:w
+#include <signal.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>

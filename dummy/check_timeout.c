@@ -33,6 +33,7 @@ const char *progusage = "[-t <timeout>]";
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 int main (int argc, char **argv) {
     /* Set signal handling and alarm */
@@ -42,7 +43,7 @@ int main (int argc, char **argv) {
     if (process_arguments (argc, argv) == 1)
         exit(STATE_CRITICAL);
 
-    alarm (mp_timeout);
+    alarm(mp_timeout);
 
     if (mp_verbose) {
         printf("Timeout: %d\n", mp_timeout);

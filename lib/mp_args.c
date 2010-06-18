@@ -48,7 +48,7 @@ int setCritTime(thresholds *threshold, char *str) {
 int parse_range_string(range *range, char *str, int multiplier) {
     char *eptr, *end_str, *start_str;
     double tmp;
-        
+
     /* Set defaults */
     range->start = 0;
     range->start_infinity = 0;
@@ -60,15 +60,15 @@ int parse_range_string(range *range, char *str, int multiplier) {
         range->alert_on = INSIDE;
         str++;
     }
-    
+
     end_str = strdup(str);
-    
+
     start_str = strsep(&end_str, ":");
     if (end_str == NULL) {
         end_str = start_str;
         start_str = NULL;
     }
-    
+
     if (start_str != NULL) {
         if (start_str[0] == '~') {
             range->start_infinity = 1;
@@ -86,8 +86,8 @@ int parse_range_string(range *range, char *str, int multiplier) {
             }
             parse_multiplier_string(eptr);
         }
-    } 
-    
+    }
+
     if (end_str[0] == '~' || strcmp(end_str, "") == 0) {
         range->end_infinity = 1;
     } else {
@@ -103,17 +103,17 @@ int parse_range_string(range *range, char *str, int multiplier) {
                 break;
         }
     }
-    
+
     if (range->start_infinity == 1 ||
         range->end_infinity == 1 ||
         range->start <= range->end) {
         return OK;
     }
-    
+
     tmp = range->start;
     range->start = range->end;
     range->end = tmp;
-    
+
     return OK;
 }
 
@@ -126,7 +126,7 @@ int parse_range_string(range *range, char *str, int multiplier) {
  * e  => 1000000000000000000        E  => 1152921504606846976
  */
 double parse_multiplier_string(char *str) {
-    
+
     switch (str[0]) {
         case 'k':
                 return 1000;
@@ -165,7 +165,7 @@ double parse_multiplier_string(char *str) {
  * w,week => 604800
  */
 double parse_time_multiplier_string(char *str) {
-    
+
     switch (str[0]) {
         /* Time */
         case 'm':
@@ -183,12 +183,12 @@ double parse_time_multiplier_string(char *str) {
 int check_range(double value, range *my_range) {
     if (value < my_range->start && my_range->start_infinity == 0)
         return (my_range->alert_on == OUTSIDE);
-    
+
     if (value > my_range->end && my_range->end_infinity == 0)
         return (my_range->alert_on == OUTSIDE);
-        
+
     return my_range->alert_on == INSIDE;
-        
+
 }
 
 int get_status(double value, thresholds *my_thresholds) {
@@ -225,3 +225,4 @@ void print_thresholds(const char *threshold_name, thresholds *my_threshold) {
 }
 
 /* EOF */
+

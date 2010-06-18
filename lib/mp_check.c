@@ -51,7 +51,7 @@ int is_hostname(const char *address) {
 
     addr = strdup(address);
 
-    while (part = strsep(&addr, ".")) {
+    while ((part = strsep(&addr, "."))) {
         size_t len;
 
         len = strlen(part);
@@ -87,3 +87,4 @@ int is_hostaddr(const char *address) {
 }
 
 /* EOF */
+

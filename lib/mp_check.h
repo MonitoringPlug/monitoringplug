@@ -45,3 +45,4 @@ int is_hostname(const char *address);
 int is_hostaddr(const char *address);
 
 #endif /* _MP_CHECK_H_ */
+
