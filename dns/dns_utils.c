@@ -1,4 +1,4 @@
-/**
+/***
  * Monitoring Plugin - dns_utils.h
  **
  *
@@ -25,7 +25,7 @@
 
 #include <stdio.h>
 
-ldns_resolver* createResolver(const char *dns_server){
+ldns_resolver* createResolver(const char *dnsserver){
     ldns_resolver   *res = NULL;
     ldns_status     status;
     ldns_rdf        *serv_rdf;
@@ -37,7 +37,7 @@ ldns_resolver* createResolver(const char *dns_server){
             return NULL;
         
         /* add the nameserver */
-        serv_rdf = getaddr(NULL, dns_server);
+        serv_rdf = getaddr(NULL, dnsserver);
         
         if (!serv_rdf) {
             ldns_resolver_free(res);

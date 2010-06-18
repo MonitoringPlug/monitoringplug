@@ -95,9 +95,8 @@ void print_copyright (void) {
     printf("Copyright (c) 2010 Monitoring Plugins\n");
 }
 
-void timeout_alarm_handler (int signo){
+void timeout_alarm_handler(int signo) {
     if (signo == SIGALRM) {
-        printf("CRITICAL - Plugin timed out after %d seconds\n", mp_timeout);
-        exit(STATE_CRITICAL);
+        critical("Plugin timed out after %d seconds\n", mp_timeout);
     }
 }

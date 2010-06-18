@@ -1,4 +1,4 @@
-/**
+/***
  * Monitoring Plugin - mp_args.c
  **
  *
@@ -137,14 +137,6 @@ int parse_range_string(range *range, char *str, int multiplier) {
     return OK;
 }
 
-/**
- * k  => 1000                       K  => 1024
- * m  => 1000000                    M  => 1048578
- * g  => 1000000000                 G  => 1073741824
- * t  => 1000000000000              T  => 1099511627776
- * p  => 1000000000000000           P  => 1125899906842624
- * e  => 1000000000000000000        E  => 1152921504606846976
- */
 double parse_multiplier_string(char *str) {
 
     switch (str[0]) {
@@ -176,14 +168,6 @@ double parse_multiplier_string(char *str) {
     return 1;
 }
 
-/*
- * Time
- * s,sec => 1
- * m,min => 60
- * h,fr  => 3600
- * d,day => 86400
- * w,week => 604800
- */
 double parse_time_multiplier_string(char *str) {
 
     switch (str[0]) {

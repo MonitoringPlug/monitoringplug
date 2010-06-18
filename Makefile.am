@@ -1,3 +1,4 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = lib dummy @EXTRASUBDIRS@ tests
+SUBDIRS = lib doc dummy @EXTRASUBDIRS@ tests
+

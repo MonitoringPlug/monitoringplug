@@ -132,6 +132,7 @@ AC_SUBST(EXTRASUBDIRS)
 
 AC_CONFIG_FILES([Makefile
                  lib/Makefile
+                 doc/Makefile
                  dns/Makefile
                  dummy/Makefile
                  tests/Makefile])

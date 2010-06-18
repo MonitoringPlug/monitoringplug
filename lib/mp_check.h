@@ -1,4 +1,4 @@
-/**
+/***
  * Monitoring Plugin - mp_check.h
  **
  *
@@ -24,22 +24,22 @@
 #define _MP_CHECK_H_
 
 /**
- * check if string is a integer
+ * Check if string is a integer.
  * \param[in] number string to check
  * \return return 1 if string is a integer 0 otherwise.
  */
 int is_integer(const char *number);
 
 /**
- * check if string is a hostname/domainname
- * \param[in] number string to check
+ * Check if string is a hostname/domainname.
+ * \param[in] address string to check
  * \return return 1 if string is a hostname 0 otherwise.
  */
 int is_hostname(const char *address);
 
 /**
- * check if string is a ip addr.
- * \param[in] number string to check
+ * Check if string is a ip addr.
+ * \param[in] address string to check
  * \return return 1 if string is a ip 0 otherwise.
  */
 int is_hostaddr(const char *address);

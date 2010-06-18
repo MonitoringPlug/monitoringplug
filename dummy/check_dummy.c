@@ -1,4 +1,4 @@
-/**
+/***
  * Monitoring Plugin - check_dummy
  **
  *

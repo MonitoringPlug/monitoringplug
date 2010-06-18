@@ -1,5 +1,5 @@
-/**
- * Monitoring Plugin - mp_check.h
+/***
+ * Monitoring Plugin - mp_check.c
  **
  *
  * Copyright (C) 2010 Marius Rieder <marius.rieder@durchmesser.ch>

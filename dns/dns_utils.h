@@ -1,4 +1,4 @@
-/**
+/***
  * Monitoring Plugin - dns_utils.h
  **
  *
@@ -28,35 +28,36 @@
 
 /**
  * create a ldns_resolver
- * \param dns_server[in] Name of the dns server, may be NULL.
- * \return The created ldns_resolver
+ * \param[in] dnsserver Name of the dns server, may be NULL.
+ * \return ldns_resolver The created ldns_resolver.
  */
 ldns_resolver* createResolver(const char *dnsserver);
 
 /**
  * enable DNSSEC on a resolver
- * \param res The resolver to dnssec enable.
+ * \param[in] res The resolver to dnssec enable.
+ * \return void
  */
 void resolverEnableDnssec(ldns_resolver *res);
 
-/*
+/**
  * resolve the hostname (or ip) with the give resolver.
- * \param res The resolver to use, may be NULL.
- * \param hostname The hostname to resolv
+ * \param[in] res The resolver to use, may be NULL.
+ * \param[in] hostname The hostname to resolv
  * \return ldns_rdf of type A or AAAA if IPv6 is enabled.
  */
 ldns_rdf* getaddr(ldns_resolver *res, const char *hostname);
 
-/*
+/**
  * load dnssec keys from a file
- * \param filename The path of the key file.
+ * \param[in] filename The path of the key file.
  * \return The ldns_rr_list of loaded keys or NULL
  */
 ldns_rr_list* loadKeyfile(const char *filename);
 
-/*
+/**
  * load dnssec anchor keys from a file
- * \param filename The path of the key file.
+ * \param[in] filename The path of the key file.
  * \return The ldns_rr_list of loaded keys or NULL
  */
 ldns_rr_list* loadAnchorfile(const char *filename);

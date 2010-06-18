@@ -1,4 +1,4 @@
-/**
+/***
  * Monitoring Plugin - mp_common.h
  **
  *
@@ -30,13 +30,21 @@
 #include "mp_args.h"
 #include "mp_check.h"
 
+/** Pointer to the program name. Each plugin must define this. */
 extern const char *progname;
+/** Pointer to the program usage string. Each plugin must define this. */
 extern const char *progusage;
+/** Pointer to the program version string. Each plugin must define this. */
 extern const char *progvers;
+/** Pointer to the program author string. Each plugin must define this. */
 extern const char *progauth;
+/** Pointer to the program copyright year. Each plugin must define this. */
 extern const char *progcopy;
 
+
+/** The global timeout variable. */
 extern unsigned int mp_timeout;
+/** The global verbose variable. */
 extern unsigned int mp_verbose;
 
 
@@ -44,10 +52,10 @@ extern unsigned int mp_verbose;
  * Default return values for functions
  */
 enum {
-   OK = 0,              /**  0 - Work as expected */
-   ERROR = -1,          /** -1 - A Error occured */
-   FALSE = 0,           /**  0 - False */
-   TRUE = 1             /**  1 - True */
+   OK = 0,              /**<  0 - Work as expected */
+   ERROR = -1,          /**< -1 - A Error occured */
+   FALSE = 0,           /**<  0 - False */
+   TRUE = 1             /**<  1 - True */
 };
 
 /**
@@ -55,11 +63,11 @@ enum {
  * Provide nice names for the nagios plugin return codes.
  */
 enum {
-   STATE_OK,            /** 0 - OK/UP */
-   STATE_WARNING,       /** 1 - Warning */
-   STATE_CRITICAL,      /** 2 - Critical/Down */
-   STATE_UNKNOWN,       /** 3 - Unknown */
-   STATE_DEPENDENT      /** 4 - Dependent */
+   STATE_OK,            /**< 0 - OK/UP */
+   STATE_WARNING,       /**< 1 - Warning */
+   STATE_CRITICAL,      /**< 2 - Critical/Down */
+   STATE_UNKNOWN,       /**< 3 - Unknown */
+   STATE_DEPENDENT      /**< 4 - Dependent */
 };
 
 /**
@@ -87,12 +95,32 @@ void unknown(const char *fmt, ...) __attribute__((__noreturn__));
  */
 void usage(const char *fmt, ...) __attribute__((__noreturn__));
 
+/**
+  * Print the program help.
+  * Needs to be implemented by checks.
+  */
 void print_help (void);
+
+/**
+  * Print the program usage.
+  */
 void print_usage (void);
+
+/**
+  * Print the program version information.
+  */
 void print_revision (void);
+
+/**
+  * Print the program copyright information.
+  */
 void print_copyright (void);
 
-/* mp timeout functions */
-void timeout_alarm_handler (int);
+/**
+ * Default timeout handler.
+ * Print a message and exit with STATE_CRITICAL.
+ * \param[in] signo Signal number of the trigering signal.
+ */
+void timeout_alarm_handler(int signo);
 
 #endif /* _MP_COMMON_H_ */
