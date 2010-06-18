@@ -2,7 +2,7 @@
 
 bindir = ${libdir}/nagios/plugins
 
-INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/lib 
+AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/lib 
 
 bin_PROGRAMS = check_dummy check_timeout
 

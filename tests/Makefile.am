@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/lib
+AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/lib
 
 TESTS = check_monitoringplug
 

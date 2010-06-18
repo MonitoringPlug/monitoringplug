@@ -38,18 +38,17 @@ const char *progusage = "<state> [message]";
 
 
 int main (int argc, char **argv) {
+    int msglen = 1;
+    char *msg;
+    char *msgc;
+    int c = 0;
+    int r = 1;
 
     if (process_arguments (argc, argv) == 1)
         exit(STATE_CRITICAL);
 
 
-    int msglen = 1;
-    char *msg;
-    char *msgc;
-    int c = optind;
-    int r = 1;
-
-    if (optind < argc && is_integer(argv[c])) {
+    if (optind < argc && is_integer(argv[c]) == 1) {
         r = (int)strtol(argv[c], NULL, 10);
         optind++;
     }
@@ -59,7 +58,11 @@ int main (int argc, char **argv) {
 
     for (c = optind; c < argc; c++)
         msglen += strlen(argv[c]) + 1;
-    msg = (char *) malloc(msglen);
+    msg = (char *) malloc((size_t)msglen);
+    
+    if (msg == NULL)
+        unknown("Can't allocate memory.");
+    
     msgc = msg;
     for (c = optind; c < argc; c++) {
         strncpy(msgc, argv[c], strlen(argv[c]));
@@ -70,7 +73,7 @@ int main (int argc, char **argv) {
     msgc--;
     *msgc = '\0';
 
-    if (mp_verbose) {
+    if (mp_verbose > 0) {
         printf("State:   %d\n", r);
         printf("Message: %s\n", msg);
     }
@@ -87,6 +90,8 @@ int main (int argc, char **argv) {
         case STATE_DEPENDENT:
             unknown(msg);
     }
+    
+    critical("You should never reach this point.");
 }
 
 int process_arguments (int argc, char **argv) {

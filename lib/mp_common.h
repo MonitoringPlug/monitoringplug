@@ -65,27 +65,27 @@ enum {
 /**
  * prints to the stdout and exit with STATE_OK.
  */
-void ok(const char *fmt, ...);
+void ok(const char *fmt, ...) __attribute__((__noreturn__));
 
 /**
  * prints to the stdout and exit with STATE_WARNING.
  */
-void warning(const char *fmt, ...);
+void warning(const char *fmt, ...) __attribute__((__noreturn__));
 
 /**
  * prints to the stdout and exit with STATE_CRITICAL.
  */
-void critical(const char *fmt, ...);
+void critical(const char *fmt, ...) __attribute__((__noreturn__));
 
 /**
  * prints to the stdout and exit with STATE_UNKNOWN.
  */
-void unknown(const char *fmt, ...);
+void unknown(const char *fmt, ...) __attribute__((__noreturn__));
 
 /**
  * prints to the stdout and exit with STATE_UNKNOWN.
  */
-void usage(const char *fmt, ...);
+void usage(const char *fmt, ...) __attribute__((__noreturn__));
 
 void print_help (void);
 void print_usage (void);

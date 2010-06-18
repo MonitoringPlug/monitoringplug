@@ -72,7 +72,7 @@ enum {
 int setWarn(thresholds *my_threshold, char *str, int multiplier);
 int setCrit(thresholds *my_threshold, char *str, int multiplier);
 int setWarnTime(thresholds *my_threshold, char *str);
-int setCritCrit(thresholds *my_threshold, char *str);
+int setCritTime(thresholds *my_threshold, char *str);
 int parse_range_string(range *range, char *str, int multiplier);
 
 /**
@@ -101,22 +101,22 @@ void print_thresholds(const char *threshold_name, thresholds *my_threshold);
 
 
 /** getopt option for help */
-#define MP_ARGS_HELP	{"help", no_argument, 0, 'h'}
+#define MP_ARGS_HELP	{"help", no_argument, NULL, (int)'h'}
 /** getopt option for version */
-#define MP_ARGS_VERS    {"version", no_argument, 0, 'V'}
+#define MP_ARGS_VERS    {"version", no_argument, NULL, (int)'V'}
 /** getopt option for verbose */
-#define MP_ARGS_VERB    {"verbose", no_argument, 0, 'v'}
+#define MP_ARGS_VERB    {"verbose", no_argument, NULL, (int)'v'}
 /** getopt option for timeout */
-#define MP_ARGS_TIMEOUT {"timeout", required_argument, 0, 't'}
+#define MP_ARGS_TIMEOUT {"timeout", required_argument, NULL, (int)'t'}
 /** getopt option for hostname */
-#define MP_ARGS_HOST    {"hostname", required_argument, 0, 'H'}
+#define MP_ARGS_HOST    {"hostname", required_argument, NULL, (int)'H'}
 /** getopt option for warning */
-#define MP_ARGS_WARN    {"warning", required_argument, 0, 'w'}
+#define MP_ARGS_WARN    {"warning", required_argument, NULL, (int)'w'}
 /** getopt option for critical */
-#define MP_ARGS_CRIT    {"critical", required_argument, 0, 'c'}
+#define MP_ARGS_CRIT    {"critical", required_argument, NULL, (int)'c'}
 
 /** getopt option end */
-#define MP_ARGS_END     {0, 0, 0, 0}
+#define MP_ARGS_END     {0, 0, NULL, 0}
 
 /** getopt cases for help, version and verbose */
 #define MP_ARGS_CASE_DEF case 'h': \

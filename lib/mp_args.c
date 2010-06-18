@@ -38,9 +38,11 @@ int setCrit(thresholds *threshold, char *str, int multiplier) {
 }
 
 int setWarnTime(thresholds *threshold, char *str) {
+    return parse_range_string(threshold->warning, str, TIME);
 }
 
-int setCritCrit(thresholds *threshold, char *str) {
+int setCritTime(thresholds *threshold, char *str) {
+    return parse_range_string(threshold->critical, str, TIME);
 }
 
 int parse_range_string(range *range, char *str, int multiplier) {
@@ -110,7 +112,7 @@ int parse_range_string(range *range, char *str, int multiplier) {
     
     tmp = range->start;
     range->start = range->end;
-    range->end <= tmp;
+    range->end = tmp;
     
     return OK;
 }

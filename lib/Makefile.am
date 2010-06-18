@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-INCLUDES = -I$(top_srcdir)
+AM_CPPFLAGS = -I$(top_srcdir)
 
 noinst_LIBRARIES  = libmonitoringplug.a
 
