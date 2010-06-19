@@ -25,12 +25,12 @@
 
 #include <stdio.h>
 
-ldns_resolver* createResolver(const char *dnsserver){
+ldns_resolver* createResolver(const char *dnsserver) {
     ldns_resolver   *res = NULL;
     ldns_status     status;
     ldns_rdf        *serv_rdf;
     
-    if (dns_server) {
+    if (dnsserver) {
         // Use the given DNS server
         res = ldns_resolver_new();
         if (!res)
