@@ -40,13 +40,15 @@ ldns_resolver* createResolver(const char *dnsserver);
  */
 void resolverEnableDnssec(ldns_resolver *res);
 
+ldns_rr_list* getaddr_rdf(ldns_resolver *res, ldns_rdf *hostrdf);
+
 /**
  * resolve the hostname (or ip) with the give resolver.
  * \param[in] res The resolver to use, may be NULL.
  * \param[in] hostname The hostname to resolv
  * \return ldns_rdf of type A or AAAA if IPv6 is enabled.
  */
-ldns_rdf* getaddr(ldns_resolver *res, const char *hostname);
+ldns_rr_list* getaddr(ldns_resolver *res, const char *hostname);
 
 /**
  * load dnssec keys from a file
