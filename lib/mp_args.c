@@ -43,7 +43,7 @@ int setCrit(thresholds **threshold, char *str, int multiplier) {
         *threshold = (thresholds *) malloc(sizeof(thresholds));
     if((*threshold)->critical == NULL)
         (*threshold)->critical = (range *) malloc(sizeof(range));
-        
+
     return parse_range_string((*threshold)->critical, str, multiplier);
 }
 
@@ -52,7 +52,7 @@ int setWarnTime(thresholds **threshold, char *str) {
         *threshold = (thresholds *) malloc(sizeof(thresholds));
     if((*threshold)->warning == NULL)
         (*threshold)->warning = (range *) malloc(sizeof(range));
-        
+
     return parse_range_string((*threshold)->warning, str, TIME);
 }
 
@@ -61,7 +61,7 @@ int setCritTime(thresholds **threshold, char *str) {
         *threshold = (thresholds *) malloc(sizeof(thresholds));
     if((*threshold)->critical == NULL)
         (*threshold)->critical = (range *) malloc(sizeof(range));
-        
+
     return parse_range_string((*threshold)->critical, str, TIME);
 }
 
@@ -227,5 +227,4 @@ void print_thresholds(const char *threshold_name, thresholds *my_threshold) {
 	printf("\n");
 }
 
-/* EOF */
-
+/* vim: set ts=4 sw=4 et : */

@@ -31,6 +31,7 @@ const char *progusage = "[-H host] -D domain [-k file] [-t timeout] [-w warn] [-
 #include "dns_utils.h"
 
 #include <getopt.h>
+#include <signal.h>
 #include <string.h>
 #include <unistd.h>
 

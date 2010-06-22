@@ -76,15 +76,19 @@ int is_hostaddr(const char *address) {
     hints.ai_family = AF_INET;
     hints.ai_flags = AI_NUMERICHOST;
 
-    if (getaddrinfo(address, NULL, &hints, &res) == 0)
+    if (getaddrinfo(address, NULL, &hints, &res) == 0) {
+        freeaddrinfo(res);
         return TRUE;
+    }
 #ifdef USE_IPV6
     hints.ai_family = AF_INET6;
-    if (getaddrinfo (address, NULL, &hints, &res) == 0)
+    if (getaddrinfo (address, NULL, &hints, &res) == 0) {
+        freeaddrinfo(res);
         return TRUE;
+    }
+
 #endif /* USE_IPV6*/
     return FALSE;
 }
 
-/* EOF */
-
+/* vim: set ts=4 sw=4 et : */

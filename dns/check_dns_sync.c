@@ -39,7 +39,7 @@ char *domainname = NULL;
 
 int main (int argc, char **argv) {
     int i = 0;
-    
+
     char            *tmp;
     ldns_resolver   *res;
     ldns_rdf        *domain;
@@ -48,22 +48,22 @@ int main (int argc, char **argv) {
     ldns_rr_list    *rrl;
     ldns_rr         *rr;
     ldns_status     status;
-    
+
     // Result Pointer
     int             ns_count;
     ldns_rr         **ns_soa;
     ldns_rdf        **ns_name;
     ldns_rr         *master_soa = NULL;
     ldns_rdf        *master_name = NULL;
-    
+
     if (process_arguments (argc, argv) == ERROR)
         exit(STATE_CRITICAL);
-    
+
     // Create DNAME from domainname
     domain = ldns_dname_new_frm_str(domainname);
     if (!domain)
         usage("Invalid domainname '%s'", domainname);
-        
+
     if (hostname) {
         // Check one nameserver against master
         if (mp_verbose > 0)
@@ -80,7 +80,7 @@ int main (int argc, char **argv) {
             printf("ldns_rdf_get_type %d\n", ldns_rdf_get_type(host));
             usage("Invalid hostname '%s'", hostname);
         }
-        
+
         // Create resolver
         res = ldns_resolver_new();
         if (!res) {
@@ -88,7 +88,7 @@ int main (int argc, char **argv) {
             ldns_rdf_deep_free(host);
             unknown("Create resolver faild.");
         }
-        
+
         // Add ns to resolver
         status = ldns_resolver_push_nameserver(res, host);
         if (status != LDNS_STATUS_OK) {
@@ -101,173 +101,179 @@ int main (int argc, char **argv) {
         // Fetch SOA
         pkt = ldns_resolver_query(res, domain, LDNS_RR_TYPE_SOA,
                                   LDNS_RR_CLASS_IN, LDNS_RD);
-        
+
         if (pkt == NULL || ldns_pkt_get_rcode(pkt) != LDNS_RCODE_NOERROR) {
             ldns_rdf_deep_free(domain);
             ldns_rdf_deep_free(host);
             ldns_resolver_deep_free(res);
-            if (pkt)
+            if (pkt && ldns_pkt_get_rcode(pkt) == LDNS_RCODE_NXDOMAIN) {
                 ldns_pkt_free(pkt);
-            if (ldns_pkt_get_rcode(pkt) == LDNS_RCODE_NXDOMAIN)
                 critical("Domain '%s' don't exist.", domainname);
-            else
-                critical("Unable to get SOA for %s from %s.", domainname, hostname);
+            }
+            ldns_pkt_free(pkt);
+            critical("Unable to get SOA for %s from %s.", domainname, hostname);
         }
-        
-        if (mp_verbose > 0)
+
+        if (mp_verbose > 2) {
+            printf("[ SOA Anser ]----------\n");
             ldns_pkt_print(stdout,pkt);
-        
+        }
+
         ns_count = 1;
-        ns_soa = (ldns_rr * *) malloc(sizeof(ldns_rr *)); 
+        ns_soa = (ldns_rr * *) malloc(sizeof(ldns_rr *));
         ns_name = (ldns_rdf * *) malloc(sizeof(ldns_rdf *));
-        
+
         ns_name[0] = host;
-        
+
         rrl = ldns_pkt_rr_list_by_name_and_type(pkt, domain, LDNS_RR_TYPE_SOA,
                                                 LDNS_SECTION_ANSWER);
-                                                
+
         ns_soa[0] = ldns_rr_list_pop_rr(rrl);
-        
+
         ldns_rr_list_deep_free(rrl);
-        
-        master_name = ldns_rr_rdf(ns_soa[0], 0);
+        ldns_pkt_free(pkt);
+
+        master_name = ldns_rdf_clone(ldns_rr_rdf(ns_soa[0], 0));
 
         rrl = getaddr_rdf(NULL, master_name);
 
-        ldns_resolver_pop_nameserver(res);
+        ldns_rdf_deep_free(ldns_resolver_pop_nameserver(res));
         ldns_resolver_push_nameserver_rr_list(res, rrl);
-        
+
         ldns_rr_list_deep_free(rrl);
-        
+
         // Fetch Master SOA
         pkt = ldns_resolver_query(res, domain, LDNS_RR_TYPE_SOA,
                                   LDNS_RR_CLASS_IN, LDNS_RD);
-        
+
         if (pkt == NULL || ldns_pkt_get_rcode(pkt) != LDNS_RCODE_NOERROR) {
             ldns_rdf_deep_free(domain);
             ldns_rdf_deep_free(host);
             ldns_resolver_deep_free(res);
-            if (pkt)
+            if (pkt && ldns_pkt_get_rcode(pkt) == LDNS_RCODE_NXDOMAIN) {
                 ldns_pkt_free(pkt);
-            if (ldns_pkt_get_rcode(pkt) == LDNS_RCODE_NXDOMAIN)
                 critical("Domain '%s' don't exist.", domainname);
-            else
-                critical("Unable to get SOA for %s from master.", domainname);
         }
-        
+        ldns_pkt_free(pkt);
+            critical("Unable to get SOA for %s from master.", domainname);
+        }
+
         rrl = ldns_pkt_rr_list_by_name_and_type(pkt, domain, LDNS_RR_TYPE_SOA,
                                                 LDNS_SECTION_ANSWER);
-                                                
+
         master_soa = ldns_rr_list_pop_rr(rrl);
-        
+
         ldns_rr_list_deep_free(rrl);
-        
+        ldns_pkt_free(pkt);
+
     } else {
         // Check all nameserver against master
         if (mp_verbose > 0)
             printf("Check zone sync for %s\n", domainname);
-            
+
         // Use a DNS server from resolv.conf
         status = ldns_resolver_new_frm_file(&res, NULL);
         if (status != LDNS_STATUS_OK) {
             ldns_rdf_deep_free(domain);
             unknown("Create resolver faild.");
         }
-        
+
         // Fetch NS
         pkt = ldns_resolver_query(res, domain, LDNS_RR_TYPE_NS,
                                   LDNS_RR_CLASS_IN, LDNS_RD);
-        
+
         if (pkt == NULL || ldns_pkt_get_rcode(pkt) != LDNS_RCODE_NOERROR) {
             ldns_rdf_deep_free(domain);
             ldns_resolver_deep_free(res);
-            if (pkt)
-                ldns_pkt_free(pkt);
-            if (ldns_pkt_get_rcode(pkt) == LDNS_RCODE_NXDOMAIN)
-                critical("Domain '%s' don't exist.", domainname);
-            else
-                critical("Unable to get NS for %s.", domainname);
+            if (pkt && ldns_pkt_get_rcode(pkt) == LDNS_RCODE_NXDOMAIN) {
+           ldns_pkt_free(pkt);
+           critical("Domain '%s' don't exist.", domainname);
         }
-        
+        ldns_pkt_free(pkt);
+        critical("Unable to get NS for %s.", domainname);
+        }
+
         if (mp_verbose > 2) {
             printf("[ NS Anser ]----------\n");
             ldns_pkt_print(stdout,pkt);
         }
-            
+
         rrl = ldns_pkt_rr_list_by_name_and_type(pkt, domain, LDNS_RR_TYPE_NS,
                                                 LDNS_SECTION_ANSWER);
-                                                
+
         ns_count = ldns_rr_list_rr_count(rrl);
-        ns_soa = (ldns_rr * *) malloc(ns_count*sizeof(ldns_rr *)); 
+        ns_soa = (ldns_rr * *) malloc(ns_count*sizeof(ldns_rr *));
         ns_name = (ldns_rdf * *) malloc(ns_count*sizeof(ldns_rdf *));
-        
+
         for (i=0; i<ns_count; i++) {
             rr = ldns_rr_list_rr(rrl, i);
             ns_name[i] = ldns_rr_set_rdf(rr, NULL, 0);
         }
-        
+
         ldns_rr_list_deep_free(rrl);
         ldns_pkt_free(pkt);
         ldns_resolver_deep_free(res);
-        
+
         // Create resolver
         res = ldns_resolver_new();
         if (!res) {
             ldns_rdf_deep_free(domain);
             unknown("Create resolver faild.");
         }
-        
+
         for (i=0; i<ns_count; i++) {
             rrl = getaddr_rdf(NULL, ns_name[i]);
             ldns_resolver_push_nameserver_rr_list(res, rrl);
-            
+
             if (mp_verbose>1) {
                 tmp = ldns_rdf2str(ns_name[i]);
                 printf("[ Addr for %s ]----------\n", tmp);
                 free(tmp);
                 ldns_rr_list_print(stdout, rrl);
             }
-            
+
             ldns_rr_list_deep_free(rrl);
-            
+
             //
             // Fetch SOA
             pkt = ldns_resolver_query(res, domain, LDNS_RR_TYPE_SOA,
                                       LDNS_RR_CLASS_IN, LDNS_RD);
-        
+
             if (pkt == NULL || ldns_pkt_get_rcode(pkt) != LDNS_RCODE_NOERROR) {
                 ldns_rdf_deep_free(domain);
                 ldns_resolver_deep_free(res);
-                if (pkt)
+                if (pkt && ldns_pkt_get_rcode(pkt) == LDNS_RCODE_NXDOMAIN) {
                     ldns_pkt_free(pkt);
-                tmp = ldns_rdf2str(ns_name[i]);
-                if (ldns_pkt_get_rcode(pkt) == LDNS_RCODE_NXDOMAIN)
+                    tmp = ldns_rdf2str(ns_name[i]);
                     critical("Domain '%s' don't exist on '%s'.", domainname, tmp);
-                else
-                    critical("Unable to get SOA for %s from '%s'.", domainname, tmp);
+                }
+                ldns_pkt_free(pkt);
+                tmp = ldns_rdf2str(ns_name[i]);
+                critical("Unable to get SOA for %s from '%s'.", domainname, tmp);
             }
-        
+
             if (mp_verbose > 2) {
                 tmp = ldns_rdf2str(ns_name[i]);
                 printf("[ SO Anser from %s ]----------\n", tmp);
                 free(tmp);
                 ldns_pkt_print(stdout,pkt);
             }
-        
-            rrl = ldns_pkt_rr_list_by_name_and_type(pkt, domain, 
+
+            rrl = ldns_pkt_rr_list_by_name_and_type(pkt, domain,
                                                     LDNS_RR_TYPE_SOA,
                                                     LDNS_SECTION_ANSWER);
-                                                                                    
+
             rr = ldns_rr_list_pop_rr(rrl);
             ldns_rr_list_deep_free(rrl);
-            
+        ldns_pkt_free(pkt);
+
             if (mp_verbose>0) {
                 tmp = ldns_rdf2str(ns_name[i]);
                 printf("[ SOA for %s ]----------\n", tmp);
                 free(tmp);
                 ldns_rr_print(stdout, rr);
             }
-            
+
             if (ldns_rdf_compare(ldns_rr_rdf(rr,0), ns_name[i]) == 0) {
                 master_soa = rr;
                 master_name = ns_name[i];
@@ -275,16 +281,17 @@ int main (int argc, char **argv) {
             } else {
                 ns_soa[i] = rr;
             }
-                   
-        
+
             while (ldns_resolver_nameserver_count(res) > 0)
-                ldns_resolver_pop_nameserver(res);
+                ldns_rdf_deep_free(ldns_resolver_pop_nameserver(res));
         }
     }
-    
+
+    ldns_resolver_deep_free(res);
+
     char *error_str = NULL;
     int error_cnt = 0;
-    
+
     for (i=0; i<ns_count; i++) {
         if (ns_soa[i] == 0)
             continue;
@@ -293,15 +300,23 @@ int main (int argc, char **argv) {
                 error_str = ldns_rdf2str(ns_name[i]);
             } else {
                 tmp = ldns_rdf2str(ns_name[i]);
-                realloc(error_str, (strlen(error_str) + strlen(tmp) + 2 ));
+                error_str = realloc(error_str, (strlen(error_str) + strlen(tmp) + 2 ));
                 strcat(error_str, ", ");
                 strcat(error_str, tmp);
                 free(tmp);
             }
             error_cnt++;
         }
+    ldns_rr_free(ns_soa[i]);
+    ldns_rdf_deep_free(ns_name[i]);
     }
-    
+
+    free(ns_soa);
+    free(ns_name);
+    ldns_rr_free(master_soa);
+    ldns_rdf_deep_free(master_name);
+    ldns_rdf_deep_free(domain);
+
     if (error_cnt == 0) {
         if (ns_count == 1)
             ok("%s is in sync with the master.", domainname);
@@ -310,7 +325,7 @@ int main (int argc, char **argv) {
     } else if (error_cnt == 1) {
         critical("%s is out of sync with master", error_str);
     }
-    
+
     critical("%s are out of sync with master", error_str);
 }
 
@@ -369,3 +384,4 @@ void print_help (void) {
    printf(MP_ARGS_HELP_TIMEOUT);
 }
 
+/* vim: set ts=4 sw=4 et : */
