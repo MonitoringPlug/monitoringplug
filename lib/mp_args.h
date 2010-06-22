@@ -198,6 +198,10 @@ void print_thresholds(const char *threshold_name, thresholds *my_threshold);
 #define MP_ARGS_WARN    {"warning", required_argument, NULL, (int)'w'}
 /** getopt option for critical */
 #define MP_ARGS_CRIT    {"critical", required_argument, NULL, (int)'c'}
+/** getopt option for ipv4 */
+#define MP_ARGS_IP4     {"ipv4", no_argument, NULL, (int)'4'}
+/** getopt option for ipv6 */
+#define MP_ARGS_IP6     {"ipv6", no_argument, NULL, (int)'6'}
 
 /** getopt option end */
 #define MP_ARGS_END     {0, 0, NULL, 0}
@@ -218,8 +222,16 @@ void print_thresholds(const char *threshold_name, thresholds *my_threshold);
             break;
 /** getopt case for hostname */
 #define  MP_ARGS_CASE_HOST case 'H': \
-	    hostname = optarg; \
-	    break;
+            if (!is_hostname(optarg) && !is_hostaddr(optarg)) \
+                usage("Illegal -H argument '%s'.", optarg); \
+            hostname = optarg; \
+            break;
+/** getopt case for hostname ip only */
+#define  MP_ARGS_CASE_HOST_IP case 'H': \
+            if (!is_hostaddr(optarg)) \
+                usage("Illegal -H argument '%s'. IPs only.", optarg); \
+            hostname = optarg; \
+            break;
 /** getopt case for warning */
 #define  MP_ARGS_CASE_WARN case 'w': \
             warn = optarg; \
@@ -230,11 +242,13 @@ void print_thresholds(const char *threshold_name, thresholds *my_threshold);
             break; \
 /** getopt case for warning time */
 #define  MP_ARGS_CASE_WARN_TIME(TRASH) case 'w': \
-            setWarnTime(&TRASH, optarg); \
+            if (setWarnTime(&TRASH, optarg) == ERROR) \
+                usage("Illegal -c warning '%s'.", optarg); \
             break;
 /** getopt case for critical time */
 #define  MP_ARGS_CASE_CRIT_TIME(TRASH) case 'c': \
-            setCritTime(&TRASH, optarg); \
+            if (setCritTime(&TRASH, optarg) == ERROR) \
+                usage("Illegal -c argument '%s'.", optarg); \
             break;
 
 /** argument helps for help, version and verbose */
