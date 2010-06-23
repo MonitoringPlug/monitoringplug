@@ -330,21 +330,24 @@ int main (int argc, char **argv) {
 }
 
 int process_arguments (int argc, char **argv) {
-   int c;
-   int option = 0;
+    int c;
+    int option = 0;
 
-   static struct option longopts[] = {
-      MP_ARGS_HELP,
-      MP_ARGS_VERS,
-      MP_ARGS_VERB,
-      MP_ARGS_HOST,
-      {"domainname", required_argument, 0, 'D'},
-      MP_ARGS_TIMEOUT,
-      MP_ARGS_END
-   };
+    static struct option longopts[] = {
+        MP_ARGS_HELP,
+        MP_ARGS_VERS,
+        MP_ARGS_VERB,
+        MP_ARGS_HOST,
+        {"domainname", required_argument, 0, 'D'},
+        MP_ARGS_TIMEOUT,
+        MP_ARGS_END
+    };
 
-//   if ( argc < 2)
-//      return 1;
+   
+    if (argc < 2) {
+        print_help();
+        exit(STATE_OK);
+    }
 
     while (1) {
         c = getopt_long (argc, argv, "hVvH:D:t:", longopts, &option);
@@ -381,6 +384,8 @@ void print_help (void) {
 
    printf(MP_ARGS_HELP_DEF);
    printf(MP_ARGS_HELP_HOST);
+   printf(" -D, --domain=DOMAIN\n");
+   printf("      The name of the domain to check.\n");
    printf(MP_ARGS_HELP_TIMEOUT);
 }
 

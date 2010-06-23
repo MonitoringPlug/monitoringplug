@@ -282,6 +282,10 @@ void print_help (void) {
 
    printf(MP_ARGS_HELP_DEF);
    printf(MP_ARGS_HELP_HOST);
+   printf(" -D, --domain=DOMAIN\n");
+   printf("      The name of the domain to check.\n");
+   printf(" -k, --trusted-keys=FILE\n");
+   printf("      File to read trust-anchors from.\n");
    printf(MP_ARGS_HELP_WARN_TIME("2 days"));
    printf(MP_ARGS_HELP_CRIT_TIME("1 day"));
    printf(MP_ARGS_HELP_TIMEOUT);
