@@ -28,28 +28,29 @@
 ldns_resolver* createResolver(const char *dnsserver) {
     ldns_resolver   *res = NULL;
     ldns_status     status;
-    ldns_rr_list    *ns_rrl;
+    ldns_rdf        *ns_rdf;
 
     if (dnsserver) {
         // Use the given DNS server
         res = ldns_resolver_new();
         if (!res)
             return NULL;
-
-        /* add the nameserver */
-        ns_rrl = getaddr(NULL, dnsserver);
-
-        if (!ns_rrl) {
+        
+        // Create rdf from dnsserver
+        ns_rdf = ldns_rdf_new_frm_str(LDNS_RDF_TYPE_A, dnsserver);
+#ifdef USE_IPV6
+        if (!ns_rdf)
+            ns_rdf = ldns_rdf_new_frm_str(LDNS_RDF_TYPE_AAAA, dnsserver);
+#endif
+        if (!ns_rdf) {
             ldns_resolver_deep_free(res);
             return NULL;
         } else {
-            status = ldns_resolver_push_nameserver_rr_list(res, ns_rrl);
+            status = ldns_resolver_push_nameserver(res, ns_rdf);
+            ldns_rdf_deep_free(ns_rdf);
             if (status != LDNS_STATUS_OK) {
                 ldns_resolver_free(res);
-                ldns_rr_list_deep_free(ns_rrl);
                 return NULL;
-            } else {
-                ldns_rr_list_deep_free(ns_rrl);
             }
         }
     } else {

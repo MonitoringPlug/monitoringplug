@@ -152,7 +152,7 @@ int main (int argc, char **argv) {
         ldns_resolver_deep_free(res);
         ldns_rr_list_deep_free(rrl_soa);
         ldns_rr_list_deep_free(rrl_soa_rrsig);
-        critical("has no DNSKEYs.");
+        critical("'%s' has no valid DNSKEYs.", domainname);
     }
     
     if (mp_verbose >= 2) {
@@ -202,9 +202,6 @@ int main (int argc, char **argv) {
     exp = ldns_rdf2native_int32(rd);
     char *exp_str = ldns_rdf2str(rd);
     ldns_rr_free(rr_newest);
-    
-    print_thresholds("exp_thresholds", exp_thresholds);
-    printf("%i - %i - %i = %i\n",exp,ttl,now,(exp-ttl-now));
         
     switch ( get_status((exp-ttl-now),exp_thresholds) ) {
         case STATE_OK:
@@ -242,17 +239,22 @@ int process_arguments (int argc, char **argv) {
     }
     
     while (1) {
-        c = getopt_long (argc, argv, "hVvH:D:w:c:t:", longopts, &option);
+        c = getopt_long (argc, argv, "hVvH:D:k:w:c:t:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
         switch (c) {
             MP_ARGS_CASE_DEF
-            MP_ARGS_CASE_HOST
+            MP_ARGS_CASE_HOST_IP
             case 'D':
                 if (!is_hostname(optarg))
                     usage("Illegal domain name.");
                 domainname = optarg;
+                break;
+            case 'k':
+                trusted_keys = loadKeyfile(optarg);
+                if (trusted_keys == NULL)
+                    usage("Parsing keyfiel faild.");
                 break;
             MP_ARGS_CASE_WARN_TIME(exp_thresholds)
             MP_ARGS_CASE_CRIT_TIME(exp_thresholds)
@@ -285,3 +287,4 @@ void print_help (void) {
    printf(MP_ARGS_HELP_TIMEOUT);
 }
 
+/* vim: set ts=4 sw=4 et : */
