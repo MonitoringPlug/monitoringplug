@@ -53,7 +53,7 @@ void warning(const char *fmt, ...) {
 
 void critical(const char *fmt, ...) {
     va_list ap;
-    printf("CRITICAL -  ");
+    printf("CRITICAL - ");
     va_start(ap, fmt);
     vprintf(fmt, ap);
     va_end(ap);
@@ -63,7 +63,7 @@ void critical(const char *fmt, ...) {
 
 void unknown(const char *fmt, ...) {
     va_list ap;
-    printf("UNKNOWN -  ");
+    printf("UNKNOWN - ");
     va_start(ap, fmt);
     vprintf(fmt, ap);
     va_end(ap);
