@@ -81,7 +81,7 @@ int main (int argc, char **argv) {
     if (!rd_domain)
         unknown("Illegal domain name");
     
-    /* Create a new resolver with dns_server or server from /etc/resolv.conf */
+    /* Create a new resolver with hostname or server from /etc/resolv.conf */
     res = createResolver(hostname);
     if (!res)
         unknown("Creating resolver faild.");
@@ -269,26 +269,26 @@ int process_arguments (int argc, char **argv) {
 }
 
 void print_help (void) {
-   print_revision();
-   print_copyright();
+    print_revision();
+    print_copyright();
 
-   printf("\n");
+    printf("\n");
+  
+    printf ("This plugin check the RRSIG expiration date.\n\n");
 
-   printf("Check if the zone serial are in sync.");
+    printf("\n\n");
 
-   printf("\n\n");
+    print_usage();
 
-   print_usage();
-
-   printf(MP_ARGS_HELP_DEF);
-   printf(MP_ARGS_HELP_HOST);
-   printf(" -D, --domain=DOMAIN\n");
-   printf("      The name of the domain to check.\n");
-   printf(" -k, --trusted-keys=FILE\n");
-   printf("      File to read trust-anchors from.\n");
-   printf(MP_ARGS_HELP_WARN_TIME("2 days"));
-   printf(MP_ARGS_HELP_CRIT_TIME("1 day"));
-   printf(MP_ARGS_HELP_TIMEOUT);
+    printf(MP_ARGS_HELP_DEF);
+    printf(MP_ARGS_HELP_HOST);
+    printf(" -D, --domain=DOMAIN\n");
+    printf("      The name of the domain to check.\n");
+    printf(" -k, --trusted-keys=FILE\n");
+    printf("      File to read trust-anchors from.\n");
+    printf(MP_ARGS_HELP_WARN_TIME("2 days"));
+    printf(MP_ARGS_HELP_CRIT_TIME("1 day"));
+    printf(MP_ARGS_HELP_TIMEOUT);
 }
 
 /* vim: set ts=4 sw=4 et syn=c.libdns : */
