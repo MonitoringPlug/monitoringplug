@@ -1,4 +1,4 @@
-/**
+/***
  * Monitoring Plugin - check_dnssec_expiration
  **
  *
@@ -291,4 +291,4 @@ void print_help (void) {
    printf(MP_ARGS_HELP_TIMEOUT);
 }
 
-/* vim: set ts=4 sw=4 et : */
+/* vim: set ts=4 sw=4 et syn=c.libdns : */
