@@ -118,7 +118,14 @@ int main (int argc, char **argv) {
 
     curl_global_cleanup();
     
-    ok("Received %'.0fbyte", size, "| time=%'.0f;%'.0f", time, time);
+    switch(get_status(time, fetch_thresholds)) {
+        case STATE_OK:
+            ok("Received %'.0fbyte in %fs.", size, time);
+        case STATE_WARNING:
+            warning("Received %'.0fbyte in %fs.", size, time);
+        case STATE_CRITICAL:
+            critical("Received %'.0fbyte in %fs.", size, time);
+    }
        
     critical("You should never reach this point.");
 }
