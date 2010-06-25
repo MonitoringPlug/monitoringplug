@@ -25,7 +25,9 @@ EXTRASUBDIRS=
 
 # Checks for libraries.
 PKG_CHECK_MODULES([CHECK], [check >= 0.9.4],,[AC_MSG_WARN([Skipping check])])
-PKG_CHECK_MODULES(LDNS, libldns,[EXTRASUBDIRS="$EXTRASUBDIRS dns"],[AC_MSG_WARN([Skipping ldns])])
+PKG_CHECK_MODULES(LDNS, libldns,,[AC_MSG_WARN([Skipping ldns])])
+LIBCURL_CHECK_CONFIG(yes)
+
 
 # IPv6 Option
 AC_ARG_WITH([ipv6],
@@ -55,6 +57,14 @@ if test "$with_ipv6" != "no"; then
     with_ipv6="$mp_cv_sys_ipv6"
 fi
 
+# Conditionals
+AM_CONDITIONAL([HAVE_LDNS], [test x$LDNS_CFLAGS != x])
+AM_CONDITIONAL([HAVE_CURL], [test x$CURL_CFLAGS != x])
+
+AM_CONDITIONAL([HAVE_CURL_TFTP], [test x$libcurl_protocol_TFTP != x])
+
+
+# GCC Opts
 if test "x$GCC" = "xyes"; then
   changequote(,)dnl
   case " $CFLAGS " in
@@ -132,8 +142,9 @@ AC_SUBST(EXTRASUBDIRS)
 
 AC_CONFIG_FILES([Makefile
                  lib/Makefile
-                 doc/Makefile
+                 curl/Makefile
                  dns/Makefile
                  dummy/Makefile
+                 doc/Makefile
                  tests/Makefile])
 AC_OUTPUT

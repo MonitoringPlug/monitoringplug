@@ -198,6 +198,8 @@ void print_thresholds(const char *threshold_name, thresholds *my_threshold);
 #define MP_ARGS_WARN    {"warning", required_argument, NULL, (int)'w'}
 /** getopt option for critical */
 #define MP_ARGS_CRIT    {"critical", required_argument, NULL, (int)'c'}
+/** getopt option for port */
+#define MP_ARGS_PORT    {"port", required_argument, NULL, (int)'P'}
 /** getopt option for ipv4 */
 #define MP_ARGS_IP4     {"ipv4", no_argument, NULL, (int)'4'}
 /** getopt option for ipv6 */
@@ -250,6 +252,12 @@ void print_thresholds(const char *threshold_name, thresholds *my_threshold);
             if (setCritTime(&TRASH, optarg) == ERROR) \
                 usage("Illegal -c argument '%s'.", optarg); \
             break;
+/** getopt case for port */
+#define  MP_ARGS_CASE_PORT case 'P': \
+            if (!is_integer(optarg)) \
+                usage("Illegal port number '%s'.", optarg); \
+            port = (int) strtol(optarg, NULL, 10); \
+            break;
 
 /** argument helps for help, version and verbose */
 #define MP_ARGS_HELP_DEF "\n\
@@ -276,5 +284,8 @@ Options:\n\
 #define MP_ARGS_HELP_CRIT_TIME(DEFAULT) "\
  -c, --critical=time[d|h|m|s]\n\
       Return critical if elapsed time exceeds value. Default to "DEFAULT"\n"
+#define MP_ARGS_HELP_PORT(DEFAULT) "\
+ -P, --port=PORT\n\
+      Port number to use. Default to "DEFAULT"\n"
 
 #endif /* _MP_ARGS_H_ */

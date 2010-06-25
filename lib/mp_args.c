@@ -30,8 +30,11 @@
  */
 
 int setWarn(thresholds **threshold, char *str, int multiplier) {
-    if(*threshold == NULL)
+    if(*threshold == NULL) {
         *threshold = (thresholds *) malloc(sizeof(thresholds));
+        (*threshold)->warning = NULL;
+        (*threshold)->critical = NULL;
+    }
     if((*threshold)->warning == NULL)
         (*threshold)->warning = (range *) malloc(sizeof(range));
 
@@ -39,8 +42,11 @@ int setWarn(thresholds **threshold, char *str, int multiplier) {
 }
 
 int setCrit(thresholds **threshold, char *str, int multiplier) {
-    if(*threshold == NULL)
+    if(*threshold == NULL) {
         *threshold = (thresholds *) malloc(sizeof(thresholds));
+        (*threshold)->warning = NULL;
+        (*threshold)->critical = NULL;
+    }
     if((*threshold)->critical == NULL)
         (*threshold)->critical = (range *) malloc(sizeof(range));
 
@@ -48,8 +54,11 @@ int setCrit(thresholds **threshold, char *str, int multiplier) {
 }
 
 int setWarnTime(thresholds **threshold, char *str) {
-    if(*threshold == NULL)
+    if(*threshold == NULL) {
         *threshold = (thresholds *) malloc(sizeof(thresholds));
+        (*threshold)->warning = NULL;
+        (*threshold)->critical = NULL;
+    }
     if((*threshold)->warning == NULL)
         (*threshold)->warning = (range *) malloc(sizeof(range));
 
@@ -57,8 +66,11 @@ int setWarnTime(thresholds **threshold, char *str) {
 }
 
 int setCritTime(thresholds **threshold, char *str) {
-    if(*threshold == NULL)
+    if(*threshold == NULL) {
         *threshold = (thresholds *) malloc(sizeof(thresholds));
+        (*threshold)->warning = NULL;
+        (*threshold)->critical = NULL;
+    }
     if((*threshold)->critical == NULL)
         (*threshold)->critical = (range *) malloc(sizeof(range));
 
