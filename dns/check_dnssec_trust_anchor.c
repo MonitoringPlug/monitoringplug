@@ -80,8 +80,17 @@ int main(int argc, char **argv) {
         
         if (mp_verbose >= 1)
             printf("Test: %s\n", ldns_rdf2str(rd_owner));
+            
+        
+    
+        /* Create a new resolver with hostname or server from /etc/resolv.conf */
+        res = createResolver(hostname);
+        if (!res)
+            unknown("Creating resolver faild.");
         
         rrl_keys = ldns_validate_domain_dnskey(res, rd_owner, trusted_keys);
+        
+        ldns_resolver_deep_free(res);
         
         if (mp_verbose >= 2) {
             printf("--[ Valid Domain Key ]----------------------------------------\n");
@@ -103,7 +112,6 @@ int main(int argc, char **argv) {
     }
     
     ldns_rr_list_deep_free(trusted_keys);
-    ldns_resolver_deep_free(res);
     
     if (invalid)
         critical("Invalid KEYs in trusted-keys for '%s'", invalid);
