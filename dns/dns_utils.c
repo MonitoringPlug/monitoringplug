@@ -289,6 +289,7 @@ ldns_rr_list* loadAnchorfile(const char *filename) {
     // Read File
     do {
         c = getc(key_file);
+        
         if ((c == '\n' && grouped == 0) || c == EOF) {
             linebuffer[col] = '\0';
             line++;
@@ -298,8 +299,13 @@ ldns_rr_list* loadAnchorfile(const char *filename) {
                 tk_section = 1;
                 continue;
             }
+            
+            // Strip leading spaces.
+            char *cur = linebuffer;
+            cur += strspn(linebuffer," \t\n");
 
-            if (linebuffer[0] == ';' || col == 0 || tk_section == 0) {
+            if (cur[0] == ';' || strncmp(cur,"//",2) == 0 || col == 0
+                || tk_section == 0) {
                 col = 0;
                 continue;
             }
@@ -310,38 +316,30 @@ ldns_rr_list* loadAnchorfile(const char *filename) {
             ldns_rr_set_type(rr, LDNS_RR_TYPE_DNSKEY);
             ldns_rr_set_ttl(rr, 3600);
 
-            char *cur = linebuffer;
-            char *t = strtok(cur, " ");
-            cur += strlen(t)+1;
-
+            char *t = strsep(&cur, " \t");
 
             ldns_str2rdf_dname(&rd, t);
             ldns_rr_set_owner(rr, rd);
-
-            t = strtok(cur, " ");
-            cur += strlen(t)+1;
+            
+            t = strsep(&cur, " \t");
 
             ldns_str2rdf_int16(&rd, t);
             ldns_rr_push_rdf(rr, rd);
-
-            t = strtok(cur, " ");
-            cur += strlen(t)+1;
+            
+            t = strsep(&cur, " \t");
 
             ldns_str2rdf_int8(&rd, t);
             ldns_rr_push_rdf(rr, rd);
-
-            t = strtok(cur, " ");
-            cur += strlen(t)+1;
+            
+            t = strsep(&cur, " \t");
 
             ldns_str2rdf_alg(&rd, t);
             ldns_rr_push_rdf(rr, rd);
 
-            t = strtok(cur, " ");
+            if (cur[strlen(cur)-1] == ';')
+                cur[strlen(cur)-1] = '\0';
 
-            if (t[strlen(t)-1] == ';')
-                t[strlen(t)-1] = '\0';
-
-            ldns_str2rdf_b64(&rd, t);
+            ldns_str2rdf_b64(&rd, cur);
             ldns_rr_push_rdf(rr, rd);
 
             ldns_rr_list_push_rr(trusted_keys,rr);

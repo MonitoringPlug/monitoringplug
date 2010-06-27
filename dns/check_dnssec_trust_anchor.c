@@ -61,6 +61,9 @@ int main(int argc, char **argv) {
         unknown("Could not parse arguments");
     }
     
+    if (mp_verbose > 1)
+        ldns_rr_list_print(stdout,trusted_keys);
+    
     /* Start plugin timeout */
     alarm(mp_timeout);
     
@@ -96,7 +99,6 @@ int main(int argc, char **argv) {
                 invalid = ldns_rdf2str(rd_owner);
             }
         }
-        
         ldns_rr_list_deep_free(rrl_keys);
     }
     
