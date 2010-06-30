@@ -360,7 +360,7 @@ void print_help (void) {
 
     printf("\n");
 
-    printf("This plugin test nothing.");
+    printf("Check age, size, owner, group and permission property of a file.");
 
     printf("\n\n");
 
