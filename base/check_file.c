@@ -36,10 +36,15 @@ const char *progusage = "-f <FILE> -w <warning age> -c <critical age>";
 #include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <sys/types.h>
+#include <pwd.h>
+#include <grp.h>
 #include <time.h>
 
 /* Global vars */
 char *filename = NULL;
+char *ownername = NULL;
+char *groupname = NULL;
 thresholds *age_thresholds = NULL;
 thresholds *size_thresholds = NULL;
 
@@ -66,12 +71,8 @@ int main (int argc, char **argv) {
         printf("Stat for %s\n", filename);
         printf(" UID:    %d\n", (int) file_stat.st_uid);
         printf(" GID:    %d\n", (int) file_stat.st_gid);
-        printf(" ATIME:  %u\n", (unsigned int) file_stat.st_atime);
         printf(" MTIME:  %u\n", (unsigned int) file_stat.st_mtime);
-        printf(" CTIME:  %u\n", (unsigned int) file_stat.st_ctime);
         printf(" Size:   %u\n", (unsigned int)(unsigned int)  file_stat.st_size);
-        print_thresholds("Age",age_thresholds);
-        print_thresholds("Size", size_thresholds);
     }
 
     if (age_thresholds != NULL) {
@@ -116,6 +117,78 @@ int main (int argc, char **argv) {
 
     status = age_status > size_status ? age_status : size_status;
 
+    if (ownername != NULL) {
+        if (is_integer(ownername)) {
+            if (file_stat.st_uid != (int) strtol(ownername, NULL, 10)) {
+                status = STATE_CRITICAL;
+                if (output != NULL) {
+                    output = realloc(output, strlen(output) + sizeof(char) * 17);
+                    strcat(output, ", owner critical");
+                } else {
+                    output = malloc(sizeof(char) * 15);
+                    strcat(output, "owner critical");
+                }
+            } else {
+                status = status > STATE_OK ? status : STATE_OK;
+            }
+        } else {
+            struct passwd *pwd;
+            pwd = getpwnam(ownername);
+
+            if (mp_verbose && pwd)
+                printf("Resolv UID: %s => %u\n", ownername, (*pwd).pw_uid);
+
+            if (pwd == NULL || file_stat.st_uid != (*pwd).pw_uid) {
+                status = STATE_CRITICAL;
+                if (output != NULL) {
+                    output = realloc(output, strlen(output) + sizeof(char) * 17);
+                    strcat(output, ", owner critical");
+                } else {
+                    output = malloc(sizeof(char) * 15);
+                    strcat(output, "owner critical");
+                }
+            } else {
+                status = status > STATE_OK ? status : STATE_OK;
+            }
+        }
+    }
+
+    if (groupname != 0 ) {
+        if (is_integer(groupname)) {
+            if (file_stat.st_gid != (int) strtol(groupname, NULL, 10)) {
+                status = STATE_CRITICAL;
+                if (output != NULL) {
+                    output = realloc(output, strlen(output) + sizeof(char) * 17);
+                    strcat(output, ", group critical");
+                } else {
+                    output = malloc(sizeof(char) * 15);
+                    strcat(output, "group critical");
+                }
+            } else {
+                status = status > STATE_OK ? status : STATE_OK;
+            }
+        } else {
+            struct group *grp;
+            grp = getgrnam(groupname);
+
+            if (mp_verbose && grp)
+                printf("Resolv GID: %s => %u\n", groupname, (*grp).gr_gid);
+
+            if (grp == NULL || file_stat.st_gid != (*grp).gr_gid) {
+                status = STATE_CRITICAL;
+                if (output != NULL) {
+                    output = realloc(output, strlen(output) + sizeof(char) * 17);
+                    strcat(output, ", group critical");
+                } else {
+                    output = malloc(sizeof(char) * 15);
+                    strcat(output, "group critical");
+                }
+            } else {
+                status = status > STATE_OK ? status : STATE_OK;
+            }
+        }
+    }
+
     switch (status) {
         case STATE_OK:
             ok("%s: Everithing ok.", filename);
@@ -139,13 +212,15 @@ int process_arguments (int argc, char **argv) {
         MP_ARGS_VERS,
         MP_ARGS_VERB,
         {"file", required_argument, NULL, (int)'f'},
+        {"owner", required_argument, NULL, (int)'o'},
+        {"group", required_argument, NULL, (int)'g'},
         MP_ARGS_WARN,
         MP_ARGS_CRIT,
         MP_ARGS_END
     };
 
     while (1) {
-        c = getopt_long (argc, argv, "hVvt:f:w:c:W:C:", longopts, &option);
+        c = getopt_long (argc, argv, "hVvt:f:o:g:w:c:W:C:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -155,6 +230,12 @@ int process_arguments (int argc, char **argv) {
 	    case 'f':
 	       filename = optarg;
 	       break;
+        case 'o':
+           ownername = optarg;
+           break;
+        case 'g':
+           groupname = optarg;
+           break;
 	    MP_ARGS_CASE_WARN_TIME(age_thresholds)
 	    MP_ARGS_CASE_CRIT_TIME(age_thresholds)
 	    case 'W':
