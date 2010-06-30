@@ -25,7 +25,7 @@ const char *progname  = "check_file";
 const char *progvers  = "0.1";
 const char *progcopy  = "2010";
 const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
-const char *progusage = "-f <FILE> -w <warning age> -c <critical age>";
+const char *progusage = "-f <FILE> [-w <warning age>] [-c <critical age>]";
 
 #include "mp_common.h"
 
@@ -45,8 +45,12 @@ const char *progusage = "-f <FILE> -w <warning age> -c <critical age>";
 char *filename = NULL;
 char *ownername = NULL;
 char *groupname = NULL;
+char *accessstring = NULL;
 thresholds *age_thresholds = NULL;
 thresholds *size_thresholds = NULL;
+
+/* function prototype */
+int check_access(mode_t file_stat);
 
 int main (int argc, char **argv) {
 
@@ -189,6 +193,21 @@ int main (int argc, char **argv) {
         }
     }
 
+    if (accessstring != NULL) {
+        if (check_access(file_stat.st_mode) != 0) {
+            status = STATE_CRITICAL;
+            if (output != NULL) {
+                output = realloc(output, strlen(output) + sizeof(char) * 18);
+                strcat(output, ", access critical");
+            } else {
+                output = malloc(sizeof(char) * 16);
+                strcat(output, "access critical");
+            }
+        } else {
+            status = status > STATE_OK ? status : STATE_OK;
+        }
+    }
+
     switch (status) {
         case STATE_OK:
             ok("%s: Everithing ok.", filename);
@@ -203,6 +222,86 @@ int main (int argc, char **argv) {
     critical("You should never reach this point.");
 }
 
+int check_access(mode_t fmode) {
+    char *c;
+
+    int state = 0;
+    int subject_mask = 0;
+    int mask_function = 0;
+    int access_mask = 0;
+
+    for (c = accessstring; c[0] != '\0'; *c++) {
+
+        if (state == 1 && c[0] != 'r' && c[0] != 'w' && c[0] != 'x' ) {
+            if (mask_function == -1) {
+                access_mask &= subject_mask;
+                if ((fmode & access_mask) != 0)
+                    return -1;
+            } else if (mask_function == 0) {
+                if ((fmode & subject_mask) != (access_mask &= subject_mask))
+                    return -1;
+            } else if (mask_function == 1) {
+                access_mask &= subject_mask;
+                if ((fmode & access_mask) != access_mask)
+                    return -1;
+            }
+
+            subject_mask = 0;
+            mask_function = 0;
+            access_mask = 0;
+
+            state = 0;
+        }
+
+        if (state == 0) {
+            if (c[0] == 'u')
+                subject_mask |= S_IRWXU;
+            else if (c[0] == 'g')
+                subject_mask |= S_IRWXG;
+            else if (c[0] == 'o')
+                subject_mask |= S_IRWXO;
+            else if (c[0] == '-') {
+                mask_function = -1;
+                state++;
+            } else if (c[0] == '+') {
+                mask_function = 1;
+                state++;
+            } else if (c[0] == '=') {
+                mask_function = 0;
+                state++;
+            } else
+                unknown("Illegal access string: %s", accessstring);
+        }
+
+        if (state == 1) {
+            if (c[0] == 'r') {
+                access_mask |= S_IRUSR | S_IRGRP | S_IROTH;
+            } else if (c[0] == 'w') {
+                access_mask |= S_IWUSR | S_IWGRP | S_IWOTH;
+            } else if (c[0] == 'x') {
+                access_mask |= S_IXUSR | S_IXGRP | S_IXOTH;
+            }
+        }
+
+    } // for (c = accessstring; c[0] !=...
+
+    if (mask_function == -1) {
+        access_mask &= subject_mask;
+        if ((fmode & access_mask) != 0)
+            return -1;
+    } else if (mask_function == 0) {
+        if ((fmode & subject_mask) != (access_mask &= subject_mask))
+            return -1;
+    } else if (mask_function == 1) {
+        access_mask &= subject_mask;
+        if ((fmode & access_mask) != access_mask)
+            return -1;
+    }
+
+    return 0;
+
+}
+
 int process_arguments (int argc, char **argv) {
     int c;
     int option = 0;
@@ -214,13 +313,14 @@ int process_arguments (int argc, char **argv) {
         {"file", required_argument, NULL, (int)'f'},
         {"owner", required_argument, NULL, (int)'o'},
         {"group", required_argument, NULL, (int)'g'},
+        {"access", required_argument, NULL, (int)'a'},
         MP_ARGS_WARN,
         MP_ARGS_CRIT,
         MP_ARGS_END
     };
 
     while (1) {
-        c = getopt_long (argc, argv, "hVvt:f:o:g:w:c:W:C:", longopts, &option);
+        c = getopt_long (argc, argv, "hVvt:f:o:g:a:w:c:W:C:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -235,6 +335,9 @@ int process_arguments (int argc, char **argv) {
            break;
         case 'g':
            groupname = optarg;
+           break;
+        case 'a':
+           accessstring = optarg;
            break;
 	    MP_ARGS_CASE_WARN_TIME(age_thresholds)
 	    MP_ARGS_CASE_CRIT_TIME(age_thresholds)
@@ -264,6 +367,28 @@ void print_help (void) {
     print_usage();
 
     printf(MP_ARGS_HELP_DEF);
+    printf(" -f, --file=filename\n");
+    printf("      The file to test.\n");
+    printf(" -w, --warning=time[d|h|m|s]\n");
+    printf("      Return warning if the file age exceed this range.\n");
+    printf(" -c, --critical=time[d|h|m|s]\n");
+    printf("      Return critical if the file age exceed this range.\n");
+    printf(" -W=size\n");
+    printf("      Return warning if the file size exceed this range.\n");
+    printf(" -C=size\n");
+    printf("      Return critical if the file size exceed this range.\n");
+    printf(" -o, --owner=uanme|uid\n");
+    printf("      Return critical if the file don't belong to the user.\n");
+    printf(" -g, --group=gname|gid\n");
+    printf("      Return critical if the file don't belong to the group.\n");
+    printf(" -a, -access=accessstring\n");
+    printf("      Return critical if the file permission don't match the accessstring.\n");
+
+    printf("\nAccess String Example:\n");
+    printf(" u+r  => Check if file owner can read the file.\n");
+    printf(" g=rx => Check if group can read, execute and not write.\n");
+    printf(" o-rw => Check if others can't read nor write.\n");
+
 }
 
 /* vim: set ts=4 sw=4 et syn=c.libdns : */
