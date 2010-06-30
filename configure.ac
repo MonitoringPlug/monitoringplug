@@ -130,12 +130,17 @@ fi
 AC_CHECK_HEADERS([limits.h netdb.h stdlib.h string.h strings.h sys/socket.h unistd.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
+AC_TYPE_SIGNAL
 AC_TYPE_SIZE_T
+AC_TYPE_UINT32_T
 
 # Checks for library functions.
 AC_FUNC_MALLOC
+AC_FUNC_REALLOC
 AC_FUNC_STRTOD
 AC_FUNC_VPRINTF
+AC_FUNC_LSTAT
+AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK
 AC_CHECK_FUNCS([alarm memset strdup strerror strspn strstr strtol])
 
 AC_SUBST(EXTRASUBDIRS)
