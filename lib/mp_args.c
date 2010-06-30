@@ -116,7 +116,6 @@ int parse_range_string(range *range, char *str, int multiplier) {
                     range->start *= parse_time_multiplier_string(eptr);
                     break;
             }
-            parse_multiplier_string(eptr);
         }
     }
 
@@ -128,10 +127,10 @@ int parse_range_string(range *range, char *str, int multiplier) {
             return ERROR;
         switch(multiplier) {
             case BISI:
-                range->start *= parse_multiplier_string(eptr);
+                range->end *= parse_multiplier_string(eptr);
                 break;
             case TIME:
-                range->start *= parse_time_multiplier_string(eptr);
+                range->end *= parse_time_multiplier_string(eptr);
                 break;
         }
     }
