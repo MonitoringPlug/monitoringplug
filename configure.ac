@@ -1,7 +1,7 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.59)
+AC_PREREQ([2.59])
 
 AC_INIT([monitorplug],[0.0],[marius.rieder@durchmesser.ch])
 AC_CONFIG_AUX_DIR(build-aux)
@@ -132,11 +132,11 @@ AC_CHECK_HEADERS([limits.h netdb.h stdlib.h string.h strings.h sys/socket.h unis
 # Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_SIGNAL
 AC_TYPE_SIZE_T
-AC_TYPE_UINT32_T
+#AC_TYPE_UINT32_T
 
 # Checks for library functions.
 AC_FUNC_MALLOC
-AC_FUNC_REALLOC
+#AC_FUNC_REALLOC
 AC_FUNC_STRTOD
 AC_FUNC_VPRINTF
 AC_FUNC_LSTAT
