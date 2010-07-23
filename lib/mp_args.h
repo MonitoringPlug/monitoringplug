@@ -284,8 +284,9 @@ Options:\n\
 #define MP_ARGS_HELP_CRIT_TIME(DEFAULT) "\
  -c, --critical=time[d|h|m|s]\n\
       Return critical if elapsed time exceeds value. Default to "DEFAULT"\n"
+/** argument help for port */
 #define MP_ARGS_HELP_PORT(DEFAULT) "\
  -P, --port=PORT\n\
       Port number to use. Default to "DEFAULT"\n"
-
+      
 #endif /* _MP_ARGS_H_ */
