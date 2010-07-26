@@ -200,16 +200,17 @@ ldns_rr_list* getaddr(ldns_resolver *res, const char *hostname) {
 }
 
 ldns_rr_list* loadKeyfile(const char *filename) {
-
-    int     col = 0;
-    int     line = 0;
+printf("loadKeyfile");
+    //int     col = 0;
+    //int     line = 0;
     FILE    *key_file;
-    char    c;
-    char    linebuffer[LDNS_MAX_PACKETLEN];
+    //char    c;
+    //char    linebuffer[LDNS_MAX_PACKETLEN];
 
     ldns_status     status;
-    ldns_rr         *rr;
+    //ldns_rr         *rr;
     ldns_rr_list    *trusted_keys;
+    ldns_zone		*trusted_zone;
 
     // Try open trusted key file
     key_file = fopen(filename, "r");
@@ -220,42 +221,14 @@ ldns_rr_list* loadKeyfile(const char *filename) {
         return NULL;
     }
 
-    // Create empty list
-    trusted_keys = ldns_rr_list_new();
+    ldns_rdf *origin = ldns_dname_new_frm_str(".");
 
-    // Read File
-    do {
-        c = getc(key_file);
-        if (c == '\n' || c == EOF) {
-            linebuffer[col] = '\0';
-            line++;
-            if (linebuffer[0] == ';' || col == 0) {
-                col = 0;
-                continue;
-            }
-            col = 0;
-
-            status = ldns_rr_new_frm_str(&rr, linebuffer, 0, NULL, NULL);
-            if (status != LDNS_STATUS_OK) {
-                if (mp_verbose >= 1)
-                    fprintf(stderr, "Error parsing RR in %s:%d: %s\n",
-                        filename, line, ldns_get_errorstr_by_id(status));
-                if (mp_verbose >= 2)
-                    fprintf(stderr, "%s\n", linebuffer);
-                ldns_rr_free(rr);
-            } else if (ldns_rr_get_type(rr) == LDNS_RR_TYPE_DNSKEY ||
-                       ldns_rr_get_type(rr) == LDNS_RR_TYPE_DS) {
-                ldns_rr_list_push_rr(trusted_keys, rr);
-            } else {
-                ldns_rr_free(rr);
-			}
-        } else {
-            linebuffer[col++] = c;
-        }
-
-    } while (c != EOF);
+    // Read key file
+    status = ldns_zone_new_frm_fp(&trusted_zone, key_file, origin, 900, LDNS_RR_CLASS_IN);
 
     fclose(key_file);
+    trusted_keys = ldns_rr_list_clone(ldns_zone_rrs(trusted_zone));
+    ldns_zone_deep_free(trusted_zone);
 
     return trusted_keys;
 }
