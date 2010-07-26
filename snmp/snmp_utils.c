@@ -42,13 +42,13 @@ char *mp_snmp_privpass;
 
 extern char* hostname;
 
-void snmp_query(netsnmp_session *ss, struct snmp_query_cmd *querycmd) {
+void snmp_query(netsnmp_session *ss, const struct snmp_query_cmd *querycmd) {
 
     netsnmp_pdu *pdu;
     netsnmp_pdu *response;
     netsnmp_variable_list *vars;
     int status;
-    struct snmp_query_cmd *p;
+    const struct snmp_query_cmd *p;
 
     pdu = snmp_pdu_create(SNMP_MSG_GET);
 
@@ -71,7 +71,7 @@ void snmp_query(netsnmp_session *ss, struct snmp_query_cmd *querycmd) {
                         continue;
                     switch(vars->type) {
                         case ASN_INTEGER:
-                            *p->target = *vars->val.integer;
+                            *(p->target) = (void *)*vars->val.integer;
                             break;
                         case ASN_OCTET_STR: {
                             char *t = (char *)malloc(1 + vars->val_len);

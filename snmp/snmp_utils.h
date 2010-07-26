@@ -90,6 +90,6 @@ void getopt_snmp(int c);
 void print_help_snmp(void);
 void print_revision_snmp(void);
 netsnmp_session *mp_snmp_init(void);
-void snmp_query(netsnmp_session *ss, struct snmp_query_cmd *querycmd);
+void snmp_query(netsnmp_session *ss, const struct snmp_query_cmd *querycmd);
 
 #endif /* _SNMP_UTILS_H_ */

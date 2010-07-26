@@ -63,16 +63,16 @@ int main (int argc, char **argv) {
     int clusternodes;
     
     struct snmp_query_cmd snmpcmd[] = {
-        {{1,3,6,1,4,1,2312,8,2,1,0}, 11, ASN_OCTET_STR, &clustername},
-        {{1,3,6,1,4,1,2312,8,2,2,0}, 11, ASN_INTEGER, &clusterstatus},
-        {{1,3,6,1,4,1,2312,8,2,3,0}, 11, ASN_OCTET_STR, &clusterstatusdesc},
-	{{1,3,6,1,4,1,2312,8,2,5,0}, 11, ASN_INTEGER, &clustervotes},
-        {{1,3,6,1,4,1,2312,8,2,4,0}, 11, ASN_INTEGER, &clusterquorum},
-	{{1,3,6,1,4,1,2312,8,2,7,0}, 11, ASN_INTEGER, &clusternodes},
+        {{1,3,6,1,4,1,2312,8,2,1,0}, 11, ASN_OCTET_STR, (void *)&clustername},
+        {{1,3,6,1,4,1,2312,8,2,2,0}, 11, ASN_INTEGER, (void *)&clusterstatus},
+        {{1,3,6,1,4,1,2312,8,2,3,0}, 11, ASN_OCTET_STR, (void *)&clusterstatusdesc},
+	{{1,3,6,1,4,1,2312,8,2,5,0}, 11, ASN_INTEGER, (void *)&clustervotes},
+        {{1,3,6,1,4,1,2312,8,2,4,0}, 11, ASN_INTEGER, (void *)&clusterquorum},
+	{{1,3,6,1,4,1,2312,8,2,7,0}, 11, ASN_INTEGER, (void *)&clusternodes},
         {{0}, 0, 0, 0},
     };
     
-    snmp_query(ss, &snmpcmd);
+    snmp_query(ss, snmpcmd);
     
     if (mp_verbose) {
         printf("clustername: %s\n", clustername);
@@ -83,13 +83,11 @@ int main (int argc, char **argv) {
 
     perfdata_int("votes", clustervotes, "", clusterquorum, clusterquorum-1, 0, clusternodes);
     
-    if (clusterstatus == 1)
+    if (clusterstatus < 2)
         ok("%s [%s]", clustername, clusterstatusdesc);
     if (clusterstatus < 16)
         warning("%s [%s]", clustername, clusterstatusdesc);
-    if (clusterstatus >= 16)
-        critical("%s [%s]", clustername, clusterstatusdesc);
-
+    critical("%s [%s]", clustername, clusterstatusdesc);
 }
 
 int process_arguments (int argc, char **argv) {

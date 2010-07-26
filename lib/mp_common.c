@@ -95,7 +95,7 @@ void perfdata_int(const char *label, int value, const char *unit,
                   int warn, int crit, int min, int max) {
    char *tmp;
 
-   tmp=malloc(32);
+   tmp=malloc(64);
    sprintf(tmp,"'%s'=%d%s;%d;%d;%d;%d", label, value, unit, warn, crit, min, max);
 
    if (mp_perfdata != NULL) {
