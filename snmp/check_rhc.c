@@ -39,6 +39,9 @@ const char *progusage = "[-t <timeout>]";
 #include <stdlib.h>
 #include <unistd.h>
 
+char *hostname = NULL;
+int port = 0;
+
 int main (int argc, char **argv) {
     /* Set signal handling and alarm */
     if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
@@ -55,12 +58,17 @@ int main (int argc, char **argv) {
     char *clustername;
     int clusterstatus;
     char *clusterstatusdesc;
-    
+    int clustervotes;
+    int clusterquorum;
+    int clusternodes;
     
     struct snmp_query_cmd snmpcmd[] = {
         {{1,3,6,1,4,1,2312,8,2,1,0}, 11, ASN_OCTET_STR, &clustername},
         {{1,3,6,1,4,1,2312,8,2,2,0}, 11, ASN_INTEGER, &clusterstatus},
         {{1,3,6,1,4,1,2312,8,2,3,0}, 11, ASN_OCTET_STR, &clusterstatusdesc},
+	{{1,3,6,1,4,1,2312,8,2,5,0}, 11, ASN_INTEGER, &clustervotes},
+        {{1,3,6,1,4,1,2312,8,2,4,0}, 11, ASN_INTEGER, &clusterquorum},
+	{{1,3,6,1,4,1,2312,8,2,7,0}, 11, ASN_INTEGER, &clusternodes},
         {{0}, 0, 0, 0},
     };
     
@@ -72,6 +80,8 @@ int main (int argc, char **argv) {
         printf("clusterstatusdesc: %s\n", clusterstatusdesc);
         printf("SNMP Version: %d\n", mp_snmp_version);
     }
+
+    perfdata_int("votes", clustervotes, "", clusterquorum, clusterquorum-1, 0, clusternodes);
     
     if (clusterstatus == 1)
         ok("%s [%s]", clustername, clusterstatusdesc);
@@ -90,18 +100,28 @@ int process_arguments (int argc, char **argv) {
         MP_ARGS_HELP,
         MP_ARGS_VERS,
         MP_ARGS_VERB,
+	MP_ARGS_HOST,
+	MP_ARGS_PORT,
         MP_ARGS_TIMEOUT,
         MP_ARGS_END
     };
 
+    if (argc < 3) {
+       print_help();
+       exit(STATE_OK);
+    }
+
+
     while (1) {
-        c = getopt_long (argc, argv, "hVvt:"SNMPOPTSTRING, longopts, &option);
+        c = getopt_long (argc, argv, "hVvt:H:p:"SNMPOPTSTRING, longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
 
         switch (c) {
             MP_ARGS_CASE_DEF
+	    MP_ARGS_CASE_HOST
+	    MP_ARGS_CASE_PORT
             MP_ARGS_CASE_TIMEOUT
         }
         getopt_snmp( c );

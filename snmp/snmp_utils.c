@@ -32,7 +32,7 @@
 #include <stdio.h>
 
 char *mp_snmp_community;
-int mp_snmp_version = 1;
+int mp_snmp_version = 2;
 int mp_snmp_seclevel;
 char *mp_snmp_secname;
 char *mp_snmp_context;
@@ -40,22 +40,22 @@ char *mp_snmp_authpass;
 int mp_snmp_autoproto;
 char *mp_snmp_privpass;
 
+extern char* hostname;
 
 void snmp_query(netsnmp_session *ss, struct snmp_query_cmd *querycmd) {
-    printf("snmp_query\n");
-    
+
     netsnmp_pdu *pdu;
     netsnmp_pdu *response;
     netsnmp_variable_list *vars;
     int status;
     struct snmp_query_cmd *p;
-    
+
     pdu = snmp_pdu_create(SNMP_MSG_GET);
-    
+
     for(p = querycmd; p->len; p++) {
         snmp_add_null_var(pdu, p->oid, p->len);
     }
-    
+
     /* Send the SNMP Query */
     status = snmp_synch_response(ss, pdu, &response);
 
@@ -64,9 +64,8 @@ void snmp_query(netsnmp_session *ss, struct snmp_query_cmd *querycmd) {
         for(vars = response->variables; vars; vars = vars->next_variable) {
             for(p = querycmd; p->len; p++) {
                 if (snmp_oid_compare(vars->name, vars->name_length, p->oid, p->len) == 0) {
-                    print_variable(vars->name, vars->name_length, vars);
-                    
-                    //printf("clustername2: 0x%X\n",pointer->target);
+                    if (mp_verbose > 1)
+                        print_variable(vars->name, vars->name_length, vars);
 
                     if (vars->type != p->type)
                         continue;
@@ -78,7 +77,7 @@ void snmp_query(netsnmp_session *ss, struct snmp_query_cmd *querycmd) {
                             char *t = (char *)malloc(1 + vars->val_len);
                             memcpy(t, vars->val.string, vars->val_len);
                             t[vars->val_len] = '\0';
-                    
+
                             *p->target = t;}
                             break;
                     }
@@ -107,16 +106,18 @@ void snmp_query(netsnmp_session *ss, struct snmp_query_cmd *querycmd) {
  * Initialize the SNMP library
  */
 netsnmp_session *mp_snmp_init(void) {
-    
+
     netsnmp_session session, *ss;
 
     init_snmp(progname);
-    
+
     snmp_sess_init( &session );
-    
-    
-    session.peername = strdup("fs-srv3.inf.ethz.ch");
-    
+
+    if (mp_snmp_community == NULL)
+        mp_snmp_community = strdup("public");
+
+    session.peername = hostname;
+
     switch(mp_snmp_version) {
         case SNMPv1:
             session.version = SNMP_VERSION_1;
@@ -132,7 +133,7 @@ netsnmp_session *mp_snmp_init(void) {
             session.version = SNMP_VERSION_3;
             break;
     }
-    
+
     SOCK_STARTUP;
     ss = snmp_open(&session);
 
@@ -141,7 +142,7 @@ netsnmp_session *mp_snmp_init(void) {
       SOCK_CLEANUP;
       exit(1);
     }
-    
+
     return ss;
 
 }
