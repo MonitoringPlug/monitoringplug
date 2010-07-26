@@ -47,6 +47,8 @@ extern unsigned int mp_timeout;
 /** The global verbose variable. */
 extern unsigned int mp_verbose;
 
+/** The global perf data string. */
+extern char *mp_perfdata;
 
 /**
  * Default return values for functions
@@ -94,6 +96,18 @@ void unknown(const char *fmt, ...) __attribute__((__noreturn__));
  * prints to the stdout and exit with STATE_UNKNOWN.
  */
 void usage(const char *fmt, ...) __attribute__((__noreturn__));
+
+/**
+ * add integer pref data for printing on exit.
+ */
+void perfdata_int(const char *label, int value, const char *unit,
+		  int warn, int crit, int min, int max);
+
+/**
+ * add float perf data for printing on exit.
+ */
+void perfdata_float(const char *label, float value, const char *unit,
+		    float warn, float crit, float min, float max);
 
 /**
   * Print the program help.

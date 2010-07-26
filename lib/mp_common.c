@@ -27,9 +27,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <string.h>
 
 unsigned int mp_timeout = 10;
 unsigned int mp_verbose = 0;
+char *mp_perfdata=NULL;
 
 void ok(const char *fmt, ...) {
     va_list ap;
@@ -37,6 +39,8 @@ void ok(const char *fmt, ...) {
     va_start(ap, fmt);
     vprintf(fmt, ap);
     va_end(ap);
+    if (mp_perfdata)
+       printf(" | %s", mp_perfdata);
     printf("\n");
     exit(STATE_OK);
 }
@@ -47,6 +51,8 @@ void warning(const char *fmt, ...) {
     va_start(ap, fmt);
     vprintf(fmt, ap);
     va_end(ap);
+    if (mp_perfdata)
+       printf(" | %s", mp_perfdata);
     printf("\n");
     exit(STATE_WARNING);
 }
@@ -57,6 +63,8 @@ void critical(const char *fmt, ...) {
     va_start(ap, fmt);
     vprintf(fmt, ap);
     va_end(ap);
+    if (mp_perfdata)
+       printf(" | %s", mp_perfdata);
     printf("\n");
     exit(STATE_CRITICAL);
 }
@@ -67,6 +75,8 @@ void unknown(const char *fmt, ...) {
     va_start(ap, fmt);
     vprintf(fmt, ap);
     va_end(ap);
+    if (mp_perfdata)
+       printf(" | %s", mp_perfdata);
     printf("\n");
     exit(STATE_UNKNOWN);
 }
@@ -79,6 +89,45 @@ void usage(const char *fmt, ...) {
     printf("\n");
     print_usage();
     exit(STATE_UNKNOWN);
+}
+
+void perfdata_int(const char *label, int value, const char *unit,
+                  int warn, int crit, int min, int max) {
+   char *tmp;
+
+   tmp=malloc(32);
+   sprintf(tmp,"'%s'=%d%s;%d;%d;%d;%d", label, value, unit, warn, crit, min, max);
+
+   if (mp_perfdata != NULL) {
+      mp_perfdata = realloc(mp_perfdata, strlen(mp_perfdata) + strlen(tmp) + 2);
+      strncat(mp_perfdata, " ", 1);
+      strncat(mp_perfdata, tmp, strlen(tmp));
+   } else {
+      mp_perfdata = malloc(strlen(tmp) + 1);
+      strncpy(mp_perfdata, tmp, strlen(tmp));
+   }
+
+   free(tmp);
+}
+
+void perfdata_float(const char *label, float value, const char *unit,
+                    float warn, float crit, float  min, float max) {
+   char *tmp;
+
+   tmp=malloc(32);
+   sprintf(tmp,"'%s'=%0.2f%s;%0.2f;%0.2f;%0.2f;%0.2f", label, value, unit, warn, crit, min, max);
+
+   if (mp_perfdata != NULL) {
+      mp_perfdata = realloc(mp_perfdata, strlen(mp_perfdata) + strlen(tmp) + 2);
+      strncat(mp_perfdata, " ", 1);
+      strncat(mp_perfdata, tmp, strlen(tmp));
+   } else {
+      mp_perfdata = malloc(strlen(tmp) + 1);
+      strncpy(mp_perfdata, tmp, strlen(tmp));
+   }
+
+   free(tmp);
+
 }
 
 void print_usage (void) {
