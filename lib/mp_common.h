@@ -114,22 +114,22 @@ void perfdata_float(const char *label, float value, const char *unit,
   * Print the program help.
   * Needs to be implemented by checks.
   */
-void print_help (void);
+void print_help(void);
 
 /**
   * Print the program usage.
   */
-void print_usage (void);
+inline void print_usage(void) __attribute__((always_inline));
 
 /**
   * Print the program version information.
   */
-void print_revision (void);
+inline void print_revision(void) __attribute__((always_inline));
 
 /**
   * Print the program copyright information.
   */
-void print_copyright (void);
+inline void print_copyright(void) __attribute__((always_inline));
 
 /**
  * Default timeout handler.

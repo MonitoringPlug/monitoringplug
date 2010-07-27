@@ -184,11 +184,37 @@ int get_status(double value, thresholds *my_thresholds);
  */
 void print_thresholds(const char *threshold_name, thresholds *my_threshold);
 
+/**
+ * Prints the help message for the defaults options.
+ */
 inline void print_help_default(void) __attribute__((always_inline));
+
+/**
+ * Prints the help to the timeout option.
+ */
 inline void print_help_timeout(void) __attribute__((always_inline));
+
+/**
+ * Prints the help for the host option
+ */
 inline void print_help_host(void) __attribute__((always_inline));
+
+/**
+ * Prints the help for the port option.
+ * \param[in] def The default string.
+ */
 inline void print_help_port(const char *def) __attribute__((always_inline));
+
+/**
+ * Print the help for a warning time option.
+ * \param[in] def The default string.
+ */
 inline void print_help_warn_time(const char *def) __attribute__((always_inline));
+
+/**
+ * Print the help for a critical time option.
+ * \param[in] def The default string.
+ */
 inline void print_help_crit_time(const char *def) __attribute__((always_inline));
 
 
