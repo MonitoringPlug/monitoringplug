@@ -340,17 +340,17 @@ void print_help (void) {
 
     print_usage();
 
-    printf(MP_ARGS_HELP_DEF);
-    printf(MP_ARGS_HELP_HOST);
+    print_help_default();
+    print_help_host();
     printf(" -D, --domain=DOMAIN\n");
     printf("      The name of the domain to check.\n");
     printf(" -T, --trace-from=DOMAIN\n");
     printf("      The name of the domain to trace from. (default: .)\n");
     printf(" -k, --trusted-keys=FILE\n");
     printf("      File to read trust-anchors from.\n");
-    printf(MP_ARGS_HELP_WARN_TIME("2 days"));
-    printf(MP_ARGS_HELP_CRIT_TIME("1 day"));
-    printf(MP_ARGS_HELP_TIMEOUT);
+    print_help_warn_time("2 days");
+    print_help_crit_time("1 day");
+    print_help_timeout();
 }
 
 /* vim: set ts=4 sw=4 et syn=c.libdns : */

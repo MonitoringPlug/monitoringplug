@@ -131,5 +131,5 @@ void print_help (void) {
 
     print_usage();
 
-    printf(MP_ARGS_HELP_DEF);
+    print_help_default();
 }

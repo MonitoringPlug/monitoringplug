@@ -169,11 +169,11 @@ void print_help(void) {
 
     print_usage();
 
-    printf(MP_ARGS_HELP_DEF);
-    printf(MP_ARGS_HELP_HOST);
+    print_help_default();
+    print_help_host();
     printf(" -k, --trusted-keys=FILE\n");
     printf("      File to read trust-anchors from.\n");
-    printf(MP_ARGS_HELP_TIMEOUT);
+    print_help_timeout();
 }
 
 /* vim: set ts=4 sw=4 et syn=c.libdns : */

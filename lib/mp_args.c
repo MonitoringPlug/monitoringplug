@@ -238,4 +238,45 @@ void print_thresholds(const char *threshold_name, thresholds *my_threshold) {
 	printf("\n");
 }
 
+void print_help_default(void) {
+	printf("\n\
+Options:\n\
+ -h, --help\n\
+      Print detailed help screen.\n\
+ -V, --version\n\
+      Print version information.\n\
+ -v, --verbose\n\
+      Show details for command-line debugging.\n");
+}
+
+void print_help_timeout(void) {
+	printf("\
+ -t, --timeout=INTEGER\n\
+      Seconds before  check timesout.\n");
+}
+
+void print_help_host(void) {
+	printf("\
+ -H, --hostname=ADDRESS\n\
+      Host name or IP Address.\n");
+}
+
+void print_help_port(const char *def) {
+	printf("\
+ -P, --port=PORT\n\
+      Port number to use. Default to %s\n", def);
+}
+
+void print_help_warn_time(const char *def) {
+	printf("\
+ -w, --warning=time[d|h|m|s]\n\
+      Return warning if elapsed time exceeds value. Default to %s\n", def);
+}
+
+void print_help_crit_time(const char *def) {
+	printf("\
+ -c, --critical=time[d|h|m|s]\n\
+      Return critical if elapsed time exceeds value. Default to %s\n", def);
+}
+
 /* vim: set ts=4 sw=4 et : */

@@ -74,6 +74,10 @@ int main (int argc, char **argv) {
     
     snmp_query(ss, snmpcmd);
     
+    //snmp_close(ss);
+    SOCK_CLEANUP;
+
+
     if (mp_verbose) {
         printf("clustername: %s\n", clustername);
         printf("clusterstatus: %d\n", clusterstatus);
@@ -141,10 +145,10 @@ void print_help (void) {
 
     print_usage();
 
-    printf(MP_ARGS_HELP_DEF);
+    print_help_default();
     
     print_help_snmp();
     
-    printf(MP_ARGS_HELP_TIMEOUT);
+    print_help_timeout();
 }
 

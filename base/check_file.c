@@ -366,7 +366,7 @@ void print_help (void) {
 
     print_usage();
 
-    printf(MP_ARGS_HELP_DEF);
+    print_help_default();
     printf(" -f, --file=filename\n");
     printf("      The file to test.\n");
     printf(" -w, --warning=time[d|h|m|s]\n");

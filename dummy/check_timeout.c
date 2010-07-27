@@ -94,7 +94,7 @@ void print_help (void) {
 
     print_usage();
 
-    printf(MP_ARGS_HELP_DEF);
-    printf(MP_ARGS_HELP_TIMEOUT);
+    print_help_default();
+    print_help_timeout();
 }
 

@@ -193,14 +193,14 @@ void print_help (void) {
 
     print_usage();
 
-    printf(MP_ARGS_HELP_DEF);
-    printf(MP_ARGS_HELP_HOST);
-    printf(MP_ARGS_HELP_PORT("UNDEF"));
+    print_help_default();
+    print_help_host();
+    print_help_port("UNDEF");
     printf(" -F, --file=FILENAME\n");
     printf("      The name of the file to download.\n");
-    printf(MP_ARGS_HELP_WARN_TIME("5 sec"));
-    printf(MP_ARGS_HELP_CRIT_TIME("9 sec"));
-    printf(MP_ARGS_HELP_TIMEOUT);
+    print_help_warn_time("5 sec");
+    print_help_crit_time("9 sec");
+    print_help_timeout();
 }
 
 /* vim: set ts=4 sw=4 et syn=c.libdns : */

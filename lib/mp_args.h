@@ -183,6 +183,13 @@ int get_status(double value, thresholds *my_thresholds);
  */
 void print_thresholds(const char *threshold_name, thresholds *my_threshold);
 
+inline void print_help_default(void) __attribute__((always_inline));
+inline void print_help_timeout(void) __attribute__((always_inline));
+inline void print_help_host(void) __attribute__((always_inline));
+inline void print_help_port(const char *def) __attribute__((always_inline));
+inline void print_help_warn_time(const char *def) __attribute__((always_inline));
+inline void print_help_crit_time(const char *def) __attribute__((always_inline));
+
 
 /** getopt option for help */
 #define MP_ARGS_HELP	{"help", no_argument, NULL, (int)'h'}
@@ -258,35 +265,5 @@ void print_thresholds(const char *threshold_name, thresholds *my_threshold);
                 usage("Illegal port number '%s'.", optarg); \
             port = (int) strtol(optarg, NULL, 10); \
             break;
-
-/** argument helps for help, version and verbose */
-#define MP_ARGS_HELP_DEF "\n\
-Options:\n\
- -h, --help\n\
-      Print detailed help screen.\n\
- -V, --version\n\
-      Print version information.\n\
- -v, --verbose\n\
-      Show details for command-line debugging.\n"
-/** argument help for timeout */
-#define MP_ARGS_HELP_TIMEOUT "\
- -t, --timeout=INTEGER\n\
-      Seconds before  check timesout.\n"
-/** argument help for hostname */
-#define MP_ARGS_HELP_HOST "\
- -H, --hostname=ADDRESS\n\
-      Host name or IP Address.\n"
-/** argument help for warning */
-#define MP_ARGS_HELP_WARN_TIME(DEFAULT) "\
- -w, --warning=time[d|h|m|s]\n\
-      Return warning if elapsed time exceeds value. Default to "DEFAULT"\n"
-/** argument help for critical */
-#define MP_ARGS_HELP_CRIT_TIME(DEFAULT) "\
- -c, --critical=time[d|h|m|s]\n\
-      Return critical if elapsed time exceeds value. Default to "DEFAULT"\n"
-/** argument help for port */
-#define MP_ARGS_HELP_PORT(DEFAULT) "\
- -P, --port=PORT\n\
-      Port number to use. Default to "DEFAULT"\n"
       
 #endif /* _MP_ARGS_H_ */

@@ -86,9 +86,9 @@ enum {
     SHA1,
 };
 
-void getopt_snmp(int c);
-void print_help_snmp(void);
-void print_revision_snmp(void);
+inline void getopt_snmp(int c) __attribute__((always_inline));
+inline void print_help_snmp(void) __attribute__((always_inline));
+inline void print_revision_snmp(void) __attribute__((always_inline));
 netsnmp_session *mp_snmp_init(void);
 void snmp_query(netsnmp_session *ss, const struct snmp_query_cmd *querycmd);
 
