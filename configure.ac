@@ -10,13 +10,15 @@ AC_CONFIG_HEADERS([config.h])
 
 AM_INIT_AUTOMAKE([1.9 -Wall -Werror foreign])
 
+AC_CANONICAL_HOST
 AC_MSG_CHECKING([for kernel type ($host_os)])
 case $host_os in
 	*linux*)
-	AC_DEFINE([KERNEL_LINUX], 1, [True if program is to be compiled for a Linux kernel])
+	AC_DEFINE([OS_LINUX], 1, [True if program is to be compiled for a Linux kernel])
 	ac_system="Linux"
 	;;
 	*darwin*)
+	AC_DEFINE([OS_DARWIN], 1, [True if program is to be compiled for a Linux kernel])
 	ac_system="Darwin"
 	;;
 	*)
