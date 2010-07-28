@@ -39,7 +39,7 @@ const char *progusage = "[-H host] -D domain [-T domain] [-k file] [-t timeout]"
 #include <ldns/ldns.h>
 
 /* Global Vars */
-char *hostname;
+const char *hostname;
 char *domainname;
 char *domaintrace;
 ldns_rr_list *trusted_keys = NULL;

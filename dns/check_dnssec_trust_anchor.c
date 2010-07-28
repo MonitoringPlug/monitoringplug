@@ -37,7 +37,7 @@ const char *progusage = "[-H host] -k file [-t timeout]";
 #include <unistd.h>
 
 /* Global Vars */
-char *hostname;
+const char *hostname;
 ldns_rr_list *trusted_keys = NULL;
 
 int main(int argc, char **argv) {

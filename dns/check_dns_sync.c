@@ -35,7 +35,7 @@ const char *progusage = "-D <domain> [-H <host>]";
 #include <string.h>
 #include <ldns/ldns.h>
 
-char *hostname = NULL;
+const char *hostname = NULL;
 char *domainname = NULL;
 
 int main (int argc, char **argv) {
