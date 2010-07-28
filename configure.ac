@@ -8,8 +8,23 @@ AC_CONFIG_AUX_DIR(build-aux)
 AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADERS([config.h])
 
-
 AM_INIT_AUTOMAKE([1.9 -Wall -Werror foreign])
+
+AC_MSG_CHECKING([for kernel type ($host_os)])
+case $host_os in
+	*linux*)
+	AC_DEFINE([KERNEL_LINUX], 1, [True if program is to be compiled for a Linux kernel])
+	ac_system="Linux"
+	;;
+	*darwin*)
+	ac_system="Darwin"
+	;;
+	*)
+	ac_system="unknown"
+esac
+AC_MSG_RESULT([$ac_system])
+AM_CONDITIONAL([OS_LINUX], [test x$ac_system == xLinux])
+AM_CONDITIONAL([OS_DARWIN], [test x$ac_system == xDarwin])
 
 # Checks for programs.
 AC_PROG_AWK
