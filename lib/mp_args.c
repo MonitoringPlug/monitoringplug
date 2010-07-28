@@ -30,7 +30,7 @@
  *  helper functions
  */
 
-int setWarn(thresholds **threshold, char *str, int multiplier) {
+int setWarn(thresholds **threshold, const char *str, int multiplier) {
     if(*threshold == NULL) {
         *threshold = (thresholds *) malloc(sizeof(thresholds));
         (*threshold)->warning = NULL;
@@ -42,7 +42,7 @@ int setWarn(thresholds **threshold, char *str, int multiplier) {
     return parse_range_string((*threshold)->warning, str, multiplier);
 }
 
-int setCrit(thresholds **threshold, char *str, int multiplier) {
+int setCrit(thresholds **threshold, const char *str, int multiplier) {
     if(*threshold == NULL) {
         *threshold = (thresholds *) malloc(sizeof(thresholds));
         (*threshold)->warning = NULL;
@@ -54,7 +54,7 @@ int setCrit(thresholds **threshold, char *str, int multiplier) {
     return parse_range_string((*threshold)->critical, str, multiplier);
 }
 
-int setWarnTime(thresholds **threshold, char *str) {
+int setWarnTime(thresholds **threshold, const char *str) {
     if(*threshold == NULL) {
         *threshold = (thresholds *) malloc(sizeof(thresholds));
         (*threshold)->warning = NULL;
@@ -66,7 +66,7 @@ int setWarnTime(thresholds **threshold, char *str) {
     return parse_range_string((*threshold)->warning, str, TIME);
 }
 
-int setCritTime(thresholds **threshold, char *str) {
+int setCritTime(thresholds **threshold, const char *str) {
     if(*threshold == NULL) {
         *threshold = (thresholds *) malloc(sizeof(thresholds));
         (*threshold)->warning = NULL;
@@ -78,7 +78,7 @@ int setCritTime(thresholds **threshold, char *str) {
     return parse_range_string((*threshold)->critical, str, TIME);
 }
 
-int parse_range_string(range *range, char *str, int multiplier) {
+int parse_range_string(range *range, const char *str, int multiplier) {
     char *eptr, *end_str, *start_str;
     double tmp;
 
@@ -278,6 +278,69 @@ void print_help_crit_time(const char *def) {
 	printf("\
  -c, --critical=time[d|h|m|s]\n\
       Return critical if elapsed time exceeds value. Default to %s\n", def);
+}
+
+void getopt_default(int c) {
+    switch (c) {
+        case 'h':
+            print_help();
+            exit(0);
+        case 'V':
+            print_revision();
+            exit (0);
+        case 'v':
+            mp_verbose++;
+            break;
+    }
+}
+
+void getopt_timeout(int c, const char *optarg) {
+    if (c == 't')
+        mp_timeout = atoi (optarg);
+}
+
+void getopt_host(int c, const char *optarg, const char **hostname) {
+    if (c == 'H') {
+        if (!is_hostname(optarg) && !is_hostaddr(optarg))
+            usage("Illegal -H argument '%s'.", optarg);
+        *hostname = optarg;
+    }
+}
+
+void getopt_host_ip(int c, const char *optarg, const char **hostname) {
+    if (c == 'H') {
+        if (!is_hostaddr(optarg))
+            usage("Illegal -H argument '%s'.", optarg);
+        *hostname = optarg;
+    }
+}
+
+void getopt_port(int c, const char *optarg, int *port) {
+    if (c == 'P') {
+        if (!is_integer(optarg))
+            usage("Illegal port number '%s'.", optarg);
+        *port = (int) strtol(optarg, NULL, 10);
+    }
+}
+
+void getopt_wc(int c, const char *optarg, thresholds **threshold) {
+    if (c == 'w') {
+        if (setWarn(threshold, optarg, BISI) == ERROR)
+            usage("Illegal -c warning '%s'.", optarg);
+    } else if (c == 'c') {
+        if (setCrit(threshold, optarg, BISI) == ERROR) \
+                usage("Illegal -c warning '%s'.", optarg);
+    }
+}
+
+void getopt_wc_time(int c, const char *optarg, thresholds **threshold) {
+    if (c == 'w') {
+        if (setWarnTime(threshold, optarg) == ERROR)
+            usage("Illegal -c warning '%s'.", optarg);
+    } else if (c == 'c') {
+        if (setCritTime(threshold, optarg) == ERROR) \
+                usage("Illegal -c warning '%s'.", optarg);
+    }
 }
 
 /* vim: set ts=4 sw=4 et : */

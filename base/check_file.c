@@ -231,7 +231,7 @@ int check_access(mode_t fmode) {
     int mask_function = 0;
     int access_mask = 0;
 
-    for (c = accessstring; c[0] != '\0'; *c++) {
+    for (c = accessstring; c[0] != '\0'; c++) {
 
         if (state == 1 && c[0] != 'r' && c[0] != 'w' && c[0] != 'x' ) {
             if (mask_function == -1) {
@@ -308,26 +308,26 @@ int process_arguments (int argc, char **argv) {
     int option = 0;
 
     static struct option longopts[] = {
-        MP_ARGS_HELP,
-        MP_ARGS_VERS,
-        MP_ARGS_VERB,
+        MP_LONGOPTS_DEFAULT,
         {"file", required_argument, NULL, (int)'f'},
         {"owner", required_argument, NULL, (int)'o'},
         {"group", required_argument, NULL, (int)'g'},
         {"access", required_argument, NULL, (int)'a'},
-        MP_ARGS_WARN,
-        MP_ARGS_CRIT,
-        MP_ARGS_END
+        MP_LONGOPTS_WC,
+        MP_LONGOPTS_END
     };
 
     while (1) {
-        c = getopt_long (argc, argv, "hVvt:f:o:g:a:w:c:W:C:", longopts, &option);
+        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"t:f:o:g:a:w:c:W:C:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
 
+        getopt_default(c);
+
+        getopt_wc_time(c, optarg, &age_thresholds);
+
         switch (c) {
-            MP_ARGS_CASE_DEF
 	    case 'f':
 	       filename = optarg;
 	       break;
@@ -340,8 +340,6 @@ int process_arguments (int argc, char **argv) {
         case 'a':
            accessstring = optarg;
            break;
-	    MP_ARGS_CASE_WARN_TIME(age_thresholds)
-	    MP_ARGS_CASE_CRIT_TIME(age_thresholds)
 	    case 'W':
 	       if (setWarn(&size_thresholds, optarg, BISI) == ERROR)
 		  usage("Illegal -W argument '%s'.", optarg);

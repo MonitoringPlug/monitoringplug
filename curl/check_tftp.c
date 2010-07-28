@@ -43,7 +43,7 @@ const char *progusage = "-H host -F file [-t timeout] [-w warn] [-c crit]";
 
 
 /* Global vars */
-char *hostname = NULL;
+const char *hostname = NULL;
 char *filename = NULL;
 thresholds *fetch_thresholds = NULL;
 int port = 0;
@@ -87,6 +87,7 @@ int main (int argc, char **argv) {
     if (mp_verbose > 0) {
         printf("CURL Version: %s\n", curl_version());
         printf("Try fetch %s\n", url);
+        print_thresholds("fetch_thresholds", fetch_thresholds);
     }
     
     curl_global_init(CURL_GLOBAL_ALL);
@@ -136,16 +137,13 @@ int process_arguments (int argc, char **argv) {
     int option = 0;
 
     static struct option longopts[] = {
-        MP_ARGS_HELP,
-        MP_ARGS_VERS,
-        MP_ARGS_VERB,
-        MP_ARGS_HOST,
-        MP_ARGS_PORT,
+        MP_LONGOPTS_DEFAULT,
+        MP_LONGOPTS_HOST,
+        MP_LONGOPTS_PORT,
         {"file", required_argument, 0, 'F'},
-        MP_ARGS_WARN,
-        MP_ARGS_CRIT,
-        MP_ARGS_TIMEOUT,
-        MP_ARGS_END
+        MP_LONGOPTS_WC,
+        MP_LONGOPTS_TIMEOUT,
+        MP_LONGOPTS_END
     };
    
     if (argc < 4) {
@@ -154,20 +152,21 @@ int process_arguments (int argc, char **argv) {
     }
     
     while (1) {
-        c = getopt_long(argc, argv, "hVvH:P:F:w:c:t:", longopts, &option);
+        c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"H:P:F:w:c:t:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
+
+        getopt_default(c);
+        getopt_host(c, optarg, &hostname);
+        getopt_port(c, optarg, &port);
+        getopt_wc_time(c, optarg, &fetch_thresholds);
+        getopt_timeout(c, optarg);
+
         switch (c) {
-            MP_ARGS_CASE_DEF
-            MP_ARGS_CASE_HOST
-            MP_ARGS_CASE_PORT
             case 'F':
                 filename = optarg;
                 break;
-            MP_ARGS_CASE_WARN_TIME(fetch_thresholds)
-            MP_ARGS_CASE_CRIT_TIME(fetch_thresholds)
-            MP_ARGS_CASE_TIMEOUT
             case '?':
                 usage("");
         }

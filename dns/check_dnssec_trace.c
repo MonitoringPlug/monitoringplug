@@ -279,15 +279,13 @@ int process_arguments(int argc, char **argv) {
     int option = 0;
     
     static struct option long_opts[] = {
-        MP_ARGS_HELP,
-        MP_ARGS_VERS,
-        MP_ARGS_VERB,
-        MP_ARGS_HOST,
+        MP_LONGOPTS_DEFAULT,
+        MP_LONGOPTS_HOST,
         {"domain", required_argument, 0, 'D'},
         {"trace-from", required_argument, 0, 'T'},
         {"trusted-keys", required_argument, 0, 'k'},
-        MP_ARGS_TIMEOUT,
-        MP_ARGS_END
+        MP_LONGOPTS_TIMEOUT,
+        MP_LONGOPTS_END
     };
 
     if (argc < 2) {
@@ -296,13 +294,15 @@ int process_arguments(int argc, char **argv) {
     }
         
     while (1) {
-        c = getopt_long(argc, argv, "hVvt:H:D:T:k:", long_opts, &option);
+        c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"t:H:D:T:k:", long_opts, &option);
         if (c == -1 || c == EOF)
             break;
-                    
+
+        getopt_default(c);
+        getopt_host_ip(c, optarg, &hostname);
+        getopt_timeout(c, optarg);
+
         switch (c) {
-            MP_ARGS_CASE_DEF
-            MP_ARGS_CASE_HOST_IP
             case 'D':
                 if (!is_hostname(optarg))
                     usage("Illegal domain name.");
@@ -318,7 +318,6 @@ int process_arguments(int argc, char **argv) {
                     usage("Illegal trace domain name.");
                 domaintrace = optarg;
                 break;
-            MP_ARGS_CASE_TIMEOUT
         }
     }
     

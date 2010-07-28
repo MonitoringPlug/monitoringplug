@@ -38,15 +38,14 @@ extern int mp_snmp_autoproto;
 extern char *mp_snmp_privpass;
 
 
-#define SNMPOPTSTRING "C:S:L:U:K:A:a:X:"
-#define SNMPLONGOPTS {"community", required_argument, NULL, (int)'C'}, \
-                     {"snmp", required_argument, NULL, (int)'S'}, \
-                     {"seclevel", required_argument, NULL, (int)'L'}, \
-                     {"secname", required_argument, NULL, (int)'U'}, \
-                     {"context", required_argument, NULL, (int)'K'}, \
-                     {"authpass", required_argument, NULL, (int)'A'}, \
-                     {"authproto", required_argument, NULL, (int)'a'}, \
-                     {"privpass", required_argument, NULL, (int)'X'}
+#define SNMP_OPTSTR "C:S:L:U:K:A:a:X:"
+#define SNMP_LONGOPTS {"community", required_argument, NULL, (int)'C'}, \
+                      {"snmp", required_argument, NULL, (int)'S'}, \
+                      {"secname", required_argument, NULL, (int)'U'}, \
+                      {"context", required_argument, NULL, (int)'K'}, \
+                      {"authpass", required_argument, NULL, (int)'A'}, \
+                      {"authproto", required_argument, NULL, (int)'a'}, \
+                      {"privpass", required_argument, NULL, (int)'X'}
 
 
 struct snmp_query_cmd {

@@ -125,14 +125,12 @@ int process_arguments(int argc, char **argv) {
     int option = 0;
     
     static struct option long_opts[] = {
-        MP_ARGS_HELP,
-        MP_ARGS_VERS,
-        MP_ARGS_VERB,
-        MP_ARGS_HOST,
+        MP_LONGOPTS_DEFAULT,
+        MP_LONGOPTS_HOST,
         {"domain", required_argument, 0, 'D'},
         {"trusted-keys", required_argument, 0, 'k'},
-        MP_ARGS_TIMEOUT,
-        MP_ARGS_END
+        MP_LONGOPTS_TIMEOUT,
+        MP_LONGOPTS_END
     };
 
     if (argc < 2) {
@@ -141,13 +139,15 @@ int process_arguments(int argc, char **argv) {
     }
         
     while (1) {
-        c = getopt_long(argc, argv, "hVvt:H:k:w:c:", long_opts, &option);
+        c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"t:H:k:w:c:", long_opts, &option);
         if (c == -1 || c == EOF)
             break;
+
+        getopt_default(c);
+        getopt_host_ip(c, optarg, &hostname);
+        getopt_timeout(c, optarg);
                     
         switch (c) {
-            MP_ARGS_CASE_DEF
-            MP_ARGS_CASE_HOST_IP
             // Plugin specific args
             case 'k': // -k --trusted-keys
                 trusted_keys = loadAnchorfile(optarg);
@@ -155,7 +155,6 @@ int process_arguments(int argc, char **argv) {
                    || ldns_rr_list_rr_count(trusted_keys) == 0)
                     usage("Can't load trust anchors from file");
                 break;
-            MP_ARGS_CASE_TIMEOUT
         }
     }
     

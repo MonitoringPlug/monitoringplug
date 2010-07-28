@@ -100,21 +100,17 @@ int process_arguments (int argc, char **argv) {
     int option = 0;
 
     static struct option longopts[] = {
-        MP_ARGS_HELP,
-        MP_ARGS_VERS,
-        MP_ARGS_VERB,
-        MP_ARGS_END
+        MP_LONGOPTS_DEFAULT,
+        MP_LONGOPTS_END
     };
 
     while (1) {
-        c = getopt_long (argc, argv, "hVvt:", longopts, &option);
+        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"t:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
 
-        switch (c) {
-            MP_ARGS_CASE_DEF
-        }
+        getopt_default(c);
     }
 
     return(OK);

@@ -82,7 +82,7 @@ enum {
  * \param[in] multiplier Multiplier syntar/function to use.
  * \return \ref OK or \ref ERROR.
  */
-int setWarn(thresholds **threshold, char *str, int multiplier);
+int setWarn(thresholds **threshold, const char *str, int multiplier);
 
 /**
  * Set the critical range of the given trashold.
@@ -93,7 +93,7 @@ int setWarn(thresholds **threshold, char *str, int multiplier);
  * \param[in] multiplier Multiplier syntar/function to use.
  * \return \ref OK or \ref ERROR.
  */
-int setCrit(thresholds **threshold, char *str, int multiplier);
+int setCrit(thresholds **threshold, const char *str, int multiplier);
 
 /**
  * Set the warning range of the given trashold using the time multiplier
@@ -104,7 +104,7 @@ int setCrit(thresholds **threshold, char *str, int multiplier);
  * \param[in] str Range string to parse.
  * \return \ref OK or \ref ERROR.
  */
-int setWarnTime(thresholds **threshold, char *str);
+int setWarnTime(thresholds **threshold, const char *str);
 
 /**
  * Set the critical range of the given trashold using the time multiplier
@@ -115,7 +115,7 @@ int setWarnTime(thresholds **threshold, char *str);
  * \param[in] str Range string to parse.
  * \return \ref OK or \ref ERROR.
  */
-int setCritTime(thresholds **threshold, char *str);
+int setCritTime(thresholds **threshold, const char *str);
 
 /**
  * Parse a string into a range.
@@ -131,7 +131,7 @@ int setCritTime(thresholds **threshold, char *str);
  * \param[in] str String to parse
  * \param[in] multiplier Multiplier syntar/function to use.
  */
-int parse_range_string(range *range, char *str, int multiplier);
+int parse_range_string(range *range, const char *str, int multiplier);
 
 /**
  * Parse a string into a multipliert for SI and Binary extensions.
@@ -217,80 +217,81 @@ inline void print_help_warn_time(const char *def) __attribute__((always_inline))
  */
 inline void print_help_crit_time(const char *def) __attribute__((always_inline));
 
+/**
+ * Parse the options for help, version, and verbose.
+ * \param[in] c option to test
+ */
+inline void getopt_default(int c) __attribute__((always_inline));
 
-/** getopt option for help */
-#define MP_ARGS_HELP	{"help", no_argument, NULL, (int)'h'}
-/** getopt option for version */
-#define MP_ARGS_VERS    {"version", no_argument, NULL, (int)'V'}
-/** \def getopt option for verbose */
-#define MP_ARGS_VERB    {"verbose", no_argument, NULL, (int)'v'}
-/** getopt option for timeout */
-#define MP_ARGS_TIMEOUT {"timeout", required_argument, NULL, (int)'t'}
-/** getopt option for hostname */
-#define MP_ARGS_HOST    {"hostname", required_argument, NULL, (int)'H'}
-/** getopt option for warning */
-#define MP_ARGS_WARN    {"warning", required_argument, NULL, (int)'w'}
-/** getopt option for critical */
-#define MP_ARGS_CRIT    {"critical", required_argument, NULL, (int)'c'}
-/** getopt option for port */
-#define MP_ARGS_PORT    {"port", required_argument, NULL, (int)'P'}
-/** getopt option for ipv4 */
-#define MP_ARGS_IP4     {"ipv4", no_argument, NULL, (int)'4'}
-/** getopt option for ipv6 */
-#define MP_ARGS_IP6     {"ipv6", no_argument, NULL, (int)'6'}
+/**
+ * Parse the option for timeout.
+ * \param[in] c option to test
+ * \param[in] optarg option argument
+ */
+inline void getopt_timeout(int c, const char *optarg) __attribute__((always_inline));
 
-/** getopt option end */
-#define MP_ARGS_END     {0, 0, NULL, 0}
+/**
+ * Parse the option for host.
+ * \param[in] c option to test
+ * \param[in] optarg option argument
+ * \param[out] hostname hostname variable to set
+ */
+inline void getopt_host(int c, const char *optarg, const char **hostname) __attribute__((always_inline));
 
-/** getopt cases for help, version and verbose */
-#define MP_ARGS_CASE_DEF case 'h': \
-            print_help(); \
-            exit(0); \
-         case 'V': \
-            print_revision(); \
-            exit (0); \
-         case 'v': \
-            mp_verbose++; \
-	    break;
-/** getopt case for timeout */
-#define MP_ARGS_CASE_TIMEOUT case 't': \
-            mp_timeout = atoi (optarg); \
-            break;
-/** getopt case for hostname */
-#define  MP_ARGS_CASE_HOST case 'H': \
-            if (!is_hostname(optarg) && !is_hostaddr(optarg)) \
-                usage("Illegal -H argument '%s'.", optarg); \
-            hostname = optarg; \
-            break;
-/** getopt case for hostname ip only */
-#define  MP_ARGS_CASE_HOST_IP case 'H': \
-            if (!is_hostaddr(optarg)) \
-                usage("Illegal -H argument '%s'. IPs only.", optarg); \
-            hostname = optarg; \
-            break;
-/** getopt case for warning */
-#define  MP_ARGS_CASE_WARN case 'w': \
-            warn = optarg; \
-            break; \
-/** getopt case for critical */
-#define  MP_ARGS_CASE_CRIT case 'c': \
-            crit = optarg; \
-            break; \
-/** getopt case for warning time */
-#define  MP_ARGS_CASE_WARN_TIME(TRASH) case 'w': \
-            if (setWarnTime(&TRASH, optarg) == ERROR) \
-                usage("Illegal -c warning '%s'.", optarg); \
-            break;
-/** getopt case for critical time */
-#define  MP_ARGS_CASE_CRIT_TIME(TRASH) case 'c': \
-            if (setCritTime(&TRASH, optarg) == ERROR) \
-                usage("Illegal -c argument '%s'.", optarg); \
-            break;
-/** getopt case for port */
-#define  MP_ARGS_CASE_PORT case 'P': \
-            if (!is_integer(optarg)) \
-                usage("Illegal port number '%s'.", optarg); \
-            port = (int) strtol(optarg, NULL, 10); \
-            break;
+/**
+ * Parse the option for host. Allow only IPs.
+ * \param[in] c option to test
+ * \param[in] optarg option argument
+ * \param[out] hostname hostname variable to set
+ */
+inline void getopt_host_ip(int c, const char *optarg, const char **hostname) __attribute__((always_inline));
+
+/**
+ * Parse the option for port.
+ * \param[in] c option to test
+ * \param[in] optarg option argument
+ * \param[out] port port variable to set
+ */
+inline void getopt_port(int c, const char *optarg, int *port) __attribute__((always_inline));
+
+inline void getopt_wc(int c, const char *optarg, thresholds **threshold) __attribute__((always_inline));
+inline void getopt_wc_time(int c, const char *optarg, thresholds **threshold) __attribute__((always_inline));
+
+/** optstring for help, version, verbose */
+#define MP_OPTSTR_DEFAULT   "hVv"
+/** longopts option for help, version, verbose */
+#define MP_LONGOPTS_DEFAULT {"help", no_argument, NULL, (int)'h'}, \
+                            {"version", no_argument, NULL, (int)'V'}, \
+                            {"verbose", no_argument, NULL, (int)'v'}
+
+/** optstring for timeout */
+#define MP_OPTSTR_TIMEOUT   "t:"
+/** longopts option for timeout */
+#define MP_LONGOPTS_TIMEOUT {"timeout", required_argument, NULL, (int)'t'}
+
+/** optstring for hostname */
+#define MP_OPTSTR_HOST      "H:"
+/** longopts option for hostname */
+#define MP_LONGOPTS_HOST    {"hostname", required_argument, NULL, (int)'H'}
+
+/** optstring for port */
+#define MP_OPTSTR_PORT      "P:"
+/** longopts option for port */
+#define MP_LONGOPTS_PORT    {"port", required_argument, NULL, (int)'P'}
+
+/** optstring for ipv4 and ipv6 */
+#define MP_OPTSTR_IPV       "46"
+/** longopts option for ipv4 and ipv6 */
+#define MP_LONGOPTS_IPV     {"ipv4", no_argument, NULL, (int)'4'}, \
+                            {"ipv6", no_argument, NULL, (int)'6'}
+
+/** optstring for warn and crit */
+#define MP_OPTSTR_WC        "w:c:"
+/** longopts option for warn and crit */
+#define MP_LONGOPTS_WC      {"warning", required_argument, NULL, (int)'w'}, \
+                            {"critical", required_argument, NULL, (int)'c'}
+
+/** longopts final */
+#define MP_LONGOPTS_END     {0, 0, NULL, 0}
       
 #endif /* _MP_ARGS_H_ */

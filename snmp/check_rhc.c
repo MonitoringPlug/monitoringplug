@@ -40,7 +40,7 @@ const char *progusage = "[-t <timeout>]";
 #include <stdlib.h>
 #include <unistd.h>
 
-char *hostname = NULL;
+const char *hostname = NULL;
 int port = 0;
 
 int main (int argc, char **argv) {
@@ -100,13 +100,12 @@ int process_arguments (int argc, char **argv) {
     int option = 0;
 
     static struct option longopts[] = {
-        MP_ARGS_HELP,
-        MP_ARGS_VERS,
-        MP_ARGS_VERB,
-	MP_ARGS_HOST,
-	MP_ARGS_PORT,
-        MP_ARGS_TIMEOUT,
-        MP_ARGS_END
+            MP_LONGOPTS_DEFAULT,
+            MP_LONGOPTS_HOST,
+            MP_LONGOPTS_PORT,
+            SNMP_LONGOPTS,
+            MP_LONGOPTS_TIMEOUT,
+            MP_LONGOPTS_END
     };
 
     if (argc < 3) {
@@ -116,18 +115,16 @@ int process_arguments (int argc, char **argv) {
 
 
     while (1) {
-        c = getopt_long (argc, argv, "hVvt:H:p:"SNMPOPTSTRING, longopts, &option);
+        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"t:H:p:"SNMP_OPTSTR, longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
 
-        switch (c) {
-            MP_ARGS_CASE_DEF
-	    MP_ARGS_CASE_HOST
-	    MP_ARGS_CASE_PORT
-            MP_ARGS_CASE_TIMEOUT
-        }
+        getopt_default(c);
+        getopt_host(c, optarg, &hostname);
+        getopt_port(c, optarg, &port);
         getopt_snmp( c );
+        getopt_timeout(c, optarg);
     }
 
     return(OK);
