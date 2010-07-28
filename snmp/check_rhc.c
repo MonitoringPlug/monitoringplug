@@ -2,7 +2,7 @@
  * Monitoring Plugin - check_rhc
  **
  *
- * check_rhc - Simulate a plugin timeout.
+ * check_rhc - Check a RedHat Cluster Suite by snmp.
  * Copyright (C) 2010 Marius Rieder <marius.rieder@durchmesser.ch>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -26,7 +26,7 @@ const char *progname  = "check_rhc";
 const char *progvers  = "0.1";
 const char *progcopy  = "2010";
 const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
-const char *progusage = "[-t <timeout>]";
+const char *progusage = "-H <HOST>";
 
 #include "mp_common.h"
 #include "snmp_utils.h"
@@ -67,9 +67,9 @@ int main (int argc, char **argv) {
         {{1,3,6,1,4,1,2312,8,2,1,0}, 11, ASN_OCTET_STR, (void *)&clustername},
         {{1,3,6,1,4,1,2312,8,2,2,0}, 11, ASN_INTEGER, (void *)&clusterstatus},
         {{1,3,6,1,4,1,2312,8,2,3,0}, 11, ASN_OCTET_STR, (void *)&clusterstatusdesc},
-	{{1,3,6,1,4,1,2312,8,2,5,0}, 11, ASN_INTEGER, (void *)&clustervotes},
+        {{1,3,6,1,4,1,2312,8,2,5,0}, 11, ASN_INTEGER, (void *)&clustervotes},
         {{1,3,6,1,4,1,2312,8,2,4,0}, 11, ASN_INTEGER, (void *)&clusterquorum},
-	{{1,3,6,1,4,1,2312,8,2,7,0}, 11, ASN_INTEGER, (void *)&clusternodes},
+        {{1,3,6,1,4,1,2312,8,2,7,0}, 11, ASN_INTEGER, (void *)&clusternodes},
         {{0}, 0, 0, 0},
     };
     
