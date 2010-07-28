@@ -256,6 +256,7 @@ inline void getopt_port(int c, const char *optarg, int *port) __attribute__((alw
 
 inline void getopt_wc(int c, const char *optarg, thresholds **threshold) __attribute__((always_inline));
 inline void getopt_wc_time(int c, const char *optarg, thresholds **threshold) __attribute__((always_inline));
+inline void getopt_46(int c, int *ipv4, int *ipv6) __attribute__((always_inline));
 
 /** optstring for help, version, verbose */
 #define MP_OPTSTR_DEFAULT   "hVv"

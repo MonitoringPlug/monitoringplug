@@ -207,6 +207,8 @@ int check_range(double value, range *my_range) {
 }
 
 int get_status(double value, thresholds *my_thresholds) {
+    if(my_thresholds == NULL)
+        return STATE_OK;
 	if (my_thresholds->critical != NULL) {
 		if (check_range(value, my_thresholds->critical) == TRUE) {
 			return STATE_CRITICAL;
@@ -340,6 +342,18 @@ void getopt_wc_time(int c, const char *optarg, thresholds **threshold) {
     } else if (c == 'c') {
         if (setCritTime(threshold, optarg) == ERROR) \
                 usage("Illegal -c warning '%s'.", optarg);
+    }
+}
+
+void getopt_46(int c, int *ipv4, int *ipv6) {
+    if (c == '4') {
+        *ipv4 = 2;
+        if(*ipv6 != 2)
+            *ipv4 = 0;
+    } else if (c == '6') {
+        *ipv6 = 2;
+        if(*ipv4 != 2)
+            *ipv6 = 0;
     }
 }
 
