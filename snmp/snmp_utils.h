@@ -69,6 +69,7 @@ struct mp_snmp_table {
 };
 
 netsnmp_session *mp_snmp_init(void);
+inline void mp_snmp_deinit(void) __attribute__((always_inline));
 void snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd);
 void snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd);
 inline netsnmp_variable_list *mp_snmp_table_get(const struct mp_snmp_table table, int x, int y) __attribute__((always_inline));

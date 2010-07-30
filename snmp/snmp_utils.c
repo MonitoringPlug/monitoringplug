@@ -33,7 +33,7 @@
 #include <stdio.h>
 
 char *mp_snmp_community;
-int mp_snmp_version = 2;
+int mp_snmp_version = SNMP_VERSION_2c;
 int mp_snmp_seclevel;
 char *mp_snmp_secname;
 char *mp_snmp_context;
@@ -67,7 +67,7 @@ netsnmp_session *mp_snmp_init(void) {
             break;
         case SNMP_VERSION_2c:
             session.version = SNMP_VERSION_2c;
-            session.community = (u_char *)strdup(mp_snmp_community);
+            session.community = (u_char *)mp_snmp_community;
             session.community_len = strlen((char *)session.community);
             break;
         case SNMP_VERSION_3:
@@ -103,6 +103,9 @@ netsnmp_session *mp_snmp_init(void) {
             break;
     }
 
+    netsnmp_ds_set_boolean(NETSNMP_DS_LIBRARY_ID,
+                           NETSNMP_DS_LIB_DONT_PERSIST_STATE, 1);
+
     SOCK_STARTUP;
     ss = snmp_open(&session);
 
@@ -114,6 +117,14 @@ netsnmp_session *mp_snmp_init(void) {
 
     return ss;
 
+}
+
+/**
+ * Deinitialize the SNMP library.
+ */
+void mp_snmp_deinit(void) {
+    snmp_shutdown(progname);
+    SOCK_CLEANUP;
 }
 
 /**
@@ -168,14 +179,16 @@ void snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd) {
        * FAILURE: print what went wrong!
        */
 
-      if (status == STAT_SUCCESS)
-        fprintf(stderr, "Error in packet\nReason: %s\n",
-                snmp_errstring(response->errstat));
-      else if (status == STAT_TIMEOUT)
-        fprintf(stderr, "Timeout: No response from %s.\n",
-                (*ss).peername);
-      else
-        snmp_sess_perror(progname, ss);
+        printf("0:0\n");
+        if (status == STAT_SUCCESS)
+            fprintf(stderr, "Error in packet\nReason: %s\n",
+                    snmp_errstring(response->errstat));
+        else if (status == STAT_TIMEOUT)
+            fprintf(stderr, "Timeout: No response from %s.\n",
+                    (*ss).peername);
+        else
+            snmp_sess_perror(progname, ss);
+        printf("1:0\n");
 
     }
 
@@ -307,9 +320,19 @@ void getopt_snmp(int c) {
             mp_snmp_community = optarg;
             break;
         case 'S':
-            if (!is_integer(optarg))
-                usage("Illegal snmp version number '%s'.", optarg);
-            mp_snmp_version = (int)strtol(optarg, NULL, 10);;
+            switch ((int)strtol(optarg, NULL, 10)) {
+                case 1:
+                    mp_snmp_version = SNMP_VERSION_1;
+                    break;
+                case 2:
+                    mp_snmp_version = SNMP_VERSION_2c;
+                    break;
+                case 3:
+                    mp_snmp_version = SNMP_VERSION_3;
+                    break;
+                default:
+                    usage("Illegal SNMP version '%s'", optarg);
+            }
             break;
         case 'L':
             if (strncmp("noAuthNoPriv",optarg,12) == 0)

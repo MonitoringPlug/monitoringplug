@@ -76,7 +76,9 @@ int main (int argc, char **argv) {
     snmp_query(ss, snmpcmd);
     
     //snmp_close(ss);
-    SOCK_CLEANUP;
+    //snmp_shutdown(progname);
+    //SOCK_CLEANUP;
+    mp_snmp_deinit();
 
 
     if (mp_verbose) {

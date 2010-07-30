@@ -78,6 +78,15 @@ int setCritTime(thresholds **threshold, const char *str) {
     return parse_range_string((*threshold)->critical, str, TIME);
 }
 
+void free_threshold(thresholds *threshold) {
+    if(threshold != NULL) {
+        if(threshold->critical != NULL)
+            free(threshold->critical);
+        if(threshold->warning != NULL)
+            free(threshold->warning);
+    }
+}
+
 int parse_range_string(range *range, const char *str, int multiplier) {
     char *eptr, *end_str, *start_str;
     double tmp;

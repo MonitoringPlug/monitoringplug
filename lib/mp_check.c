@@ -48,9 +48,9 @@ int is_integer(const char *number) {
 }
 
 int is_hostname(const char *address) {
-    char *addr, *part;
+    char *a, *addr, *part;
 
-    addr = strdup(address);
+    a = addr = strdup(address);
 
     while ((part = strsep(&addr, "."))) {
         size_t len;
@@ -65,6 +65,7 @@ int is_hostname(const char *address) {
             "0123456789-_") != len)
             return FALSE;
     }
+    free(a);
     return TRUE;
 }
 

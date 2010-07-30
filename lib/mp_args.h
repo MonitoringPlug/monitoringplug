@@ -117,6 +117,8 @@ int setWarnTime(thresholds **threshold, const char *str);
  */
 int setCritTime(thresholds **threshold, const char *str);
 
+void free_threshold(thresholds *threshold);
+
 /**
  * Parse a string into a range.
  *
