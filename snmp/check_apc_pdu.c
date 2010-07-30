@@ -61,7 +61,7 @@ int main (int argc, char **argv) {
 
 
     struct mp_snmp_query_cmd snmpcmd = {{1,3,6,1,4,1,318,1,1,12,3,5,1,1}, 14, 0, (void *)&table};
-    snmp_table_query(ss, &snmpcmd);
+    mp_snmp_table_query(ss, &snmpcmd);
 
 
     printf("table %d:%d\n",table.col, table.row);

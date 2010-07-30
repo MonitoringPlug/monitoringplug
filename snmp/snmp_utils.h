@@ -68,13 +68,54 @@ struct mp_snmp_table {
     netsnmp_variable_list **var;
 };
 
+/**
+ * Init the Net-SNMP library and return a new session.
+ * \return netsnmp_session created
+ */
 netsnmp_session *mp_snmp_init(void);
+
+/**
+ * Cleanup the Net-SNMP library.
+ */
 inline void mp_snmp_deinit(void) __attribute__((always_inline));
-void snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd);
-void snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd);
+
+/**
+ * Run all querys in querycmd and save result to pointer in querycmd struct.
+ * \param[in] ss Session to use.
+ * \param[in|out] querycmd Query commands
+ * \return return a status value like snmp.
+ */
+int mp_snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd);
+
+/**
+ * Run table query for querycmd and save mp_snmp_table to pointer in querycmd.
+ * \param[in] ss Session to use.
+ * \param[in|out] querycmd Table query command
+ * \return return a status value like snmp.
+ */
+int mp_snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd);
+
+/**
+ * Get a netsnmp_variable_list out of a mp_snmp_table.
+ * \param[in] table Table to fetch value from.
+ * \param[in] x X coordinate of value.
+ * \param[in] y Y coordinate of value.
+ */
 inline netsnmp_variable_list *mp_snmp_table_get(const struct mp_snmp_table table, int x, int y) __attribute__((always_inline));
 
+/**
+ * Handle SNMP related command line options.
+ * \param[in] c Command line option to handle.
+ */
 inline void getopt_snmp(int c) __attribute__((always_inline));
+
+/**
+ * Print the help for the SNMP related command line options.
+ */
 inline void print_help_snmp(void) __attribute__((always_inline));
+
+/**
+ * Print the Net-SNMP library revision.
+ */
 inline void print_revision_snmp(void) __attribute__((always_inline));
 #endif /* _SNMP_UTILS_H_ */

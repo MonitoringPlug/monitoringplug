@@ -44,25 +44,17 @@ const char *hostname = NULL;
 int port = 0;
 
 int main (int argc, char **argv) {
-    /* Set signal handling and alarm */
-    if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
-        exit(STATE_CRITICAL);
-
-    if (process_arguments (argc, argv) == 1)
-        exit(STATE_CRITICAL);
-
-    alarm(mp_timeout);
-    
-    netsnmp_session *ss;
-    ss = mp_snmp_init();
-    
+    /* Local variables */
+    int status;
     char *clustername;
     int clusterstatus;
     char *clusterstatusdesc;
     int clustervotes;
     int clusterquorum;
     int clusternodes;
+    netsnmp_session *ss;
     
+    /* OIDs to query */
     struct mp_snmp_query_cmd snmpcmd[] = {
         {{1,3,6,1,4,1,2312,8,2,1,0}, 11, ASN_OCTET_STR, (void *)&clustername},
         {{1,3,6,1,4,1,2312,8,2,2,0}, 11, ASN_INTEGER, (void *)&clusterstatus},
@@ -73,23 +65,37 @@ int main (int argc, char **argv) {
         {{0}, 0, 0, 0},
     };
     
-    snmp_query(ss, snmpcmd);
+    /* Set signal handling and alarm */
+    if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
+        exit(STATE_CRITICAL);
+
+    /* Process command line arguments */
+    if (process_arguments (argc, argv) == 1)
+        exit(STATE_CRITICAL);
+
+    /* Set plugin timeout */
+    alarm(mp_timeout);
+
+    /* Init Net-SNMP */
+    ss = mp_snmp_init();
+
+    /* Query target agent */
+    status = mp_snmp_query(ss, snmpcmd);
+    switch (status) {
+        case STAT_ERROR:
+            unknown("Error in libnetsnmp");
+        case STAT_TIMEOUT:
+            critical("Timeout in libnetsnmp");
+    }
     
-    //snmp_close(ss);
-    //snmp_shutdown(progname);
-    //SOCK_CLEANUP;
+    /* Finish Net-SNMP */
     mp_snmp_deinit();
 
-
-    if (mp_verbose) {
-        printf("clustername: %s\n", clustername);
-        printf("clusterstatus: %d\n", clusterstatus);
-        printf("clusterstatusdesc: %s\n", clusterstatusdesc);
-        printf("SNMP Version: %d\n", mp_snmp_version);
-    }
-
-    perfdata_int("votes", clustervotes, "", clusterquorum, clusterquorum-1, 0, clusternodes);
+    /* Perfdata */
+    if (mp_showperfdata)
+        perfdata_int("votes", clustervotes, "", clusterquorum, clusterquorum-1, 0, clusternodes);
     
+    /* Output and return */
     if (clusterstatus < 2)
         ok("%s [%s]", clustername, clusterstatusdesc);
     if (clusterstatus < 16)
@@ -106,6 +112,7 @@ int process_arguments (int argc, char **argv) {
             MP_LONGOPTS_HOST,
             MP_LONGOPTS_PORT,
             SNMP_LONGOPTS,
+            MP_LONGOPTS_PERF,
             MP_LONGOPTS_TIMEOUT,
             MP_LONGOPTS_END
     };
@@ -126,6 +133,7 @@ int process_arguments (int argc, char **argv) {
         getopt_host(c, optarg, &hostname);
         getopt_port(c, optarg, &port);
         getopt_snmp( c );
+        getopt_perf(c);
         getopt_timeout(c, optarg);
     }
 
@@ -146,8 +154,10 @@ void print_help (void) {
     print_usage();
 
     print_help_default();
-    
+
     print_help_snmp();
+    
+    print_help_perf();
     
     print_help_timeout();
 }

@@ -47,6 +47,8 @@ extern const char *progcopy;
 extern unsigned int mp_timeout;
 /** The global verbose variable. */
 extern unsigned int mp_verbose;
+/** The global perfdata variable. */
+extern unsigned int mp_showperfdata;
 
 /** The global perf data string. */
 extern char *mp_perfdata;

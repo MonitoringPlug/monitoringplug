@@ -251,7 +251,7 @@ void print_thresholds(const char *threshold_name, thresholds *my_threshold) {
 }
 
 void print_help_default(void) {
-	printf("\n\
+    printf("\n\
 Options:\n\
  -h, --help\n\
       Print detailed help screen.\n\
@@ -259,6 +259,12 @@ Options:\n\
       Print version information.\n\
  -v, --verbose\n\
       Show details for command-line debugging.\n");
+}
+
+void print_help_perf(void) {
+    printf("\
+ --perfdata\n\
+      Print perfdata for check.\n");
 }
 
 void print_help_timeout(void) {
@@ -301,6 +307,14 @@ void getopt_default(int c) {
             exit (0);
         case 'v':
             mp_verbose++;
+            break;
+    }
+}
+
+void getopt_perf(int c) {
+    switch (c) {
+        case ARG_PERFDATA:
+            mp_showperfdata = 1;
             break;
     }
 }

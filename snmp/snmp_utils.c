@@ -43,9 +43,6 @@ char *mp_snmp_privpass;
 
 extern char* hostname;
 
-/**
- * Initialize the SNMP library and return a new session.
- */
 netsnmp_session *mp_snmp_init(void) {
 
     netsnmp_session session, *ss;
@@ -119,20 +116,13 @@ netsnmp_session *mp_snmp_init(void) {
 
 }
 
-/**
- * Deinitialize the SNMP library.
- */
 void mp_snmp_deinit(void) {
     snmp_shutdown(progname);
     SOCK_CLEANUP;
 }
 
-/**
- * Run all querys in querycmd and save result to pointer in querycmd struct.
- * \param[in] ss Session to use.
- * \param[in|out] querycmd Query commands
- */
-void snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd) {
+
+int mp_snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd) {
 
     netsnmp_pdu *pdu;
     netsnmp_pdu *response;
@@ -157,8 +147,10 @@ void snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd) {
                     if (mp_verbose > 1)
                         print_variable(vars->name, vars->name_length, vars);
 
-                    if (vars->type != p->type)
+                    if (vars->type != p->type) {
+                        *p->target = NULL;
                         continue;
+                    }
                     switch(vars->type) {
                         case ASN_INTEGER:
                             *(p->target) = (void *)*vars->val.integer;
@@ -175,33 +167,29 @@ void snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd) {
             }
         }
     } else {
-      /*
-       * FAILURE: print what went wrong!
-       */
+        /* FAILURE: print what went wrong! */
 
-        printf("0:0\n");
-        if (status == STAT_SUCCESS)
+        if (status == STAT_SUCCESS) {
             fprintf(stderr, "Error in packet\nReason: %s\n",
                     snmp_errstring(response->errstat));
+            status = STAT_ERROR;
+        }
         else if (status == STAT_TIMEOUT)
             fprintf(stderr, "Timeout: No response from %s.\n",
                     (*ss).peername);
         else
             snmp_sess_perror(progname, ss);
-        printf("1:0\n");
 
     }
 
     if (response)
       snmp_free_pdu(response);
+
+    return status;
 }
 
-/**
- * Run table query for querycmd and save mp_snmp_table to pointer in querycmd.
- * \param[in] ss Session to use.
- * \param[in|out] querycmd Table query command
- */
-void snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd) {
+
+int mp_snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd) {
 
     netsnmp_pdu *pdu;
     netsnmp_pdu *response;
@@ -222,9 +210,9 @@ void snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *query
 
     memcpy(current_oid, querycmd->oid, querycmd->len * sizeof(oid));
     current_len = querycmd->len;
-    status = 1;
+    status = STAT_SUCCESS;
 
-    while(status == 1) {
+    while(status == STAT_SUCCESS) {
 
         if(ss->version== SNMP_VERSION_1) {
             pdu = snmp_pdu_create(SNMP_MSG_GETNEXT);
@@ -238,13 +226,11 @@ void snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *query
 
         status = snmp_synch_response(ss, pdu, &response);
 
-
         if (status == STAT_SUCCESS && response->errstat == SNMP_ERR_NOERROR) {
-            status = 1;
             for(last_var = vars = response->variables; vars; last_var=vars, vars = vars->next_variable) {
                 /* Check for leafing of subtree */
                 if (snmp_oid_ncompare(querycmd->oid, querycmd->len, vars->name, vars->name_length, querycmd->len) != 0) {
-                    status = 0;
+                    status = -1;
                     break;
                 }
                 if ((int)vars->name[querycmd->len] == 1) {
@@ -278,16 +264,16 @@ void snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *query
         } else {
             /* FAILURE: print what went wrong! */
 
-            if (status == STAT_SUCCESS)
+            if (status == STAT_SUCCESS) {
                 fprintf(stderr, "Error in packet\nReason: %s\n",
                         snmp_errstring(response->errstat));
+                status = STAT_ERROR;
+            }
             else if (status == STAT_TIMEOUT)
                 fprintf(stderr, "Timeout: No response from %s.\n",
                         (*ss).peername);
             else
                 snmp_sess_perror(progname, ss);
-
-            status = 0;
         }
         if (response)
           snmp_free_pdu(response);
@@ -295,15 +281,9 @@ void snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *query
             printf("----------\n");
     }
 
-    printf("table %d:%d\n",table->col, table->row);
+    return status;
 }
 
-/**
- * Get a netsnmp_variable_list out of a mp_snmp_table.
- * \param[in] table Table to fetch value from.
- * \param[in] x X coordinate of value.
- * \param[in] y Y coordinate of value.
- */
 netsnmp_variable_list *mp_snmp_table_get(const struct mp_snmp_table table, int x, int y) {
     printf("mp_snmp_table_get(t, %d, %d)", x, y);
     if( x < 0 || y < 0 || x >= table.col || y >= table.row)

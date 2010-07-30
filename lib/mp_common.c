@@ -32,6 +32,7 @@
 
 unsigned int mp_timeout = 10;
 unsigned int mp_verbose = 0;
+unsigned int mp_showperfdata = 0;
 char *mp_perfdata=NULL;
 
 void ok(const char *fmt, ...) {

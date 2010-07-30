@@ -74,6 +74,13 @@ enum {
 };
 
 /**
+ * Helper enum for long only opts
+ */
+enum {
+    ARG_PERFDATA = -1,
+};
+
+/**
  * Set the warning range of the given trashold.
  * If the thresholds or the warning range of the thresholds is NULL,
  * the needed memory is allocated.
@@ -192,6 +199,11 @@ void print_thresholds(const char *threshold_name, thresholds *my_threshold);
 inline void print_help_default(void) __attribute__((always_inline));
 
 /**
+ * Prints the help message for the perfdata options.
+ */
+inline void print_help_perf(void) __attribute__((always_inline));
+
+/**
  * Prints the help to the timeout option.
  */
 inline void print_help_timeout(void) __attribute__((always_inline));
@@ -224,6 +236,12 @@ inline void print_help_crit_time(const char *def) __attribute__((always_inline))
  * \param[in] c option to test
  */
 inline void getopt_default(int c) __attribute__((always_inline));
+
+/**
+ * Parse the options for perfdata.
+ * \param[in] c option to test
+ */
+inline void getopt_perf(int c) __attribute__((always_inline));
 
 /**
  * Parse the option for timeout.
@@ -266,6 +284,8 @@ inline void getopt_46(int c, int *ipv4, int *ipv6) __attribute__((always_inline)
 #define MP_LONGOPTS_DEFAULT {"help", no_argument, NULL, (int)'h'}, \
                             {"version", no_argument, NULL, (int)'V'}, \
                             {"verbose", no_argument, NULL, (int)'v'}
+
+#define MP_LONGOPTS_PERF    {"perfdata", no_argument, NULL, ARG_PERFDATA}
 
 /** optstring for timeout */
 #define MP_OPTSTR_TIMEOUT   "t:"
