@@ -1,8 +1,8 @@
 /**
- * Monitoring Plugin - check_rhc
+ * Monitoring Plugin - check_apc_pdu
  **
  *
- * check_rhc - Check a RedHat Cluster Suite by snmp.
+ * check_apc_pdu - Check tyhe outlet status of a APC PDU.
  * Copyright (C) 2010 Marius Rieder <marius.rieder@durchmesser.ch>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@
  * $Id$
  */
 
-const char *progname  = "check_rhc";
+const char *progname  = "check_apc_pdu";
 const char *progvers  = "0.1";
 const char *progcopy  = "2010";
 const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
@@ -41,6 +41,7 @@ const char *progusage = "-H <HOST>";
 #include <unistd.h>
 
 const char *hostname = NULL;
+
 int port = 0;
 
 int main (int argc, char **argv) {
@@ -52,47 +53,35 @@ int main (int argc, char **argv) {
         exit(STATE_CRITICAL);
 
     alarm(mp_timeout);
-    
+
     netsnmp_session *ss;
     ss = mp_snmp_init();
-    
-    char *clustername;
-    int clusterstatus;
-    char *clusterstatusdesc;
-    int clustervotes;
-    int clusterquorum;
-    int clusternodes;
-    
-    struct mp_snmp_query_cmd snmpcmd[] = {
-        {{1,3,6,1,4,1,2312,8,2,1,0}, 11, ASN_OCTET_STR, (void *)&clustername},
-        {{1,3,6,1,4,1,2312,8,2,2,0}, 11, ASN_INTEGER, (void *)&clusterstatus},
-        {{1,3,6,1,4,1,2312,8,2,3,0}, 11, ASN_OCTET_STR, (void *)&clusterstatusdesc},
-        {{1,3,6,1,4,1,2312,8,2,5,0}, 11, ASN_INTEGER, (void *)&clustervotes},
-        {{1,3,6,1,4,1,2312,8,2,4,0}, 11, ASN_INTEGER, (void *)&clusterquorum},
-        {{1,3,6,1,4,1,2312,8,2,7,0}, 11, ASN_INTEGER, (void *)&clusternodes},
-        {{0}, 0, 0, 0},
-    };
-    
-    snmp_query(ss, snmpcmd);
-    
-    //snmp_close(ss);
+
+    struct mp_snmp_table table;
+
+
+    struct mp_snmp_query_cmd snmpcmd = {{1,3,6,1,4,1,318,1,1,12,3,5,1,1}, 14, 0, (void *)&table};
+    snmp_table_query(ss, &snmpcmd);
+
+
+    printf("table %d:%d\n",table.col, table.row);
+
+    int x, y;
+    netsnmp_variable_list *vars;
+
+
+    for(y=0; y<table.row; y++) {
+        for(x=0; x<table.col; x++) {
+            printf("%d/%d: (%d)\n", x, y, x*table.col+y);
+            vars = mp_snmp_table_get(table, x, y);
+            print_variable(vars->name, vars->name_length, vars);
+        }
+    }
+
     SOCK_CLEANUP;
 
 
-    if (mp_verbose) {
-        printf("clustername: %s\n", clustername);
-        printf("clusterstatus: %d\n", clusterstatus);
-        printf("clusterstatusdesc: %s\n", clusterstatusdesc);
-        printf("SNMP Version: %d\n", mp_snmp_version);
-    }
-
-    perfdata_int("votes", clustervotes, "", clusterquorum, clusterquorum-1, 0, clusternodes);
-    
-    if (clusterstatus < 2)
-        ok("%s [%s]", clustername, clusterstatusdesc);
-    if (clusterstatus < 16)
-        warning("%s [%s]", clustername, clusterstatusdesc);
-    critical("%s [%s]", clustername, clusterstatusdesc);
+    ok("end");
 }
 
 int process_arguments (int argc, char **argv) {
@@ -103,6 +92,8 @@ int process_arguments (int argc, char **argv) {
             MP_LONGOPTS_DEFAULT,
             MP_LONGOPTS_HOST,
             MP_LONGOPTS_PORT,
+            {"on", required_argument, NULL, (int)'o'},
+            {"off", required_argument, NULL, (int)'O'},
             SNMP_LONGOPTS,
             MP_LONGOPTS_TIMEOUT,
             MP_LONGOPTS_END
@@ -115,7 +106,7 @@ int process_arguments (int argc, char **argv) {
 
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"t:H:p:"SNMP_OPTSTR, longopts, &option);
+        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"t:H:p:o:O:"SNMP_OPTSTR, longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -125,6 +116,12 @@ int process_arguments (int argc, char **argv) {
         getopt_port(c, optarg, &port);
         getopt_snmp( c );
         getopt_timeout(c, optarg);
+
+        if (c == 'o') {
+
+        } else if (c == 'O') {
+
+        }
     }
 
     return(OK);
@@ -137,16 +134,16 @@ void print_help (void) {
 
     printf("\n");
 
-    printf("This plugin check a RedHat Cluster Suite by snmp..");
+    printf("This plugin check the outlet status of a APC PDU.");
 
     printf("\n\n");
 
     print_usage();
 
     print_help_default();
-    
+
     print_help_snmp();
-    
+
     print_help_timeout();
 }
 

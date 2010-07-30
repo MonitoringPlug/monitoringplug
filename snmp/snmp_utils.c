@@ -38,18 +38,96 @@ int mp_snmp_seclevel;
 char *mp_snmp_secname;
 char *mp_snmp_context;
 char *mp_snmp_authpass;
-int mp_snmp_autoproto;
+oid *mp_snmp_authproto;
 char *mp_snmp_privpass;
 
 extern char* hostname;
 
-void snmp_query(netsnmp_session *ss, const struct snmp_query_cmd *querycmd) {
+/**
+ * Initialize the SNMP library and return a new session.
+ */
+netsnmp_session *mp_snmp_init(void) {
+
+    netsnmp_session session, *ss;
+
+    init_snmp(progname);
+
+    snmp_sess_init( &session );
+
+    if (mp_snmp_community == NULL)
+        mp_snmp_community = strdup("public");
+
+    session.peername = hostname;
+
+    switch(mp_snmp_version) {
+        case SNMP_VERSION_1:
+            session.version = SNMP_VERSION_1;
+            session.community = (u_char *)strdup(mp_snmp_community);
+            session.community_len = strlen((char *)session.community);
+            break;
+        case SNMP_VERSION_2c:
+            session.version = SNMP_VERSION_2c;
+            session.community = (u_char *)strdup(mp_snmp_community);
+            session.community_len = strlen((char *)session.community);
+            break;
+        case SNMP_VERSION_3:
+            session.version = SNMP_VERSION_3;
+
+            session.securityName = strdup(mp_snmp_secname);
+            session.securityNameLen = strlen(session.securityName);
+
+            /* set the security level */
+            session.securityLevel = mp_snmp_seclevel;
+            session.contextName = strdup(mp_snmp_context);
+
+            session.contextNameLen = strlen(session.contextName);
+
+            /* set the authentication method */
+            session.securityAuthProto = mp_snmp_authproto;
+            session.securityAuthProtoLen = 10;
+            session.securityAuthKeyLen = USM_AUTH_KU_LEN;
+
+            int status;
+            status = generate_Ku(session.securityAuthProto,
+                    session.securityAuthProtoLen,
+                    (u_char *) mp_snmp_authpass, strlen(mp_snmp_authpass),
+                    session.securityAuthKey,
+                    &session.securityAuthKeyLen);
+            if (status != SNMPERR_SUCCESS) {
+                snmp_perror(progname);
+                snmp_log(LOG_ERR,
+                        "Error generating Ku from authentication pass phrase. \n%s\n",snmp_api_errstring(status));
+                exit(1);
+            }
+
+            break;
+    }
+
+    SOCK_STARTUP;
+    ss = snmp_open(&session);
+
+    if (!ss) {
+      snmp_sess_perror("ack", &session);
+      SOCK_CLEANUP;
+      exit(1);
+    }
+
+    return ss;
+
+}
+
+/**
+ * Run all querys in querycmd and save result to pointer in querycmd struct.
+ * \param[in] ss Session to use.
+ * \param[in|out] querycmd Query commands
+ */
+void snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd) {
 
     netsnmp_pdu *pdu;
     netsnmp_pdu *response;
     netsnmp_variable_list *vars;
     int status;
-    const struct snmp_query_cmd *p;
+    const struct mp_snmp_query_cmd *p;
 
     pdu = snmp_pdu_create(SNMP_MSG_GET);
 
@@ -105,51 +183,123 @@ void snmp_query(netsnmp_session *ss, const struct snmp_query_cmd *querycmd) {
       snmp_free_pdu(response);
 }
 
+/**
+ * Run table query for querycmd and save mp_snmp_table to pointer in querycmd.
+ * \param[in] ss Session to use.
+ * \param[in|out] querycmd Table query command
+ */
+void snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd) {
+
+    netsnmp_pdu *pdu;
+    netsnmp_pdu *response;
+    netsnmp_variable_list *vars, *last_var;
+    int status;
+    //const struct mp_snmp_query_cmd *p;
+
+    struct mp_snmp_table *table;
+
+    table = (struct mp_snmp_table *)querycmd->target;
+
+    table->row = 0;
+    table->col = 1;
+    table->var = NULL;
+
+    oid current_oid[MAX_OID_LEN];
+    size_t current_len;
+
+    memcpy(current_oid, querycmd->oid, querycmd->len * sizeof(oid));
+    current_len = querycmd->len;
+    status = 1;
+
+    while(status == 1) {
+
+        if(ss->version== SNMP_VERSION_1) {
+            pdu = snmp_pdu_create(SNMP_MSG_GETNEXT);
+        } else {
+            pdu = snmp_pdu_create(SNMP_MSG_GETBULK);
+            pdu->non_repeaters = 0;
+            pdu->max_repetitions = 10;
+        }
+
+        snmp_add_null_var(pdu, current_oid, current_len);
+
+        status = snmp_synch_response(ss, pdu, &response);
+
+
+        if (status == STAT_SUCCESS && response->errstat == SNMP_ERR_NOERROR) {
+            status = 1;
+            for(last_var = vars = response->variables; vars; last_var=vars, vars = vars->next_variable) {
+                /* Check for leafing of subtree */
+                if (snmp_oid_ncompare(querycmd->oid, querycmd->len, vars->name, vars->name_length, querycmd->len) != 0) {
+                    status = 0;
+                    break;
+                }
+                if ((int)vars->name[querycmd->len] == 1) {
+                    if ((int)vars->name[querycmd->len+1] > table->row) {
+                        table->row = (int)vars->name[querycmd->len+1];
+                        table->var = realloc(table->var, (table->row*table->col)*sizeof(netsnmp_variable_list*));
+                    }
+                } else {
+                    if ((int)vars->name[querycmd->len+1] > table->row)
+                        printf("ERROR %d\n", __LINE__);
+                }
+                if ((int)vars->name[querycmd->len] > table->col) {
+                    table->col = (int)vars->name[querycmd->len];
+                    table->var = realloc(table->var, (table->row*table->col)*sizeof(netsnmp_variable_list*));
+                }
+                if ((int)vars->name[querycmd->len] > table->col)
+                    table->col = (int)vars->name[querycmd->len];
+
+                int c = (table->col-1)*table->row+(int)vars->name[querycmd->len+1]-1;
+                if (mp_verbose > 1)
+                    print_variable(vars->name, vars->name_length, vars);
+
+                table->var[c] = malloc(sizeof(netsnmp_variable_list));
+
+                snmp_clone_var(vars, table->var[c]);
+            }
+
+            memcpy(current_oid, last_var->name, last_var->name_length * sizeof(oid));
+            current_len = last_var->name_length;
+
+        } else {
+            /* FAILURE: print what went wrong! */
+
+            if (status == STAT_SUCCESS)
+                fprintf(stderr, "Error in packet\nReason: %s\n",
+                        snmp_errstring(response->errstat));
+            else if (status == STAT_TIMEOUT)
+                fprintf(stderr, "Timeout: No response from %s.\n",
+                        (*ss).peername);
+            else
+                snmp_sess_perror(progname, ss);
+
+            status = 0;
+        }
+        if (response)
+          snmp_free_pdu(response);
+        if (mp_verbose > 1)
+            printf("----------\n");
+    }
+
+    printf("table %d:%d\n",table->col, table->row);
+}
 
 /**
- * Initialize the SNMP library
+ * Get a netsnmp_variable_list out of a mp_snmp_table.
+ * \param[in] table Table to fetch value from.
+ * \param[in] x X coordinate of value.
+ * \param[in] y Y coordinate of value.
  */
-netsnmp_session *mp_snmp_init(void) {
-
-    netsnmp_session session, *ss;
-
-    init_snmp(progname);
-
-    snmp_sess_init( &session );
-
-    if (mp_snmp_community == NULL)
-        mp_snmp_community = strdup("public");
-
-    session.peername = hostname;
-
-    switch(mp_snmp_version) {
-        case SNMPv1:
-            session.version = SNMP_VERSION_1;
-            session.community = (u_char *)strdup(mp_snmp_community);
-            session.community_len = strlen((char *)session.community);
-            break;
-        case SNMPv2c:
-            session.version = SNMP_VERSION_2c;
-            session.community = (u_char *)strdup(mp_snmp_community);
-            session.community_len = strlen((char *)session.community);
-            break;
-        case SNMPv3:
-            session.version = SNMP_VERSION_3;
-            break;
-    }
-
-    SOCK_STARTUP;
-    ss = snmp_open(&session);
-
-    if (!ss) {
-      snmp_sess_perror("ack", &session);
-      SOCK_CLEANUP;
-      exit(1);
-    }
-
-    return ss;
-
+netsnmp_variable_list *mp_snmp_table_get(const struct mp_snmp_table table, int x, int y) {
+    printf("mp_snmp_table_get(t, %d, %d)", x, y);
+    if( x < 0 || y < 0 || x >= table.col || y >= table.row)
+        return NULL;
+    return table.var[x*table.row+y];
 }
+
+
+
 
 void getopt_snmp(int c) {
     switch ( c ) {
@@ -163,11 +313,11 @@ void getopt_snmp(int c) {
             break;
         case 'L':
             if (strncmp("noAuthNoPriv",optarg,12) == 0)
-                mp_snmp_seclevel = noAuthNoPriv;
+                mp_snmp_seclevel = SNMP_SEC_LEVEL_NOAUTH;
             else if (strncmp("authNoPriv",optarg,10) == 0)
-                mp_snmp_seclevel = authNoPriv;
+                mp_snmp_seclevel = SNMP_SEC_LEVEL_AUTHNOPRIV;
             else if (strncmp("authPriv",optarg,8) == 0)
-                mp_snmp_seclevel = authNoPriv;
+                mp_snmp_seclevel = SNMP_SEC_LEVEL_AUTHPRIV;
             else
                 usage("Illegal snmp security level '%s'.", optarg);
             break;
@@ -182,9 +332,9 @@ void getopt_snmp(int c) {
             break;
         case 'a':
             if (strncmp("MD5",optarg,3) == 0)
-                mp_snmp_autoproto = MD5;
+                mp_snmp_authproto = usmHMACMD5AuthProtocol;
             else if (strncmp("SHA1",optarg,4) == 0)
-                mp_snmp_autoproto = SHA1;
+                mp_snmp_authproto = usmHMACSHA1AuthProtocol;
             else
                 usage("Illegal snmp auth protocoll '%s'.", optarg);
             break;

@@ -34,7 +34,7 @@ extern int mp_snmp_seclevel;
 extern char *mp_snmp_secname;
 extern char *mp_snmp_context;
 extern char *mp_snmp_authpass;
-extern int mp_snmp_autoproto;
+extern oid *mp_snmp_authproto;
 extern char *mp_snmp_privpass;
 
 
@@ -48,48 +48,32 @@ extern char *mp_snmp_privpass;
                       {"privpass", required_argument, NULL, (int)'X'}
 
 
-struct snmp_query_cmd {
-    /* OID name to query */
+struct mp_snmp_query_cmd {
+    /** OID name to query */
     oid oid[MAX_OID_LEN];
-    /* OID lenght */
+    /** OID lenght */
     size_t len;
-    /* OID return type */
+    /** OID return type */
     u_char type;
-    /* Pointer to store value in */
+    /** Pointer to store value in */
     void **target;
 };
 
-
-/**
- * SNMP Version prity print.
- */
-enum {
-    SNMPv1 = 1,           /**< 1 - SNMP Version 1 */
-    SNMPv2c = 2,          /**< 2 - SNMP Version 2c */
-    SNMPv3 = 3,           /**< 3 - SNMP Version 3 */
+struct mp_snmp_table {
+    /** Table row count */
+    int row;
+    /** Table column count */
+    int col;
+    /** Table data count */
+    netsnmp_variable_list **var;
 };
 
-/**
- * SNMP Security Levels prity print
- */
-enum {
-    noAuthNoPriv,
-    authNoPriv,
-    authPriv,
-};
-
-/**
- * SNMP Auth Protocol prity print
- */
-enum {
-    MD5,
-    SHA1,
-};
+netsnmp_session *mp_snmp_init(void);
+void snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd);
+void snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd);
+inline netsnmp_variable_list *mp_snmp_table_get(const struct mp_snmp_table table, int x, int y) __attribute__((always_inline));
 
 inline void getopt_snmp(int c) __attribute__((always_inline));
 inline void print_help_snmp(void) __attribute__((always_inline));
 inline void print_revision_snmp(void) __attribute__((always_inline));
-netsnmp_session *mp_snmp_init(void);
-void snmp_query(netsnmp_session *ss, const struct snmp_query_cmd *querycmd);
-
 #endif /* _SNMP_UTILS_H_ */
