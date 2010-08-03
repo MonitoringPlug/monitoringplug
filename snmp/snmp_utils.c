@@ -153,7 +153,7 @@ int mp_snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd)
                     }
                     switch(vars->type) {
                         case ASN_INTEGER:
-                            *(p->target) = (void *)*vars->val.integer;
+                            *(p->target) = (int)(*vars->val.integer);
                             break;
                         case ASN_OCTET_STR: {
                             char *t = (char *)malloc(1 + vars->val_len);
@@ -195,7 +195,8 @@ int mp_snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *que
     netsnmp_pdu *response;
     netsnmp_variable_list *vars, *last_var;
     int status;
-    //const struct mp_snmp_query_cmd *p;
+    int row_idx = 0;
+    int col_idx = 0;
 
     struct mp_snmp_table *table;
 
@@ -227,29 +228,40 @@ int mp_snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *que
         status = snmp_synch_response(ss, pdu, &response);
 
         if (status == STAT_SUCCESS && response->errstat == SNMP_ERR_NOERROR) {
+            if (row_idx == 0) {
+                vars = response->variables;
+                row_idx = querycmd->len + 1;
+                col_idx = querycmd->len;
+
+                if (vars->name_length >= row_idx) {
+                    row_idx = vars->name_length - 1;
+                    col_idx = vars->name_length - 2;
+                }
+            }
+
             for(last_var = vars = response->variables; vars; last_var=vars, vars = vars->next_variable) {
                 /* Check for leafing of subtree */
                 if (snmp_oid_ncompare(querycmd->oid, querycmd->len, vars->name, vars->name_length, querycmd->len) != 0) {
                     status = -1;
                     break;
                 }
-                if ((int)vars->name[querycmd->len] == 1) {
-                    if ((int)vars->name[querycmd->len+1] > table->row) {
-                        table->row = (int)vars->name[querycmd->len+1];
+                if ((int)vars->name[col_idx] == 1) {
+                    if ((int)vars->name[row_idx] > table->row) {
+                        table->row = (int)vars->name[row_idx];
                         table->var = realloc(table->var, (table->row*table->col)*sizeof(netsnmp_variable_list*));
                     }
                 } else {
-                    if ((int)vars->name[querycmd->len+1] > table->row)
+                    if ((int)vars->name[row_idx] > table->row)
                         printf("ERROR %d\n", __LINE__);
                 }
-                if ((int)vars->name[querycmd->len] > table->col) {
-                    table->col = (int)vars->name[querycmd->len];
+                if ((int)vars->name[col_idx] > table->col) {
+                    table->col = (int)vars->name[col_idx];
                     table->var = realloc(table->var, (table->row*table->col)*sizeof(netsnmp_variable_list*));
                 }
-                if ((int)vars->name[querycmd->len] > table->col)
-                    table->col = (int)vars->name[querycmd->len];
+                if ((int)vars->name[col_idx] > table->col)
+                    table->col = (int)vars->name[col_idx];
 
-                int c = (table->col-1)*table->row+(int)vars->name[querycmd->len+1]-1;
+                int c = (table->col-1)*table->row+(int)vars->name[row_idx]-1;
                 if (mp_verbose > 1)
                     print_variable(vars->name, vars->name_length, vars);
 
@@ -285,10 +297,9 @@ int mp_snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *que
 }
 
 netsnmp_variable_list *mp_snmp_table_get(const struct mp_snmp_table table, int x, int y) {
-    printf("mp_snmp_table_get(t, %d, %d)", x, y);
     if( x < 0 || y < 0 || x >= table.col || y >= table.row)
         return NULL;
-    return table.var[x*table.row+y];
+    return table.var[(x-1)*table.row+y];
 }
 
 

@@ -41,10 +41,23 @@ const char *progusage = "-H <HOST>";
 #include <unistd.h>
 
 const char *hostname = NULL;
+const char *stateOn = NULL;
+const char *stateOff = NULL;
 
 int port = 0;
 
 int main (int argc, char **argv) {
+
+    char        *output = NULL;
+    char        *pdu_name = NULL;
+    int         status = STATE_OK;
+    long        pdu_psu1;
+    long        pdu_psu2;
+    int         i;
+    struct mp_snmp_table    table_state;
+    netsnmp_session         *ss;
+    netsnmp_variable_list   *vars;
+
     /* Set signal handling and alarm */
     if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
         exit(STATE_CRITICAL);
@@ -54,34 +67,141 @@ int main (int argc, char **argv) {
 
     alarm(mp_timeout);
 
-    netsnmp_session *ss;
     ss = mp_snmp_init();
 
-    struct mp_snmp_table table;
+    /* OIDs to query */
+    struct mp_snmp_query_cmd snmpcmd[] = {
+        {{1,3,6,1,4,1,318,1,1,12,4,1,1,0}, 14, ASN_INTEGER, (void *)&pdu_psu1},
+        {{1,3,6,1,4,1,318,1,1,12,4,1,2,0}, 14, ASN_INTEGER, (void *)&pdu_psu2},
+        {{1,3,6,1,2,1,1,5,0}, 9, ASN_OCTET_STR, (void *)&pdu_name},
+        {{0}, 0, 0, 0},
+    };
+    struct mp_snmp_query_cmd snmpcmd_table = {{1,3,6,1,4,1,318,1,1,12,3,5,1}, 13, 0, (void *)&table_state};
 
+    mp_snmp_query(ss, snmpcmd);
 
-    struct mp_snmp_query_cmd snmpcmd = {{1,3,6,1,4,1,318,1,1,12,3,5,1,1}, 14, 0, (void *)&table};
-    mp_snmp_table_query(ss, &snmpcmd);
+    mp_snmp_table_query(ss, &snmpcmd_table);
 
+    mp_snmp_deinit();
 
-    printf("table %d:%d\n",table.col, table.row);
-
-    int x, y;
-    netsnmp_variable_list *vars;
-
-
-    for(y=0; y<table.row; y++) {
-        for(x=0; x<table.col; x++) {
-            printf("%d/%d: (%d)\n", x, y, x*table.col+y);
-            vars = mp_snmp_table_get(table, x, y);
-            print_variable(vars->name, vars->name_length, vars);
-        }
+    // Check for PSU Failure
+    if (pdu_psu1 != 1) {
+        status = STATE_CRITICAL;
+        output = strdup("Power Supply 1 Faild!");
+    } else if (pdu_psu2 != 1) {
+        status = STATE_CRITICAL;
+        output = strdup("Power Supply 2 Faild!");
     }
 
-    SOCK_CLEANUP;
+    if (stateOn == NULL && stateOff == NULL) {
+        // Check all outlets for on.
+        for (i = 0; i<table_state.row; i++) {
+            vars = mp_snmp_table_get(table_state, 4, i);
 
-
-    ok("end");
+            if (*vars->val.integer != 1) {
+                vars = mp_snmp_table_get(table_state, 2, i);
+                
+                char *t = (char *)malloc(9 + vars->val_len);
+                memcpy(t, vars->val.string, vars->val_len);
+                t[vars->val_len] = '\0';
+                strcat(t, " is off!");
+                
+                if (output == NULL) {
+                    output = strdup(t);
+                } else {
+                    realloc(output, strlen(output) + strlen(t) + 2);
+                    strcat(output, " ");
+                    strcat(output, t);
+                }
+                free(t);
+                status = STATE_CRITICAL;
+            }
+        }
+    } else {
+        if (stateOn != NULL) {
+            char *c, *s, *p;
+            p = s = strdup(stateOn);
+            while((c = strsep(&s, ","))) {
+                i = strtol(c, NULL, 10);
+                if (i == 0) {
+                    for (i = 0; i<table_state.row; i++) {
+                        vars = mp_snmp_table_get(table_state, 2, i);
+                        if (strcmp(c, (char*)vars->val.string) == 0)
+                            break;
+                    }
+                } else {
+                    i--;
+                }
+                if (i >= table_state.row)
+                    continue;
+                
+                vars = mp_snmp_table_get(table_state, 4, i);
+                if (*vars->val.integer != 1) {
+                    vars = mp_snmp_table_get(table_state, 2, i);
+                    
+                    char *t = (char *)malloc(9 + vars->val_len);
+                    memcpy(t, vars->val.string, vars->val_len);
+                    t[vars->val_len] = '\0';
+                    strcat(t, " is off!");
+                    if (output == NULL) {
+                        output = strdup(t);
+                    } else {
+                        realloc(output, strlen(output) + strlen(t) + 2);
+                        strcat(output, " ");
+                        strcat(output, t);
+                    }
+                    free(t);
+                    status = STATE_CRITICAL;
+                }
+            }
+            free( p );
+        }
+        if (stateOff != NULL) {
+            char *c, *s, *p;
+            p = s = strdup(stateOff);
+            while((c = strsep(&s, ","))) {
+                i = strtol(c, NULL, 10);
+                if (i == 0) {
+                    for (i = 0; i<table_state.row; i++) {
+                        vars = mp_snmp_table_get(table_state, 2, i);
+                        if (strcmp(c, (char*)vars->val.string) == 0)
+                            break;
+                    }
+                } else {
+                    i--;
+                }
+                if (i >= table_state.row)
+                    continue;
+                
+                vars = mp_snmp_table_get(table_state, 4, i);
+                if (*vars->val.integer != 2) {
+                    vars = mp_snmp_table_get(table_state, 2, i);
+                    
+                    char *t = (char *)malloc(9 + vars->val_len);
+                    memcpy(t, vars->val.string, vars->val_len);
+                    t[vars->val_len] = '\0';
+                    strcat(t, " is on!");
+                    if (output == NULL) {
+                        output = strdup(t);
+                    } else {
+                        realloc(output, strlen(output) + strlen(t) + 2);
+                        strcat(output, " ");
+                        strcat(output, t);
+                    }
+                    free(t);
+                    status = STATE_CRITICAL;
+                }
+            }
+            free( p );
+        }
+    }
+    
+    /* Output and return */
+    if (status == STATE_OK)
+        ok("APC PDU %s", pdu_name);
+    if (status == STATE_WARNING)
+        warning("APC PDU %s [%s]", pdu_name, output);
+    critical("APC PDU %s [%s]", pdu_name, output);
 }
 
 int process_arguments (int argc, char **argv) {
@@ -118,9 +238,9 @@ int process_arguments (int argc, char **argv) {
         getopt_timeout(c, optarg);
 
         if (c == 'o') {
-
+            stateOn = optarg;
         } else if (c == 'O') {
-
+            stateOff = optarg;
         }
     }
 
