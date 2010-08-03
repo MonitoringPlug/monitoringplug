@@ -2,7 +2,7 @@
  * Monitoring Plugin - check_aspsms_credits
  **
  *
- * check_aspsms_credits - Check if a file can be downloaded from tftp.
+ * check_aspsms_credits - Check ASPSMS credits by XML.
  * Copyright (C) 2010 Marius Rieder <marius.rieder@durchmesser.ch>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,11 +60,7 @@ static size_t my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream) {
         realloc(answer, strlen(answer) + size*nmemb + 1);
     }
     memcpy(xmlp, buffer, size*nmemb);
-   
     xmlp[size*nmemb] = '\0';
-    
-    printf("my_fwrite %s\n", xmlp);
-    
     xmlp += size*nmemb;
     
     return size*nmemb;
@@ -75,7 +71,6 @@ static size_t my_fread(void *buffer, size_t size, size_t nmemb, void *stream) {
         s = size*nmemb;
         
     strncpy(buffer, xmlp, s);
-    printf("my_fread %d, %s\n", s, buffer);
     xmlp += s;
     return s;
 }
@@ -86,9 +81,6 @@ int main (int argc, char **argv) {
     CURL        *curl;
     CURLcode    res;
     struct curl_slist *headers = NULL;
-    char        *url;
-    double      size;
-    double      time;
     char        *xml;
     char        *c;
     int         errorCode;
@@ -128,11 +120,12 @@ int main (int argc, char **argv) {
     curl_global_init(CURL_GLOBAL_ALL);
     
     /* Set Header */
-    char *length_header = malloc(21);
-    sprintf(clh, "Content-Length: %d", strlen(xml));
+    c = malloc(21);
+    sprintf(c, "Content-Length: %d", (int)strlen(xml));
     
     headers = curl_slist_append (headers, "Content-Type: text/html");
-    headers = curl_slist_append (headers, clh);
+    headers = curl_slist_append (headers, c);
+    free( c );
     
     curl = curl_easy_init();
     if(curl) {
@@ -254,7 +247,8 @@ void print_help (void) {
 
     printf("\n");
   
-    printf ("This plugin check if a file can be downloaded from tftp.");
+    printf ("This plugin check available ASPSMS credits.");
+    printf ("\n\n\tWARNING: Password is sent unencryptet.");
 
     printf("\n\n");
 
