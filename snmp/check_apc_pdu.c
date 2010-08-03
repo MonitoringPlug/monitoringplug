@@ -26,7 +26,7 @@ const char *progname  = "check_apc_pdu";
 const char *progvers  = "0.1";
 const char *progcopy  = "2010";
 const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
-const char *progusage = "-H <HOST>";
+const char *progusage = "-H <HOST> [-on <PORTS>] [-off <PORTS>]";
 
 #include "mp_common.h"
 #include "snmp_utils.h"
@@ -254,13 +254,21 @@ void print_help (void) {
 
     printf("\n");
 
-    printf("This plugin check the outlet status of a APC PDU.");
+    printf("This plugin check the psu and outlet status of a APC PDU.");
 
     printf("\n\n");
 
     print_usage();
+    
+    printf("\nIf no On/Off-Ports are defines all ports are asumed as should be On.\n");
+    printf("\nOn/Off-Ports can be named or nubered. ex: --on '1,Outlet 3,4'\n");
 
     print_help_default();
+    
+    printf(" -o, --on=PORT[,PORTS]\n");
+    printf("      Ports which should be On.\n");
+    printf(" -O, --off=PORT[,PORTS]\n");
+    printf("      Ports which should be Off.\n");
 
     print_help_snmp();
 
