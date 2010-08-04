@@ -261,8 +261,8 @@ void print_help (void) {
     printf("      The userkey of the ASPSMS account.\n");
     printf(" -P, --password=PASSWORD\n");
     printf("      The password of the ASPSMS account.\n");
-    print_help_warn_time("100:");
-    print_help_crit_time("50:");
+    print_help_warn("credits", "100:");
+    print_help_crit("credits", "50:");
     print_help_timeout();
 }
 

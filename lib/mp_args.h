@@ -232,6 +232,18 @@ inline void print_help_warn_time(const char *def) __attribute__((always_inline))
 inline void print_help_crit_time(const char *def) __attribute__((always_inline));
 
 /**
+ * Print the help for a warning option.
+ * \param[in] def The default string.
+ */
+inline void print_help_warn(const char *limit, const char *def) __attribute__((always_inline));
+
+/**
+ * Print the help for a critical option.
+ * \param[in] def The default string.
+ */
+inline void print_help_crit(const char *limit, const char *def) __attribute__((always_inline));
+
+/**
  * Parse the options for help, version, and verbose.
  * \param[in] c option to test
  */

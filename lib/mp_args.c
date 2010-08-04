@@ -297,6 +297,18 @@ void print_help_crit_time(const char *def) {
       Return critical if elapsed time exceeds value. Default to %s\n", def);
 }
 
+void print_help_warn(const char *limit, const char *def) {
+	printf("\
+ -w, --warning=LIMIT\n\
+      Return warning if %s exceeds limit. Default to %s\n", limit, def);
+}
+
+void print_help_crit(const char *limit, const char *def) {
+	printf("\
+ -c, --critical=LIMIT\n\
+      Return critical if %s exceeds limit. Default to %s\n", limit, def);
+}
+
 void getopt_default(int c) {
     switch (c) {
         case 'h':
