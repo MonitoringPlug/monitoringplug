@@ -41,8 +41,8 @@ void ok(const char *fmt, ...) {
     va_start(ap, fmt);
     vprintf(fmt, ap);
     va_end(ap);
-    if (mp_perfdata)
-       printf(" | %s", mp_perfdata);
+    if (mp_perfdata != NULL)
+       printf("| %s", mp_perfdata);
     printf("\n");
     exit(STATE_OK);
 }
@@ -103,11 +103,11 @@ void perfdata_int(const char *label, int value, const char *unit,
    if (mp_perfdata != NULL) {
       mp_perfdata = realloc(mp_perfdata, strlen(mp_perfdata) + strlen(tmp) + 2);
       strncat(mp_perfdata, " ", 1);
-      strncat(mp_perfdata, tmp, strlen(tmp));
    } else {
       mp_perfdata = malloc(strlen(tmp) + 1);
-      strncpy(mp_perfdata, tmp, strlen(tmp));
+      mp_perfdata[0] = '\0';
    }
+   strncat(mp_perfdata, tmp, strlen(tmp));
 
    free(tmp);
 }

@@ -244,6 +244,11 @@ inline void print_help_warn(const char *limit, const char *def) __attribute__((a
 inline void print_help_crit(const char *limit, const char *def) __attribute__((always_inline));
 
 /**
+ * Print the help for the IPv4/6 option.
+ */
+inline void print_help_46(void) __attribute__((always_inline));
+
+/**
  * Parse the options for help, version, and verbose.
  * \param[in] c option to test
  */

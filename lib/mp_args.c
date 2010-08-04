@@ -88,7 +88,7 @@ void free_threshold(thresholds *threshold) {
 }
 
 int parse_range_string(range *range, const char *str, int multiplier) {
-    char *eptr, *end_str, *start_str;
+    char *e, *eptr, *end_str, *start_str;
     double tmp;
 
     /* Set defaults */
@@ -103,7 +103,7 @@ int parse_range_string(range *range, const char *str, int multiplier) {
         str++;
     }
 
-    end_str = strdup(str);
+    e = end_str = strdup(str);
 
     start_str = strsep(&end_str, ":");
     if (end_str == NULL) {
@@ -148,12 +148,15 @@ int parse_range_string(range *range, const char *str, int multiplier) {
     if (range->start_infinity == 1 ||
         range->end_infinity == 1 ||
         range->start <= range->end) {
+        free(e);
         return OK;
     }
 
     tmp = range->start;
     range->start = range->end;
     range->end = tmp;
+
+    free(e);
 
     return OK;
 }
@@ -307,6 +310,14 @@ void print_help_crit(const char *limit, const char *def) {
 	printf("\
  -c, --critical=LIMIT\n\
       Return critical if %s exceeds limit. Default to %s\n", limit, def);
+}
+
+void print_help_46(void) {
+    printf("\
+ -4, --ipv4\n\
+      Use IPv4 to check.\n\
+ -6, --ipv6\n\
+      Use IPv6 to check.\n");
 }
 
 void getopt_default(int c) {
