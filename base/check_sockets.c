@@ -244,6 +244,8 @@ int countSocket(const char *filename, int port) {
     int cnt = 0;
 
     input = fopen(filename, "r");
+    if (input == NULL)
+        return -1;
 
     fgets(buffer, 256, input);
 
@@ -277,11 +279,13 @@ int process_arguments (int argc, char **argv) {
         {"tcp", required_argument, NULL, (int)'t'},
         {"udp", required_argument, NULL, (int)'u'},
         {"raw", required_argument, NULL, (int)'r'},
+        MP_LONGOPTS_WC,
+        MP_LONGOPTS_PERF,
         MP_LONGOPTS_END
     };
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"t:u:r:c:w:", longopts, &option);
+        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"t:u:r:c:w:46", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -289,6 +293,7 @@ int process_arguments (int argc, char **argv) {
         getopt_default(c);
         getopt_46(c, &ipv4, &ipv6);
         getopt_wc(c, optarg, &socket_thresholds);
+        getopt_perf(c);
 
         switch (c) {
             case 't':
@@ -321,34 +326,23 @@ void print_help (void) {
 
     printf("\n");
 
-    printf("Check age, size, owner, group and permission property of a file.");
+    printf("Check number of open Sockets.");
 
     printf("\n\n");
 
     print_usage();
 
     print_help_default();
-    printf(" -f, --file=filename\n");
-    printf("      The file to test.\n");
-    printf(" -w, --warning=time[d|h|m|s]\n");
-    printf("      Return warning if the file age exceed this range.\n");
-    printf(" -c, --critical=time[d|h|m|s]\n");
-    printf("      Return critical if the file age exceed this range.\n");
-    printf(" -W=size\n");
-    printf("      Return warning if the file size exceed this range.\n");
-    printf(" -C=size\n");
-    printf("      Return critical if the file size exceed this range.\n");
-    printf(" -o, --owner=uanme|uid\n");
-    printf("      Return critical if the file don't belong to the user.\n");
-    printf(" -g, --group=gname|gid\n");
-    printf("      Return critical if the file don't belong to the group.\n");
-    printf(" -a, -access=accessstring\n");
-    printf("      Return critical if the file permission don't match the accessstring.\n");
-
-    printf("\nAccess String Example:\n");
-    printf(" u+r  => Check if file owner can read the file.\n");
-    printf(" g=rx => Check if group can read, execute and not write.\n");
-    printf(" o-rw => Check if others can't read nor write.\n");
+    print_help_46();
+    printf(" -t, --tcp=PORT\n");
+    printf("      Count TCP sockets on port PORT. Port 0 for all sockets.\n");
+    printf(" -u, --udp=PORT\n");
+    printf("      Count UDP sockets on port PORT. Port 0 for all sockets.\n");
+    printf(" -r, --raw=PORT\n");
+    printf("      Count RAW sockets on port PORT. Port 0 for all sockets.\n");
+    print_help_warn("socket count", "");
+    print_help_crit("socket count", "");
+    print_help_perf();
 
 }
 
