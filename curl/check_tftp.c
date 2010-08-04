@@ -120,6 +120,8 @@ int main (int argc, char **argv) {
 
     curl_global_cleanup();
     
+    free(url);
+
     switch(get_status(time, fetch_thresholds)) {
         case STATE_OK:
             ok("Received %'.0fbyte in %fs.", size, time);
