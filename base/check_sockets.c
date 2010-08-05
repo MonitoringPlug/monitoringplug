@@ -26,7 +26,7 @@ const char *progname  = "check_sockets";
 const char *progvers  = "0.1";
 const char *progcopy  = "2010";
 const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
-const char *progusage = "-f <FILE> [-w <warning age>] [-c <critical age>]";
+const char *progusage = "--tcp <PORT> [-w <warning count>] [-c <critical count>]";
 
 #include "mp_common.h"
 
@@ -55,173 +55,188 @@ int countSocket(const char *filename, int port);
 
 int main (int argc, char **argv) {
 
-    int         cnt;
+    int         count;
     int         status = STATE_OK;
     int         lstatus;
     char        *output = NULL;
 
+    /* Set Default range */
+    setWarnTime(&socket_thresholds, "1000");
+    setCritTime(&socket_thresholds, "1024");
+
+    /* Parse argumens */
     if (process_arguments (argc, argv) == 1)
         exit(STATE_CRITICAL);
 
     if (tcpport < 0 && udpport < 0 && rawport < 0)
         usage("--tcp, --udp or --raw mandatory.");
 
+    if (mp_verbose) {
+        printf("IPv4/6: %d %d\n",ipv4, ipv6);
+        printf("TCP: %d\n", tcpport);
+        printf("UDP: %d\n", udpport);
+        printf("RAW: %d\n", rawport);
+    }
+
     if (tcpport >=0) {
         if(ipv4 > 0) {
-            cnt = countSocket("tcp",tcpport);
-            lstatus = get_status(cnt, socket_thresholds);
+            count = countSocket("tcp",tcpport);
+            if (count >= 0) {
+                lstatus = get_status(count, socket_thresholds);
+                if (mp_showperfdata)
+                    perfdata_int("tcp", count, "", socket_thresholds->warning->end ,
+                            socket_thresholds->critical->end, 0, 1024);
+            } else {
+                lstatus = STATE_UNKNOWN;
+            }
 
             switch (lstatus) {
                 case STATE_WARNING:
-                    output = malloc(sizeof(char) * 12);
-                    strcat(output, "tcp warning");
+                    mp_strcat_comma(&output, "tcp warning");
+                    status = STATE_CRITICAL != status ? lstatus : status;
                     break;
                 case STATE_CRITICAL:
-                    output = malloc(sizeof(char) * 13);
-                    strcat(output, "tcp critical");
+                    mp_strcat_comma(&output, "tcp critical");
+                    status = lstatus;
+                    break;
+                case STATE_UNKNOWN:
+                    mp_strcat_comma(&output, "Can't read tcp!");
+                    status = STATE_OK == status ? lstatus : status;
                     break;
             }
-
-            status = lstatus > status ? lstatus : status;
         }
         if(ipv6 > 0) {
-            cnt = countSocket("tcp6",tcpport);
-            lstatus = get_status(cnt, socket_thresholds);
+            count = countSocket("tcp6",tcpport);
+            if (count >= 0) {
+                lstatus = get_status(count, socket_thresholds);
+                if (mp_showperfdata)
+                    perfdata_int("tcp6", count, "", socket_thresholds->warning->end ,
+                            socket_thresholds->critical->end, 0, 1024);
+            } else {
+                lstatus = STATE_UNKNOWN;
+            }
 
             switch (lstatus) {
                 case STATE_WARNING:
-                    if (output != NULL) {
-                        output = realloc(output, strlen(output) + sizeof(char) * 15);
-                        strcat(output, ", tcp6 warning");
-                    } else {
-                        output = malloc(sizeof(char) * 13);
-                        strcat(output, "tcp6 warning");
-                    }
+                    mp_strcat_comma(&output, "tcp6 warning");
+                    status = STATE_CRITICAL != status ? lstatus : status;
                     break;
                 case STATE_CRITICAL:
-                    if (output != NULL) {
-                        output = realloc(output, strlen(output) + sizeof(char) * 16);
-                        strcat(output, ", tcp6 critical");
-                    } else {
-                        output = malloc(sizeof(char) * 14);
-                        strcat(output, "tcp6 critical");
-                    }
+                    mp_strcat_comma(&output, "tcp6 critical");
+                    break;
+                case STATE_UNKNOWN:
+                    mp_strcat_comma(&output, "Can't read tcp6!");
+                    status = STATE_OK == status ? lstatus : status;
                     break;
             }
-
-            status = lstatus > status ? lstatus : status;
         }
     }
     if (udpport >=0) {
         if(ipv4 > 0) {
-            cnt = countSocket("udp",udpport);
-            lstatus = get_status(cnt, socket_thresholds);
+            count = countSocket("udp",udpport);
+            if (count >= 0) {
+                lstatus = get_status(count, socket_thresholds);
+                if (mp_showperfdata)
+                    perfdata_int("udp", count, "", socket_thresholds->warning->end ,
+                            socket_thresholds->critical->end, 0, 1024);
+            } else {
+                lstatus = STATE_UNKNOWN;
+            }
 
             switch (lstatus) {
                 case STATE_WARNING:
-                    if (output != NULL) {
-                        output = realloc(output, strlen(output) + sizeof(char) * 14);
-                        strcat(output, ", udp warning");
-                    } else {
-                        output = malloc(sizeof(char) * 12);
-                        strcat(output, "udp warning");
-                    }
+                    mp_strcat_comma(&output, "udp warning");
+                    status = STATE_CRITICAL != status ? lstatus : status;
                     break;
                 case STATE_CRITICAL:
-                    if (output != NULL) {
-                        output = realloc(output, strlen(output) + sizeof(char) * 15);
-                        strcat(output, ", udp critical");
-                    } else {
-                        output = malloc(sizeof(char) * 13);
-                        strcat(output, "udp critical");
-                    }
+                    mp_strcat_comma(&output, "udp critical");
+                    status = lstatus;
+                    break;
+                case STATE_UNKNOWN:
+                    mp_strcat_comma(&output, "Can't read udp!");
+                    status = STATE_OK == status ? lstatus : status;
                     break;
             }
-
-            status = lstatus > status ? lstatus : status;
         }
         if(ipv6 > 0) {
-            cnt = countSocket("udp6",udpport);
-            lstatus = get_status(cnt, socket_thresholds);
+            count = countSocket("udp6",udpport);
+            if (count >= 0) {
+                lstatus = get_status(count, socket_thresholds);
+                if (mp_showperfdata)
+                    perfdata_int("udp", count, "", socket_thresholds->warning->end ,
+                            socket_thresholds->critical->end, 0, 1024);
+            } else {
+                lstatus = STATE_UNKNOWN;
+            }
 
             switch (lstatus) {
                 case STATE_WARNING:
-                    if (output != NULL) {
-                        output = realloc(output, strlen(output) + sizeof(char) * 15);
-                        strcat(output, ", udp6 warning");
-                    } else {
-                        output = malloc(sizeof(char) * 13);
-                        strcat(output, "udp6 warning");
-                    }
+                    mp_strcat_comma(&output, "udp6 warning");
+                    status = STATE_CRITICAL != status ? lstatus : status;
                     break;
                 case STATE_CRITICAL:
-                    if (output != NULL) {
-                        output = realloc(output, strlen(output) + sizeof(char) * 16);
-                        strcat(output, ", udp6 critical");
-                    } else {
-                        output = malloc(sizeof(char) * 14);
-                        strcat(output, "udp6 critical");
-                    }
+                    mp_strcat_comma(&output, "udp6 critical");
+                    status = lstatus;
+                    break;
+                case STATE_UNKNOWN:
+                    mp_strcat_comma(&output, "Can't read udp6!");
+                    status = STATE_OK == status ? lstatus : status;
                     break;
             }
-
-            status = lstatus > status ? lstatus : status;
         }
     }
     if (rawport >=0) {
         if(ipv4 > 0) {
-            cnt = countSocket("raw",rawport);
-            lstatus = get_status(cnt, socket_thresholds);
+            count = countSocket("raw",rawport);
+            if (count >= 0) {
+                lstatus = get_status(count, socket_thresholds);
+                if (mp_showperfdata)
+                    perfdata_int("raw", count, "", socket_thresholds->warning->end ,
+                            socket_thresholds->critical->end, 0, 1024);
+            } else {
+                lstatus = STATE_UNKNOWN;
+            }
 
             switch (lstatus) {
                 case STATE_WARNING:
-                    if (output != NULL) {
-                        output = realloc(output, strlen(output) + sizeof(char) * 14);
-                        strcat(output, ", raw warning");
-                    } else {
-                        output = malloc(sizeof(char) * 12);
-                        strcat(output, "raw warning");
-                    }
+                    mp_strcat_comma(&output, "raw warning");
+                    status = STATE_CRITICAL != status ? lstatus : status;
                     break;
                 case STATE_CRITICAL:
-                    if (output != NULL) {
-                        output = realloc(output, strlen(output) + sizeof(char) * 15);
-                        strcat(output, ", raw critical");
-                    } else {
-                        output = malloc(sizeof(char) * 13);
-                        strcat(output, "raw critical");
-                    }
+                    mp_strcat_comma(&output, "raw critical");
+                    status = lstatus;
+                    break;
+                case STATE_UNKNOWN:
+                    mp_strcat_comma(&output, "Can't read raw!");
+                    status = STATE_OK == status ? lstatus : status;
                     break;
             }
-
-            status = lstatus > status ? lstatus : status;
         }
         if(ipv6 > 0) {
-            cnt = countSocket("raw6",rawport);
-            lstatus = get_status(cnt, socket_thresholds);
+            count = countSocket("raw6",rawport);
+            if (count >= 0) {
+                lstatus = get_status(count, socket_thresholds);
+                if (mp_showperfdata)
+                    perfdata_int("raw6", count, "", socket_thresholds->warning->end ,
+                            socket_thresholds->critical->end, 0, 1024);
+            } else {
+                lstatus = STATE_UNKNOWN;
+            }
 
             switch (lstatus) {
                 case STATE_WARNING:
-                    if (output != NULL) {
-                        output = realloc(output, strlen(output) + sizeof(char) * 15);
-                        strcat(output, ", raw6 warning");
-                    } else {
-                        output = malloc(sizeof(char) * 13);
-                        strcat(output, "raw6 warning");
-                    }
+                    mp_strcat_comma(&output, "raw6 warning");
+                    status = STATE_CRITICAL != status ? lstatus : status;
                     break;
                 case STATE_CRITICAL:
-                    if (output != NULL) {
-                        output = realloc(output, strlen(output) + sizeof(char) * 16);
-                        strcat(output, ", raw6 critical");
-                    } else {
-                        output = malloc(sizeof(char) * 14);
-                        strcat(output, "raw6 critical");
-                    }
+                    mp_strcat_comma(&output, "raw6 critical");
+                    status = lstatus;
+                    break;
+                case STATE_UNKNOWN:
+                    mp_strcat_comma(&output, "Can't read raw6!");
+                    status = STATE_OK == status ? lstatus : status;
                     break;
             }
-
-            status = lstatus > status ? lstatus : status;
         }
     }
 
@@ -232,6 +247,8 @@ int main (int argc, char **argv) {
             warning(output);
         case STATE_CRITICAL:
             critical(output);
+        case STATE_UNKNOWN:
+            unknown(output);
     }
 
     critical("You should never reach this point.");
@@ -241,7 +258,7 @@ int countSocket(const char *filename, int port) {
     FILE *input;
     char buffer[256];
     char *c, *next;
-    int cnt = 0;
+    int count = 0;
 
     input = fopen(filename, "r");
     if (input == NULL)
@@ -256,18 +273,15 @@ int countSocket(const char *filename, int port) {
             c = strsep(&next, ":");
             c = strsep(&next, " ");
             if(port == strtol(c, NULL, 16)) {
-                cnt++;
+                count++;
             }
         } else {
-            cnt++;
+            count++;
         }
     }
-
     fclose(input);
 
-    printf("%s: %d\n", filename, cnt);
-
-    return cnt;
+    return count;
 }
 
 int process_arguments (int argc, char **argv) {
@@ -281,11 +295,11 @@ int process_arguments (int argc, char **argv) {
         {"raw", required_argument, NULL, (int)'r'},
         MP_LONGOPTS_WC,
         MP_LONGOPTS_PERF,
-        MP_LONGOPTS_END
+        MP_LONGOPTS_END,
     };
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"t:u:r:c:w:46", longopts, &option);
+        c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"t:u:r:c:w:46", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -293,7 +307,6 @@ int process_arguments (int argc, char **argv) {
         getopt_default(c);
         getopt_46(c, &ipv4, &ipv6);
         getopt_wc(c, optarg, &socket_thresholds);
-        getopt_perf(c);
 
         switch (c) {
             case 't':
@@ -340,8 +353,8 @@ void print_help (void) {
     printf("      Count UDP sockets on port PORT. Port 0 for all sockets.\n");
     printf(" -r, --raw=PORT\n");
     printf("      Count RAW sockets on port PORT. Port 0 for all sockets.\n");
-    print_help_warn("socket count", "");
-    print_help_crit("socket count", "");
+    print_help_warn("socket count", "1000");
+    print_help_crit("socket count", "1024");
     print_help_perf();
 
 }

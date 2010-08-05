@@ -334,14 +334,6 @@ void getopt_default(int c) {
     }
 }
 
-void getopt_perf(int c) {
-    switch (c) {
-        case ARG_PERFDATA:
-            mp_showperfdata = 1;
-            break;
-    }
-}
-
 void getopt_timeout(int c, const char *optarg) {
     if (c == 't')
         mp_timeout = atoi (optarg);
@@ -395,7 +387,7 @@ void getopt_46(int c, int *ipv4, int *ipv6) {
     if (c == '4') {
         *ipv4 = 2;
         if(*ipv6 != 2)
-            *ipv4 = 0;
+            *ipv6 = 0;
     } else if (c == '6') {
         *ipv6 = 2;
         if(*ipv4 != 2)

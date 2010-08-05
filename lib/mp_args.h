@@ -255,12 +255,6 @@ inline void print_help_46(void) __attribute__((always_inline));
 inline void getopt_default(int c) __attribute__((always_inline));
 
 /**
- * Parse the options for perfdata.
- * \param[in] c option to test
- */
-inline void getopt_perf(int c) __attribute__((always_inline));
-
-/**
  * Parse the option for timeout.
  * \param[in] c option to test
  * \param[in] optarg option argument
@@ -302,7 +296,7 @@ inline void getopt_46(int c, int *ipv4, int *ipv6) __attribute__((always_inline)
                             {"version", no_argument, NULL, (int)'V'}, \
                             {"verbose", no_argument, NULL, (int)'v'}
 
-#define MP_LONGOPTS_PERF    {"perfdata", no_argument, NULL, ARG_PERFDATA}
+#define MP_LONGOPTS_PERF    {"perfdata", no_argument, &mp_showperfdata, 1}
 
 /** optstring for timeout */
 #define MP_OPTSTR_TIMEOUT   "t:"
