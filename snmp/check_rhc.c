@@ -132,8 +132,7 @@ int process_arguments (int argc, char **argv) {
         getopt_default(c);
         getopt_host(c, optarg, &hostname);
         getopt_port(c, optarg, &port);
-        getopt_snmp( c );
-        getopt_perf(c);
+        getopt_snmp(c);
         getopt_timeout(c, optarg);
     }
 

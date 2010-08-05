@@ -83,9 +83,9 @@ int main (int argc, char **argv) {
     struct curl_slist *headers = NULL;
     char        *xml;
     char        *c;
-    int         errorCode;
-    float       credits;
-    char        *errorDescription;
+    int         errorCode = 0;
+    float       credits = 0;
+    char        *errorDescription = "Illegal response from server.";
 
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)

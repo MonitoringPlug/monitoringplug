@@ -106,13 +106,7 @@ int main (int argc, char **argv) {
                 t[vars->val_len] = '\0';
                 strcat(t, " is off!");
                 
-                if (output == NULL) {
-                    output = strdup(t);
-                } else {
-                    realloc(output, strlen(output) + strlen(t) + 2);
-                    strcat(output, " ");
-                    strcat(output, t);
-                }
+                mp_strcat_space(&output, t);
                 free(t);
                 status = STATE_CRITICAL;
             }
@@ -143,13 +137,7 @@ int main (int argc, char **argv) {
                     memcpy(t, vars->val.string, vars->val_len);
                     t[vars->val_len] = '\0';
                     strcat(t, " is off!");
-                    if (output == NULL) {
-                        output = strdup(t);
-                    } else {
-                        realloc(output, strlen(output) + strlen(t) + 2);
-                        strcat(output, " ");
-                        strcat(output, t);
-                    }
+                    mp_strcat_space(&output, t);
                     free(t);
                     status = STATE_CRITICAL;
                 }
@@ -181,13 +169,7 @@ int main (int argc, char **argv) {
                     memcpy(t, vars->val.string, vars->val_len);
                     t[vars->val_len] = '\0';
                     strcat(t, " is on!");
-                    if (output == NULL) {
-                        output = strdup(t);
-                    } else {
-                        realloc(output, strlen(output) + strlen(t) + 2);
-                        strcat(output, " ");
-                        strcat(output, t);
-                    }
+                    mp_strcat_space(&output, t);
                     free(t);
                     status = STATE_CRITICAL;
                 }

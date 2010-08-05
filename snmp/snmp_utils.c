@@ -153,7 +153,7 @@ int mp_snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd)
                     }
                     switch(vars->type) {
                         case ASN_INTEGER:
-                            *(p->target) = (int)(*vars->val.integer);
+                            *(p->target) = (void *)(*vars->val.integer);
                             break;
                         case ASN_OCTET_STR: {
                             char *t = (char *)malloc(1 + vars->val_len);
@@ -301,9 +301,6 @@ netsnmp_variable_list *mp_snmp_table_get(const struct mp_snmp_table table, int x
         return NULL;
     return table.var[(x-1)*table.row+y];
 }
-
-
-
 
 void getopt_snmp(int c) {
     switch ( c ) {
