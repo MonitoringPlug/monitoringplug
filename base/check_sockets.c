@@ -80,7 +80,7 @@ int main (int argc, char **argv) {
 
     if (tcpport >=0) {
         if(ipv4 > 0) {
-            count = countSocket("tcp",tcpport);
+            count = countSocket("/proc/net/tcp",tcpport);
             if (count >= 0) {
                 lstatus = get_status(count, socket_thresholds);
                 if (mp_showperfdata)
@@ -106,7 +106,7 @@ int main (int argc, char **argv) {
             }
         }
         if(ipv6 > 0) {
-            count = countSocket("tcp6",tcpport);
+            count = countSocket("/proc/net/tcp6",tcpport);
             if (count >= 0) {
                 lstatus = get_status(count, socket_thresholds);
                 if (mp_showperfdata)
@@ -133,7 +133,7 @@ int main (int argc, char **argv) {
     }
     if (udpport >=0) {
         if(ipv4 > 0) {
-            count = countSocket("udp",udpport);
+            count = countSocket("/proc/net/udp",udpport);
             if (count >= 0) {
                 lstatus = get_status(count, socket_thresholds);
                 if (mp_showperfdata)
@@ -159,7 +159,7 @@ int main (int argc, char **argv) {
             }
         }
         if(ipv6 > 0) {
-            count = countSocket("udp6",udpport);
+            count = countSocket("/proc/net/udp6",udpport);
             if (count >= 0) {
                 lstatus = get_status(count, socket_thresholds);
                 if (mp_showperfdata)
@@ -187,7 +187,7 @@ int main (int argc, char **argv) {
     }
     if (rawport >=0) {
         if(ipv4 > 0) {
-            count = countSocket("raw",rawport);
+            count = countSocket("/proc/net/raw",rawport);
             if (count >= 0) {
                 lstatus = get_status(count, socket_thresholds);
                 if (mp_showperfdata)
@@ -213,7 +213,7 @@ int main (int argc, char **argv) {
             }
         }
         if(ipv6 > 0) {
-            count = countSocket("raw6",rawport);
+            count = countSocket("/proc/net/raw6",rawport);
             if (count >= 0) {
                 lstatus = get_status(count, socket_thresholds);
                 if (mp_showperfdata)
