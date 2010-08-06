@@ -255,8 +255,6 @@ void print_help (void) {
     print_usage();
 
     print_help_default();
-    print_help_host();
-    print_help_port("UNDEF");
     printf(" -U, --userkey=USERKEY\n");
     printf("      The userkey of the ASPSMS account.\n");
     printf(" -P, --password=PASSWORD\n");
