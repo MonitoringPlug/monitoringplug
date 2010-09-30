@@ -30,6 +30,7 @@
 
 #include "mp_args.h"
 #include "mp_check.h"
+#include "mp_popen.h"
 
 /** Pointer to the program name. Each plugin must define this. */
 extern const char *progname;
@@ -149,5 +150,10 @@ inline void print_copyright(void) __attribute__((always_inline));
  * \param[in] signo Signal number of the trigering signal.
  */
 void timeout_alarm_handler(int signo);
+
+/**
+ * Abort if none-root runs root-only plugin.
+ */
+void mp_noneroot_die(void);
 
 #endif /* _MP_COMMON_H_ */

@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <string.h>
+#include <unistd.h>
 
 unsigned int mp_timeout = 10;
 unsigned int mp_verbose = 0;
@@ -169,5 +170,11 @@ void print_copyright (void) {
 void timeout_alarm_handler(int signo) {
     if (signo == SIGALRM) {
         critical("Plugin timed out after %d seconds\n", mp_timeout);
+    }
+}
+
+void mp_noneroot_die(void) {
+    if (geteuid() != 0) {
+        usage("This plugin must be run as root.");
     }
 }
