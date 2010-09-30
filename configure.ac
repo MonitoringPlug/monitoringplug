@@ -43,6 +43,8 @@ EXTRASUBDIRS=
 # Checks for libraries.
 PKG_CHECK_MODULES([CHECK], [check >= 0.9.4],,[AC_MSG_WARN([Skipping check])])
 PKG_CHECK_MODULES(LDNS, libldns,,[AC_MSG_WARN([Skipping ldns])])
+AX_LIB_EXPAT()
+
 LIBCURL_CHECK_CONFIG([yes],[7.7.2], [], [AC_MSG_WARN([Skipping curl])])
 
 AC_CHECK_LIB(netsnmp, netsnmp_get_version,[
@@ -84,8 +86,8 @@ fi
 # Conditionals
 AM_CONDITIONAL([HAVE_LDNS], [test x$LDNS_CFLAGS != x])
 AM_CONDITIONAL([HAVE_CURL], [test x$CURL_CFLAGS != x])
-
 AM_CONDITIONAL([HAVE_CURL_TFTP], [test x$libcurl_protocol_TFTP != x])
+AM_CONDITIONAL([HAVE_EXPAT], [test x$EXPAT_CFLAGS != x])
 AM_CONDITIONAL([HAVE_NET_SNMP], [test x$NETSNMP_LIBS != x])
 
 
@@ -172,10 +174,11 @@ AC_SUBST(EXTRASUBDIRS)
 
 AC_CONFIG_FILES([Makefile
                  lib/Makefile
-		 base/Makefile
+		         base/Makefile
                  curl/Makefile
                  dns/Makefile
                  dummy/Makefile
+                 rhcs/Makefile
                  snmp/Makefile
                  doc/Makefile
                  tests/Makefile])
