@@ -26,6 +26,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+void range_setup(void);
+void range_teardown(void);
+void threshold_setup(void);
+void threshold_teardown(void);
+
 static struct string_return test_multi_case[] = {
     { "k",  1000 },                     { "K",  1024 },
     { "kB", 1000 },                     { "KB", 1024 },
@@ -152,9 +157,9 @@ END_TEST
 
 
 START_TEST (test_threshold_simple) {
-    fail_unless (setWarn(my_thresholds, "10", 0) == 0,
+    fail_unless (setWarn(&my_thresholds, "10", 0) == 0,
         "Parse range string '10' faild");
-    fail_unless (setCrit(my_thresholds, "20", 0) == 0,
+    fail_unless (setCrit(&my_thresholds, "20", 0) == 0,
         "Parse range string '10' faild");
     
     double i;

@@ -22,9 +22,14 @@
 
 #include "mp_common.h"
 #include <stdlib.h>
+#include <unistd.h>
 #include <check.h>
 
 #include "main.h"
+
+
+void exit_setup(void);
+void exit_teardown(void);
 
 void exit_setup(void) {
   close(1);
