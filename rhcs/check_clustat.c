@@ -2,7 +2,7 @@
  * Monitoring Plugin - check_dummy
  **
  *
- * check_dummy - Dummy plugin.
+ * check_clustat - Check clustat plugin.
  * Copyright (C) 2010 Marius Rieder <marius.rieder@durchmesser.ch>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -22,13 +22,14 @@
  * $Id$
  */
 
-const char *progname  = "check_dummy";
+const char *progname  = "check_clustat";
 const char *progvers  = "0.1";
 const char *progcopy  = "2010";
 const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
-const char *progusage = "<state> [message]";
+const char *progusage = "";
 
 #include "mp_common.h"
+#include "rhcs_utils.h"
 
 #include <errno.h>
 #include <getopt.h>
@@ -36,63 +37,100 @@ const char *progusage = "<state> [message]";
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <limits.h>
 
+int nonroot = 0;
 
 int main (int argc, char **argv) {
-    int msglen = 1;
-    char *msg;
-    char *msgc;
-    int c = 0;
-    int r = 1;
+    FILE *fp;
+    char *missing = NULL;
+    char *foreign = NULL;
+
+    rhcs_clustat *clustat;
+    rhcs_clustat_group **groups;
+
+    rhcs_conf *conf;
+    rhcs_conf_fodom_node **fodomnode;
+    rhcs_conf_service **service;
 
     if (process_arguments (argc, argv) == 1)
         exit(STATE_CRITICAL);
 
+    // Need to be root
+    if (nonroot == 0)
+        mp_noneroot_die();
 
-    if (optind < argc && is_integer(argv[c]) == 1) {
-        r = (int)strtol(argv[c], NULL, 10);
-        optind++;
+    alarm(mp_timeout);
+
+    // Parse clustat
+    if (nonroot == 0)
+        fp = fopen("/etc/cluster/clustat.xml","r");
+    else
+        fp = fopen("clustat.xml","r");
+    clustat = parse_rhcs_clustat(fp);
+    fclose(fp);
+
+    if (clustat->local->rgmanager != 1)
+        critical("%s [%s] rgmanager not running!", clustat->name, clustat->local->name);
+
+    // Parse cluster.conf
+    if (nonroot == 0)
+        fp = mp_popen((char *[]) {"/usr/sbin/clustat","-x", NULL});
+    else
+        fp = fopen("cluster.conf","r");
+    conf = parse_rhcs_conf(fp);
+    if (nonroot == 0)
+        mp_pclose(fp);
+    else
+        fclose(fp);
+
+    int localprio;
+    int ownerprio;
+    int bestprio;
+
+    for(groups = clustat->group; *groups != NULL ; groups++) {
+        localprio = 0;
+        ownerprio = 0;
+        bestprio = INT_MAX;
+
+        if ((*groups)->owner == NULL)
+            continue;
+
+        fodomnode = NULL;
+        for(service = conf->service; *service != NULL ; service++) {
+            if (strcmp((*service)->name, (*groups)->name) == 0) {
+                fodomnode = (*service)->fodomain->node;
+                break;
+            }
+        }
+
+        if (fodomnode != NULL) {
+            for(; *fodomnode != NULL ; fodomnode++) {
+                if (strcmp((*fodomnode)->node->name, clustat->local->name) == 0)
+                    localprio = (*fodomnode)->priority;
+                if (strcmp((*fodomnode)->node->name, (*groups)->owner->name) == 0)
+                    ownerprio = (*fodomnode)->priority;
+                bestprio = (*fodomnode)->priority<bestprio?(*fodomnode)->priority:bestprio;
+            }
+
+            if ((*groups)->owner == clustat->local && localprio > bestprio)
+                mp_strcat_comma(&foreign, (*groups)->name);
+
+            if ((*groups)->owner != clustat->local && localprio < ownerprio)
+                mp_strcat_comma(&missing, (*groups)->name);
+
+        }
     }
 
-    if (r < 0 || r > 4)
-        r = 2;
-
-    for (c = optind; c < argc; c++)
-        msglen += strlen(argv[c]) + 1;
-    msg = (char *) malloc((size_t)msglen);
+    if (foreign == NULL &&  missing == NULL)
+        ok("%s(%d) on %s", clustat->name, clustat->id, clustat->local->name);
+    if (foreign == NULL)
+        warning("%s(%d) on %s: Missing %s", clustat->name, clustat->id, clustat->local->name, missing);
+    if (missing == NULL)
+        warning("%s(%d) on %s: Foreign %s", clustat->name, clustat->id, clustat->local->name, foreign);
+    warning("%s(%d) on %s: Missing %s  Foreign %s", clustat->name, clustat->id, clustat->local->name, missing, foreign);
     
-    if (msg == NULL)
-        unknown("Can't allocate memory.");
-    
-    msgc = msg;
-    for (c = optind; c < argc; c++) {
-        strncpy(msgc, argv[c], strlen(argv[c]));
-        msgc += strlen(argv[c]);
-        *msgc = ' ';
-        msgc++;
-    }
-    msgc--;
-    *msgc = '\0';
-
-    if (mp_verbose > 0) {
-        printf("State:   %d\n", r);
-        printf("Message: %s\n", msg);
-    }
-
-    switch ( r ) {
-        case STATE_OK:
-            ok(msg);
-        case STATE_WARNING:
-            warning(msg);
-        case STATE_CRITICAL:
-            critical(msg);
-        case STATE_UNKNOWN:
-            unknown(msg);
-        case STATE_DEPENDENT:
-            unknown(msg);
-    }
-    
-    critical("You should never reach this point.");
+    return 0;
 }
 
 int process_arguments (int argc, char **argv) {
@@ -101,16 +139,25 @@ int process_arguments (int argc, char **argv) {
 
     static struct option longopts[] = {
         MP_LONGOPTS_DEFAULT,
+        {"noroot", no_argument, NULL, (int)'n'},
         MP_LONGOPTS_END
     };
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"t:", longopts, &option);
+        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"nt:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
 
         getopt_default(c);
+        getopt_timeout(c, optarg);
+
+        switch(c) {
+            case 'n':
+                nonroot = 1;
+                break;
+        }
+
     }
 
     return(OK);

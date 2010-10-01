@@ -15,4 +15,6 @@ endif
 
 eck_clustat_SOURCE = check_aspsms_credits.c
 
-LDADD = ../lib/libmonitoringplug.a
+LDADD = rhcs_utils.o ../lib/libmonitoringplug.a
+
+rhcs_utils.o: rhcs_utils.c rhcs_utils.h
