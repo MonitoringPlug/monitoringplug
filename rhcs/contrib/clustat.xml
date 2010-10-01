@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<clustat version="4.1.1">
+  <cluster name="iiweb" id="3296" generation="1808"/>
+  <quorum quorate="1" groupmember="1"/>
+  <nodes>
+    <node name="web-mgt-srv1.inf.ethz.ch" state="1" local="1" estranged="0" rgmanager="1" rgmanager_master="0" qdisk="0" nodeid="0x00000001"/>
+    <node name="web-mgt-srv2.inf.ethz.ch" state="1" local="0" estranged="0" rgmanager="1" rgmanager_master="0" qdisk="0" nodeid="0x00000002"/>
+    <node name="web-mgt-srv3.inf.ethz.ch" state="1" local="0" estranged="0" rgmanager="1" rgmanager_master="0" qdisk="0" nodeid="0x00000003"/>
+  </nodes>
+  <groups>
+    <group name="service:web-arbenz" state="112" state_str="started" flags="0" flags_str="" owner="web-mgt-srv1.inf.ethz.ch" last_owner="web-mgt-srv2.inf.ethz.ch" restarts="0" last_transition="1284471313" last_transition_str="Tue Sep 14 15:35:13 2010"/>
+    <group name="service:web-dept" state="112" state_str="started" flags="0" flags_str="" owner="web-mgt-srv1.inf.ethz.ch" last_owner="none" restarts="0" last_transition="1284960833" last_transition_str="Mon Sep 20 07:33:53 2010"/>
+    <group name="service:web-donaldk" state="112" state_str="started" flags="0" flags_str="" owner="web-mgt-srv2.inf.ethz.ch" last_owner="web-mgt-srv1.inf.ethz.ch" restarts="0" last_transition="1284470845" last_transition_str="Tue Sep 14 15:27:25 2010"/>
+    <group name="service:web-drz" state="112" state_str="started" flags="0" flags_str="" owner="web-mgt-srv2.inf.ethz.ch" last_owner="web-mgt-srv1.inf.ethz.ch" restarts="0" last_transition="1284470845" last_transition_str="Tue Sep 14 15:27:25 2010"/>
+    <group name="service:web-grossm" state="112" state_str="started" flags="0" flags_str="" owner="web-mgt-srv2.inf.ethz.ch" last_owner="web-mgt-srv2.inf.ethz.ch" restarts="0" last_transition="1285150219" last_transition_str="Wed Sep 22 12:10:19 2010"/>
+    <group name="service:web-gutknecht" state="112" state_str="started" flags="0" flags_str="" owner="web-mgt-srv2.inf.ethz.ch" last_owner="web-mgt-srv1.inf.ethz.ch" restarts="0" last_transition="1284470845" last_transition_str="Tue Sep 14 15:27:25 2010"/>
+    <group name="service:web-hinterberger" state="112" state_str="started" flags="0" flags_str="" owner="web-mgt-srv1.inf.ethz.ch" last_owner="web-mgt-srv2.inf.ethz.ch" restarts="0" last_transition="1284471312" last_transition_str="Tue Sep 14 15:35:12 2010"/>
+    <group name="service:web-isg" state="112" state_str="started" flags="0" flags_str="" owner="web-mgt-srv2.inf.ethz.ch" last_owner="none" restarts="0" last_transition="1284720961" last_transition_str="Fri Sep 17 12:56:01 2010"/>
+    <group name="service:web-jbuhmann" state="112" state_str="started" flags="0" flags_str="" owner="web-mgt-srv2.inf.ethz.ch" last_owner="web-mgt-srv2.inf.ethz.ch" restarts="0" last_transition="1285651023" last_transition_str="Tue Sep 28 07:17:03 2010"/>
+    <group name="service:web-jhromkov" state="119" state_str="disabled" flags="0" flags_str="" owner="none" last_owner="web-mgt-srv1.inf.ethz.ch" restarts="0" last_transition="1285059525" last_transition_str="Tue Sep 21 10:58:45 2010"/>
+    <group name="service:web-mattern" state="112" state_str="started" flags="0" flags_str="" owner="web-mgt-srv1.inf.ethz.ch" last_owner="web-mgt-srv1.inf.ethz.ch" restarts="0" last_transition="1285226220" last_transition_str="Thu Sep 23 09:17:00 2010"/>
+    <group name="service:web-maurer" state="112" state_str="started" flags="0" flags_str="" owner="web-mgt-srv1.inf.ethz.ch" last_owner="web-mgt-srv2.inf.ethz.ch" restarts="0" last_transition="1284471311" last_transition_str="Tue Sep 14 15:35:11 2010"/>
+    <group name="service:web-meyer" state="112" state_str="started" flags="0" flags_str="" owner="web-mgt-srv2.inf.ethz.ch" last_owner="web-mgt-srv1.inf.ethz.ch" restarts="0" last_transition="1284470844" last_transition_str="Tue Sep 14 15:27:24 2010"/>
+    <group name="service:web-peop" state="112" state_str="started" flags="0" flags_str="" owner="web-mgt-srv1.inf.ethz.ch" last_owner="web-mgt-srv2.inf.ethz.ch" restarts="0" last_transition="1284471311" last_transition_str="Tue Sep 14 15:35:11 2010"/>
+    <group name="service:web-pmueller" state="112" state_str="started" flags="0" flags_str="" owner="web-mgt-srv1.inf.ethz.ch" last_owner="web-mgt-srv2.inf.ethz.ch" restarts="0" last_transition="1284471312" last_transition_str="Tue Sep 14 15:35:12 2010"/>
+    <group name="service:web-pollefeys" state="112" state_str="started" flags="0" flags_str="" owner="web-mgt-srv1.inf.ethz.ch" last_owner="web-mgt-srv1.inf.ethz.ch" restarts="0" last_transition="1285247281" last_transition_str="Thu Sep 23 15:08:01 2010"/>
+    <group name="service:web-stelling" state="112" state_str="started" flags="0" flags_str="" owner="web-mgt-srv2.inf.ethz.ch" last_owner="web-mgt-srv2.inf.ethz.ch" restarts="0" last_transition="1285074897" last_transition_str="Tue Sep 21 15:14:57 2010"/>
+    <group name="service:web-svn" state="112" state_str="started" flags="0" flags_str="" owner="web-mgt-srv3.inf.ethz.ch" last_owner="web-mgt-srv2.inf.ethz.ch" restarts="0" last_transition="1284470309" last_transition_str="Tue Sep 14 15:18:29 2010"/>
+    <group name="service:web-tatbul" state="112" state_str="started" flags="0" flags_str="" owner="web-mgt-srv2.inf.ethz.ch" last_owner="web-mgt-srv1.inf.ethz.ch" restarts="0" last_transition="1284470845" last_transition_str="Tue Sep 14 15:27:25 2010"/>
+    <group name="service:web-ti" state="112" state_str="started" flags="0" flags_str="" owner="web-mgt-srv2.inf.ethz.ch" last_owner="web-mgt-srv1.inf.ethz.ch" restarts="0" last_transition="1284470845" last_transition_str="Tue Sep 14 15:27:25 2010"/>
+    <group name="service:web-trac" state="112" state_str="started" flags="0" flags_str="" owner="web-mgt-srv3.inf.ethz.ch" last_owner="web-mgt-srv2.inf.ethz.ch" restarts="0" last_transition="1284470310" last_transition_str="Tue Sep 14 15:18:30 2010"/>
+    <group name="service:web-trg" state="112" state_str="started" flags="0" flags_str="" owner="web-mgt-srv2.inf.ethz.ch" last_owner="web-mgt-srv2.inf.ethz.ch" restarts="0" last_transition="1285570762" last_transition_str="Mon Sep 27 08:59:22 2010"/>
+    <group name="service:web-virtual" state="112" state_str="started" flags="0" flags_str="" owner="web-mgt-srv1.inf.ethz.ch" last_owner="web-mgt-srv2.inf.ethz.ch" restarts="0" last_transition="1284471313" last_transition_str="Tue Sep 14 15:35:13 2010"/>
+    <group name="service:web-wolf" state="112" state_str="started" flags="0" flags_str="" owner="web-mgt-srv2.inf.ethz.ch" last_owner="web-mgt-srv1.inf.ethz.ch" restarts="0" last_transition="1284470845" last_transition_str="Tue Sep 14 15:27:25 2010"/>
+  </groups>
+</clustat>
