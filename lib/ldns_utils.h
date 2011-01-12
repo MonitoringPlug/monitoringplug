@@ -46,6 +46,11 @@ ldns_resolver* createResolver(const char *dnsserver);
  */
 void resolverEnableDnssec(ldns_resolver *res);
 
+/**
+ * ldns_resolver_query wrapper for debug
+ */
+ldns_pkt *mp_ldns_resolver_query(const ldns_resolver *r, const ldns_rdf *name, ldns_rr_type t, ldns_rr_class c, uint16_t flags);
+
 ldns_rr_list* getaddr_rdf(ldns_resolver *res, ldns_rdf *hostrdf);
 
 /**

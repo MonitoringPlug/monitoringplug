@@ -134,7 +134,7 @@ int main(int argc, char **argv) {
     ldns_resolver_set_dnssec_anchors(res, rrl_valid_keys);
 
     /* check domain exists */
-    pkt = ldns_resolver_query(res, rd_domain, LDNS_RR_TYPE_ANY,
+    pkt = mp_ldns_resolver_query(res, rd_domain, LDNS_RR_TYPE_ANY,
                               LDNS_RR_CLASS_IN, LDNS_RD);
     
     if (pkt == NULL || ldns_pkt_get_rcode(pkt) != LDNS_RCODE_NOERROR) {

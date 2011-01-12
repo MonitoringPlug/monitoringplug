@@ -89,7 +89,7 @@ int main (int argc, char **argv) {
     resolverEnableDnssec(res);
         
     /* Query for soa */
-    pkt = ldns_resolver_query(res, rd_domain, LDNS_RR_TYPE_SOA,
+    pkt = mp_ldns_resolver_query(res, rd_domain, LDNS_RR_TYPE_SOA,
                               LDNS_RR_CLASS_IN, LDNS_RD);
     if (!pkt) {
         ldns_rdf_deep_free(rd_domain);
@@ -133,7 +133,7 @@ int main (int argc, char **argv) {
         if (ldns_rr_list_rr_count(rrl_keys) == 0)
             rrl_keys = NULL;
     } else {
-        pkt = ldns_resolver_query(res, rd_domain, LDNS_RR_TYPE_DNSKEY,
+        pkt = mp_ldns_resolver_query(res, rd_domain, LDNS_RR_TYPE_DNSKEY,
                                   LDNS_RR_CLASS_IN, LDNS_RD);
         if (!pkt) {
             ldns_rdf_deep_free(rd_domain);

@@ -90,6 +90,9 @@ int main (int argc, char **argv) {
             unknown("Create resolver faild.");
         }
 
+        //  Enable TCP if requested
+        ldns_resolver_set_usevc(res, mp_ldns_usevc);
+
         // Add ns to resolver
         status = ldns_resolver_push_nameserver(res, host);
         if (status != LDNS_STATUS_OK) {
@@ -100,7 +103,7 @@ int main (int argc, char **argv) {
         }
 
         // Fetch SOA
-        pkt = ldns_resolver_query(res, domain, LDNS_RR_TYPE_SOA,
+        pkt = mp_ldns_resolver_query(res, domain, LDNS_RR_TYPE_SOA,
                                   LDNS_RR_CLASS_IN, LDNS_RD);
 
         if (pkt == NULL || ldns_pkt_get_rcode(pkt) != LDNS_RCODE_NOERROR) {
@@ -144,7 +147,7 @@ int main (int argc, char **argv) {
         ldns_rr_list_deep_free(rrl);
 
         // Fetch Master SOA
-        pkt = ldns_resolver_query(res, domain, LDNS_RR_TYPE_SOA,
+        pkt = mp_ldns_resolver_query(res, domain, LDNS_RR_TYPE_SOA,
                                   LDNS_RR_CLASS_IN, LDNS_RD);
 
         if (pkt == NULL || ldns_pkt_get_rcode(pkt) != LDNS_RCODE_NOERROR) {
@@ -179,8 +182,11 @@ int main (int argc, char **argv) {
             unknown("Create resolver faild.");
         }
 
+        //  Enable TCP if requested
+        ldns_resolver_set_usevc(res, mp_ldns_usevc);
+
         // Fetch NS
-        pkt = ldns_resolver_query(res, domain, LDNS_RR_TYPE_NS,
+        pkt = mp_ldns_resolver_query(res, domain, LDNS_RR_TYPE_NS,
                                   LDNS_RR_CLASS_IN, LDNS_RD);
 
         if (pkt == NULL || ldns_pkt_get_rcode(pkt) != LDNS_RCODE_NOERROR) {
@@ -222,6 +228,9 @@ int main (int argc, char **argv) {
             unknown("Create resolver faild.");
         }
 
+        //  Enable TCP if requested
+        ldns_resolver_set_usevc(res, mp_ldns_usevc);
+
         for (i=0; i<ns_count; i++) {
             rrl = getaddr_rdf(NULL, ns_name[i]);
             ldns_resolver_push_nameserver_rr_list(res, rrl);
@@ -237,7 +246,7 @@ int main (int argc, char **argv) {
 
             //
             // Fetch SOA
-            pkt = ldns_resolver_query(res, domain, LDNS_RR_TYPE_SOA,
+            pkt = mp_ldns_resolver_query(res, domain, LDNS_RR_TYPE_SOA,
                                       LDNS_RR_CLASS_IN, LDNS_RD);
 
             if (pkt == NULL || ldns_pkt_get_rcode(pkt) != LDNS_RCODE_NOERROR) {
