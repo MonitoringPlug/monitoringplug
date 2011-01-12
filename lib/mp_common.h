@@ -132,17 +132,18 @@ void print_help(void);
 /**
   * Print the program usage.
   */
-inline void print_usage(void) __attribute__((always_inline));
+void print_usage(void);
 
 /**
   * Print the program version information.
   */
-inline void print_revision(void) __attribute__((always_inline));
+void print_revision(void);
+
 
 /**
   * Print the program copyright information.
   */
-inline void print_copyright(void) __attribute__((always_inline));
+void print_copyright(void);
 
 /**
  * Default timeout handler.

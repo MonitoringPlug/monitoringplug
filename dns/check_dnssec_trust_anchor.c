@@ -29,7 +29,7 @@ const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "[-H host] -k file [-t timeout]";
 
 #include "mp_common.h"
-#include "dns_utils.h"
+#include "ldns_utils.h"
 
 #include <getopt.h>
 #include <signal.h>

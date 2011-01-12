@@ -32,7 +32,7 @@
 #include "mp_common.h"
 
 pid_t *mp_childpid;
-sig_t *mp_popen_alarm;
+sig_t mp_popen_alarm;
 
 void popen_timeout_alarm_handler(int signo);
 
@@ -49,15 +49,14 @@ FILE *mp_popen(char *command[]) {
 
     if (stat(command[0], &fileStat) < 0)
         return NULL;
-    //if(((fileStat->st_mode) & S_IFMT) != S_IFREG)
     if (!S_ISREG(fileStat.st_mode))
         return NULL;
 
-    // Create pipe
+    /* Create pipe */
     if (pipe(pfp) == -1)
         return NULL;
 
-    // Fork away
+    /* Fork away */
     pid = fork();
     if (pid == -1) {
         close(pfp[0]);
@@ -65,7 +64,7 @@ FILE *mp_popen(char *command[]) {
         return NULL;
     }
 
-    // Parent
+    /* Parent */
     if (pid > 0) {
         if (close(pfp[1]) == -1)
             return NULL;
@@ -81,7 +80,7 @@ FILE *mp_popen(char *command[]) {
         return fdopen(pfp[0], "r");
     }
 
-    // Child
+    /* Child */
     if (close(pfp[0]) == -1)
         exit(1);
 

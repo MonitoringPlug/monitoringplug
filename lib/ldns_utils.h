@@ -27,6 +27,11 @@
 #include <ldns/ldns.h>
 #include "config.h"
 
+extern int mp_ldns_usevc;
+
+#define LDNS_OPTSTR "X"
+#define LDNS_LONGOPTS {"tcp", no_argument, NULL, (int)'X'}
+
 /**
  * create a ldns_resolver
  * \param[in] dnsserver Name of the dns server, may be NULL.
@@ -64,5 +69,16 @@ ldns_rr_list* loadKeyfile(const char *filename);
  * \return The ldns_rr_list of loaded keys or NULL
  */
 ldns_rr_list* loadAnchorfile(const char *filename);
+
+/**
+ * Handle LDNS related command line options.
+ * \param[in] c Command line option to handle.
+ */
+void getopt_ldns(int c);
+
+/**
+ * Print the help for the LDNS related command line options.
+ */
+void print_help_ldns(void);
 
 #endif /* _DNS_UTILS_H_ */

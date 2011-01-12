@@ -38,8 +38,6 @@ AC_PROG_RANLIB
 
 AC_C_CONST
 
-EXTRASUBDIRS=
-
 # Checks for libraries.
 PKG_CHECK_MODULES([CHECK], [check >= 0.9.4],,[AC_MSG_WARN([Skipping check])])
 PKG_CHECK_MODULES(LDNS, libldns,,[AC_MSG_WARN([Skipping ldns])])
@@ -92,85 +90,46 @@ AM_CONDITIONAL([HAVE_NET_SNMP], [test x$NETSNMP_LIBS != x])
 
 
 # GCC Opts
-if test "x$GCC" = "xyes"; then
-  changequote(,)dnl
-  case " $CFLAGS " in
-  *[\ \ ]-Wall[\ \ ]*) ;;
-  *) CFLAGS="$CFLAGS -Wall" ;;
-  esac
+AX_C99_INLINE()
+#AX_CFLAGS_WARN_ALL()
+AX_CFLAGS_GCC_OPTION(-Wall)
+AX_CFLAGS_GCC_OPTION(-Wchar-subscripts)
+AX_CFLAGS_GCC_OPTION(-Wmissing-declarations")
+AX_CFLAGS_GCC_OPTION(-Wnested-externs)
+AX_CFLAGS_GCC_OPTION(-Wcast-align)
+AX_CFLAGS_GCC_OPTION(-Wformat)
+AX_CFLAGS_GCC_OPTION(-Wformat-security)
+AX_CFLAGS_GCC_OPTION(-Winline)
 
-  case " $CFLAGS " in
-  *[\ \ ]-Wchar-subscripts[\ \ ]*) ;;
-  *) CFLAGS="$CFLAGS -Wchar-subscripts" ;;
-  esac
+# MP VARS
+CPPFLAGS="-I\$(top_srcdir) -I\$(top_srcdir)/lib";
+LDFLAGS="$LDFLAGS -L\$(top_srcdir)/lib";
 
-  case " $CFLAGS " in
-  *[\ \ ]-Wmissing-declarations[\ \ ]*) ;;
-  *) CFLAGS="$CFLAGS -Wmissing-declarations" ;;
-  esac
+MPLIB_LIBS="-lmonitoringplug"
+SNMPUTIL_LIBS="-lsnmputils"
+RHCSUTIL_LIBS="-lrhcsutils"
+LDNSUTIL_LIBS="-lldnsutils"
 
-  case " $CFLAGS " in
-  *[\ \ ]-Wnested-externs[\ \ ]*) ;;
-  *) CFLAGS="$CFLAGS -Wnested-externs" ;;
-  esac
-
-  case " $CFLAGS " in
-  *[\ \ ]-Wcast-align[\ \ ]*) ;;
-  *) CFLAGS="$CFLAGS -Wcast-align" ;;
-  esac
-
-  case " $CFLAGS " in
-  *[\ \ ]-Wformat[\ \ ]*) ;;
-  *) CFLAGS="$CFLAGS -Wformat" ;;
-  esac
-
-  case " $CFLAGS " in
-  *[\ \ ]-Wformat-security[\ \ ]*) ;;
-  *) CFLAGS="$CFLAGS -Wformat-security" ;;
-  esac
-
-  if test "x$enable_ansi" = "xyes"; then
-    case " $CFLAGS " in
-    *[\ \ ]-ansi[\ \ ]*) ;;
-    *) CFLAGS="$CFLAGS -ansi" ;;
-    esac
-
-    case " $CFLAGS " in
-    *[\ \ ]-D_POSIX_C_SOURCE*) ;;
-    *) CFLAGS="$CFLAGS -D_POSIX_C_SOURCE=199309L" ;;
-    esac
-
-    case " $CFLAGS " in
-    *[\ \ ]-D_BSD_SOURCE[\ \ ]*) ;;
-    *) CFLAGS="$CFLAGS -D_BSD_SOURCE" ;;
-    esac
-
-    case " $CFLAGS " in
-    *[\ \ ]-pedantic[\ \ ]*) ;;
-    *) CFLAGS="$CFLAGS -pedantic" ;;
-    esac
-  fi
-  changequote([,])dnl
-fi
+AC_SUBST(MPLIB_LIBS)
+AC_SUBST(SNMPUTIL_LIBS)
+AC_SUBST(RHCSUTIL_LIBS)
+AC_SUBST(LDNSUTIL_LIBS)
 
 # Checks for header files.
 AC_CHECK_HEADERS([limits.h netdb.h stdlib.h string.h strings.h sys/socket.h unistd.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_SIGNAL
-AC_TYPE_SIZE_T
 #AC_TYPE_UINT32_T
 
 # Checks for library functions.
-AC_FUNC_MALLOC
+#AC_FUNC_MALLOC
 #AC_FUNC_REALLOC
 AC_FUNC_STRTOD
 AC_FUNC_VPRINTF
 AC_FUNC_LSTAT
 AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK
 AC_CHECK_FUNCS([alarm memset strdup strerror strspn strstr strtol])
-
-AC_SUBST(EXTRASUBDIRS)
 
 AC_CONFIG_FILES([Makefile
                  lib/Makefile

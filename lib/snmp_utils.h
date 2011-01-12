@@ -77,7 +77,7 @@ netsnmp_session *mp_snmp_init(void);
 /**
  * Cleanup the Net-SNMP library.
  */
-inline void mp_snmp_deinit(void);
+void mp_snmp_deinit(void);
 
 /**
  * Run all querys in querycmd and save result to pointer in querycmd struct.
@@ -101,21 +101,21 @@ int mp_snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *que
  * \param[in] x X coordinate of value.
  * \param[in] y Y coordinate of value.
  */
-inline netsnmp_variable_list *mp_snmp_table_get(const struct mp_snmp_table table, int x, int y);
+netsnmp_variable_list *mp_snmp_table_get(const struct mp_snmp_table table, int x, int y);
 
 /**
  * Handle SNMP related command line options.
  * \param[in] c Command line option to handle.
  */
-inline void getopt_snmp(int c) __attribute__((always_inline));
+void getopt_snmp(int c);
 
 /**
  * Print the help for the SNMP related command line options.
  */
-inline void print_help_snmp(void) __attribute__((always_inline));
+void print_help_snmp(void);
 
 /**
  * Print the Net-SNMP library revision.
  */
-inline void print_revision_snmp(void) __attribute__((always_inline));
+void print_revision_snmp(void);
 #endif /* _SNMP_UTILS_H_ */

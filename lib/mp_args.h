@@ -58,7 +58,7 @@ typedef struct thresholds_struct {
  */
 enum {
     OUTSIDE = 0,                /**<  Match if outside of range */
-    INSIDE = 1,                 /**<  Match if inside of range  */
+    INSIDE = 1                  /**<  Match if inside of range  */
 };
 
 /**
@@ -69,7 +69,7 @@ enum {
     NOEXT = -1,                 /**< No Extension                       */
     BISI = 0,                   /**< Binary/SI Prefix. Use
                                      \ref parse_multiplier_string       */
-    TIME = 1,                   /**< Times. Use              
+    TIME = 1                    /**< Times. Use
                                      \ref parse_time_multiplier_string  */
 };
 
@@ -77,7 +77,7 @@ enum {
  * Helper enum for long only opts
  */
 enum {
-    ARG_PERFDATA = -1,
+    ARG_PERFDATA = -1
 };
 
 /**
@@ -196,70 +196,70 @@ void print_thresholds(const char *threshold_name, thresholds *my_threshold);
 /**
  * Prints the help message for the defaults options.
  */
-inline void print_help_default(void) __attribute__((always_inline));
+void print_help_default(void);
 
 /**
  * Prints the help message for the perfdata options.
  */
-inline void print_help_perf(void) __attribute__((always_inline));
+void print_help_perf(void);
 
 /**
  * Prints the help to the timeout option.
  */
-inline void print_help_timeout(void) __attribute__((always_inline));
+void print_help_timeout(void);
 
 /**
  * Prints the help for the host option
  */
-inline void print_help_host(void) __attribute__((always_inline));
+void print_help_host(void);
 
 /**
  * Prints the help for the port option.
  * \param[in] def The default string.
  */
-inline void print_help_port(const char *def) __attribute__((always_inline));
+void print_help_port(const char *def);
 
 /**
  * Print the help for a warning time option.
  * \param[in] def The default string.
  */
-inline void print_help_warn_time(const char *def) __attribute__((always_inline));
+void print_help_warn_time(const char *def);
 
 /**
  * Print the help for a critical time option.
  * \param[in] def The default string.
  */
-inline void print_help_crit_time(const char *def) __attribute__((always_inline));
+void print_help_crit_time(const char *def);
 
 /**
  * Print the help for a warning option.
  * \param[in] def The default string.
  */
-inline void print_help_warn(const char *limit, const char *def) __attribute__((always_inline));
+void print_help_warn(const char *limit, const char *def);
 
 /**
  * Print the help for a critical option.
  * \param[in] def The default string.
  */
-inline void print_help_crit(const char *limit, const char *def) __attribute__((always_inline));
+void print_help_crit(const char *limit, const char *def);
 
 /**
  * Print the help for the IPv4/6 option.
  */
-inline void print_help_46(void) __attribute__((always_inline));
+void print_help_46(void);
 
 /**
  * Parse the options for help, version, and verbose.
  * \param[in] c option to test
  */
-inline void getopt_default(int c) __attribute__((always_inline));
+void getopt_default(int c);
 
 /**
  * Parse the option for timeout.
  * \param[in] c option to test
  * \param[in] optarg option argument
  */
-inline void getopt_timeout(int c, const char *optarg) __attribute__((always_inline));
+void getopt_timeout(int c, const char *optarg);
 
 /**
  * Parse the option for host.
@@ -267,7 +267,7 @@ inline void getopt_timeout(int c, const char *optarg) __attribute__((always_inli
  * \param[in] optarg option argument
  * \param[out] hostname hostname variable to set
  */
-inline void getopt_host(int c, const char *optarg, const char **hostname) __attribute__((always_inline));
+void getopt_host(int c, const char *optarg, const char **hostname);
 
 /**
  * Parse the option for host. Allow only IPs.
@@ -275,7 +275,7 @@ inline void getopt_host(int c, const char *optarg, const char **hostname) __attr
  * \param[in] optarg option argument
  * \param[out] hostname hostname variable to set
  */
-inline void getopt_host_ip(int c, const char *optarg, const char **hostname) __attribute__((always_inline));
+void getopt_host_ip(int c, const char *optarg, const char **hostname);
 
 /**
  * Parse the option for port.
@@ -283,11 +283,11 @@ inline void getopt_host_ip(int c, const char *optarg, const char **hostname) __a
  * \param[in] optarg option argument
  * \param[out] port port variable to set
  */
-inline void getopt_port(int c, const char *optarg, int *port) __attribute__((always_inline));
+void getopt_port(int c, const char *optarg, int *port);
 
-inline void getopt_wc(int c, const char *optarg, thresholds **threshold) __attribute__((always_inline));
-inline void getopt_wc_time(int c, const char *optarg, thresholds **threshold) __attribute__((always_inline));
-inline void getopt_46(int c, int *ipv4, int *ipv6) __attribute__((always_inline));
+void getopt_wc(int c, const char *optarg, thresholds **threshold);
+void getopt_wc_time(int c, const char *optarg, thresholds **threshold);
+void getopt_46(int c, int *ipv4, int *ipv6);
 
 /** optstring for help, version, verbose */
 #define MP_OPTSTR_DEFAULT   "hVv"

@@ -29,7 +29,7 @@ const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "[-H host] -D domain [-k file] [-t timeout] [-w warn] [-c crit]";
 
 #include "mp_common.h"
-#include "dns_utils.h"
+#include "ldns_utils.h"
 
 #include <getopt.h>
 #include <signal.h>
@@ -224,6 +224,7 @@ int process_arguments (int argc, char **argv) {
     static struct option longopts[] = {
         MP_LONGOPTS_DEFAULT,
         MP_LONGOPTS_HOST,
+        LDNS_LONGOPTS,
         {"domain", required_argument, 0, 'D'},
         {"trusted-keys", required_argument, 0, 'k'},
         MP_LONGOPTS_WC,
@@ -237,7 +238,7 @@ int process_arguments (int argc, char **argv) {
     }
     
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"H:D:k:w:c:t:", longopts, &option);
+        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"H:D:k:w:c:t:"LDNS_OPTSTR, longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -246,6 +247,7 @@ int process_arguments (int argc, char **argv) {
         getopt_host_ip(c, optarg, &hostname);
         getopt_wc_time(c, optarg, &exp_thresholds);
         getopt_timeout(c, optarg);
+        getopt_ldns(c);
 
         switch (c) {
             case 'D':
@@ -281,6 +283,7 @@ void print_help (void) {
 
     print_help_default();
     print_help_host();
+    print_help_ldns();
     printf(" -D, --domain=DOMAIN\n");
     printf("      The name of the domain to check.\n");
     printf(" -k, --trusted-keys=FILE\n");
