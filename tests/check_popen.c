@@ -55,10 +55,10 @@ END_TEST
 
 START_TEST (test_popen_false) {
     FILE *fh;
-    char *cmd[] = { "/usr/bin/false", (char *)0 };
+    char *cmd[] = { "/bin/false", (char *)0 };
 
     fh = mp_popen(cmd);
-    fail_if(fh == NULL, "Popen '/usr/bin/false' faild!");
+    fail_if(fh == NULL, "Popen '/bin/false' faild!");
 
     fail_unless(mp_pclose(fh) == 1, "Popen pclose faild!");
 }

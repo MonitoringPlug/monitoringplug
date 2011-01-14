@@ -1,7 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 
 AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/lib
-AM_LDFLAGS = $(MPLIB_LIBS)
+LDADD = ../lib/*.a
 
 TESTS = check_monitoringplug
 

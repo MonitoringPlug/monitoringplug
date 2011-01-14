@@ -27,6 +27,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 
 #include "mp_popen.h"
 #include "mp_common.h"
