@@ -40,9 +40,9 @@ AC_PROG_RANLIB
 AC_C_CONST
 
 # Checks for libraries.
-PKG_CHECK_MODULES([CHECK], [check >= 0.9.4])
+PKG_CHECK_MODULES([CHECK], [check >= 0.9.4], [], [AC_MSG_WARN([Skipping check])])
 AX_LIB_EXPAT()
-ACX_LDNS(1,4,0)
+ACX_LDNS()
 
 LIBCURL_CHECK_CONFIG([yes],[7.7.2], [], [AC_MSG_WARN([Skipping curl])])
 
