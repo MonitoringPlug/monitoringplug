@@ -7,6 +7,7 @@ AC_INIT([monitorplug],[0.0],[marius.rieder@durchmesser.ch])
 AC_CONFIG_AUX_DIR(build-aux)
 AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_MACRO_DIR([m4])
 
 AM_INIT_AUTOMAKE([1.9 -Wall -Werror foreign])
 
@@ -39,19 +40,25 @@ AC_PROG_RANLIB
 AC_C_CONST
 
 # Checks for libraries.
-PKG_CHECK_MODULES([CHECK], [check >= 0.9.4],,[AC_MSG_WARN([Skipping check])])
-PKG_CHECK_MODULES(LDNS, libldns,,[AC_MSG_WARN([Skipping ldns])])
+PKG_CHECK_MODULES([CHECK], [check >= 0.9.4])
 AX_LIB_EXPAT()
+ACX_LDNS()
 
 LIBCURL_CHECK_CONFIG([yes],[7.7.2], [], [AC_MSG_WARN([Skipping curl])])
 
-AC_CHECK_LIB(netsnmp, netsnmp_get_version,[
-     NETSNMP_LIBS="-lnetsnmp"
-     AC_DEFINE(HAVE_NET_SNMP, 1, Net-SNMP Version) 
-	 HAVE_NET_SNMP=yes
-	 AC_SUBST(NETSNMP_LIBS) ],
-	AC_MSG_RESULT(Cannot find Net-SNMP libraries.))
+# SNMP Option
+AC_ARG_WITH([netsnmp],
+    [AS_HELP_STRING([--with-netsnmp], [support SNMP @<:@default=check@:>@])],
+    [], [with_netsnmp=check])
 
+if test "$with_netsnmp" != "no"; then
+	AC_CHECK_LIB(netsnmp, netsnmp_get_version,[
+	     NETSNMP_LIBS="-lnetsnmp"
+	     AC_DEFINE(HAVE_NET_SNMP, 1, Net-SNMP Version) 
+		 HAVE_NET_SNMP=yes
+		 AC_SUBST(NETSNMP_LIBS) ],
+		AC_MSG_RESULT(Cannot find Net-SNMP libraries.))
+fi
 
 # IPv6 Option
 AC_ARG_WITH([ipv6],
@@ -94,7 +101,7 @@ AX_C99_INLINE()
 #AX_CFLAGS_WARN_ALL()
 AX_CFLAGS_GCC_OPTION(-Wall)
 AX_CFLAGS_GCC_OPTION(-Wchar-subscripts)
-AX_CFLAGS_GCC_OPTION(-Wmissing-declarations")
+AX_CFLAGS_GCC_OPTION(-Wmissing-declarations)
 AX_CFLAGS_GCC_OPTION(-Wnested-externs)
 AX_CFLAGS_GCC_OPTION(-Wcast-align)
 AX_CFLAGS_GCC_OPTION(-Wformat)
@@ -105,7 +112,7 @@ AX_CFLAGS_GCC_OPTION(-Winline)
 CPPFLAGS="-I\$(top_srcdir) -I\$(top_srcdir)/lib";
 LDFLAGS="$LDFLAGS -L\$(top_srcdir)/lib";
 
-MPLIB_LIBS="-lmonitoringplug"
+MPLIB_LIBS="-monitoringplug"
 SNMPUTIL_LIBS="-lsnmputils"
 RHCSUTIL_LIBS="-lrhcsutils"
 LDNSUTIL_LIBS="-lldnsutils"
@@ -133,7 +140,7 @@ AC_CHECK_FUNCS([alarm memset strdup strerror strspn strstr strtol])
 
 AC_CONFIG_FILES([Makefile
                  lib/Makefile
-		         base/Makefile
+                 base/Makefile
                  curl/Makefile
                  dns/Makefile
                  dummy/Makefile
