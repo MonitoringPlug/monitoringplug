@@ -57,7 +57,7 @@ static size_t my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream) {
         answer = malloc(size*nmemb + 1);
         xmlp = answer;
     } else {
-        realloc(answer, strlen(answer) + size*nmemb + 1);
+        answer = realloc(answer, strlen(answer) + size*nmemb + 1);
     }
     memcpy(xmlp, buffer, size*nmemb);
     xmlp[size*nmemb] = '\0';

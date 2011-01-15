@@ -264,7 +264,9 @@ int countSocket(const char *filename, int port) {
     if (input == NULL)
         return -1;
 
-    fgets(buffer, 256, input);
+    if (fgets(buffer, 256, input) == NULL) {
+        warning("Can't read %s.", filename);
+    }
 
     while (fgets(buffer, 256, input) != NULL) {
         if (port > 0) {
