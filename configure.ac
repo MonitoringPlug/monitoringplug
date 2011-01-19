@@ -40,7 +40,10 @@ AC_PROG_RANLIB
 AC_C_CONST
 
 # Checks for libraries.
-PKG_CHECK_MODULES([CHECK], [check >= 0.9.4], [], [AC_MSG_WARN([Skipping check])])
+PKG_CHECK_MODULES([CHECK], [check >= 0.9.4],
+    [AM_CONDITIONAL([HAVE_CHECK], [1])],
+    [AM_CONDITIONAL([HAVE_CHECK], [0])
+     AC_MSG_WARN([Skipping check])])
 AX_LIB_EXPAT()
 AC_LIB_LDNS([],[], [AC_MSG_WARN([Skipping ldns])])
 
@@ -88,6 +91,7 @@ if test "$with_ipv6" != "no"; then
     with_ipv6="$mp_cv_sys_ipv6"
 fi
 
+
 # Conditionals
 AM_CONDITIONAL([HAVE_LDNS], [test x$LDNS_CFLAGS != x])
 AM_CONDITIONAL([HAVE_CURL], [test x$CURL_CFLAGS != x])
@@ -97,7 +101,6 @@ AM_CONDITIONAL([HAVE_NET_SNMP], [test x$NETSNMP_LIBS != x])
 
 
 # GCC Opts
-AX_C99_INLINE()
 #AX_CFLAGS_WARN_ALL()
 AX_CFLAGS_GCC_OPTION(-Wall)
 AX_CFLAGS_GCC_OPTION(-Wchar-subscripts)
