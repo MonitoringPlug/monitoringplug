@@ -42,7 +42,7 @@ AC_C_CONST
 # Checks for libraries.
 PKG_CHECK_MODULES([CHECK], [check >= 0.9.4], [], [AC_MSG_WARN([Skipping check])])
 AX_LIB_EXPAT()
-ACX_LDNS()
+AC_LIB_LDNS([],[], [AC_MSG_WARN([Skipping ldns])])
 
 LIBCURL_CHECK_CONFIG([yes],[7.7.2], [], [AC_MSG_WARN([Skipping curl])])
 
