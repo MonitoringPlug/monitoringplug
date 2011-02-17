@@ -44,4 +44,7 @@ Suite *make_lib_check_suite(void);
 /* LIB POPEN Suite */
 Suite *make_lib_popen_suite(void);
 
+/* LIB EOPT Suite */
+Suite *make_lib_eopt_suite(void);
+
 #endif /* _TESTS_MAIN_H */

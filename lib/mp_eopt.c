@@ -40,18 +40,19 @@ char **mp_eopt(int *argc, char **orig_argv, char *optarg) {
     int i = 0;
 
     if (optarg == NULL && strncmp(orig_argv[optind], "-",1) != 0) {
-        optarg = orig_argv[optind];
+        optarg = strdup(orig_argv[optind]);
         optind++;
     }
 
     efile = "/etc/nagios/monitoringplug.ini";
-    esection = (char *)progname;
+    esection = progname;
 
     // Parse optarg if available
     // [section][@file]
     if (optarg) {
         if(optarg[0] == '@') {
             efile = optarg+1;
+            esection = progname;
         } else {
             esection = strsep(&optarg, "@");
             if (optarg)

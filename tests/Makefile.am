@@ -13,7 +13,8 @@ check_monitoringplug_SOURCES = main.c main.h \
     check_check.c \
     check_common.c \
     check_args.c \
-    check_popen.c
+    check_popen.c \
+    check_eopt.c
 
 check_monitoringplug_CFLAGS = $(AM_CPPFLAGS) $(CHECK_CFLAGS)
 

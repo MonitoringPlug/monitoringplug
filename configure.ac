@@ -89,6 +89,9 @@ if test "$with_ipv6" != "no"; then
     with_ipv6="$mp_cv_sys_ipv6"
 fi
 
+AC_PATH_PROGS(BIN_FALSE, false)
+AC_DEFINE_UNQUOTED([BIN_FALSE], ["$ac_cv_path_BIN_FALSE"],
+            [false path.])
 
 # Conditionals
 AM_CONDITIONAL([HAVE_LDNS], [test x$LDNS_CFLAGS != x])
@@ -97,7 +100,7 @@ AM_CONDITIONAL([HAVE_CURL_TFTP], [test x$libcurl_protocol_TFTP != x])
 AM_CONDITIONAL([HAVE_EXPAT], [test x$EXPAT_CFLAGS != x])
 AM_CONDITIONAL([HAVE_NET_SNMP], [test x$NETSNMP_LIBS != x])
 AM_CONDITIONAL([HAVE_XMLRPC], [test x$XMLRPC_LIBS != x])
-AM_CONDITIONAL([HAVE_CHECK], [test x$CHECK_LIBS != x])
+AM_CONDITIONAL([HAVE_CHECK], [test "x$CHECK_LIBS" != x])
 
 
 # GCC Opts
@@ -151,7 +154,7 @@ AC_CONFIG_FILES([Makefile
                  dummy/Makefile
                  rhcs/Makefile
                  snmp/Makefile
-		 xmlrpc/Makefile
+                 xmlrpc/Makefile
                  doc/Makefile
                  tests/Makefile])
 AC_OUTPUT

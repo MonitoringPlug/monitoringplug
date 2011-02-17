@@ -17,18 +17,18 @@ AC_DEFUN([AC_LIB_LDNS], [
     ifelse([$3], , AC_MSG_ERROR([disabling ldns is not supported]), [$3])
   else
    if test "x$with_ldns" != "xno"; then
-      CHECK_CFLAGS="-I$with_ldns/include"
-      CHECK_LIBS="-L$with_ldns/lib -lldns"
+      LDNS_CFLAGS="-I$with_ldns/include"
+      LDNS_LIBS="-L$with_ldns/lib -lldns"
     else
-      CHECK_CFLAGS=""
-      CHECK_LIBS="-lldns"
+      LDNS_CFLAGS=""
+      LDNS_LIBS="-lldns"
     fi
  
     ac_save_CFLAGS="$CFLAGS"
     ac_save_LIBS="$LIBS"
 
-    CFLAGS="$CFLAGS $CHECK_CFLAGS"
-    LIBS="$CHECK_LIBS $LIBS"
+    CFLAGS="$CFLAGS $LDNS_CFLAGS"
+    LIBS="$LDNS_LIBS $LIBS"
 
     AC_COMPILE_IFELSE([AC_LANG_SOURCE([AC_INCLUDES_DEFAULT([])
 #include <ldns/ldns.h>
@@ -71,10 +71,12 @@ int main () {
     else
       AC_MSG_RESULT(no)
       ifelse([$3], , AC_MSG_ERROR([check not found]), [$3])
+      LDNS_CFLAGS=""
+      LDNS_LIBS=""
     fi
 
-    AC_SUBST(CHECK_CFLAGS)
-    AC_SUBST(CHECK_LIBS)
+    AC_SUBST(LDNS_CFLAGS)
+    AC_SUBST(LDNS_LIBS)
 
   fi
 ])
