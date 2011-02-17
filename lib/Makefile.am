@@ -25,6 +25,13 @@ libsnmputils_a_SOURCES = snmp_utils.c snmp_utils.c
 libsnmputils_a_CPPFLAGS = $(AM_CPPFLAGS) $(NETSNMP_CFLAGS)
 endif
 
+if HAVE_XMLRPC	
+noinst_LIBRARIES += libxmlrpcutils.a
+
+libxmlrpcutils_a_SOURCES = xmlrpc_utils.c xmlrpc_utils.c
+libxmlrpcutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(XMLRPC_CFLAGS)
+endif
+
 libmonitoringplug_a_SOURCES = mp_common.c mp_common.h \
 							  mp_args.c mp_args.h \
 							  mp_check.c mp_check.h \

@@ -1,5 +1,5 @@
 /***
- * Monitoring Plugin - mp_eopt.h
+ * Monitoring Plugin - mp_eopt.c
  **
  *
  * Copyright (C) 2010 Marius Rieder <marius.rieder@durchmesser.ch>
@@ -24,6 +24,7 @@
 #include "mp_common.h"
 #include "mp_eopt.h"
 
+#include <ctype.h>
 #include <getopt.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -35,6 +36,7 @@ char **mp_eopt(int *argc, char **orig_argv, char *optarg) {
     char *efile;
     char *esection;
     char **eargv;
+    char *arg;
     int i = 0;
 
     printf(":>%c\n", orig_argv[optind][0]);
@@ -45,7 +47,7 @@ char **mp_eopt(int *argc, char **orig_argv, char *optarg) {
     }
 
     efile = "/etc/nagios/monitoringplug.ini";
-    esection = progname;
+    esection = (char *)progname;
 
     // Parse optarg if available
     // [section][@file]
@@ -120,15 +122,12 @@ char **mp_eopt(int *argc, char **orig_argv, char *optarg) {
                 new_argv = realloc(new_argv, sizeof(char *)*(new_argc+1));
             }
 
-
-            size_t slen;
-            char *arg;
-            slen = strlen(key);
-            if (slen > 1) {
-                arg = malloc(slen+3);
+            len = strlen(key);
+            if (len > 1) {
+                arg = malloc(len+3);
                 sprintf(arg, "--%s", key);
             } else {
-                arg = malloc(slen+2);
+                arg = malloc(len+2);
                 sprintf(arg, "-%s", key);
             }
 

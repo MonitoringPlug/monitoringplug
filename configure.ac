@@ -40,14 +40,12 @@ AC_PROG_RANLIB
 AC_C_CONST
 
 # Checks for libraries.
-PKG_CHECK_MODULES([CHECK], [check >= 0.9.4],
-    [AM_CONDITIONAL([HAVE_CHECK], [1])],
-    [AM_CONDITIONAL([HAVE_CHECK], [0])
-     AC_MSG_WARN([Skipping check])])
+PKG_CHECK_MODULES([CHECK], [check >= 0.9.4],[],[AC_MSG_WARN([Skipping check])])
 AX_LIB_EXPAT()
 AC_LIB_LDNS([],[], [AC_MSG_WARN([Skipping ldns])])
-
 LIBCURL_CHECK_CONFIG([yes],[7.7.2], [], [AC_MSG_WARN([Skipping curl])])
+PKG_CHECK_MODULES([XMLRPC], [xmlrpc_client],[],[AC_MSG_WARN([Skipping xmlrpc-c])])
+
 
 # SNMP Option
 AC_ARG_WITH([netsnmp],
@@ -98,6 +96,8 @@ AM_CONDITIONAL([HAVE_CURL], [test x$CURL_CFLAGS != x])
 AM_CONDITIONAL([HAVE_CURL_TFTP], [test x$libcurl_protocol_TFTP != x])
 AM_CONDITIONAL([HAVE_EXPAT], [test x$EXPAT_CFLAGS != x])
 AM_CONDITIONAL([HAVE_NET_SNMP], [test x$NETSNMP_LIBS != x])
+AM_CONDITIONAL([HAVE_XMLRPC], [test x$XMLRPC_LIBS != x])
+AM_CONDITIONAL([HAVE_CHECK], [test x$CHECK_LIBS != x])
 
 
 # GCC Opts
@@ -119,11 +119,13 @@ MPLIB_LIBS="-monitoringplug"
 SNMPUTIL_LIBS="-lsnmputils"
 RHCSUTIL_LIBS="-lrhcsutils"
 LDNSUTIL_LIBS="-lldnsutils"
+XMLRPCUTIL_LIBS="-lxmlrpcutils"
 
 AC_SUBST(MPLIB_LIBS)
 AC_SUBST(SNMPUTIL_LIBS)
 AC_SUBST(RHCSUTIL_LIBS)
 AC_SUBST(LDNSUTIL_LIBS)
+AC_SUBST(XMLRPCUTIL_LIBS)
 
 # Checks for header files.
 AC_CHECK_HEADERS([limits.h netdb.h stdlib.h string.h strings.h sys/socket.h unistd.h])
