@@ -39,8 +39,6 @@ char **mp_eopt(int *argc, char **orig_argv, char *optarg) {
     char *arg;
     int i = 0;
 
-    printf(":>%c\n", orig_argv[optind][0]);
-
     if (optarg == NULL && strncmp(orig_argv[optind], "-",1) != 0) {
         optarg = orig_argv[optind];
         optind++;
@@ -60,8 +58,6 @@ char **mp_eopt(int *argc, char **orig_argv, char *optarg) {
                 efile = optarg;
         }
     }
-
-    printf("%s‚%s\n", esection, efile);
 
     fd = fopen(efile, "r");
     if (!fd) {
@@ -114,8 +110,6 @@ char **mp_eopt(int *argc, char **orig_argv, char *optarg) {
             val = buffer;
             key = strsep(&val, "=");
 
-            printf("%s => %s\n", key, val);
-
             if(*val) {
                 new_argv = realloc(new_argv, sizeof(char *)*(new_argc+2));
             } else {
@@ -148,10 +142,13 @@ char **mp_eopt(int *argc, char **orig_argv, char *optarg) {
 
     *argc += new_argc;
 
-    for(i=0;i<*argc;i++)
-        printf("%d: %s\n", i, eargv[i]);
-
     return eargv;
+}
+
+void print_help_eopt(void) {
+    printf("\
+ -E, --eopt=[section][@file]\n\
+      Read additional opts from section in ini-File.\n");
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */

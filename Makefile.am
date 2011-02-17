@@ -2,6 +2,6 @@
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = lib base curl dns dummy rhcs snmp \
+SUBDIRS = lib base curl dns dummy rhcs snmp xmlrpc \
 	doc tests
 

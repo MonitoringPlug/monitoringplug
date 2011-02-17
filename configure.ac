@@ -151,6 +151,7 @@ AC_CONFIG_FILES([Makefile
                  dummy/Makefile
                  rhcs/Makefile
                  snmp/Makefile
+		 xmlrpc/Makefile
                  doc/Makefile
                  tests/Makefile])
 AC_OUTPUT
