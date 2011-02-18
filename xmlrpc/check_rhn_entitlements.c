@@ -49,11 +49,16 @@ char **channel = NULL;
 char **system_name = NULL;
 int channels = 0;
 int systems = 0;
+thresholds *free_thresholds = NULL;
 
 int main (int argc, char **argv) {
     /* Set signal handling and alarm */
     if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
         exit(STATE_CRITICAL);
+
+    /* Set Default range */
+    setWarn(&free_thresholds, "10:",0);
+    setCrit(&free_thresholds, "5:",0);
 
     if (process_arguments (argc, argv) == 1)
         exit(STATE_CRITICAL);
@@ -71,7 +76,7 @@ int main (int argc, char **argv) {
     char *key;
     int used_slots;
     int total_slots;
-    int size, i, j;
+    int size, state=0, i, j;
 
     env = mp_xmlrpc_init();
 
@@ -150,14 +155,18 @@ int main (int argc, char **argv) {
 
                     char *tmp;
                     tmp = malloc(128);
-                    printf("1\n");
                     snprintf(tmp, 128, "%s (%d/%d)", name, used_slots, total_slots);
-                    printf("2\n");
                     mp_strcat_space(&out, tmp);
-                    printf("3\n");
-
-                    printf("  %s\n", tmp);
                     free(tmp);
+
+                    perfdata_int(label, used_slots, "",
+                            (total_slots - free_thresholds->warning->start),
+                            (total_slots - free_thresholds->critical->start),
+                            0, total_slots);
+
+                    if (state < get_status((total_slots-used_slots),free_thresholds)) {
+                        state = get_status((total_slots-used_slots),free_thresholds);
+                    }
                 }
             }
         }
@@ -165,8 +174,16 @@ int main (int argc, char **argv) {
 
     }
 
+    switch ( state ) {
+        case STATE_OK:
+            ok(out);
+        case STATE_WARNING:
+            warning(out);
+        case STATE_CRITICAL:
+            critical(out);
+    }
 
-    ok(out);
+    unknown(out);
 }
 
 int process_arguments (int argc, char **argv) {
@@ -188,7 +205,7 @@ int process_arguments (int argc, char **argv) {
 
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"E::t:U:u:p:C:S:", longopts, &option);
+        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"E::t:U:u:p:C:S:w:c:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -218,10 +235,18 @@ int process_arguments (int argc, char **argv) {
                 break;
         }
 
+        getopt_wc_time(c, optarg, &free_thresholds);
         getopt_default(c);
         getopt_timeout(c, optarg);
 
     }
+
+    if (!url)
+        usage("A URL is mandatory.");
+    if (!user)
+        usage("A Username is mandatory.");
+    if (!pass)
+        usage("A Password is mandatory.");
 
     return(OK);
 }
