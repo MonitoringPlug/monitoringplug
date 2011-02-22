@@ -45,6 +45,7 @@ AX_LIB_EXPAT()
 AC_LIB_LDNS([],[], [AC_MSG_WARN([Skipping ldns])])
 LIBCURL_CHECK_CONFIG([yes],[7.7.2], [], [AC_MSG_WARN([Skipping curl])])
 PKG_CHECK_MODULES([XMLRPC], [xmlrpc_client],[],[AC_MSG_WARN([Skipping xmlrpc-c])])
+PKG_CHECK_MODULES([SELINUX], [libselinux],[],[AC_MSG_WARN([Skipping SELinux])])
 
 
 # SNMP Option
@@ -100,6 +101,7 @@ AM_CONDITIONAL([HAVE_CURL_TFTP], [test x$libcurl_protocol_TFTP != x])
 AM_CONDITIONAL([HAVE_EXPAT], [test x$EXPAT_CFLAGS != x])
 AM_CONDITIONAL([HAVE_NET_SNMP], [test x$NETSNMP_LIBS != x])
 AM_CONDITIONAL([HAVE_XMLRPC], [test x$XMLRPC_LIBS != x])
+AM_CONDITIONAL([HAVE_SELINUX], [test "x$SELINUX_LIBS" != x])
 AM_CONDITIONAL([HAVE_CHECK], [test "x$CHECK_LIBS" != x])
 
 
@@ -153,6 +155,7 @@ AC_CONFIG_FILES([Makefile
                  dns/Makefile
                  dummy/Makefile
                  rhcs/Makefile
+		 selinux/Makefile
                  snmp/Makefile
                  xmlrpc/Makefile
                  doc/Makefile
