@@ -338,17 +338,10 @@ void getopt_timeout(const char *optarg) {
     mp_timeout = atoi (optarg);
 }
 
-void getopt_timeout_OLD(int c, const char *optarg) {
-    if (c == 't')
-        mp_timeout = atoi (optarg);
-}
-
-void getopt_host(int c, const char *optarg, const char **hostname) {
-    if (c == 'H') {
-        if (!is_hostname(optarg) && !is_hostaddr(optarg))
-            usage("Illegal -H argument '%s'.", optarg);
-        *hostname = optarg;
-    }
+void getopt_host(const char *optarg, const char **hostname) {
+    if (!is_hostname(optarg) && !is_hostaddr(optarg))
+        usage("Illegal host argument '%s'.", optarg);
+    *hostname = optarg;
 }
 
 void getopt_host_ip(int c, const char *optarg, const char **hostname) {
@@ -360,11 +353,9 @@ void getopt_host_ip(int c, const char *optarg, const char **hostname) {
 }
 
 void getopt_port(int c, const char *optarg, int *port) {
-    if (c == 'P') {
-        if (!is_integer(optarg))
-            usage("Illegal port number '%s'.", optarg);
-        *port = (int) strtol(optarg, NULL, 10);
-    }
+    if (!is_integer(optarg))
+        usage("Illegal port number '%s'.", optarg);
+    *port = (int) strtol(optarg, NULL, 10);
 }
 
 void getopt_wc(int c, const char *optarg, thresholds **threshold) {

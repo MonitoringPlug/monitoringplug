@@ -259,15 +259,13 @@ void getopt_default(int c);
  * \param[in] optarg option argument
  */
 void getopt_timeout(const char *optarg);
-void getopt_timeout_OLD(int c, const char *optarg);
 
 /**
  * Parse the option for host.
- * \param[in] c option to test
  * \param[in] optarg option argument
  * \param[out] hostname hostname variable to set
  */
-void getopt_host(int c, const char *optarg, const char **hostname);
+void getopt_host(const char *optarg, const char **hostname);
 
 /**
  * Parse the option for host. Allow only IPs.
@@ -279,11 +277,10 @@ void getopt_host_ip(int c, const char *optarg, const char **hostname);
 
 /**
  * Parse the option for port.
- * \param[in] c option to test
  * \param[in] optarg option argument
  * \param[out] port port variable to set
  */
-void getopt_port(int c, const char *optarg, int *port);
+void getopt_port(const char *optarg, int *port);
 
 void getopt_wc(int c, const char *optarg, thresholds **threshold);
 void getopt_wc_time(int c, const char *optarg, thresholds **threshold);

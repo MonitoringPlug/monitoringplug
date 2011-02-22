@@ -214,11 +214,17 @@ int process_arguments (int argc, char **argv) {
             break;
 
         getopt_default(c);
-        getopt_host(c, optarg, &hostname);
-        getopt_port(c, optarg, &port);
-        getopt_snmp( c );
+        getopt_snmp(c);
 
         switch (c) {
+            /* Hostname opt */
+            case 'H':
+                getopt_host(optarg, &hostname);
+                break;
+            /* Port opt */
+            case 'P':
+                getopt_port(optarg, &port);
+                break;
             case 'o':
                 stateOn = optarg;
                 break;

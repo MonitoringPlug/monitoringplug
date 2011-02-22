@@ -160,11 +160,17 @@ int process_arguments (int argc, char **argv) {
             break;
 
         getopt_default(c);
-        getopt_host(c, optarg, &hostname);
-        getopt_port(c, optarg, &port);
         getopt_wc_time(c, optarg, &fetch_thresholds);
 
         switch (c) {
+            /* Hostname opt */
+            case 'H':
+                getopt_host(optarg, &hostname);
+                break;
+            /* Port opt */
+            case 'P':
+                getopt_port(optarg, &port);
+                break;
             case 'F':
                 filename = optarg;
                 break;

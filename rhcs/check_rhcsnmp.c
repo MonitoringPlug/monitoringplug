@@ -130,11 +130,17 @@ int process_arguments (int argc, char **argv) {
             break;
 
         getopt_default(c);
-        getopt_host(c, optarg, &hostname);
-        getopt_port(c, optarg, &port);
         getopt_snmp(c);
 
         switch (c) {
+            /* Hostname opt */
+            case 'H':
+                getopt_host(optarg, &hostname);
+                break;
+            /* Port opt */
+            case 'P':
+                getopt_port(optarg, &port);
+                break;
             /* Timeout opt */
             case 't':
                 getopt_timeout(optarg);
