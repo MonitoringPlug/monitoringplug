@@ -163,11 +163,20 @@ void print_help (void) {
 
     printf("\n");
 
-    printf("This plugin test nothing.");
+    printf("This plugin test the selinux state and policy.");
 
     printf("\n\n");
 
     print_usage();
+
+    printf(" -e, --enforcing\n");
+    printf("      SELinux should be enforcing.\n");
+    printf(" -p, --permissive\n");
+    printf("      SELinux should be permissive.\n");
+    printf(" -d, --disabled\n");
+    printf("      SELinux should be disabled.\n");
+    printf(" -P, --policy=POLICY\n");
+    printf("      SELinux should run with POLICY loaded.\n");
 
     print_help_default();
 }
