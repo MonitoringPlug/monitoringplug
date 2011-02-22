@@ -150,11 +150,14 @@ int process_arguments (int argc, char **argv) {
             break;
 
         getopt_default(c);
-        getopt_timeout(c, optarg);
 
         switch(c) {
             case 'n':
                 nonroot = 1;
+                break;
+            /* Timeout opt */
+            case 't':
+                getopt_timeout(optarg);
                 break;
         }
 

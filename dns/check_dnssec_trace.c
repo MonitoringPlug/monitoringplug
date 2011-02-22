@@ -300,7 +300,6 @@ int process_arguments(int argc, char **argv) {
 
         getopt_default(c);
         getopt_host_ip(c, optarg, &hostname);
-        getopt_timeout(c, optarg);
 
         switch (c) {
             case 'D':
@@ -317,6 +316,10 @@ int process_arguments(int argc, char **argv) {
                 if (!is_hostname(optarg))
                     usage("Illegal trace domain name.");
                 domaintrace = optarg;
+                break;
+            /* Timeout opt */
+            case 't':
+                getopt_timeout(optarg);
                 break;
         }
     }

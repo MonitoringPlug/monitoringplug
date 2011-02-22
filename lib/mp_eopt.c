@@ -45,14 +45,13 @@ char **mp_eopt(int *argc, char **orig_argv, char *optarg) {
     }
 
     efile = "/etc/nagios/monitoringplug.ini";
-    esection = progname;
+    esection = (char *)progname;
 
     // Parse optarg if available
     // [section][@file]
     if (optarg) {
         if(optarg[0] == '@') {
             efile = optarg+1;
-            esection = progname;
         } else {
             esection = strsep(&optarg, "@");
             if (optarg)

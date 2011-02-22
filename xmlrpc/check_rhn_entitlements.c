@@ -52,19 +52,7 @@ int systems = 0;
 thresholds *free_thresholds = NULL;
 
 int main (int argc, char **argv) {
-    /* Set signal handling and alarm */
-    if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
-        exit(STATE_CRITICAL);
-
-    /* Set Default range */
-    setWarn(&free_thresholds, "10:",0);
-    setCrit(&free_thresholds, "5:",0);
-
-    if (process_arguments (argc, argv) == 1)
-        exit(STATE_CRITICAL);
-
-    alarm(mp_timeout);
-
+    /* Local variables */
     xmlrpc_env env;
     xmlrpc_value *result;
     xmlrpc_value *array;
@@ -78,8 +66,23 @@ int main (int argc, char **argv) {
     int total_slots;
     int size, state=0, i, j;
 
+    /* Set signal handling and alarm */
+    if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
+        exit(STATE_CRITICAL);
+
+    /* Set Default range */
+    setWarn(&free_thresholds, "10:",0);
+    setCrit(&free_thresholds, "5:",0);
+
+    if (process_arguments (argc, argv) == 1)
+        exit(STATE_CRITICAL);
+
+    alarm(mp_timeout);
+
+    /* Create XMLRPC env */
     env = mp_xmlrpc_init();
 
+    /* RHN Login */
     result = xmlrpc_client_call(&env, url, "auth.login", "(ss)", user, pass);
     unknown_if_xmlrpc_fault(&env);
 
@@ -89,6 +92,7 @@ int main (int argc, char **argv) {
         printf("Login Successfull: %s\n", key);
     }
 
+    /* Get RHN Entitlements */
     result = xmlrpc_client_call(&env, url, "satellite.listEntitlements", "(s)",
             key);
     unknown_if_xmlrpc_fault(&env);
@@ -100,6 +104,7 @@ int main (int argc, char **argv) {
     if(xmlrpc_value_type(result) != XMLRPC_TYPE_STRUCT)
         unknown("Unknow return value.");
 
+    /* Check system entitlements */
     if (system_name) {
         xmlrpc_struct_read_value(&env, result, "system", &array);
         unknown_if_xmlrpc_fault(&env);
@@ -170,8 +175,79 @@ int main (int argc, char **argv) {
                 }
             }
         }
+    }
 
+    /* Check channel entitlements */
+    if (channel) {
+        xmlrpc_struct_read_value(&env, result, "channel", &array);
+        unknown_if_xmlrpc_fault(&env);
 
+        size = xmlrpc_array_size(&env, array);
+        unknown_if_xmlrpc_fault(&env);
+
+        for(i=0; i < size; i++) {
+            xmlrpc_array_read_item(&env, array, i, &item);
+            unknown_if_xmlrpc_fault(&env);
+
+            xmlrpc_struct_read_value(&env, item, "label", &value);
+            unknown_if_xmlrpc_fault(&env);
+
+            xmlrpc_parse_value(&env, value, "s", &label);
+            unknown_if_xmlrpc_fault(&env);
+
+            if (mp_verbose >= 2) {
+                printf("channel => %s\n", label);
+            }
+
+            for(j=0; j < channels; j++) {
+                if (strcmp(channel[j], label) == 0) {
+                    // Read Name
+                    xmlrpc_struct_read_value(&env, item, "name", &value);
+                    unknown_if_xmlrpc_fault(&env);
+                    xmlrpc_parse_value(&env, value, "s", &name);
+                    unknown_if_xmlrpc_fault(&env);
+
+                    if (mp_verbose >= 2) {
+                        printf(" name => %s\n", name);
+                    }
+
+                    // Read Free
+                    xmlrpc_struct_read_value(&env, item, "used_slots", &value);
+                    unknown_if_xmlrpc_fault(&env);
+                    xmlrpc_parse_value(&env, value, "i", &used_slots);
+                    unknown_if_xmlrpc_fault(&env);
+
+                    if (mp_verbose >= 2) {
+                        printf(" used_slots => %d\n", used_slots);
+                    }
+
+                    // Read Total
+                    xmlrpc_struct_read_value(&env, item, "total_slots", &value);
+                    unknown_if_xmlrpc_fault(&env);
+                    xmlrpc_parse_value(&env, value, "i", &total_slots);
+                    unknown_if_xmlrpc_fault(&env);
+
+                    if (mp_verbose >= 2) {
+                        printf(" total_slots => %d\n", total_slots);
+                    }
+
+                    char *tmp;
+                    tmp = malloc(128);
+                    snprintf(tmp, 128, "%s (%d/%d)", name, used_slots, total_slots);
+                    mp_strcat_space(&out, tmp);
+                    free(tmp);
+
+                    perfdata_int(label, used_slots, "",
+                            (total_slots - free_thresholds->warning->start),
+                            (total_slots - free_thresholds->critical->start),
+                            0, total_slots);
+
+                    if (state < get_status((total_slots-used_slots),free_thresholds)) {
+                        state = get_status((total_slots-used_slots),free_thresholds);
+                    }
+                }
+            }
+        }
     }
 
     switch ( state ) {
@@ -202,8 +278,6 @@ int process_arguments (int argc, char **argv) {
         MP_LONGOPTS_END
     };
 
-
-
     while (1) {
         c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"E::t:U:u:p:C:S:w:c:", longopts, &option);
 
@@ -211,9 +285,17 @@ int process_arguments (int argc, char **argv) {
             break;
 
         switch (c) {
-            case 'E':
-                argv = mp_eopt(&argc, argv, optarg);
+            /* Default opts */
+            case 'h':
+                print_help();
+                exit(0);
+            case 'V':
+                print_revision();
+                exit (0);
+            case 'v':
+                mp_verbose++;
                 break;
+            /* Local opts */
             case 'U':
                 url = optarg;
                 break;
@@ -233,11 +315,18 @@ int process_arguments (int argc, char **argv) {
                 system_name[systems] = optarg;
                 systems++;
                 break;
+            /* EOPT opt */
+            case 'E':
+                argv = mp_eopt(&argc, argv, optarg);
+                break;
+            /* Timeout opt */
+            case 't':
+                getopt_timeout(optarg);
+                break;
         }
 
-        getopt_wc_time(c, optarg, &free_thresholds);
+        getopt_wc(c, optarg, &free_thresholds);
         getopt_default(c);
-        getopt_timeout(c, optarg);
 
     }
 
@@ -247,6 +336,8 @@ int process_arguments (int argc, char **argv) {
         usage("A Username is mandatory.");
     if (!pass)
         usage("A Password is mandatory.");
+    if (!channel && !system_name)
+        usage("A Channel or System entitlement to check is mandatory.");
 
     return(OK);
 }
@@ -257,13 +348,25 @@ void print_help (void) {
 
     printf("\n");
 
-    printf("This plugin simulate a plugin timeout.");
+    printf("This plugin check RHN or a satellite for available entitlements.");
 
     printf("\n\n");
 
     print_usage();
 
     print_help_default();
+
+    printf(" -U, --url=URL\n");
+    printf("      URL of the RHN XML-RPC api.\n");
+    printf(" -u, --user=USER\n");
+    printf("      USER to log in.\n");
+    printf(" -p, --pass=PASS\n");
+    printf("      PASS to log in.\n");
+    printf(" -C, --channel=CHANNEL\n");
+    printf("      CHANNEL entitlement to check.\n");
+    printf(" -S, --system=SYSTEM\n");
+    printf("      SYSTEM  entitlement to check.\n");
+
     print_help_timeout();
     print_help_eopt();
 }

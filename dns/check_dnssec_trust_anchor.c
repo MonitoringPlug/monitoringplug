@@ -145,7 +145,6 @@ int process_arguments(int argc, char **argv) {
 
         getopt_default(c);
         getopt_host_ip(c, optarg, &hostname);
-        getopt_timeout(c, optarg);
                     
         switch (c) {
             // Plugin specific args
@@ -154,6 +153,10 @@ int process_arguments(int argc, char **argv) {
                 if(trusted_keys == NULL
                    || ldns_rr_list_rr_count(trusted_keys) == 0)
                     usage("Can't load trust anchors from file");
+                break;
+            /* Timeout opt */
+            case 't':
+                getopt_timeout(optarg);
                 break;
         }
     }

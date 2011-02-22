@@ -163,14 +163,15 @@ int process_arguments (int argc, char **argv) {
         getopt_host(c, optarg, &hostname);
         getopt_port(c, optarg, &port);
         getopt_wc_time(c, optarg, &fetch_thresholds);
-        getopt_timeout(c, optarg);
 
         switch (c) {
             case 'F':
                 filename = optarg;
                 break;
-            case '?':
-                usage("");
+            /* Timeout opt */
+            case 't':
+                getopt_timeout(optarg);
+                break;
         }
     }
     

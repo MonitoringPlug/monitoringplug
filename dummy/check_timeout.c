@@ -73,7 +73,13 @@ int process_arguments (int argc, char **argv) {
             break;
 
         getopt_default(c);
-        getopt_timeout(c, optarg);
+
+        switch (c) {
+            /* Timeout opt */
+            case 't':
+                getopt_timeout(optarg);
+                break;
+        }
 
     }
 

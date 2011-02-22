@@ -246,7 +246,6 @@ int process_arguments (int argc, char **argv) {
         getopt_default(c);
         getopt_host_ip(c, optarg, &hostname);
         getopt_wc_time(c, optarg, &exp_thresholds);
-        getopt_timeout(c, optarg);
         getopt_ldns(c);
 
         switch (c) {
@@ -259,6 +258,10 @@ int process_arguments (int argc, char **argv) {
                 trusted_keys = loadKeyfile(optarg);
                 if (trusted_keys == NULL)
                     usage("Parsing keyfiel faild.");
+                break;
+            /* Timeout opt */
+            case 't':
+                getopt_timeout(optarg);
                 break;
         }
     }

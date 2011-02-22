@@ -218,7 +218,6 @@ int process_arguments (int argc, char **argv) {
 
         getopt_default(c);
         getopt_wc_time(c, optarg, &credit_thresholds);
-        getopt_timeout(c, optarg);
         
         switch (c) {
             case 'U':
@@ -227,9 +226,10 @@ int process_arguments (int argc, char **argv) {
             case 'P':
                 password = optarg;
                 break;
-            case '?':
-                usage("");
-        }
+            /* Timeout opt */
+            case 't':
+                getopt_timeout(optarg);
+                break;
     }
     
     if (!userkey)

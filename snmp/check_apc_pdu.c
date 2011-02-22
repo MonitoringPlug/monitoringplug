@@ -217,12 +217,18 @@ int process_arguments (int argc, char **argv) {
         getopt_host(c, optarg, &hostname);
         getopt_port(c, optarg, &port);
         getopt_snmp( c );
-        getopt_timeout(c, optarg);
 
-        if (c == 'o') {
-            stateOn = optarg;
-        } else if (c == 'O') {
-            stateOff = optarg;
+        switch (c) {
+            case 'o':
+                stateOn = optarg;
+                break;
+            case 'O':
+                stateOff = optarg;
+                break;
+            /* Timeout opt */
+            case 't':
+                getopt_timeout(optarg);
+                break;
         }
     }
 

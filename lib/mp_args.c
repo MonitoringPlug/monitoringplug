@@ -334,7 +334,11 @@ void getopt_default(int c) {
     }
 }
 
-void getopt_timeout(int c, const char *optarg) {
+void getopt_timeout(const char *optarg) {
+    mp_timeout = atoi (optarg);
+}
+
+void getopt_timeout_OLD(int c, const char *optarg) {
     if (c == 't')
         mp_timeout = atoi (optarg);
 }

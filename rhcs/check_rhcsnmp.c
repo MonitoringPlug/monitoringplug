@@ -133,7 +133,13 @@ int process_arguments (int argc, char **argv) {
         getopt_host(c, optarg, &hostname);
         getopt_port(c, optarg, &port);
         getopt_snmp(c);
-        getopt_timeout(c, optarg);
+
+        switch (c) {
+            /* Timeout opt */
+            case 't':
+                getopt_timeout(optarg);
+                break;
+        }
     }
 
     return(OK);

@@ -256,10 +256,10 @@ void getopt_default(int c);
 
 /**
  * Parse the option for timeout.
- * \param[in] c option to test
  * \param[in] optarg option argument
  */
-void getopt_timeout(int c, const char *optarg);
+void getopt_timeout(const char *optarg);
+void getopt_timeout_OLD(int c, const char *optarg);
 
 /**
  * Parse the option for host.

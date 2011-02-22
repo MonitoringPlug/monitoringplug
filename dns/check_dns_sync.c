@@ -365,11 +365,14 @@ int process_arguments (int argc, char **argv) {
 
         getopt_default(c);
         getopt_host_ip(c, optarg, &hostname);
-        getopt_timeout(c, optarg);
 
         switch (c) {
             case 'D':
                 domainname = optarg;
+                break;
+            /* Timeout opt */
+            case 't':
+                getopt_timeout(optarg);
                 break;
         }
     }
