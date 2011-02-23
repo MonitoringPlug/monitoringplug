@@ -213,10 +213,11 @@ int process_arguments (int argc, char **argv) {
         if (c == -1 || c == EOF)
             break;
 
-        getopt_default(c);
         getopt_snmp(c);
 
         switch (c) {
+            /* Default opts */
+            MP_GETOPTS_DEFAULT
             /* Hostname opt */
             case 'H':
                 getopt_host(optarg, &hostname);

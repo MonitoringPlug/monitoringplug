@@ -243,12 +243,16 @@ int process_arguments (int argc, char **argv) {
         if (c == -1 || c == EOF)
             break;
 
-        getopt_default(c);
-        getopt_host_ip(c, optarg, &hostname);
         getopt_wc_time(c, optarg, &exp_thresholds);
         getopt_ldns(c);
 
         switch (c) {
+            /* Default opts */
+            MP_GETOPTS_DEFAULT
+            /* Host opt */
+            case 'H':
+                getopt_host_ip(optarg, &hostname);
+                break;
             case 'D':
                 if (!is_hostname(optarg))
                     usage("Illegal domain name.");

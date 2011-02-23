@@ -142,11 +142,14 @@ int process_arguments(int argc, char **argv) {
         c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"t:H:k:w:c:", long_opts, &option);
         if (c == -1 || c == EOF)
             break;
-
-        getopt_default(c);
-        getopt_host_ip(c, optarg, &hostname);
                     
         switch (c) {
+            /* Default opts */
+            MP_GETOPTS_DEFAULT
+            /* Host opt */
+            case 'H':
+                getopt_host_ip(optarg, &hostname);
+                break;
             // Plugin specific args
             case 'k': // -k --trusted-keys
                 trusted_keys = loadAnchorfile(optarg);

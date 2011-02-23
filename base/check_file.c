@@ -323,30 +323,30 @@ int process_arguments (int argc, char **argv) {
         if (c == -1 || c == EOF)
             break;
 
-        getopt_default(c);
-
         getopt_wc_time(c, optarg, &age_thresholds);
 
         switch (c) {
-	    case 'f':
-	       filename = optarg;
-	       break;
-        case 'o':
-           ownername = optarg;
-           break;
-        case 'g':
-           groupname = optarg;
-           break;
-        case 'a':
-           accessstring = optarg;
-           break;
-	    case 'W':
-	       if (setWarn(&size_thresholds, optarg, BISI) == ERROR)
-		  usage("Illegal -W argument '%s'.", optarg);
-	       break;
-	    case 'C':
-	       if (setCrit(&size_thresholds, optarg, BISI) == ERROR)
-		  usage("Illegal -C argument '%s'.", optarg);
+            /* Default opts */
+            MP_GETOPTS_DEFAULT
+            case 'f':
+                filename = optarg;
+                break;
+            case 'o':
+                ownername = optarg;
+                break;
+            case 'g':
+                groupname = optarg;
+                break;
+            case 'a':
+                accessstring = optarg;
+                break;
+            case 'W':
+                if (setWarn(&size_thresholds, optarg, BISI) == ERROR)
+                    usage("Illegal -W argument '%s'.", optarg);
+                break;
+            case 'C':
+                if (setCrit(&size_thresholds, optarg, BISI) == ERROR)
+                    usage("Illegal -C argument '%s'.", optarg);
         }
     }
 

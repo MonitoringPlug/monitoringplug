@@ -216,10 +216,11 @@ int process_arguments (int argc, char **argv) {
         if (c == -1 || c == EOF)
             break;
 
-        getopt_default(c);
         getopt_wc_time(c, optarg, &credit_thresholds);
         
         switch (c) {
+            /* Default opts */
+            MP_GETOPTS_DEFAULT
             case 'U':
                 userkey = optarg;
                 break;

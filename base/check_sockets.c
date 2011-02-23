@@ -306,11 +306,12 @@ int process_arguments (int argc, char **argv) {
         if (c == -1 || c == EOF)
             break;
 
-        getopt_default(c);
         getopt_46(c, &ipv4, &ipv6);
         getopt_wc(c, optarg, &socket_thresholds);
 
         switch (c) {
+            /* Default opts */
+            MP_GETOPTS_DEFAULT
             case 't':
                 if (optarg)
                     tcpport = strtol(optarg,NULL,10);

@@ -72,9 +72,9 @@ int process_arguments (int argc, char **argv) {
         if (c == -1 || c == EOF)
             break;
 
-        getopt_default(c);
-
         switch (c) {
+            /* Default opts */
+            MP_GETOPTS_DEFAULT
             /* Timeout opt */
             case 't':
                 getopt_timeout(optarg);

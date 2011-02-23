@@ -249,12 +249,6 @@ void print_help_crit(const char *limit, const char *def);
 void print_help_46(void);
 
 /**
- * Parse the options for help, version, and verbose.
- * \param[in] c option to test
- */
-void getopt_default(int c);
-
-/**
  * Parse the option for timeout.
  * \param[in] optarg option argument
  */
@@ -269,11 +263,10 @@ void getopt_host(const char *optarg, const char **hostname);
 
 /**
  * Parse the option for host. Allow only IPs.
- * \param[in] c option to test
  * \param[in] optarg option argument
  * \param[out] hostname hostname variable to set
  */
-void getopt_host_ip(int c, const char *optarg, const char **hostname);
+void getopt_host_ip(const char *optarg, const char **hostname);
 
 /**
  * Parse the option for port.
@@ -292,6 +285,16 @@ void getopt_46(int c, int *ipv4, int *ipv6);
 #define MP_LONGOPTS_DEFAULT {"help", no_argument, NULL, (int)'h'}, \
                             {"version", no_argument, NULL, (int)'V'}, \
                             {"verbose", no_argument, NULL, (int)'v'}
+/** getopt for help, version, verbose */
+#define MP_GETOPTS_DEFAULT case 'h': \
+            print_help(); \
+            exit(0); \
+        case 'V': \
+            print_revision(); \
+            exit (0); \
+        case 'v': \
+            mp_verbose++; \
+            break; \
 
 #define MP_LONGOPTS_PERF    {"perfdata", no_argument, (int *)&mp_showperfdata, 1}
 

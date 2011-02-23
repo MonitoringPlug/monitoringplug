@@ -105,10 +105,10 @@ int process_arguments (int argc, char **argv) {
 
     static struct option longopts[] = {
         MP_LONGOPTS_DEFAULT,
-	{"enforcing", no_argument, NULL, (int)'e'},
-	{"permissiv", no_argument, NULL, (int)'p'},
-	{"disabled", no_argument, NULL, (int)'d'},
-	{"policy", required_argument, NULL, (int)'P'},
+        {"enforcing", no_argument, NULL, (int)'e'},
+        {"permissiv", no_argument, NULL, (int)'p'},
+        {"disabled", no_argument, NULL, (int)'d'},
+        {"policy", required_argument, NULL, (int)'P'},
         MP_LONGOPTS_END
     };
 
@@ -118,40 +118,40 @@ int process_arguments (int argc, char **argv) {
         if (c == -1 || c == EOF)
             break;
 
-        getopt_default(c);
-
-	switch (c) {
-	    case 'e':
-	        if (state_enforcing != -1)
-		   usage("Only one state argument allowed.");
-	        state_enforcing = STATE_OK;
-	        state_permissive = STATE_WARNING;
-	        state_disabled = STATE_CRITICAL;
-	        break;
-	    case 'p':
-		if (state_enforcing != -1)
-		    usage("Only one state argument allowed.");
-		state_enforcing = STATE_WARNING;
-		state_permissive = STATE_OK;
-		state_disabled = STATE_CRITICAL;
-		break;
-	    case 'd':
-		if (state_enforcing != -1)
-		    usage("Only one state argument allowed.");
-		state_enforcing = STATE_CRITICAL;
-		state_permissive = STATE_WARNING;
-		state_disabled = STATE_OK;
-		break;
-	    case 'P':
-		policy = optarg;
-		break;
-	}
+        switch (c) {
+            /* Default opts */
+            MP_GETOPTS_DEFAULT
+            case 'e':
+                if (state_enforcing != -1)
+                    usage("Only one state argument allowed.");
+                state_enforcing = STATE_OK;
+                state_permissive = STATE_WARNING;
+                state_disabled = STATE_CRITICAL;
+                break;
+            case 'p':
+                if (state_enforcing != -1)
+                    usage("Only one state argument allowed.");
+                state_enforcing = STATE_WARNING;
+                state_permissive = STATE_OK;
+                state_disabled = STATE_CRITICAL;
+                break;
+            case 'd':
+                if (state_enforcing != -1)
+                    usage("Only one state argument allowed.");
+                state_enforcing = STATE_CRITICAL;
+                state_permissive = STATE_WARNING;
+                state_disabled = STATE_OK;
+                break;
+            case 'P':
+                policy = optarg;
+                break;
+        }
     }
 
     if (state_enforcing == -1) {
         state_enforcing = STATE_OK;
-	state_permissive = STATE_WARNING;
-	state_disabled = STATE_CRITICAL;
+        state_permissive = STATE_WARNING;
+        state_disabled = STATE_CRITICAL;
     }
 
     return(OK);

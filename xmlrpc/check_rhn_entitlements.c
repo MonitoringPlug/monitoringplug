@@ -286,15 +286,7 @@ int process_arguments (int argc, char **argv) {
 
         switch (c) {
             /* Default opts */
-            case 'h':
-                print_help();
-                exit(0);
-            case 'V':
-                print_revision();
-                exit (0);
-            case 'v':
-                mp_verbose++;
-                break;
+            MP_GETOPTS_DEFAULT
             /* Local opts */
             case 'U':
                 url = optarg;
@@ -326,8 +318,6 @@ int process_arguments (int argc, char **argv) {
         }
 
         getopt_wc(c, optarg, &free_thresholds);
-        getopt_default(c);
-
     }
 
     if (!url)

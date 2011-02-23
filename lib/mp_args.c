@@ -320,20 +320,6 @@ void print_help_46(void) {
       Use IPv6 to check.\n");
 }
 
-void getopt_default(int c) {
-    switch (c) {
-        case 'h':
-            print_help();
-            exit(0);
-        case 'V':
-            print_revision();
-            exit (0);
-        case 'v':
-            mp_verbose++;
-            break;
-    }
-}
-
 void getopt_timeout(const char *optarg) {
     mp_timeout = atoi (optarg);
 }
@@ -344,15 +330,13 @@ void getopt_host(const char *optarg, const char **hostname) {
     *hostname = optarg;
 }
 
-void getopt_host_ip(int c, const char *optarg, const char **hostname) {
-    if (c == 'H') {
-        if (!is_hostaddr(optarg))
-            usage("Illegal -H argument '%s'.", optarg);
-        *hostname = optarg;
-    }
+void getopt_host_ip(const char *optarg, const char **hostname) {
+    if (!is_hostaddr(optarg))
+        usage("Illegal Host-IP argument '%s'.", optarg);
+    *hostname = optarg;
 }
 
-void getopt_port(int c, const char *optarg, int *port) {
+void getopt_port(const char *optarg, int *port) {
     if (!is_integer(optarg))
         usage("Illegal port number '%s'.", optarg);
     *port = (int) strtol(optarg, NULL, 10);
