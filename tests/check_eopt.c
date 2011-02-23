@@ -69,9 +69,8 @@ START_TEST (test_eopt_section_file) {
     fail_unless (args == res_args, "Wrong arg count. %d %d",args, res_args);
     
     for(i=0; i < args; i++) {
-        //fprintf(stdout, "%d: %s :: %s\n", i, new_argv[i], res_argv[i]);
-        //fail_unless (strcmp(new_argv[i], res_argv[i]) == 0,
-        //"Wrong arg at index: %d", i);
+        fail_unless (strcmp(new_argv[i], res_argv[i]) == 0,
+        "Wrong arg at index: %d", i);
     }
 }
 END_TEST

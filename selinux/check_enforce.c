@@ -24,7 +24,7 @@
 
 const char *progname  = "check_enforce";
 const char *progvers  = "0.1";
-const char *progcopy  = "2010";
+const char *progcopy  = "2011";
 const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "[--enforcing|--permissive|--disabled]";
 
@@ -36,6 +36,7 @@ const char *progusage = "[--enforcing|--permissive|--disabled]";
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <libgen.h>
 
 #include <selinux/selinux.h>
 
@@ -73,7 +74,7 @@ int main (int argc, char **argv) {
 	    state = state_permissive;
 	}
 
-	pol_name = strdup(basename(selinux_policy_root()));
+	pol_name = basename(strdup(selinux_policy_root()));
 
 	if (policy && strcmp(pol_name, policy) != 0) {
 	   critical("Wrong SELinux policy %s", pol_name);
@@ -85,8 +86,6 @@ int main (int argc, char **argv) {
        pol_name = strdup("no policy");
     }
 
-    pol_name = strdup(basename(selinux_policy_root()));
-
     switch (state) {
        case STATE_OK:
 	  ok("SELinux: %s (%s)", state_name, pol_name);
@@ -96,7 +95,7 @@ int main (int argc, char **argv) {
 	  critical("SELinux: %s (%s)", state_name, pol_name);
     }
 
-    critical("You should never reack this point. %d %d", se_enabled, se_enforced);
+    critical("You should never reack this point.");
 }
 
 int process_arguments (int argc, char **argv) {
@@ -169,6 +168,8 @@ void print_help (void) {
 
     print_usage();
 
+    print_help_default();
+
     printf(" -e, --enforcing\n");
     printf("      SELinux should be enforcing.\n");
     printf(" -p, --permissive\n");
@@ -177,6 +178,4 @@ void print_help (void) {
     printf("      SELinux should be disabled.\n");
     printf(" -P, --policy=POLICY\n");
     printf("      SELinux should run with POLICY loaded.\n");
-
-    print_help_default();
 }
