@@ -31,7 +31,6 @@ const char *progusage = "--url URL --user USER --pass PASS [--channel CHANNEl] [
 
 /* MP Includes */
 #include "mp_common.h"
-#include "mp_eopt.h"
 #include "xmlrpc_utils.h"
 /* Default Includes */
 #include <getopt.h>
