@@ -12,8 +12,6 @@ bin_PROGRAMS =
 
 if HAVE_XMLRPC
 bin_PROGRAMS += check_rhn_entitlements
-
-check_rhn_entitlements_LDFLAGS = $(AM_LDFLAGS) $(XMLRPC_LIBS)
 endif
 
 

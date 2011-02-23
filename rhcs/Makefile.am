@@ -3,10 +3,10 @@
 bindir = ${libdir}/nagios/plugins
 
 AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/lib
-AM_LDFLAGS = $(MPLIB_LIBS)
+AM_LDFLAGS = 
 AM_DEFAULT_SOURCE_EXT = .c
 
-LDADD = ../lib/*.a
+LDADD = ../lib/libmonitoringplug.a
 
 bin_PROGRAMS = 
 
@@ -22,4 +22,5 @@ bin_PROGRAMS += check_rhcsnmp
 
 check_rhcsnmp_CPPFLAGS = $(AM_CPPFLAGS) $(NETSNMP_CFLAGS)
 check_rhcsnmp_LDFLAGS = $(AM_LDFLAGS) $(NETSNMP_LIBS)
+check_rhcsnmp_LDADD = $(LDADD) ../lib/libsnmputils.a
 endif

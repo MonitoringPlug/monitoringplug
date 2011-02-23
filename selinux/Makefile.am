@@ -6,7 +6,7 @@ AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/lib
 AM_LDFLAGS = $(SELINUX_LIBS)
 AM_DEFAULT_SOURCE_EXT = .c
 
-LDADD = ../lib/*.a
+LDADD = ../lib/libmonitoringplug.a
 
 bin_PROGRAMS = 
 
