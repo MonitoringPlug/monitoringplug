@@ -85,12 +85,10 @@ int main (int argc, char **argv) {
 
         switch (age_status) {
             case STATE_WARNING:
-                output = malloc(sizeof(char) * 12);
-                strcat(output, "age warning");
+                output = strdup("age warning");
                 break;
             case STATE_CRITICAL:
-                output = malloc(sizeof(char) * 13);
-                strcat(output, "age critical");
+                output = strdup("age critical");
                 break;
         }
     }
@@ -100,22 +98,10 @@ int main (int argc, char **argv) {
 
         switch (size_status) {
             case STATE_WARNING:
-                if (output != NULL) {
-                    output = realloc(output, strlen(output) + sizeof(char) * 15);
-                    strcat(output, ", size warning");
-                } else {
-                    output = malloc(sizeof(char) * 13);
-                    strcat(output, "size warning");
-                }
+                mp_strcat_comma(&output, "size warning");
                 break;
             case STATE_CRITICAL:
-                if (output != NULL) {
-                    output = realloc(output, strlen(output) + sizeof(char) * 16);
-                    strcat(output, ", size critical");
-                } else {
-                    output = malloc(sizeof(char) * 14);
-                    strcat(output, "size critical");
-                }
+                mp_strcat_comma(&output, "size critical");
                 break;
         }
     }
@@ -126,13 +112,7 @@ int main (int argc, char **argv) {
         if (is_integer(ownername)) {
             if (file_stat.st_uid != (int) strtol(ownername, NULL, 10)) {
                 status = STATE_CRITICAL;
-                if (output != NULL) {
-                    output = realloc(output, strlen(output) + sizeof(char) * 17);
-                    strcat(output, ", owner critical");
-                } else {
-                    output = malloc(sizeof(char) * 15);
-                    strcat(output, "owner critical");
-                }
+                mp_strcat_comma(&output, "owner critcal");
             } else {
                 status = status > STATE_OK ? status : STATE_OK;
             }
@@ -145,13 +125,7 @@ int main (int argc, char **argv) {
 
             if (pwd == NULL || file_stat.st_uid != (*pwd).pw_uid) {
                 status = STATE_CRITICAL;
-                if (output != NULL) {
-                    output = realloc(output, strlen(output) + sizeof(char) * 17);
-                    strcat(output, ", owner critical");
-                } else {
-                    output = malloc(sizeof(char) * 15);
-                    strcat(output, "owner critical");
-                }
+                mp_strcat_comma(&output, "owner critical");
             } else {
                 status = status > STATE_OK ? status : STATE_OK;
             }
@@ -162,13 +136,7 @@ int main (int argc, char **argv) {
         if (is_integer(groupname)) {
             if (file_stat.st_gid != (int) strtol(groupname, NULL, 10)) {
                 status = STATE_CRITICAL;
-                if (output != NULL) {
-                    output = realloc(output, strlen(output) + sizeof(char) * 17);
-                    strcat(output, ", group critical");
-                } else {
-                    output = malloc(sizeof(char) * 15);
-                    strcat(output, "group critical");
-                }
+                mp_strcat_comma(&output, "group critical");
             } else {
                 status = status > STATE_OK ? status : STATE_OK;
             }
@@ -181,13 +149,7 @@ int main (int argc, char **argv) {
 
             if (grp == NULL || file_stat.st_gid != (*grp).gr_gid) {
                 status = STATE_CRITICAL;
-                if (output != NULL) {
-                    output = realloc(output, strlen(output) + sizeof(char) * 17);
-                    strcat(output, ", group critical");
-                } else {
-                    output = malloc(sizeof(char) * 15);
-                    strcat(output, "group critical");
-                }
+                mp_strcat_comma(&output, "group critical");
             } else {
                 status = status > STATE_OK ? status : STATE_OK;
             }
@@ -197,13 +159,7 @@ int main (int argc, char **argv) {
     if (accessstring != NULL) {
         if (check_access(file_stat.st_mode) != 0) {
             status = STATE_CRITICAL;
-            if (output != NULL) {
-                output = realloc(output, strlen(output) + sizeof(char) * 18);
-                strcat(output, ", access critical");
-            } else {
-                output = malloc(sizeof(char) * 16);
-                strcat(output, "access critical");
-            }
+            mp_strcat_comma(&output, "access critical");
         } else {
             status = status > STATE_OK ? status : STATE_OK;
         }
