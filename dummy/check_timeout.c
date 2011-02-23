@@ -99,6 +99,5 @@ void print_help (void) {
     print_usage();
 
     print_help_default();
-    print_help_timeout();
 }
 

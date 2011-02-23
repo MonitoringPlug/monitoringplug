@@ -356,7 +356,6 @@ void print_help (void) {
     printf("      File to read trust-anchors from.\n");
     print_help_warn_time("2 days");
     print_help_crit_time("1 day");
-    print_help_timeout();
 }
 
 /* vim: set ts=4 sw=4 et syn=c.libdns : */

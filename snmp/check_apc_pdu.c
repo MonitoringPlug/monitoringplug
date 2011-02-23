@@ -266,7 +266,5 @@ void print_help (void) {
     printf("      Ports which should be Off.\n");
 
     print_help_snmp();
-
-    print_help_timeout();
 }
 

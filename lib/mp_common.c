@@ -42,7 +42,7 @@ void ok(const char *fmt, ...) {
     va_start(ap, fmt);
     vprintf(fmt, ap);
     va_end(ap);
-    if (mp_perfdata != NULL)
+    if (mp_showperfdata && mp_perfdata)
        printf("| %s", mp_perfdata);
     printf("\n");
     exit(STATE_OK);
@@ -54,7 +54,7 @@ void warning(const char *fmt, ...) {
     va_start(ap, fmt);
     vprintf(fmt, ap);
     va_end(ap);
-    if (mp_perfdata)
+    if (mp_showperfdata && mp_perfdata)
        printf(" | %s", mp_perfdata);
     printf("\n");
     exit(STATE_WARNING);
@@ -66,7 +66,7 @@ void critical(const char *fmt, ...) {
     va_start(ap, fmt);
     vprintf(fmt, ap);
     va_end(ap);
-    if (mp_perfdata)
+    if (mp_showperfdata && mp_perfdata)
        printf(" | %s", mp_perfdata);
     printf("\n");
     exit(STATE_CRITICAL);
@@ -78,7 +78,7 @@ void unknown(const char *fmt, ...) {
     va_start(ap, fmt);
     vprintf(fmt, ap);
     va_end(ap);
-    if (mp_perfdata)
+    if (mp_showperfdata && mp_perfdata)
        printf(" | %s", mp_perfdata);
     printf("\n");
     exit(STATE_UNKNOWN);
@@ -118,6 +118,9 @@ void perfdata_int(const char *label, int value, const char *unit,
                   int warn, int crit, int min, int max) {
    char *tmp;
 
+   if (!mp_showperfdata)
+       return;
+
    tmp=malloc(64);
    sprintf(tmp,"'%s'=%d%s;%d;%d;%d;%d", label, value, unit, warn, crit, min, max);
 
@@ -136,6 +139,9 @@ void perfdata_int(const char *label, int value, const char *unit,
 void perfdata_float(const char *label, float value, const char *unit,
                     float warn, float crit, float  min, float max) {
    char *tmp;
+
+   if (!mp_showperfdata)
+       return;
 
    tmp=malloc(32);
    sprintf(tmp,"'%s'=%0.2f%s;%0.2f;%0.2f;%0.2f;%0.2f", label, value, unit, warn, crit, min, max);
@@ -164,7 +170,7 @@ void print_revision (void) {
 
 void print_copyright (void) {
     printf("Copyright (c) %s %s\n", progcopy, progauth);
-    printf("Copyright (c) 2010 Monitoring Plugins\n");
+    printf("Copyright (c) 2010-2011 Monitoring Plugins\n");
 }
 
 void timeout_alarm_handler(int signo) {

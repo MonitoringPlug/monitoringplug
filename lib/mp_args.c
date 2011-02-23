@@ -261,19 +261,13 @@ Options:\n\
  -V, --version\n\
       Print version information.\n\
  -v, --verbose\n\
-      Show details for command-line debugging.\n");
-}
-
-void print_help_perf(void) {
-    printf("\
- --perfdata\n\
-      Print perfdata for check.\n");
-}
-
-void print_help_timeout(void) {
-	printf("\
+      Show details for command-line debugging.\n\
  -t, --timeout=INTEGER\n\
-      Seconds before  check timesout.\n");
+      Seconds before the check return with a timeout alert.\n\
+     --eopt=[section][@file]\n\
+      Read additional opts from section in ini-File.\n\
+     --perfdata\n\
+      Print performance data (if available).\n");
 }
 
 void print_help_host(void) {

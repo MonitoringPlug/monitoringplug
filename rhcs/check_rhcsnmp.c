@@ -22,6 +22,7 @@
  * $Id$
  */
 
+
 const char *progname  = "check_rhc";
 const char *progvers  = "0.1";
 const char *progcopy  = "2010";
@@ -112,7 +113,6 @@ int process_arguments (int argc, char **argv) {
             MP_LONGOPTS_HOST,
             MP_LONGOPTS_PORT,
             SNMP_LONGOPTS,
-            MP_LONGOPTS_PERF,
             MP_LONGOPTS_TIMEOUT,
             MP_LONGOPTS_END
     };
@@ -168,9 +168,5 @@ void print_help (void) {
     print_help_default();
 
     print_help_snmp();
-    
-    print_help_perf();
-    
-    print_help_timeout();
 }
 

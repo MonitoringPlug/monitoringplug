@@ -402,7 +402,6 @@ void print_help (void) {
    print_help_host();
    printf(" -D, --domain=DOMAIN\n");
    printf("      The name of the domain to check.\n");
-   print_help_timeout();
 }
 
 /* vim: set ts=4 sw=4 et : */

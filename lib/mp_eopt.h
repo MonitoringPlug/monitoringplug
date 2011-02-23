@@ -31,9 +31,7 @@ char **mp_eopt(int *argc, char **orig_argv, char *optarg);
  */
 void print_help_eopt(void);
 
-/** optstring for timeout */
-#define MP_OPTSTR_EOPT   "E::"
 /** longopts option for timeout */
-#define MP_LONGOPTS_EOPT {"eopt", optional_argument, NULL, (int)'E'}
+#define MP_LONGOPTS_EOPT {"eopt", optional_argument, NULL, (int)MP_LONGOPT_EOPT}
 
 #endif /* MP_EOPT_H_ */

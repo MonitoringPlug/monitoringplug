@@ -210,7 +210,6 @@ void print_help (void) {
     printf("      The name of the file to download.\n");
     print_help_warn_time("5 sec");
     print_help_crit_time("9 sec");
-    print_help_timeout();
 }
 
 /* vim: set ts=4 sw=4 et syn=c.libdns : */

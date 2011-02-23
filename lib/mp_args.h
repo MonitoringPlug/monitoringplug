@@ -24,6 +24,8 @@
 #ifndef _MP_ARGS_H_
 #define _MP_ARGS_H_
 
+#include "mp_eopt.h"
+
 /**
  * prototype for argument parsing function.
  * Needs to be implemented by checks.
@@ -199,16 +201,6 @@ void print_thresholds(const char *threshold_name, thresholds *my_threshold);
 void print_help_default(void);
 
 /**
- * Prints the help message for the perfdata options.
- */
-void print_help_perf(void);
-
-/**
- * Prints the help to the timeout option.
- */
-void print_help_timeout(void);
-
-/**
  * Prints the help for the host option
  */
 void print_help_host(void);
@@ -284,7 +276,10 @@ void getopt_46(int c, int *ipv4, int *ipv6);
 /** longopts option for help, version, verbose */
 #define MP_LONGOPTS_DEFAULT {"help", no_argument, NULL, (int)'h'}, \
                             {"version", no_argument, NULL, (int)'V'}, \
-                            {"verbose", no_argument, NULL, (int)'v'}
+                            {"verbose", no_argument, NULL, (int)'v'}, \
+                            {"eopt", optional_argument, NULL, (int)MP_LONGOPT_EOPT}, \
+                            {"perfdata", no_argument, (int *)&mp_showperfdata, 1}
+
 /** getopt for help, version, verbose */
 #define MP_GETOPTS_DEFAULT case 'h': \
             print_help(); \
@@ -295,8 +290,12 @@ void getopt_46(int c, int *ipv4, int *ipv6);
         case 'v': \
             mp_verbose++; \
             break; \
+        case MP_LONGOPT_EOPT: \
+            argv = mp_eopt(&argc, argv, optarg); \
+            break; \
 
-#define MP_LONGOPTS_PERF    {"perfdata", no_argument, (int *)&mp_showperfdata, 1}
+
+#define MP_LONGOPTS_PERF
 
 /** optstring for timeout */
 #define MP_OPTSTR_TIMEOUT   "t:"

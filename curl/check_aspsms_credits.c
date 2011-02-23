@@ -44,7 +44,6 @@ const char *progusage = "--userkey <userkey> --password <password>";
 /* URLs */
 const char *xml_url = "http://xml1.aspsms.com:5061/xmlsvr.asp";
 
-
 /* Global vars */
 const char *userkey = NULL;
 const char *password = NULL;
@@ -65,6 +64,7 @@ static size_t my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream) {
     
     return size*nmemb;
 }
+
 static size_t my_fread(void *buffer, size_t size, size_t nmemb, void *stream) {
     size_t s = strlen(xmlp);
     if (s > size*nmemb)
@@ -231,6 +231,7 @@ int process_arguments (int argc, char **argv) {
             case 't':
                 getopt_timeout(optarg);
                 break;
+        }
     }
     
     if (!userkey)
@@ -262,7 +263,6 @@ void print_help (void) {
     printf("      The password of the ASPSMS account.\n");
     print_help_warn("credits", "100:");
     print_help_crit("credits", "50:");
-    print_help_timeout();
 }
 
 /* vim: set ts=4 sw=4 et syn=c.libdns : */

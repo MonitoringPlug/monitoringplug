@@ -1,4 +1,5 @@
-/**
+/***
+
  * Monitoring Plugin - check_rhn_entitlements
  **
  *
@@ -26,22 +27,24 @@ const char *progname  = "check_rhn_entitlements";
 const char *progvers  = "0.1";
 const char *progcopy  = "2011";
 const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
-const char *progusage = "[-t <timeout>]";
+const char *progusage = "--url URL --user USER --pass PASS [--channel CHANNEl] [--system SYSTEM]";
 
+/* MP Includes */
 #include "mp_common.h"
 #include "mp_eopt.h"
 #include "xmlrpc_utils.h"
-
+/* Default Includes */
 #include <getopt.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
+/* Library Includes */
 #include <xmlrpc.h>
 #include <xmlrpc_client.h>
 
+/* Global Vars */
 const char *url = NULL;
 const char *user = NULL;
 const char *pass = NULL;
@@ -52,7 +55,7 @@ int systems = 0;
 thresholds *free_thresholds = NULL;
 
 int main (int argc, char **argv) {
-    /* Local variables */
+    /* Local Vars */
     xmlrpc_env env;
     xmlrpc_value *result;
     xmlrpc_value *array;
@@ -307,10 +310,6 @@ int process_arguments (int argc, char **argv) {
                 system_name[systems] = optarg;
                 systems++;
                 break;
-            /* EOPT opt */
-            case 'E':
-                argv = mp_eopt(&argc, argv, optarg);
-                break;
             /* Timeout opt */
             case 't':
                 getopt_timeout(optarg);
@@ -356,8 +355,5 @@ void print_help (void) {
     printf("      CHANNEL entitlement to check.\n");
     printf(" -S, --system=SYSTEM\n");
     printf("      SYSTEM  entitlement to check.\n");
-
-    print_help_timeout();
-    print_help_eopt();
 }
 

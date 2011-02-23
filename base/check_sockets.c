@@ -296,7 +296,6 @@ int process_arguments (int argc, char **argv) {
         {"udp", required_argument, NULL, (int)'u'},
         {"raw", required_argument, NULL, (int)'r'},
         MP_LONGOPTS_WC,
-        MP_LONGOPTS_PERF,
         MP_LONGOPTS_END,
     };
 
@@ -358,8 +357,6 @@ void print_help (void) {
     printf("      Count RAW sockets on port PORT. Port 0 for all sockets.\n");
     print_help_warn("socket count", "1000");
     print_help_crit("socket count", "1024");
-    print_help_perf();
-
 }
 
 /* vim: set ts=4 sw=4 et syn=c.libdns : */
