@@ -80,7 +80,7 @@ int main (int argc, char **argv) {
     
     size_t urllen = strlen(hostname)+strlen(filename) + 9;
     
-    url = malloc(urllen);
+    url = mp_malloc(urllen);
     
     snprintf(url, urllen, "tftp://%s/%s", hostname, filename);
     

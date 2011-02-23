@@ -31,6 +31,7 @@
 #include "mp_args.h"
 #include "mp_check.h"
 #include "mp_popen.h"
+#include "mp_utils.h"
 #include "mp_longopt.h"
 
 /** Pointer to the program name. Each plugin must define this. */

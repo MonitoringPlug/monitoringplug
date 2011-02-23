@@ -59,7 +59,7 @@ int main (int argc, char **argv) {
 
     for (c = optind; c < argc; c++)
         msglen += strlen(argv[c]) + 1;
-    msg = (char *) malloc((size_t)msglen);
+    msg = (char *) mp_malloc((size_t)msglen);
     
     if (msg == NULL)
         unknown("Can't allocate memory.");

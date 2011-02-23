@@ -124,8 +124,8 @@ int main (int argc, char **argv) {
         }
 
         ns_count = 1;
-        ns_soa = (ldns_rr * *) malloc(sizeof(ldns_rr *));
-        ns_name = (ldns_rdf * *) malloc(sizeof(ldns_rdf *));
+        ns_soa = (ldns_rr * *) mp_malloc(sizeof(ldns_rr *));
+        ns_name = (ldns_rdf * *) mp_malloc(sizeof(ldns_rdf *));
 
         ns_name[0] = host;
 
@@ -209,8 +209,8 @@ int main (int argc, char **argv) {
                                                 LDNS_SECTION_ANSWER);
 
         ns_count = ldns_rr_list_rr_count(rrl);
-        ns_soa = (ldns_rr * *) malloc(ns_count*sizeof(ldns_rr *));
-        ns_name = (ldns_rdf * *) malloc(ns_count*sizeof(ldns_rdf *));
+        ns_soa = (ldns_rr * *) mp_malloc(ns_count*sizeof(ldns_rr *));
+        ns_name = (ldns_rdf * *) mp_malloc(ns_count*sizeof(ldns_rdf *));
 
         for (i=0; i<ns_count; i++) {
             rr = ldns_rr_list_rr(rrl, i);
@@ -310,7 +310,7 @@ int main (int argc, char **argv) {
                 error_str = ldns_rdf2str(ns_name[i]);
             } else {
                 tmp = ldns_rdf2str(ns_name[i]);
-                error_str = realloc(error_str, (strlen(error_str) + strlen(tmp) + 2 ));
+                error_str = mp_realloc(error_str, (strlen(error_str) + strlen(tmp) + 2 ));
                 strcat(error_str, ", ");
                 strcat(error_str, tmp);
                 free(tmp);

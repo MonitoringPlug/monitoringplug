@@ -62,7 +62,7 @@ int main (int argc, char **argv) {
         critical("SELinux is disabled!");
     }
 
-    buf = malloc(sizeof(char *) * 128);
+    buf = mp_malloc(sizeof(char *) * 128);
     if (!buf)
         critical("Out of Memory!");
 
@@ -137,12 +137,12 @@ int process_arguments (int argc, char **argv) {
             /* Default opts */
             MP_GETOPTS_DEFAULT
             case LONGOPT_ON:
-                bool_on = realloc(bool_on, sizeof(char*)*(bools_on+1));
+                bool_on = mp_realloc(bool_on, sizeof(char*)*(bools_on+1));
                 bool_on[bools_on] = optarg;
                 bools_on++;
                 break;
             case LONGOPT_OFF:
-                bool_off = realloc(bool_off, sizeof(char*)*(bools_off+1));
+                bool_off = mp_realloc(bool_off, sizeof(char*)*(bools_off+1));
                 bool_off[bools_off] = optarg;
                 bools_off++;
                 break;

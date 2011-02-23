@@ -53,10 +53,10 @@ char *answer = NULL;
 
 static size_t my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream) {
     if (answer == NULL) {
-        answer = malloc(size*nmemb + 1);
+        answer = mp_malloc(size*nmemb + 1);
         xmlp = answer;
     } else {
-        answer = realloc(answer, strlen(answer) + size*nmemb + 1);
+        answer = mp_realloc(answer, strlen(answer) + size*nmemb + 1);
     }
     memcpy(xmlp, buffer, size*nmemb);
     xmlp[size*nmemb] = '\0';
@@ -103,7 +103,7 @@ int main (int argc, char **argv) {
     alarm(mp_timeout);
     
     /* Magik */
-    xml = malloc(strlen(userkey) + strlen(password) + 134);
+    xml = mp_malloc(strlen(userkey) + strlen(password) + 134);
     sprintf(xml, "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n<aspsms>"
         "\n<Userkey>%s</Userkey>\n<Password>%s</Password>\n"
         "<Action>ShowCredits</Action>\n</aspsms>", userkey, password);
@@ -120,7 +120,7 @@ int main (int argc, char **argv) {
     curl_global_init(CURL_GLOBAL_ALL);
     
     /* Set Header */
-    c = malloc(21);
+    c = mp_malloc(21);
     sprintf(c, "Content-Length: %d", (int)strlen(xml));
     
     headers = curl_slist_append (headers, "Content-Type: text/html");

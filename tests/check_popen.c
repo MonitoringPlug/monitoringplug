@@ -37,7 +37,7 @@ START_TEST (test_popen_echo) {
     char *buffer;
     size_t s;
 
-    buffer = malloc(10);
+    buffer = mp_malloc(10);
     memset(buffer, 0, 10);
 
     fh = mp_popen(cmd);

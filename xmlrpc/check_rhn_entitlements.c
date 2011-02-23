@@ -162,7 +162,7 @@ int main (int argc, char **argv) {
                     }
 
                     char *tmp;
-                    tmp = malloc(128);
+                    tmp = mp_malloc(128);
                     snprintf(tmp, 128, "%s (%d/%d)", name, used_slots, total_slots);
                     mp_strcat_space(&out, tmp);
                     free(tmp);
@@ -235,7 +235,7 @@ int main (int argc, char **argv) {
                     }
 
                     char *tmp;
-                    tmp = malloc(128);
+                    tmp = mp_malloc(128);
                     snprintf(tmp, 128, "%s (%d/%d)", name, used_slots, total_slots);
                     mp_strcat_space(&out, tmp);
                     free(tmp);
@@ -301,12 +301,12 @@ int process_arguments (int argc, char **argv) {
                 pass = optarg;
                 break;
             case 'C':
-                channel = realloc(channel, sizeof(char*)*(channels+1));
+                channel = mp_realloc(channel, sizeof(char*)*(channels+1));
                 channel[channels] = optarg;
                 channels++;
                 break;
             case 'S':
-                system_name = realloc(system_name, sizeof(char*)*(systems+1));
+                system_name = mp_realloc(system_name, sizeof(char*)*(systems+1));
                 system_name[systems] = optarg;
                 systems++;
                 break;

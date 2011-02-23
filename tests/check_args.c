@@ -60,7 +60,7 @@ range *my_range;
 thresholds *my_thresholds;
 
 void range_setup(void) {
-  my_range = (range *) malloc(sizeof(range));
+  my_range = (range *) mp_malloc(sizeof(range));
 }
 
 void range_teardown(void) {
@@ -68,9 +68,9 @@ void range_teardown(void) {
 }
 
 void threshold_setup(void) {
-  my_thresholds = (thresholds *) malloc(sizeof(thresholds));
-  my_thresholds->warning = (range *) malloc(sizeof(range));
-  my_thresholds->critical = (range *) malloc(sizeof(range));
+  my_thresholds = (thresholds *) mp_malloc(sizeof(thresholds));
+  my_thresholds->warning = (range *) mp_malloc(sizeof(range));
+  my_thresholds->critical = (range *) mp_malloc(sizeof(range));
 }
 
 void threshold_teardown(void) {
