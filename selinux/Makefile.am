@@ -11,7 +11,7 @@ LDADD = ../lib/libmonitoringplug.a
 bin_PROGRAMS = 
 
 if HAVE_SELINUX
-bin_PROGRAMS += check_enforce
+bin_PROGRAMS += check_enforce check_sebool
 endif
 
 
