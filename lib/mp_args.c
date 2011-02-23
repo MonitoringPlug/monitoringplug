@@ -32,48 +32,48 @@
 
 int setWarn(thresholds **threshold, const char *str, int multiplier) {
     if(*threshold == NULL) {
-        *threshold = (thresholds *) malloc(sizeof(thresholds));
+        *threshold = (thresholds *) mp_malloc(sizeof(thresholds));
         (*threshold)->warning = NULL;
         (*threshold)->critical = NULL;
     }
     if((*threshold)->warning == NULL)
-        (*threshold)->warning = (range *) malloc(sizeof(range));
+        (*threshold)->warning = (range *) mp_malloc(sizeof(range));
 
     return parse_range_string((*threshold)->warning, str, multiplier);
 }
 
 int setCrit(thresholds **threshold, const char *str, int multiplier) {
     if(*threshold == NULL) {
-        *threshold = (thresholds *) malloc(sizeof(thresholds));
+        *threshold = (thresholds *) mp_malloc(sizeof(thresholds));
         (*threshold)->warning = NULL;
         (*threshold)->critical = NULL;
     }
     if((*threshold)->critical == NULL)
-        (*threshold)->critical = (range *) malloc(sizeof(range));
+        (*threshold)->critical = (range *) mp_malloc(sizeof(range));
 
     return parse_range_string((*threshold)->critical, str, multiplier);
 }
 
 int setWarnTime(thresholds **threshold, const char *str) {
     if(*threshold == NULL) {
-        *threshold = (thresholds *) malloc(sizeof(thresholds));
+        *threshold = (thresholds *) mp_malloc(sizeof(thresholds));
         (*threshold)->warning = NULL;
         (*threshold)->critical = NULL;
     }
     if((*threshold)->warning == NULL)
-        (*threshold)->warning = (range *) malloc(sizeof(range));
+        (*threshold)->warning = (range *) mp_malloc(sizeof(range));
 
     return parse_range_string((*threshold)->warning, str, TIME);
 }
 
 int setCritTime(thresholds **threshold, const char *str) {
     if(*threshold == NULL) {
-        *threshold = (thresholds *) malloc(sizeof(thresholds));
+        *threshold = (thresholds *) mp_malloc(sizeof(thresholds));
         (*threshold)->warning = NULL;
         (*threshold)->critical = NULL;
     }
     if((*threshold)->critical == NULL)
-        (*threshold)->critical = (range *) malloc(sizeof(range));
+        (*threshold)->critical = (range *) mp_malloc(sizeof(range));
 
     return parse_range_string((*threshold)->critical, str, TIME);
 }

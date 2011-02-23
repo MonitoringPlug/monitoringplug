@@ -22,12 +22,21 @@
  */
 
 #include "mp_utils.h"
+#include "mp_common.h"
 
 #include <stdlib.h>
 
 void *mp_malloc(size_t size) {
     void *p;
     p = malloc(size);
+    if (!p)
+        critical("Out of memory!");
+    return p;
+}
+
+void *mp_calloc(size_t nmemb, size_t size) {
+    void *p;
+    p = mp_calloc(nmemb, size);
     if (!p)
         critical("Out of memory!");
     return p;

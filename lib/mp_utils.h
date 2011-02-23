@@ -32,6 +32,11 @@
 void *mp_malloc(size_t size);
 
 /**
+ * Call calloc, call critical if faild.
+ */
+void *mp_calloc(size_t nmemb, size_t size);
+
+/**
  * Call realloc, call critical if faild.
  */
 void *mp_realloc(void *ptr, size_t size);

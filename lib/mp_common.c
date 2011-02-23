@@ -98,7 +98,7 @@ void mp_strcat_space(char **target, char *source) {
     if(*target == NULL) {
         *target = strdup(source);
     } else {
-        *target = realloc(*target, strlen(*target) + strlen(source) + 2);
+        *target = mp_realloc(*target, strlen(*target) + strlen(source) + 2);
         strcat(*target, " ");
         strcat(*target, source);
     }
@@ -108,7 +108,7 @@ void mp_strcat_comma(char **target, char *source) {
     if(*target == NULL) {
         *target = strdup(source);
     } else {
-        *target = realloc(*target, strlen(*target) + strlen(source) + 3);
+        *target = mp_realloc(*target, strlen(*target) + strlen(source) + 3);
         strcat(*target, ", ");
         strcat(*target, source);
     }
@@ -125,10 +125,10 @@ void perfdata_int(const char *label, int value, const char *unit,
    sprintf(tmp,"'%s'=%d%s;%d;%d;%d;%d", label, value, unit, warn, crit, min, max);
 
    if (mp_perfdata != NULL) {
-      mp_perfdata = realloc(mp_perfdata, strlen(mp_perfdata) + strlen(tmp) + 2);
+      mp_perfdata = mp_realloc(mp_perfdata, strlen(mp_perfdata) + strlen(tmp) + 2);
       strncat(mp_perfdata, " ", 1);
    } else {
-      mp_perfdata = malloc(strlen(tmp) + 1);
+      mp_perfdata = mp_malloc(strlen(tmp) + 1);
       mp_perfdata[0] = '\0';
    }
    strncat(mp_perfdata, tmp, strlen(tmp));
@@ -147,11 +147,11 @@ void perfdata_float(const char *label, float value, const char *unit,
    sprintf(tmp,"'%s'=%0.2f%s;%0.2f;%0.2f;%0.2f;%0.2f", label, value, unit, warn, crit, min, max);
 
    if (mp_perfdata != NULL) {
-      mp_perfdata = realloc(mp_perfdata, strlen(mp_perfdata) + strlen(tmp) + 2);
+      mp_perfdata = mp_realloc(mp_perfdata, strlen(mp_perfdata) + strlen(tmp) + 2);
       strncat(mp_perfdata, " ", 1);
       strncat(mp_perfdata, tmp, strlen(tmp));
    } else {
-      mp_perfdata = malloc(strlen(tmp) + 1);
+      mp_perfdata = mp_malloc(strlen(tmp) + 1);
       strncpy(mp_perfdata, tmp, strlen(tmp));
    }
 

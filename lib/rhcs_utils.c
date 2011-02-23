@@ -23,6 +23,8 @@
 
 #include "rhcs_utils.h"
 
+#include "mp_common.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -47,14 +49,14 @@ rhcs_clustat *parse_rhcs_clustat(FILE *in) {
     nodes = 0;
     services = 0;
 
-    clustat = calloc(1, sizeof(rhcs_clustat));
+    clustat = mp_calloc(1, sizeof(rhcs_clustat));
 
     // Create Parser
     parser = XML_ParserCreate(NULL);
     XML_SetUserData(parser, clustat);
     XML_SetElementHandler(parser, rhcs_clustat_startElement, rhcs_clustat_stopElement);
 
-    buf = calloc(BUFFERSIZE, 1);
+    buf = mp_calloc(BUFFERSIZE, 1);
 
     do {
        len = fread(buf, 1, BUFFERSIZE, in);
@@ -85,8 +87,8 @@ void rhcs_clustat_startElement(void *clustat, const char *name, const char **att
     }
 
     if (strcmp(name, "node") == 0) {
-        ((rhcs_clustat *)clustat)->node = realloc(((rhcs_conf *)clustat)->node, (nodes+2)*sizeof(rhcs_clustat_node));
-        ((rhcs_clustat *)clustat)->node[nodes] = calloc(1, sizeof(rhcs_clustat_node));
+        ((rhcs_clustat *)clustat)->node = mp_realloc(((rhcs_conf *)clustat)->node, (nodes+2)*sizeof(rhcs_clustat_node));
+        ((rhcs_clustat *)clustat)->node[nodes] = mp_calloc(1, sizeof(rhcs_clustat_node));
         ((rhcs_clustat *)clustat)->node[nodes+1] = NULL;
         for(k = atts, v = atts+1; *k != NULL; k+=2, v+=2) {
             if (strcmp(*k, "name") == 0)
@@ -105,8 +107,8 @@ void rhcs_clustat_startElement(void *clustat, const char *name, const char **att
     }
 
     if (strcmp(name, "group") == 0) {
-        ((rhcs_clustat *)clustat)->group = realloc(((rhcs_clustat *)clustat)->group, (services+2)*sizeof(rhcs_clustat_group));
-        ((rhcs_clustat *)clustat)->group[services] = calloc(1, sizeof(rhcs_clustat_group));
+        ((rhcs_clustat *)clustat)->group = mp_realloc(((rhcs_clustat *)clustat)->group, (services+2)*sizeof(rhcs_clustat_group));
+        ((rhcs_clustat *)clustat)->group[services] = mp_calloc(1, sizeof(rhcs_clustat_group));
         ((rhcs_clustat *)clustat)->group[services+1] = NULL;
         for(k = atts, v = atts+1; *k != NULL; k+=2, v+=2) {
             if (strcmp(*k, "name") == 0) {
@@ -146,7 +148,7 @@ rhcs_conf *parse_rhcs_conf(FILE *in) {
     nodes = 0;
     services = 0;
 
-    conf = calloc(1, sizeof(rhcs_conf));
+    conf = mp_calloc(1, sizeof(rhcs_conf));
 
     // Create Parser
     parser = XML_ParserCreate(NULL);
@@ -155,7 +157,7 @@ rhcs_conf *parse_rhcs_conf(FILE *in) {
     XML_SetUserData(parser, conf);
     XML_SetElementHandler(parser, rhcs_conf_startElement, rhcs_conf_stopElement);
 
-    buf = calloc(BUFFERSIZE, 1);
+    buf = mp_calloc(BUFFERSIZE, 1);
 
     do {
        len = fread(buf, 1, BUFFERSIZE, in);
@@ -188,8 +190,8 @@ void rhcs_conf_startElement(void *conf, const char *name, const char **atts) {
         return;
     }
     if (strcmp(name, "clusternode") == 0) {
-        ((rhcs_conf *)conf)->node = realloc(((rhcs_conf *)conf)->node, (nodes+2)*sizeof(rhcs_conf_node));
-        ((rhcs_conf *)conf)->node[nodes] = calloc(1, sizeof(rhcs_conf_node));
+        ((rhcs_conf *)conf)->node = mp_realloc(((rhcs_conf *)conf)->node, (nodes+2)*sizeof(rhcs_conf_node));
+        ((rhcs_conf *)conf)->node[nodes] = mp_calloc(1, sizeof(rhcs_conf_node));
         ((rhcs_conf *)conf)->node[nodes+1] = NULL;
         for(k = atts, v = atts+1; *k != NULL; k+=2, v+=2) {
             if (strcmp(*k, "name") == 0)
@@ -203,8 +205,8 @@ void rhcs_conf_startElement(void *conf, const char *name, const char **atts) {
         return;
     }
     if (strcmp(name, "failoverdomain") == 0) {
-        ((rhcs_conf *)conf)->fodomain = realloc(((rhcs_conf *)conf)->fodomain, (fodomains+2)*sizeof(rhcs_conf_fodom));
-        ((rhcs_conf *)conf)->fodomain[fodomains] = calloc(1, sizeof(rhcs_conf_fodom));
+        ((rhcs_conf *)conf)->fodomain = mp_realloc(((rhcs_conf *)conf)->fodomain, (fodomains+2)*sizeof(rhcs_conf_fodom));
+        ((rhcs_conf *)conf)->fodomain[fodomains] = mp_calloc(1, sizeof(rhcs_conf_fodom));
         ((rhcs_conf *)conf)->fodomain[fodomains+1] = NULL;
         for(k = atts, v = atts+1; *k != NULL; k+=2, v+=2) {
             if (strcmp(*k, "name") == 0)
@@ -220,8 +222,8 @@ void rhcs_conf_startElement(void *conf, const char *name, const char **atts) {
         return;
     }
     if (strcmp(name, "failoverdomainnode") == 0) {
-        ((rhcs_conf *)conf)->fodomain[fodomains]->node = realloc(((rhcs_conf *)conf)->fodomain[fodomains]->node, (fodomain_nodes+2)*sizeof(rhcs_conf_fodom_node));
-        ((rhcs_conf *)conf)->fodomain[fodomains]->node[fodomain_nodes] = calloc(1, sizeof(rhcs_conf_fodom_node));
+        ((rhcs_conf *)conf)->fodomain[fodomains]->node = mp_realloc(((rhcs_conf *)conf)->fodomain[fodomains]->node, (fodomain_nodes+2)*sizeof(rhcs_conf_fodom_node));
+        ((rhcs_conf *)conf)->fodomain[fodomains]->node[fodomain_nodes] = mp_calloc(1, sizeof(rhcs_conf_fodom_node));
         ((rhcs_conf *)conf)->fodomain[fodomains]->node[fodomain_nodes+1] = NULL;
         for(k = atts, v = atts+1; *k != NULL; k+=2, v+=2) {
             if (strcmp(*k, "name") == 0)
@@ -237,8 +239,8 @@ void rhcs_conf_startElement(void *conf, const char *name, const char **atts) {
         return;
     }
     if (strcmp(name, "service") == 0) {
-        ((rhcs_conf *)conf)->service = realloc(((rhcs_conf *)conf)->service, (services+2)*sizeof(rhcs_conf_service));
-        ((rhcs_conf *)conf)->service[services] = calloc(1, sizeof(rhcs_conf_service));
+        ((rhcs_conf *)conf)->service = mp_realloc(((rhcs_conf *)conf)->service, (services+2)*sizeof(rhcs_conf_service));
+        ((rhcs_conf *)conf)->service[services] = mp_calloc(1, sizeof(rhcs_conf_service));
         ((rhcs_conf *)conf)->service[services+1] = NULL;
         for(k = atts, v = atts+1; *k != NULL; k+=2, v+=2) {
             if (strcmp(*k, "name") == 0)

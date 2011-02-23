@@ -248,7 +248,7 @@ int mp_snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *que
                 if ((int)vars->name[col_idx] == 1) {
                     if ((int)vars->name[row_idx] > table->row) {
                         table->row = (int)vars->name[row_idx];
-                        table->var = realloc(table->var, (table->row*table->col)*sizeof(netsnmp_variable_list*));
+                        table->var = mp_realloc(table->var, (table->row*table->col)*sizeof(netsnmp_variable_list*));
                     }
                 } else {
                     if ((int)vars->name[row_idx] > table->row)
@@ -256,7 +256,7 @@ int mp_snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *que
                 }
                 if ((int)vars->name[col_idx] > table->col) {
                     table->col = (int)vars->name[col_idx];
-                    table->var = realloc(table->var, (table->row*table->col)*sizeof(netsnmp_variable_list*));
+                    table->var = mp_realloc(table->var, (table->row*table->col)*sizeof(netsnmp_variable_list*));
                 }
                 if ((int)vars->name[col_idx] > table->col)
                     table->col = (int)vars->name[col_idx];
@@ -265,7 +265,7 @@ int mp_snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *que
                 if (mp_verbose > 1)
                     print_variable(vars->name, vars->name_length, vars);
 
-                table->var[c] = malloc(sizeof(netsnmp_variable_list));
+                table->var[c] = mp_malloc(sizeof(netsnmp_variable_list));
 
                 snmp_clone_var(vars, table->var[c]);
             }

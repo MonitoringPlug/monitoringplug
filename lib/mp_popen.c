@@ -70,7 +70,7 @@ FILE *mp_popen(char *command[]) {
         if (close(pfp[1]) == -1)
             return NULL;
         if (mp_childpid == NULL) {
-            if ((mp_childpid = calloc((size_t) getdtablesize(), sizeof(pid_t)))
+            if ((mp_childpid = mp_calloc((size_t) getdtablesize(), sizeof(pid_t)))
                     == NULL)
                 return NULL;
         }

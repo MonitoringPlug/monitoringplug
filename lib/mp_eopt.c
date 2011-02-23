@@ -65,7 +65,7 @@ char **mp_eopt(int *argc, char **orig_argv, char *optarg) {
         return orig_argv;
     }
 
-    buffer = malloc(256);
+    buffer = mp_malloc(256);
     int lineno = 0;
     int len;
     int current_section = 0;
@@ -111,17 +111,17 @@ char **mp_eopt(int *argc, char **orig_argv, char *optarg) {
             key = strsep(&val, "=");
 
             if(*val) {
-                new_argv = realloc(new_argv, sizeof(char *)*(new_argc+2));
+                new_argv = mp_realloc(new_argv, sizeof(char *)*(new_argc+2));
             } else {
-                new_argv = realloc(new_argv, sizeof(char *)*(new_argc+1));
+                new_argv = mp_realloc(new_argv, sizeof(char *)*(new_argc+1));
             }
 
             len = strlen(key);
             if (len > 1) {
-                arg = malloc(len+3);
+                arg = mp_malloc(len+3);
                 sprintf(arg, "--%s", key);
             } else {
-                arg = malloc(len+2);
+                arg = mp_malloc(len+2);
                 sprintf(arg, "-%s", key);
             }
 
