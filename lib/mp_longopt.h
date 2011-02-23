@@ -27,4 +27,13 @@
 #define MP_LONGOPT_EOPT         0x0080
 #define MP_LONGOPT_PERFDATA     0x0081
 
+#define MP_LONGOPT_PRIV0        0x0090
+#define MP_LONGOPT_PRIV1        0x0091
+#define MP_LONGOPT_PRIV2        0x0092
+#define MP_LONGOPT_PRIV3        0x0093
+#define MP_LONGOPT_PRIV4        0x0094
+#define MP_LONGOPT_PRIV5        0x0095
+#define MP_LONGOPT_PRIV6        0x0096
+#define MP_LONGOPT_PRIV7        0x0097
+
 #endif /* MP_LONGOPT_H_ */
