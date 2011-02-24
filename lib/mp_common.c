@@ -95,7 +95,9 @@ void usage(const char *fmt, ...) {
 }
 
 void mp_strcat_space(char **target, char *source) {
-    if(*target == NULL) {
+    if(source == NULL) {
+        return;
+    } else if(*target == NULL) {
         *target = strdup(source);
     } else {
         *target = mp_realloc(*target, strlen(*target) + strlen(source) + 2);
@@ -105,7 +107,9 @@ void mp_strcat_space(char **target, char *source) {
 }
 
 void mp_strcat_comma(char **target, char *source) {
-    if(*target == NULL) {
+    if(source == NULL) {
+        return;
+    } else if(*target == NULL) {
         *target = strdup(source);
     } else {
         *target = mp_realloc(*target, strlen(*target) + strlen(source) + 3);
