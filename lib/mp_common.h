@@ -104,16 +104,6 @@ void unknown(const char *fmt, ...) __attribute__((__noreturn__));
 void usage(const char *fmt, ...) __attribute__((__noreturn__));
 
 /**
- * concat strings with a separating space.
- */
-void mp_strcat_space(char **target, char *source);
-
-/**
- * concat strings with a separating comma.
- */
-void mp_strcat_comma(char **target, char *source);
-
-/**
  * add integer pref data for printing on exit.
  */
 void perfdata_int(const char *label, int value, const char *unit,

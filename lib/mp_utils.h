@@ -51,5 +51,14 @@ void *mp_calloc(size_t nmemb, size_t size);
  */
 void *mp_realloc(void *ptr, size_t size);
 
+/**
+ * concat strings with a separating space.
+ */
+void mp_strcat_space(char **target, char *source);
+
+/**
+ * concat strings with a separating comma.
+ */
+void mp_strcat_comma(char **target, char *source);
 
 #endif /* MP_UTILS_H_ */

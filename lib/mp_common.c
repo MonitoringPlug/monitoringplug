@@ -94,30 +94,6 @@ void usage(const char *fmt, ...) {
     exit(STATE_UNKNOWN);
 }
 
-void mp_strcat_space(char **target, char *source) {
-    if(source == NULL) {
-        return;
-    } else if(*target == NULL) {
-        *target = strdup(source);
-    } else {
-        *target = mp_realloc(*target, strlen(*target) + strlen(source) + 2);
-        strcat(*target, " ");
-        strcat(*target, source);
-    }
-}
-
-void mp_strcat_comma(char **target, char *source) {
-    if(source == NULL) {
-        return;
-    } else if(*target == NULL) {
-        *target = strdup(source);
-    } else {
-        *target = mp_realloc(*target, strlen(*target) + strlen(source) + 3);
-        strcat(*target, ", ");
-        strcat(*target, source);
-    }
-}
-
 void perfdata_int(const char *label, int value, const char *unit,
                   int warn, int crit, int min, int max) {
    char *tmp;

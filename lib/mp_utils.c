@@ -74,3 +74,27 @@ void *mp_realloc(void *ptr, size_t size) {
     }
     return p;
 }
+
+void mp_strcat_space(char **target, char *source) {
+    if(source == NULL) {
+        return;
+    } else if(*target == NULL) {
+        *target = strdup(source);
+    } else {
+        *target = mp_realloc(*target, strlen(*target) + strlen(source) + 2);
+        strcat(*target, " ");
+        strcat(*target, source);
+    }
+}
+
+void mp_strcat_comma(char **target, char *source) {
+    if(source == NULL) {
+        return;
+    } else if(*target == NULL) {
+        *target = strdup(source);
+    } else {
+        *target = mp_realloc(*target, strlen(*target) + strlen(source) + 3);
+        strcat(*target, ", ");
+        strcat(*target, source);
+    }
+}
