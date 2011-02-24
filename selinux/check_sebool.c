@@ -72,14 +72,14 @@ int main (int argc, char **argv) {
         active = security_get_boolean_active(bool_on[i]);
 
         if (active  == 1) {
-            snprintf(buf, 128, "%s: ON", bool_on[i]);
+            mp_snprintf(buf, 128, "%s: ON", bool_on[i]);
             mp_strcat_comma(&bools_ok, buf);
         } else if (active == 0) {
-            snprintf(buf, 128, "%s: OFF", bool_on[i]);
+            mp_snprintf(buf, 128, "%s: OFF", bool_on[i]);
             mp_strcat_comma(&bools_crit, buf);
             state = STATE_CRITICAL;
         } else {
-            snprintf(buf, 128, "%s: Unknown", bool_on[i]);
+            mp_snprintf(buf, 128, "%s: Unknown", bool_on[i]);
             mp_strcat_comma(&bools_crit, buf);
             state = STATE_CRITICAL;
         }
@@ -91,14 +91,14 @@ int main (int argc, char **argv) {
         active = security_get_boolean_active(bool_off[i]);
 
         if (active  == 1) {
-            snprintf(buf, 128, "%s: ON", bool_off[i]);
+            mp_snprintf(buf, 128, "%s: ON", bool_off[i]);
             mp_strcat_comma(&bools_crit, buf);
             state = STATE_CRITICAL;
         } else if (active == 0) {
-            snprintf(buf, 128, "%s: OFF", bool_off[i]);
+            mp_snprintf(buf, 128, "%s: OFF", bool_off[i]);
             mp_strcat_comma(&bools_ok, buf);
         } else {
-            snprintf(buf, 128, "%s: Unknown", bool_off[i]);
+            mp_snprintf(buf, 128, "%s: Unknown", bool_off[i]);
             mp_strcat_comma(&bools_crit, buf);
             state = STATE_CRITICAL;
         }
