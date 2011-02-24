@@ -25,6 +25,29 @@
 #include "mp_common.h"
 
 #include <stdlib.h>
+#include <stdarg.h>
+
+int mp_sprintf(char *s, const char *format, ...) {
+    int len=0;
+    va_list ap;
+    va_start(ap, format);
+    len = vsprintf(s, format, ap);
+    va_end(ap);
+    if (len < 0)
+        critical("sprintf faild!");
+    return len;
+}
+
+int mp_snprintf(char *s, size_t n, const char *format, ...) {
+    int len=0;
+    va_list ap;
+    va_start(ap, format);
+    len = vsnprintf(s, n, format, ap);
+    va_end(ap);
+    if (len < 0 || len >= n)
+        critical("snprintf faild!");
+    return len;
+}
 
 void *mp_malloc(size_t size) {
     void *p;

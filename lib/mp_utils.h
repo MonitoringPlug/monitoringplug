@@ -27,6 +27,16 @@
 #include <stdlib.h>
 
 /**
+ * Call sprintf, call critical if faild.
+ */
+int mp_sprintf(char *s, const char *format, ...);
+
+/**
+ * Call snprintf, call critical if faild.
+ */
+int mp_snprintf(char *s, size_t n, const char *format, ...);
+
+/**
  * Call malloc, call critical if faild.
  */
 void *mp_malloc(size_t size);
