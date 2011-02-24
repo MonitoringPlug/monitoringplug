@@ -104,7 +104,7 @@ int main (int argc, char **argv) {
     
     /* Magik */
     xml = mp_malloc(strlen(userkey) + strlen(password) + 134);
-    sprintf(xml, "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n<aspsms>"
+    mp_sprintf(xml, "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n<aspsms>"
         "\n<Userkey>%s</Userkey>\n<Password>%s</Password>\n"
         "<Action>ShowCredits</Action>\n</aspsms>", userkey, password);
     xmlp = xml;
@@ -121,7 +121,7 @@ int main (int argc, char **argv) {
     
     /* Set Header */
     c = mp_malloc(21);
-    sprintf(c, "Content-Length: %d", (int)strlen(xml));
+    mp_sprintf(c, "Content-Length: %d", (int)strlen(xml));
     
     headers = curl_slist_append (headers, "Content-Type: text/html");
     headers = curl_slist_append (headers, c);

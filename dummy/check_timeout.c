@@ -41,9 +41,11 @@ int main (int argc, char **argv) {
     if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
         exit(STATE_CRITICAL);
 
+    /* Process check arguments */
     if (process_arguments (argc, argv) == 1)
         exit(STATE_CRITICAL);
 
+    /* Start timer */
     alarm(mp_timeout);
 
     if (mp_verbose) {

@@ -47,14 +47,23 @@ int state_enforcing = -1;
 char *policy;
 
 int main (int argc, char **argv) {
+    /* Local Vars */
     int se_enabled;
     int se_enforced;
     char *state_name;
     int state;
     char *pol_name;
 
+    /* Set signal handling and alarm */
+    if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
+        exit(STATE_CRITICAL);
+
+    /* Process check arguments */
     if (process_arguments (argc, argv) == 1)
         exit(STATE_CRITICAL);
+
+    /* Start timer */
+    alarm(mp_timeout);
 
     se_enabled = is_selinux_enabled();
     if (se_enabled < 0)

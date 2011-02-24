@@ -26,7 +26,7 @@ const char *progname  = "check_sebool";
 const char *progvers  = "0.1";
 const char *progcopy  = "2011";
 const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
-const char *progusage = "[--on BOOL] [--off BOOL]";
+const char *progusage = "[--on BOOL] [--off BOOL] [--on|off ...]";
 
 /* MP Includes */
 #include "mp_common.h"
@@ -48,6 +48,7 @@ int bools_off = 0;
 #define LONGOPT_OFF MP_LONGOPT_PRIV1
 
 int main (int argc, char **argv) {
+    /* Local Vars */
     int i;
     int active;
     int state = STATE_OK;
@@ -55,8 +56,16 @@ int main (int argc, char **argv) {
     char *bools_ok = NULL;
     char *bools_crit = NULL;
 
+    /* Set signal handling and alarm */
+    if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
+        exit(STATE_CRITICAL);
+
+    /* Process check arguments */
     if (process_arguments (argc, argv) == 1)
         exit(STATE_CRITICAL);
+
+    /* Start timer */
+    alarm(mp_timeout);
 
     if (is_selinux_enabled() <= 0) {
         critical("SELinux is disabled!");

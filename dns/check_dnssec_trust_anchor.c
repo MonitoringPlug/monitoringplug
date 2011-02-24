@@ -102,12 +102,7 @@ int main(int argc, char **argv) {
         if (!rrl_keys) {
             if (mp_verbose >= 1)
                 printf("  Invalid.\n");
-            if (invalid) {
-                char *c = invalid;
-                sprintf(invalid, "%s, %s", c, ldns_rdf2str(rd_owner));
-            } else {
-                invalid = ldns_rdf2str(rd_owner);
-            }
+            mp_strcat_comma(&invalid, ldns_rdf2str(rd_owner));
         }
         ldns_rr_list_deep_free(rrl_keys);
     }

@@ -162,7 +162,7 @@ int main (int argc, char **argv) {
 
                     char *tmp;
                     tmp = mp_malloc(128);
-                    snprintf(tmp, 128, "%s (%d/%d)", name, used_slots, total_slots);
+                    mp_snprintf(tmp, 128, "%s (%d/%d)", name, used_slots, total_slots);
                     mp_strcat_space(&out, tmp);
                     free(tmp);
 
@@ -235,7 +235,7 @@ int main (int argc, char **argv) {
 
                     char *tmp;
                     tmp = mp_malloc(128);
-                    snprintf(tmp, 128, "%s (%d/%d)", name, used_slots, total_slots);
+                    mp_snprintf(tmp, 128, "%s (%d/%d)", name, used_slots, total_slots);
                     mp_strcat_space(&out, tmp);
                     free(tmp);
 
