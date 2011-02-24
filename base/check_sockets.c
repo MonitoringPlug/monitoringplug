@@ -28,8 +28,9 @@ const char *progcopy  = "2010";
 const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "--tcp <PORT> [-w <warning count>] [-c <critical count>]";
 
+/* MP Includes */
 #include "mp_common.h"
-
+/* Default Includes */
 #include <errno.h>
 #include <getopt.h>
 #include <stdio.h>
@@ -42,7 +43,7 @@ const char *progusage = "--tcp <PORT> [-w <warning count>] [-c <critical count>]
 #include <grp.h>
 #include <time.h>
 
-/* Global vars */
+/* Global Vars */
 int tcpport = -1;
 int udpport = -1;
 int rawport = -1;
@@ -50,26 +51,26 @@ int ipv4 = 1;
 int ipv6 = 1;
 thresholds *socket_thresholds = NULL;
 
-/* function prototype */
+/* Function prototype */
 int countSocket(const char *filename, int port);
 
 int main (int argc, char **argv) {
-
+    /* Local Vars */
     int         count;
     int         status = STATE_OK;
     int         lstatus;
     char        *output = NULL;
 
-    /* Set Default range */
-    setWarnTime(&socket_thresholds, "1000");
-    setCritTime(&socket_thresholds, "1024");
+    /* Set signal handling and alarm */
+    if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
+        critical("Setup SIGALRM trap faild!");
 
-    /* Parse argumens */
-    if (process_arguments (argc, argv) == 1)
-        exit(STATE_CRITICAL);
+    /* Process check arguments */
+    if (process_arguments(argc, argv) == OK)
+        unknown("Parsing arguments faild!");
 
-    if (tcpport < 0 && udpport < 0 && rawport < 0)
-        usage("--tcp, --udp or --raw mandatory.");
+    /* Start plugin timeout */
+    alarm(mp_timeout);
 
     if (mp_verbose) {
         printf("IPv4/6: %d %d\n",ipv4, ipv6);
@@ -299,6 +300,10 @@ int process_arguments (int argc, char **argv) {
         MP_LONGOPTS_END,
     };
 
+    /* Set default */
+    setWarnTime(&socket_thresholds, "1000");
+    setCritTime(&socket_thresholds, "1024");
+
     while (1) {
         c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"t:u:r:c:w:46", longopts, &option);
 
@@ -332,6 +337,10 @@ int process_arguments (int argc, char **argv) {
         }
     }
 
+    /* Check requirements */
+    if (tcpport < 0 && udpport < 0 && rawport < 0)
+        usage("--tcp, --udp or --raw mandatory.");
+
     return(OK);
 }
 
@@ -359,4 +368,4 @@ void print_help (void) {
     print_help_crit("socket count", "1024");
 }
 
-/* vim: set ts=4 sw=4 et syn=c.libdns : */
+/* vim: set ts=4 sw=4 et syn=c : */

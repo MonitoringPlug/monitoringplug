@@ -28,8 +28,9 @@ const char *progcopy  = "2010";
 const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "-f <FILE> [-w <warning age>] [-c <critical age>]";
 
+/* MP Includes */
 #include "mp_common.h"
-
+/* Default Includes */
 #include <errno.h>
 #include <getopt.h>
 #include <stdio.h>
@@ -42,7 +43,7 @@ const char *progusage = "-f <FILE> [-w <warning age>] [-c <critical age>]";
 #include <grp.h>
 #include <time.h>
 
-/* Global vars */
+/* Global Vars */
 char *filename = NULL;
 char *ownername = NULL;
 char *groupname = NULL;
@@ -50,25 +51,30 @@ char *accessstring = NULL;
 thresholds *age_thresholds = NULL;
 thresholds *size_thresholds = NULL;
 
-/* function prototype */
+/* Function prototype */
 int check_access(mode_t file_stat);
 
 int main (int argc, char **argv) {
-
+    /* Local Vars */
     int         status;
     int         age_status = -1;
     int         size_status = -1;
     char        *output = NULL;
     struct stat file_stat;
 
-    if (process_arguments (argc, argv) == 1)
-        exit(STATE_CRITICAL);
+    /* Set signal handling and alarm */
+    if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
+        critical("Setup SIGALRM trap faild!");
 
-    if (filename == 0)
-        usage("Filename is mandatory.");
+    /* Process check arguments */
+    if (process_arguments(argc, argv) == OK)
+        unknown("Parsing arguments faild!");
 
+    /* Start plugin timeout */
+    alarm(mp_timeout);
+
+    /* Get file stat */
     status = lstat(filename, &file_stat);
-
     if (status != 0)
         critical("Stat '%s' faild.", filename);
 
@@ -173,8 +179,6 @@ int main (int argc, char **argv) {
         case STATE_CRITICAL:
             critical("%s: %s", filename, output);
     }
-
-
 
     critical("You should never reach this point.");
 }
@@ -306,6 +310,10 @@ int process_arguments (int argc, char **argv) {
         }
     }
 
+    /* Check requirements */
+    if (filename == NULL)
+        usage("Filename is mandatory.");
+
     return(OK);
 }
 
@@ -346,4 +354,4 @@ void print_help (void) {
 
 }
 
-/* vim: set ts=4 sw=4 et syn=c.libdns : */
+/* vim: set ts=4 sw=4 et syn=c : */

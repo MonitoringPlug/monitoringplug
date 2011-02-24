@@ -28,56 +28,36 @@ const char *progcopy  = "2010";
 const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "--userkey <userkey> --password <password>";
 
+/* MP Includes */
 #include "mp_common.h"
-
+/* Default Includes */
 #include <getopt.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
+/* Library Includes */
 #include <curl/curl.h>
 #include <curl/types.h>
 #include <curl/easy.h>
 
-/* URLs */
+/* Global Constants */
 const char *xml_url = "http://xml1.aspsms.com:5061/xmlsvr.asp";
 
-/* Global vars */
+/* Global Vars */
 const char *userkey = NULL;
 const char *password = NULL;
 thresholds *credit_thresholds = NULL;
 char *xmlp;
 char *answer = NULL;
 
-static size_t my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream) {
-    if (answer == NULL) {
-        answer = mp_malloc(size*nmemb + 1);
-        xmlp = answer;
-    } else {
-        answer = mp_realloc(answer, strlen(answer) + size*nmemb + 1);
-    }
-    memcpy(xmlp, buffer, size*nmemb);
-    xmlp[size*nmemb] = '\0';
-    xmlp += size*nmemb;
-    
-    return size*nmemb;
-}
-
-static size_t my_fread(void *buffer, size_t size, size_t nmemb, void *stream) {
-    size_t s = strlen(xmlp);
-    if (s > size*nmemb)
-        s = size*nmemb;
-        
-    strncpy(buffer, xmlp, s);
-    xmlp += s;
-    return s;
-}
+/* Function prototype */
+static size_t my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream);
+static size_t my_fread(void *buffer, size_t size, size_t nmemb, void *stream);
 
 int main (int argc, char **argv) {
-    
-    /* C vars */
+    /* Local Vars */
     CURL        *curl;
     CURLcode    res;
     struct curl_slist *headers = NULL;
@@ -88,27 +68,22 @@ int main (int argc, char **argv) {
     char        *errorDescription = "Illegal response from server.";
 
     /* Set signal handling and alarm */
-    if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
-        unknown("Cannot catch SIGALRM");
+    if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
+        critical("Setup SIGALRM trap faild!");
 
-    /* Set Default range */
-    setWarnTime(&credit_thresholds, "100:");
-    setCritTime(&credit_thresholds, "50:");
+    /* Process check arguments */
+    if (process_arguments(argc, argv) == OK)
+        unknown("Parsing arguments faild!");
 
-    /* Parse argumens */
-    if (process_arguments (argc, argv) == ERROR)
-        unknown("Could not parse arguments");
-    
     /* Start plugin timeout */
     alarm(mp_timeout);
     
-    /* Magik */
+    /* Build query */
     xml = mp_malloc(strlen(userkey) + strlen(password) + 134);
     mp_sprintf(xml, "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n<aspsms>"
         "\n<Userkey>%s</Userkey>\n<Password>%s</Password>\n"
         "<Action>ShowCredits</Action>\n</aspsms>", userkey, password);
     xmlp = xml;
-    
     
     if (mp_verbose > 0) {
         printf("CURL Version: %s\n", curl_version());
@@ -120,9 +95,8 @@ int main (int argc, char **argv) {
     curl_global_init(CURL_GLOBAL_ALL);
     
     /* Set Header */
-    c = mp_malloc(21);
-    mp_sprintf(c, "Content-Length: %d", (int)strlen(xml));
-    
+    c = mp_malloc(24);
+    mp_snprintf(c, 24, "Content-Length: %d", (int)strlen(xml));
     headers = curl_slist_append (headers, "Content-Type: text/html");
     headers = curl_slist_append (headers, c);
     free( c );
@@ -154,9 +128,7 @@ int main (int argc, char **argv) {
     }
     
     /* Parse Answer */
-    
     xmlp = answer;
-    
     
     while((c = strsep(&xmlp, "<>"))) {
         if (strcmp(c, "ErrorCode") == 0) {
@@ -167,7 +139,6 @@ int main (int argc, char **argv) {
             credits = strtof(strsep(&xmlp, "<>"), NULL);
         }
     }
-
     
     if (mp_verbose > 0) {
         printf("errorCode %d\n", errorCode);
@@ -178,8 +149,7 @@ int main (int argc, char **argv) {
     /* XML Error Code */
     if (errorCode != 1)
         unknown(errorDescription);
-        
-    
+
     switch(get_status((int)credits, credit_thresholds)) {
         case STATE_OK:
             ok("ASP SMS %.2f credits left for %s.", credits, userkey);
@@ -190,6 +160,30 @@ int main (int argc, char **argv) {
     }
        
     critical("You should never reach this point.");
+}
+
+static size_t my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream) {
+    if (answer == NULL) {
+        answer = mp_malloc(size*nmemb + 1);
+        xmlp = answer;
+    } else {
+        answer = mp_realloc(answer, strlen(answer) + size*nmemb + 1);
+    }
+    memcpy(xmlp, buffer, size*nmemb);
+    xmlp[size*nmemb] = '\0';
+    xmlp += size*nmemb;
+
+    return size*nmemb;
+}
+
+static size_t my_fread(void *buffer, size_t size, size_t nmemb, void *stream) {
+    size_t s = strlen(xmlp);
+    if (s > size*nmemb)
+        s = size*nmemb;
+
+    strncpy(buffer, xmlp, s);
+    xmlp += s;
+    return s;
 }
 
 int process_arguments (int argc, char **argv) {
@@ -209,6 +203,10 @@ int process_arguments (int argc, char **argv) {
         print_help();
         exit(STATE_OK);
     }
+
+    /* Set default */
+    setWarnTime(&credit_thresholds, "100:");
+    setCritTime(&credit_thresholds, "50:");
     
     while (1) {
         c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"U:P:w:c:t:", longopts, &option);
@@ -233,12 +231,10 @@ int process_arguments (int argc, char **argv) {
                 break;
         }
     }
-    
-    if (!userkey)
-        usage("A userkey is mandatory.");
-    
-    if (!password)
-        usage("A password is mandatory.");
+
+    /* Check requirements */
+    if (!userkey || !password)
+        usage("Userkey and password are mandatory.");
 
     return(OK);
 }
@@ -249,7 +245,7 @@ void print_help (void) {
 
     printf("\n");
   
-    printf ("This plugin check available ASPSMS credits.");
+    printf ("This plugin check for available ASPSMS credits.");
     printf ("\n\n\tWARNING: Password is sent unencryptet.");
 
     printf("\n\n");
@@ -265,4 +261,4 @@ void print_help (void) {
     print_help_crit("credits", "50:");
 }
 
-/* vim: set ts=4 sw=4 et syn=c.libdns : */
+/* vim: set ts=4 sw=4 et syn=c : */

@@ -28,33 +28,31 @@ const char *progcopy  = "2010";
 const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "-H host -F file [-t timeout] [-w warn] [-c crit]";
 
+/* MP Includes */
 #include "mp_common.h"
-
+/* Default Includes */
 #include <getopt.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
+/* Library Includes */
 #include <curl/curl.h>
 #include <curl/types.h>
 #include <curl/easy.h>
 
-
-/* Global vars */
+/* Global Vars */
 const char *hostname = NULL;
 char *filename = NULL;
 thresholds *fetch_thresholds = NULL;
 int port = 0;
 
-static size_t my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream) {
-  return size*nmemb;
-}
+/* Function prototype */
+static size_t my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream);
 
 int main (int argc, char **argv) {
-    
-    /* C vars */
+    /* Local Vars */
     CURL        *curl;
     CURLcode    res;
     char        *url;
@@ -62,17 +60,13 @@ int main (int argc, char **argv) {
     double      time;
 
     /* Set signal handling and alarm */
-    if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
-        unknown("Cannot catch SIGALRM");
+    if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
+        critical("Setup SIGALRM trap faild!");
 
-    /* Set Default range */
-    setWarnTime(&fetch_thresholds, "5s");
-    setCritTime(&fetch_thresholds, "9s");
+    /* Process check arguments */
+    if (process_arguments(argc, argv) == OK)
+        unknown("Parsing arguments faild!");
 
-    /* Parse argumens */
-    if (process_arguments (argc, argv) == ERROR)
-        unknown("Could not parse arguments");
-    
     /* Start plugin timeout */
     alarm(mp_timeout);
     
@@ -134,6 +128,10 @@ int main (int argc, char **argv) {
     critical("You should never reach this point.");
 }
 
+static size_t my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream) {
+    return size*nmemb;
+}
+
 int process_arguments (int argc, char **argv) {
     int c;
     int option = 0;
@@ -152,6 +150,10 @@ int process_arguments (int argc, char **argv) {
         print_help();
         exit(STATE_OK);
     }
+
+    /* Set default */
+    setWarnTime(&fetch_thresholds, "5s");
+    setCritTime(&fetch_thresholds, "9s");
     
     while (1) {
         c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"H:P:F:w:c:t:", longopts, &option);
@@ -181,12 +183,10 @@ int process_arguments (int argc, char **argv) {
                 break;
         }
     }
-    
-    if (!filename)
-        usage("A filename is mandatory.");
-    
-    if (!hostname)
-        usage("A hostname is mandatory.");
+
+    /* Check requirements */
+    if (!filename || !hostname)
+        usage("Filename and hostname are mandatory.");
 
     return(OK);
 }
@@ -212,4 +212,4 @@ void print_help (void) {
     print_help_crit_time("9 sec");
 }
 
-/* vim: set ts=4 sw=4 et syn=c.libdns : */
+/* vim: set ts=4 sw=4 et syn=c : */
