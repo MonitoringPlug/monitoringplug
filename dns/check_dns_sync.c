@@ -28,19 +28,22 @@ const char *progcopy  = "2010";
 const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "-D <domain> [-H <host>]";
 
+/* MP Includes */
 #include "mp_common.h"
 #include "ldns_utils.h"
-
+/* Default Includes */
 #include <getopt.h>
 #include <string.h>
+/* Library Includes */
 #include <ldns/ldns.h>
 
+/* Global Vars */
 const char *hostname = NULL;
 char *domainname = NULL;
 
 int main (int argc, char **argv) {
-    int i = 0;
-
+    /* Local Vars */
+    int             i = 0;
     char            *tmp;
     ldns_resolver   *res;
     ldns_rdf        *domain;
@@ -49,16 +52,22 @@ int main (int argc, char **argv) {
     ldns_rr_list    *rrl;
     ldns_rr         *rr;
     ldns_status     status;
-
-    // Result Pointer
     int             ns_count;
     ldns_rr         **ns_soa;
     ldns_rdf        **ns_name;
     ldns_rr         *master_soa = NULL;
     ldns_rdf        *master_name = NULL;
 
-    if (process_arguments (argc, argv) == ERROR)
-        exit(STATE_CRITICAL);
+    /* Set signal handling and alarm */
+    if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
+        critical("Setup SIGALRM trap faild!");
+
+    /* Process check arguments */
+    if (process_arguments(argc, argv) == OK)
+        unknown("Parsing arguments faild!");
+
+    /* Start plugin timeout */
+    alarm(mp_timeout);
 
     // Create DNAME from domainname
     domain = ldns_dname_new_frm_str(domainname);
@@ -380,6 +389,7 @@ int process_arguments (int argc, char **argv) {
         }
     }
 
+    /* Check requirements */
     if (!domainname)
         usage("A domainname is mandatory.");
 

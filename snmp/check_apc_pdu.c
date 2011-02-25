@@ -28,26 +28,27 @@ const char *progcopy  = "2010";
 const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "-H <HOST> [-on <PORTS>] [-off <PORTS>]";
 
+/* MP Includes */
 #include "mp_common.h"
 #include "snmp_utils.h"
-
-#include <net-snmp/net-snmp-config.h>
-#include <net-snmp/net-snmp-includes.h>
-
+/* Default Includes */
 #include <getopt.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+/* Library Includes */
+#include <net-snmp/net-snmp-config.h>
+#include <net-snmp/net-snmp-includes.h>
 
-const char *hostname = NULL;
-const char *stateOn = NULL;
-const char *stateOff = NULL;
-
-int port = 0;
+/* Global Vars */
+const char  *hostname = NULL;
+const char  *stateOn = NULL;
+const char  *stateOff = NULL;
+int         port = 0;
 
 int main (int argc, char **argv) {
-
+    /* Local Vars */
     char        *output = NULL;
     char        *pdu_name = NULL;
     int         status = STATE_OK;
@@ -59,12 +60,14 @@ int main (int argc, char **argv) {
     netsnmp_variable_list   *vars;
 
     /* Set signal handling and alarm */
-    if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
-        exit(STATE_CRITICAL);
+    if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
+        critical("Setup SIGALRM trap faild!");
 
-    if (process_arguments (argc, argv) == 1)
-        exit(STATE_CRITICAL);
+    /* Process check arguments */
+    if (process_arguments(argc, argv) == OK)
+        unknown("Parsing arguments faild!");
 
+    /* Start plugin timeout */
     alarm(mp_timeout);
 
     ss = mp_snmp_init();

@@ -29,23 +29,25 @@ const char *progcopy  = "2010";
 const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "-H <HOST>";
 
+/* MP Includes */
 #include "mp_common.h"
 #include "snmp_utils.h"
-
-#include <net-snmp/net-snmp-config.h>
-#include <net-snmp/net-snmp-includes.h>
-
+/* Default Includes */
 #include <getopt.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+/* Library Includes */
+#include <net-snmp/net-snmp-config.h>
+#include <net-snmp/net-snmp-includes.h>
 
+/* Global Vars */
 const char *hostname = NULL;
 int port = 0;
 
 int main (int argc, char **argv) {
-    /* Local variables */
+    /* Local Vars */
     int status;
     char *clustername;
     int clusterstatus;
@@ -65,16 +67,16 @@ int main (int argc, char **argv) {
         {{1,3,6,1,4,1,2312,8,2,7,0}, 11, ASN_INTEGER, (void *)&clusternodes},
         {{0}, 0, 0, 0},
     };
-    
+
     /* Set signal handling and alarm */
-    if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
-        exit(STATE_CRITICAL);
+    if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
+        critical("Setup SIGALRM trap faild!");
 
-    /* Process command line arguments */
-    if (process_arguments (argc, argv) == 1)
-        exit(STATE_CRITICAL);
+    /* Process check arguments */
+    if (process_arguments(argc, argv) == OK)
+        unknown("Parsing arguments faild!");
 
-    /* Set plugin timeout */
+    /* Start plugin timeout */
     alarm(mp_timeout);
 
     /* Init Net-SNMP */

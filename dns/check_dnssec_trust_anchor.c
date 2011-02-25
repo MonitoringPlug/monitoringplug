@@ -28,45 +28,46 @@ const char *progcopy  = "2009 - 2010";
 const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "[-H host] -k file [-t timeout]";
 
+/* MP Includes */
 #include "mp_common.h"
 #include "ldns_utils.h"
-
+/* Default Includes */
 #include <getopt.h>
 #include <signal.h>
 #include <string.h>
 #include <unistd.h>
+/* Library Includes */
+#include <ldns/ldns.h>
 
 /* Global Vars */
 const char *hostname;
 ldns_rr_list *trusted_keys = NULL;
 
 int main(int argc, char **argv) {
-    
-    /* C vars */
-    int         i;
-    char        *invalid = NULL;
-    
-    /* LDNS vars */
+    /* Local Vars */
+    int             i;
+    char            *invalid = NULL;
     ldns_resolver   *res;
     ldns_rdf        *rd_owner;
     ldns_rr         *rr;
     ldns_rr_list    *rrl_keys;
     
+
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
-        unknown("Cannot catch SIGALRM");
+        critical("Setup SIGALRM trap faild!");
 
-    /* Parse argumens */
-    if (process_arguments (argc, argv) == ERROR) {
+    /* Process check arguments */
+    if (process_arguments(argc, argv) == OK) {
         ldns_rr_list_deep_free(trusted_keys);
-        unknown("Could not parse arguments");
+        unknown("Parsing arguments faild!");
     }
+
+    /* Start plugin timeout */
+    alarm(mp_timeout);
     
     if (mp_verbose > 1)
         ldns_rr_list_print(stdout,trusted_keys);
-    
-    /* Start plugin timeout */
-    alarm(mp_timeout);
     
     /* Create a new resolver with hostname or server from /etc/resolv.conf */
     res = createResolver(hostname);
@@ -115,7 +116,7 @@ int main(int argc, char **argv) {
         ok("All keys from trusted-keys valid");
 }
 
-int process_arguments(int argc, char **argv) {
+int process_arguments (int argc, char **argv) {
     int c;
     int option = 0;
     

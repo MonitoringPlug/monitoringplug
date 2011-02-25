@@ -28,9 +28,10 @@ const char *progcopy  = "2010";
 const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "";
 
+/* MP Includes */
 #include "mp_common.h"
 #include "rhcs_utils.h"
-
+/* Default Includes */
 #include <errno.h>
 #include <getopt.h>
 #include <stdio.h>
@@ -39,22 +40,30 @@ const char *progusage = "";
 #include <unistd.h>
 #include <limits.h>
 
+/* Global Vars */
 int nonroot = 0;
 
 int main (int argc, char **argv) {
-    FILE *fp;
-    char *missing = NULL;
-    char *foreign = NULL;
+    /* Local Vars */
+    FILE                    *fp;
+    char                    *missing = NULL;
+    char                    *foreign = NULL;
+    rhcs_clustat            *clustat;
+    rhcs_clustat_group      **groups;
+    rhcs_conf               *conf;
+    rhcs_conf_fodom_node    **fodomnode;
+    rhcs_conf_service       **service;
 
-    rhcs_clustat *clustat;
-    rhcs_clustat_group **groups;
+    /* Set signal handling and alarm */
+    if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
+        critical("Setup SIGALRM trap faild!");
 
-    rhcs_conf *conf;
-    rhcs_conf_fodom_node **fodomnode;
-    rhcs_conf_service **service;
+    /* Process check arguments */
+    if (process_arguments(argc, argv) == OK)
+        unknown("Parsing arguments faild!");
 
-    if (process_arguments (argc, argv) == 1)
-        exit(STATE_CRITICAL);
+    /* Start plugin timeout */
+    alarm(mp_timeout);
 
     // Need to be root
     if (nonroot == 0)

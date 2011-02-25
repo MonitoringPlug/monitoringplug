@@ -28,26 +28,32 @@ const char *progcopy  = "2010";
 const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "<state> [message]";
 
+/* MP Includes */
 #include "mp_common.h"
-
-#include <errno.h>
+/* Default Includes */
 #include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-
 
 int main (int argc, char **argv) {
+    /* Local Vars */
     int msglen = 1;
     char *msg;
     char *msgc;
     int c = 0;
     int r = 1;
 
-    if (process_arguments (argc, argv) == 1)
-        exit(STATE_CRITICAL);
+    /* Set signal handling and alarm */
+    if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
+        critical("Setup SIGALRM trap faild!");
 
+    /* Process check arguments */
+    if (process_arguments(argc, argv) == OK)
+        unknown("Parsing arguments faild!");
+
+    /* Start plugin timeout */
+    alarm(mp_timeout);
 
     if (optind < argc && is_integer(argv[c]) == 1) {
         r = (int)strtol(argv[c], NULL, 10);

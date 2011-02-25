@@ -69,16 +69,14 @@ int main (int argc, char **argv) {
     int size, state=0, i, j;
 
     /* Set signal handling and alarm */
-    if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
-        exit(STATE_CRITICAL);
+    if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
+        critical("Setup SIGALRM trap faild!");
 
-    /* Set Default range */
-    setWarn(&free_thresholds, "10:",0);
-    setCrit(&free_thresholds, "5:",0);
+    /* Process check arguments */
+    if (process_arguments(argc, argv) == OK)
+        unknown("Parsing arguments faild!");
 
-    if (process_arguments (argc, argv) == 1)
-        exit(STATE_CRITICAL);
-
+    /* Start plugin timeout */
     alarm(mp_timeout);
 
     /* Create XMLRPC env */
@@ -280,6 +278,10 @@ int process_arguments (int argc, char **argv) {
         MP_LONGOPTS_END
     };
 
+    /* Set default */
+    setWarn(&free_thresholds, "10:",0);
+    setCrit(&free_thresholds, "5:",0);
+
     while (1) {
         c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"E::t:U:u:p:C:S:w:c:", longopts, &option);
 
@@ -318,14 +320,15 @@ int process_arguments (int argc, char **argv) {
         getopt_wc(c, optarg, &free_thresholds);
     }
 
+    /* Check requirements */
     if (!url)
-        usage("A URL is mandatory.");
+        usage("URL is mandatory.");
     if (!user)
-        usage("A Username is mandatory.");
+        usage("Username is mandatory.");
     if (!pass)
-        usage("A Password is mandatory.");
+        usage("Password is mandatory.");
     if (!channel && !system_name)
-        usage("A Channel or System entitlement to check is mandatory.");
+        usage("Channel or System entitlement to check is mandatory.");
 
     return(OK);
 }

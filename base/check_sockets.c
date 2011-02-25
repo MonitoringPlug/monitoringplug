@@ -31,17 +31,11 @@ const char *progusage = "--tcp <PORT> [-w <warning count>] [-c <critical count>]
 /* MP Includes */
 #include "mp_common.h"
 /* Default Includes */
-#include <errno.h>
 #include <getopt.h>
 #include <stdio.h>
+#include <signal.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <pwd.h>
-#include <grp.h>
-#include <time.h>
 
 /* Global Vars */
 int tcpport = -1;
@@ -62,7 +56,7 @@ int main (int argc, char **argv) {
     char        *output = NULL;
 
     /* Set signal handling and alarm */
-    if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
+    if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
         critical("Setup SIGALRM trap faild!");
 
     /* Process check arguments */

@@ -39,8 +39,6 @@ const char *progusage = "-H host -F file [-t timeout] [-w warn] [-c crit]";
 #include <unistd.h>
 /* Library Includes */
 #include <curl/curl.h>
-#include <curl/types.h>
-#include <curl/easy.h>
 
 /* Global Vars */
 const char *hostname = NULL;
@@ -60,7 +58,7 @@ int main (int argc, char **argv) {
     double      time;
 
     /* Set signal handling and alarm */
-    if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
+    if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
         critical("Setup SIGALRM trap faild!");
 
     /* Process check arguments */

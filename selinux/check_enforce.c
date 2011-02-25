@@ -28,8 +28,9 @@ const char *progcopy  = "2011";
 const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "[--enforcing|--permissive|--disabled]";
 
+/* MP Includes */
 #include "mp_common.h"
-
+/* Default Includes */
 #include <errno.h>
 #include <getopt.h>
 #include <stdio.h>
@@ -37,7 +38,7 @@ const char *progusage = "[--enforcing|--permissive|--disabled]";
 #include <string.h>
 #include <unistd.h>
 #include <libgen.h>
-
+/* Library Includes */
 #include <selinux/selinux.h>
 
 /* Global Vars */
@@ -48,21 +49,21 @@ char *policy;
 
 int main (int argc, char **argv) {
     /* Local Vars */
-    int se_enabled;
-    int se_enforced;
-    char *state_name;
-    int state;
-    char *pol_name;
+    int     se_enabled;
+    int     se_enforced;
+    char    *state_name;
+    int     state;
+    char    *pol_name;
 
     /* Set signal handling and alarm */
-    if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
+    if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
         exit(STATE_CRITICAL);
 
     /* Process check arguments */
-    if (process_arguments (argc, argv) == 1)
+    if (process_arguments(argc, argv) == 1)
         exit(STATE_CRITICAL);
 
-    /* Start timer */
+    /* Start plugin timeout */
     alarm(mp_timeout);
 
     se_enabled = is_selinux_enabled();
@@ -156,6 +157,7 @@ int process_arguments (int argc, char **argv) {
         }
     }
 
+    /* Check requirements */
     if (state_enforcing == -1) {
         state_enforcing = STATE_OK;
         state_permissive = STATE_WARNING;
@@ -188,3 +190,5 @@ void print_help (void) {
     printf(" -P, --policy=POLICY\n");
     printf("      SELinux should run with POLICY loaded.\n");
 }
+
+/* vim: set ts=4 sw=4 et syn=c : */

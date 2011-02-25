@@ -39,8 +39,6 @@ const char *progusage = "--userkey <userkey> --password <password>";
 #include <unistd.h>
 /* Library Includes */
 #include <curl/curl.h>
-#include <curl/types.h>
-#include <curl/easy.h>
 
 /* Global Constants */
 const char *xml_url = "http://xml1.aspsms.com:5061/xmlsvr.asp";
@@ -68,7 +66,7 @@ int main (int argc, char **argv) {
     char        *errorDescription = "Illegal response from server.";
 
     /* Set signal handling and alarm */
-    if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
+    if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
         critical("Setup SIGALRM trap faild!");
 
     /* Process check arguments */

@@ -31,11 +31,11 @@ const char *progusage = "-f <FILE> [-w <warning age>] [-c <critical age>]";
 /* MP Includes */
 #include "mp_common.h"
 /* Default Includes */
-#include <errno.h>
 #include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <signal.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -63,7 +63,7 @@ int main (int argc, char **argv) {
     struct stat file_stat;
 
     /* Set signal handling and alarm */
-    if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
+    if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
         critical("Setup SIGALRM trap faild!");
 
     /* Process check arguments */

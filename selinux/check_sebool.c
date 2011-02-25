@@ -49,22 +49,22 @@ int bools_off = 0;
 
 int main (int argc, char **argv) {
     /* Local Vars */
-    int i;
-    int active;
-    int state = STATE_OK;
-    char *buf = NULL;
-    char *bools_ok = NULL;
-    char *bools_crit = NULL;
+    int     i;
+    int     active;
+    int     state = STATE_OK;
+    char    *buf = NULL;
+    char    *bools_ok = NULL;
+    char    *bools_crit = NULL;
 
     /* Set signal handling and alarm */
-    if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
+    if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
         exit(STATE_CRITICAL);
 
     /* Process check arguments */
-    if (process_arguments (argc, argv) == 1)
+    if (process_arguments(argc, argv) == 1)
         exit(STATE_CRITICAL);
 
-    /* Start timer */
+    /* Start plugin timeout */
     alarm(mp_timeout);
 
     if (is_selinux_enabled() <= 0) {
@@ -158,6 +158,7 @@ int process_arguments (int argc, char **argv) {
         }
     }
 
+    /* Check requirements */
     if ((bools_on + bools_off) == 0) {
         usage("Please specify al least one --on or --off bool to check.");
     }
@@ -184,3 +185,5 @@ void print_help (void) {
     printf("     --off\n");
     printf("      SELinux boolean which should be OFF.\n");
 }
+
+/* vim: set ts=4 sw=4 et syn=c : */

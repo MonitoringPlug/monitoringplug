@@ -28,30 +28,28 @@ const char *progcopy  = "2009 - 2010";
 const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "[-H host] -D domain [-k file] [-t timeout] [-w warn] [-c crit]";
 
+/* MP Includes */
 #include "mp_common.h"
 #include "ldns_utils.h"
-
+/* Default Includes */
 #include <getopt.h>
 #include <signal.h>
 #include <string.h>
 #include <unistd.h>
-
+/* Library Includes */
 #include <ldns/ldns.h>
 
-/* Global vars */
+/* Global Vars */
 const char *hostname = NULL;
 char *domainname = NULL;
 ldns_rr_list *trusted_keys = NULL;
 thresholds *exp_thresholds = NULL;
 
 int main (int argc, char **argv) {
-    
-    /* C vars */
-    int         i;
-    int         longest = 0;
-    uint32_t    exp, ttl, now;
-    
-    /* LDNS vars */
+    /* Local Vars */
+    int             i;
+    int             longest = 0;
+    uint32_t        exp, ttl, now;
     ldns_rdf        *rd_domain;
     ldns_pkt        *pkt;
     ldns_resolver   *res;
@@ -65,16 +63,12 @@ int main (int argc, char **argv) {
     
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
-        unknown("Cannot catch SIGALRM");
+        critical("Setup SIGALRM trap faild!");
 
-    /* Set Default range */
-    setWarnTime(&exp_thresholds, "2d:");
-    setCritTime(&exp_thresholds, "1d:");
+    /* Process check arguments */
+    if (process_arguments(argc, argv) == OK)
+        unknown("Parsing arguments faild!");
 
-    /* Parse argumens */
-    if (process_arguments (argc, argv) == ERROR)
-        unknown("Could not parse arguments");
-    
     /* Start plugin timeout */
     alarm(mp_timeout);
     
@@ -236,6 +230,10 @@ int process_arguments (int argc, char **argv) {
         print_help();
         exit(STATE_OK);
     }
+
+    /* Set default */
+    setWarnTime(&exp_thresholds, "2d:");
+    setCritTime(&exp_thresholds, "1d:");
     
     while (1) {
         c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"H:D:k:w:c:t:"LDNS_OPTSTR, longopts, &option);
@@ -269,7 +267,8 @@ int process_arguments (int argc, char **argv) {
                 break;
         }
     }
-    
+
+    /* Check requirements */
     if (!domainname)
         usage("A domainname is mandatory.");
 

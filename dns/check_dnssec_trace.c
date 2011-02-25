@@ -28,14 +28,15 @@ const char *progcopy  = "2009 - 2010";
 const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "[-H host] -D domain [-T domain] [-k file] [-t timeout]";
 
+/* MP Includes */
 #include "mp_common.h"
 #include "ldns_utils.h"
-
+/* Default Includes */
 #include <getopt.h>
 #include <signal.h>
 #include <string.h>
 #include <unistd.h>
-
+/* Library Includes */
 #include <ldns/ldns.h>
 
 /* Global Vars */
@@ -46,13 +47,10 @@ ldns_rr_list *trusted_keys = NULL;
 int checkState;
 
 int main(int argc, char **argv) {
-    
-    /* C vars */
-    int     i;
-    int     soa_valid = 0;
-    int     ns_valid = 0;
-    
-    /* LDNS vars */
+    /* Local Vars */
+    int             i;
+    int             soa_valid = 0;
+    int             ns_valid = 0;
     ldns_rdf        *rd_domain;
     ldns_rdf        *rd_trace;
     ldns_rdf        *rd_cdomain;
@@ -66,15 +64,15 @@ int main(int argc, char **argv) {
     ldns_rr_list    *rrl_domain_ns_rrsig;
     ldns_rr_list    *rrl_valid_keys;
     ldns_status	    status;
-    
+
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
-        unknown("Cannot catch SIGALRM");
+        critical("Setup SIGALRM trap faild!");
 
-    /* Parse argumens */
-    if (process_arguments (argc, argv) == ERROR)
-        unknown("Could not parse arguments");
-    
+    /* Process check arguments */
+    if (process_arguments(argc, argv) == OK)
+        unknown("Parsing arguments faild!");
+
     /* Start plugin timeout */
     alarm(mp_timeout);
     
@@ -274,7 +272,7 @@ int main(int argc, char **argv) {
     return checkState;
 }
 
-int process_arguments(int argc, char **argv) {
+int process_arguments (int argc, char **argv) {
     int c;
     int option = 0;
     
@@ -326,8 +324,8 @@ int process_arguments(int argc, char **argv) {
                 break;
         }
     }
-    
-    //validate_arguments
+
+    /* Check requirements */
     if(!domainname)
         usage("Domain is mandatory");
     
