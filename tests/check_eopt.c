@@ -56,8 +56,8 @@ END_TEST
 START_TEST (test_eopt_section_file) {
     char *argv[] = {"test", "--eopt", "sectionB@eopt.ini","--last", 0};
     char **new_argv;
-    char *res_argv[] = {"test", "--eopt", "@eopt.ini","--abc","def","-ghi",
-        "jkl","-mno","--last", 0};
+    char *res_argv[] = {"test", "--eopt", "sectionB@eopt.ini","--abc","def","--ghi",
+        "jkl","--mno","--last", 0};
     int args = 4;
     int res_args = 9;
     int i = 0;
