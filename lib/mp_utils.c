@@ -62,7 +62,7 @@ void *mp_malloc(size_t size) {
 
 void *mp_calloc(size_t nmemb, size_t size) {
     void *p;
-    p = mp_calloc(nmemb, size);
+    p = calloc(nmemb, size);
     if (!p)
         critical("Out of memory!");
     return p;
