@@ -1,0 +1,18 @@
+== Monitoring EOPT ==
+
+To prevent giving passwords by commandline, all monitoringplug checks can read
+additional commandline args from a file. With --eopt you can enable and
+controll this feature. By default the file /etc/nagios/monitoringplug.ini is
+parsed and the section with the same name as the check is used. With a argument
+to the --eopt option the file and section can be controlled.
+
+  --eopt [section][@file]
+
+With the followingcontent in monitoringplug.ini:
+--------------------------
+[check_name]
+user=foo
+password=bar
+-------------------------
+--eopt check_name@monitoringplug.ini injects "--user foo --password bar" into
+the command arguments.

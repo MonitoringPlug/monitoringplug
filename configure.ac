@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.59])
 
-AC_INIT([monitorplug],[0.0],[marius.rieder@durchmesser.ch])
+AC_INIT([monitorplug],[0.1],[marius.rieder@durchmesser.ch])
 AC_CONFIG_AUX_DIR(build-aux)
 AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADERS([config.h])
@@ -158,6 +158,7 @@ AC_CONFIG_FILES([Makefile
 		 selinux/Makefile
                  snmp/Makefile
                  xmlrpc/Makefile
+		 contrib/Makefile
                  doc/Makefile
                  tests/Makefile])
 AC_OUTPUT

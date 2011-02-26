@@ -1,5 +1,3 @@
 ## Process this file with automake to produce Makefile.in
 
-doc_DATA = README-EOPT
-
-EXTRA_DIST = $(doc_DATA)
+EXTRA_DIST = monitorplug.spec

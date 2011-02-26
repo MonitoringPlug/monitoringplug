@@ -22,3 +22,5 @@ check_monitoringplug_CFLAGS = $(AM_CPPFLAGS) $(CHECK_CFLAGS)
 check_monitoringplug_LDFLAGS = $(AM_LDFLAGS) $(CHECK_LIBS)
 
 endif
+
+EXTRA_DIST = eopt.ini
