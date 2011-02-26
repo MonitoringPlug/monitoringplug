@@ -36,6 +36,7 @@ const char *progusage = "--tcp <PORT> [-w <warning count>] [-c <critical count>]
 #include <signal.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 /* Global Vars */
 int tcpport = -1;

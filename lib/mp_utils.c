@@ -21,11 +21,14 @@
  * $Id$
  */
 
-#include "mp_utils.h"
-#include "mp_common.h"
 
+/* MP Includes */
+#include "mp_common.h"
+#include "mp_utils.h"
+/* Default Includes */
 #include <stdlib.h>
 #include <stdarg.h>
+#include <string.h>
 
 int mp_sprintf(char *s, const char *format, ...) {
     int len=0;
