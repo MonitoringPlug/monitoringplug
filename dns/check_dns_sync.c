@@ -34,6 +34,7 @@ const char *progusage = "-D <domain> [-H <host>]";
 /* Default Includes */
 #include <getopt.h>
 #include <string.h>
+#include <signal.h>
 /* Library Includes */
 #include <ldns/ldns.h>
 

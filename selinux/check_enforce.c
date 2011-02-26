@@ -36,6 +36,7 @@ const char *progusage = "[--enforcing|--permissive|--disabled]";
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <signal.h>
 #include <unistd.h>
 #include <libgen.h>
 /* Library Includes */

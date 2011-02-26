@@ -35,6 +35,7 @@ const char *progusage = "[--on BOOL] [--off BOOL] [--on|off ...]";
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <signal.h>
 #include <unistd.h>
 /* Library Includes */
 #include <selinux/selinux.h>
