@@ -62,7 +62,7 @@ int main (int argc, char **argv) {
         exit(STATE_CRITICAL);
 
     /* Process check arguments */
-    if (process_arguments(argc, argv) == 1)
+    if (process_arguments(argc, argv) != OK)
         exit(STATE_CRITICAL);
 
     /* Start plugin timeout */

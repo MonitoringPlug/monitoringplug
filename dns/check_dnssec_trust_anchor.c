@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
         critical("Setup SIGALRM trap faild!");
 
     /* Process check arguments */
-    if (process_arguments(argc, argv) == OK) {
+    if (process_arguments(argc, argv) != OK) {
         ldns_rr_list_deep_free(trusted_keys);
         unknown("Parsing arguments faild!");
     }
