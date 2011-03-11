@@ -99,10 +99,10 @@ int main (int argc, char **argv) {
     if (stateOn == NULL && stateOff == NULL) {
         // Check all outlets for on.
         for (i = 0; i<table_state.row; i++) {
-            vars = mp_snmp_table_get(table_state, 4, i);
+            vars = mp_snmp_table_get(table_state, 3, i);
 
             if (*vars->val.integer != 1) {
-                vars = mp_snmp_table_get(table_state, 2, i);
+                vars = mp_snmp_table_get(table_state, 1, i);
                 
                 char *t = (char *)malloc(9 + vars->val_len);
                 memcpy(t, vars->val.string, vars->val_len);
@@ -122,7 +122,7 @@ int main (int argc, char **argv) {
                 i = strtol(c, NULL, 10);
                 if (i == 0) {
                     for (i = 0; i<table_state.row; i++) {
-                        vars = mp_snmp_table_get(table_state, 2, i);
+                        vars = mp_snmp_table_get(table_state, 1, i);
                         if (strcmp(c, (char*)vars->val.string) == 0)
                             break;
                     }
@@ -132,9 +132,9 @@ int main (int argc, char **argv) {
                 if (i >= table_state.row)
                     continue;
                 
-                vars = mp_snmp_table_get(table_state, 4, i);
+                vars = mp_snmp_table_get(table_state, 3, i);
                 if (*vars->val.integer != 1) {
-                    vars = mp_snmp_table_get(table_state, 2, i);
+                    vars = mp_snmp_table_get(table_state, 1, i);
                     
                     char *t = (char *)malloc(9 + vars->val_len);
                     memcpy(t, vars->val.string, vars->val_len);
@@ -154,7 +154,7 @@ int main (int argc, char **argv) {
                 i = strtol(c, NULL, 10);
                 if (i == 0) {
                     for (i = 0; i<table_state.row; i++) {
-                        vars = mp_snmp_table_get(table_state, 2, i);
+                        vars = mp_snmp_table_get(table_state, 1, i);
                         if (strcmp(c, (char*)vars->val.string) == 0)
                             break;
                     }
@@ -164,9 +164,9 @@ int main (int argc, char **argv) {
                 if (i >= table_state.row)
                     continue;
                 
-                vars = mp_snmp_table_get(table_state, 4, i);
+                vars = mp_snmp_table_get(table_state, 3, i);
                 if (*vars->val.integer != 2) {
-                    vars = mp_snmp_table_get(table_state, 2, i);
+                    vars = mp_snmp_table_get(table_state, 1, i);
                     
                     char *t = (char *)malloc(9 + vars->val_len);
                     memcpy(t, vars->val.string, vars->val_len);

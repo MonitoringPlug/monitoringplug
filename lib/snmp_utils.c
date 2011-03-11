@@ -299,7 +299,7 @@ int mp_snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *que
 netsnmp_variable_list *mp_snmp_table_get(const struct mp_snmp_table table, int x, int y) {
     if( x < 0 || y < 0 || x >= table.col || y >= table.row)
         return NULL;
-    return table.var[(x-1)*table.row+y];
+    return table.var[x*table.row+y];
 }
 
 void getopt_snmp(int c) {
