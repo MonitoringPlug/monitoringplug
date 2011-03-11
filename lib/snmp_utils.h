@@ -36,16 +36,20 @@ extern char *mp_snmp_context;
 extern char *mp_snmp_authpass;
 extern oid *mp_snmp_authproto;
 extern char *mp_snmp_privpass;
+extern int mp_snmp_timeout;
+extern int mp_snmp_retries;
 
 
-#define SNMP_OPTSTR "C:S:L:U:K:A:a:X:"
+#define SNMP_OPTSTR "C:S:L:U:K:A:a:X:T:R:"
 #define SNMP_LONGOPTS {"community", required_argument, NULL, (int)'C'}, \
                       {"snmp", required_argument, NULL, (int)'S'}, \
                       {"secname", required_argument, NULL, (int)'U'}, \
                       {"context", required_argument, NULL, (int)'K'}, \
                       {"authpass", required_argument, NULL, (int)'A'}, \
                       {"authproto", required_argument, NULL, (int)'a'}, \
-                      {"privpass", required_argument, NULL, (int)'X'}
+                      {"privpass", required_argument, NULL, (int)'X'}, \
+                      {"snmptimeout", required_argument, NULL, (int)'T'}, \
+                      {"snmpretries", required_argument, NULL, (int)'R'}
 
 
 struct mp_snmp_query_cmd {
