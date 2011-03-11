@@ -67,18 +67,22 @@ int main (int argc, char **argv) {
     // PLUGIN CODE
     ss = mp_snmp_init();
 
-    // Default timeout is to short
-    ss->timeout = 5;
-
     /* OIDs to query */
     struct mp_snmp_query_cmd snmpcmd_table = {{1,3,6,1,4,1,24681,1,2,11}, 10, 0, (void *)&table_state};
 
-    mp_snmp_table_query(ss, &snmpcmd_table);
+    status = mp_snmp_table_query(ss, &snmpcmd_table);
+    if (status != STAT_SUCCESS) {
+        char *string;
+        snmp_error(ss, NULL, NULL, &string);
+        printf("Error fetching table: %s", string);
+    }
 
     mp_snmp_deinit();
 
+    status = STATE_OK;
+
     for (i = 0; i<table_state.row; i++) {
-        vars = mp_snmp_table_get(table_state, 7, i);
+        vars = mp_snmp_table_get(table_state, 6, i);
 
         if (strcmp((char *)vars->val.string, "GOOD") == 1) {
             vars2 = mp_snmp_table_get(table_state, 2, i);
