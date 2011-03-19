@@ -74,9 +74,11 @@ int main (int argc, char **argv) {
 
     // Parse clustat
     if (nonroot == 0)
-        fp = fopen("/etc/cluster/clustat.xml","r");
+        fp = mp_popen((char *[]) {"/usr/sbin/clustat","-x", NULL});
     else
         fp = fopen("clustat.xml","r");
+    if (fp == NULL)
+       unknown("Can't exec clustat");
     clustat = parse_rhcs_clustat(fp);
     fclose(fp);
 
@@ -85,9 +87,11 @@ int main (int argc, char **argv) {
 
     // Parse cluster.conf
     if (nonroot == 0)
-        fp = mp_popen((char *[]) {"/usr/sbin/clustat","-x", NULL});
+        fp = fopen("/etc/cluster/cluster.conf","r");
     else
         fp = fopen("cluster.conf","r");
+    if (fp == NULL)
+       unknown("Can't read cluster.conf.");
     conf = parse_rhcs_conf(fp);
     if (nonroot == 0)
         mp_pclose(fp);
