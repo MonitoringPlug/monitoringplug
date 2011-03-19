@@ -114,21 +114,22 @@ void rhcs_clustat_startElement(void *clustat, const char *name, const char **att
             if (strcmp(*k, "name") == 0) {
                 ((rhcs_clustat *)clustat)->group[services]->name = strdup(*v);
                 strsep(&((rhcs_clustat *)clustat)->group[services]->name, ":");
-            }
-            else if (strcmp(*k, "state") == 0)
+            } else if (strcmp(*k, "state") == 0) {
                 ((rhcs_clustat *)clustat)->group[services]->state = (unsigned int) strtol(*v, NULL, 10);
-            else if (strcmp(*k, "owner") == 0)
+	    } else if (strcmp(*k, "owner") == 0) {
+	        ((rhcs_clustat *)clustat)->group[services]->owner = NULL;
                 for(i=0; i < nodes; i++) {
                     if(strcmp(*v, ((rhcs_clustat *)clustat)->node[i]->name) == 0) {
                         ((rhcs_clustat *)clustat)->group[services]->owner = ((rhcs_clustat *)clustat)->node[i];
                     }
                 }
-            else if (strcmp(*k, "last_owner") == 0)
+	    } else if (strcmp(*k, "last_owner") == 0) {
                 for(i=0; i < nodes; i++) {
                     if(strcmp(*v, ((rhcs_clustat *)clustat)->node[i]->name) == 0) {
                         ((rhcs_clustat *)clustat)->group[services]->last = ((rhcs_clustat *)clustat)->node[i];
                     }
                 }
+	    }
         }
         services++;
         return;

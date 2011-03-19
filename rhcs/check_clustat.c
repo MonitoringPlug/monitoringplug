@@ -101,19 +101,19 @@ int main (int argc, char **argv) {
     int localprio;
     int ownerprio;
     int bestprio;
+    int autostart;
 
     for(groups = clustat->group; *groups != NULL ; groups++) {
         localprio = 0;
         ownerprio = 0;
+	autostart = 1;
         bestprio = INT_MAX;
-
-        if ((*groups)->owner == NULL)
-            continue;
 
         fodomnode = NULL;
         for(service = conf->service; *service != NULL ; service++) {
             if (strcmp((*service)->name, (*groups)->name) == 0) {
                 fodomnode = (*service)->fodomain->node;
+		autostart = (*service)->autostart;
                 break;
             }
         }
@@ -122,7 +122,7 @@ int main (int argc, char **argv) {
             for(; *fodomnode != NULL ; fodomnode++) {
                 if (strcmp((*fodomnode)->node->name, clustat->local->name) == 0)
                     localprio = (*fodomnode)->priority;
-                if (strcmp((*fodomnode)->node->name, (*groups)->owner->name) == 0)
+                if ((*groups)->owner && strcmp((*fodomnode)->node->name, (*groups)->owner->name) == 0)
                     ownerprio = (*fodomnode)->priority;
                 bestprio = (*fodomnode)->priority<bestprio?(*fodomnode)->priority:bestprio;
             }
@@ -133,6 +133,8 @@ int main (int argc, char **argv) {
             if ((*groups)->owner != clustat->local && localprio < ownerprio)
                 mp_strcat_comma(&missing, (*groups)->name);
 
+	    if ((*groups)->owner == NULL && localprio == bestprio && autostart)
+	        mp_strcat_comma(&missing, (*groups)->name);
         }
     }
 
@@ -143,7 +145,7 @@ int main (int argc, char **argv) {
     if (missing == NULL)
         warning("%s(%d) on %s: Foreign %s", clustat->name, clustat->id, clustat->local->name, foreign);
     warning("%s(%d) on %s: Missing %s  Foreign %s", clustat->name, clustat->id, clustat->local->name, missing, foreign);
-    
+
     return 0;
 }
 
