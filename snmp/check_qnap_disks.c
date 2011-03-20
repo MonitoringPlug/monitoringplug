@@ -32,6 +32,7 @@ const char *progusage = "[--help] [--timeout TIMEOUT]";
 #include "snmp_utils.h"
 /* Default Includes */
 #include <getopt.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -54,7 +55,7 @@ int main (int argc, char **argv) {
     netsnmp_variable_list   *vars, *vars2;
 
     /* Set signal handling and alarm */
-    if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
+    if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
         critical("Setup SIGALRM trap faild!");
 
     /* Process check arguments */
