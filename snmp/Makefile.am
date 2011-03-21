@@ -11,6 +11,6 @@ LDADD = ../lib/libmonitoringplug.a ../lib/libsnmputils.a
 bin_PROGRAMS = 
 
 if HAVE_NET_SNMP
-bin_PROGRAMS += check_apc_pdu check_qnap_disks
+bin_PROGRAMS += check_apc_pdu check_qnap_disks check_qnap_vols
 endif
 
