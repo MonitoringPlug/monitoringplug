@@ -83,18 +83,38 @@ int main (int argc, char **argv) {
     status = STATE_OK;
 
     for (i = 0; i<table_state.row; i++) {
-        vars = mp_snmp_table_get(table_state, 6, i);
+        vars = mp_snmp_table_get(table_state, 3, i);
 
-        if (strcmp((char *)vars->val.string, "GOOD") == 1) {
-            vars2 = mp_snmp_table_get(table_state, 2, i);
-
-            char *t = (char *)malloc(5 + vars->val_len + vars2->val_len);
-            sprintf(t, "%s is %s", vars2->val.string, vars->val.string);
-
-            mp_strcat_space(&output, t);
-            free(t);
-            status = STATE_CRITICAL;
+        if (*vars->val.integer == 0) {
+            continue;
         }
+
+        vars2 = mp_snmp_table_get(table_state, 1, i);
+        char *t;
+
+        switch ((int)*vars->val.integer) {
+            case -5:
+                t = (char *)malloc(9 + vars2->val_len);
+                sprintf(t, "%s missing", vars2->val.string);
+                break;
+            case -6:
+                t = (char *)malloc(9 + vars2->val_len);
+                sprintf(t, "%s invalid", vars2->val.string);
+                break;
+            case -9:
+                t = (char *)malloc(11 + vars2->val_len);
+                sprintf(t, "%s r/w-error", vars2->val.string);
+                break;
+            case -4:
+            default:
+                t = (char *)malloc(9 + vars2->val_len);
+                sprintf(t, "%s unknown", vars2->val.string);
+                break;
+        }
+
+        mp_strcat_comma(&output, t);
+        free(t);
+        status = STATE_CRITICAL;
     }
     /* Output and return */
     if (status == STATE_OK)
