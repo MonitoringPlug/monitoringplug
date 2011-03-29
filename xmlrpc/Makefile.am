@@ -11,7 +11,7 @@ LDADD = ../lib/*.a
 bin_PROGRAMS = 
 
 if HAVE_XMLRPC
-bin_PROGRAMS += check_rhn_entitlements
+bin_PROGRAMS += check_rhn_entitlements check_koji_hub
 endif
 
 
