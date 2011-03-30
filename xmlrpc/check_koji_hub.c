@@ -70,10 +70,8 @@ int main (int argc, char **argv) {
     result = xmlrpc_client_call(&env, url, "getAPIVersion", "()");
 
     if (env.fault_occurred) {
-       critical("Koji-Hub donw: %s (%d)", env.fault_string, env.fault_code);
+       critical("Koji-Hub down: %s (%d)", env.fault_string, env.fault_code);
     }
-
-    unknown_if_xmlrpc_fault(&env);
 
     xmlrpc_parse_value(&env, result, "i", &api);
 
