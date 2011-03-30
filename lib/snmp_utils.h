@@ -98,6 +98,8 @@ int mp_snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd)
  * \return return a status value like snmp.
  */
 int mp_snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd);
+int mp_snmp_table_query_new(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd, int cols);
+
 
 /**
  * Get a netsnmp_variable_list out of a mp_snmp_table.

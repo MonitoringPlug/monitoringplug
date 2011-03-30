@@ -195,6 +195,87 @@ int mp_snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd)
     return status;
 }
 
+int mp_snmp_table_query_new(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd, int cols) {
+    netsnmp_pdu *pdu;
+    netsnmp_pdu *response;
+    netsnmp_variable_list *vars, *last_var;
+    int status;
+    int index = 0;
+    int alloc = 0;
+
+    struct mp_snmp_table *table;
+    table = (struct mp_snmp_table *)querycmd->target;
+
+    table->row = 0;
+    table->col = cols;
+    table->var = NULL;
+
+    oid current_oid[MAX_OID_LEN];
+    size_t current_len;
+    memcpy(current_oid, querycmd->oid, querycmd->len * sizeof(oid));
+    current_len = querycmd->len;
+    status = STAT_SUCCESS;
+
+    while(status == STAT_SUCCESS) {
+
+        if(ss->version== SNMP_VERSION_1) {
+            pdu = snmp_pdu_create(SNMP_MSG_GETNEXT);
+        } else {
+            pdu = snmp_pdu_create(SNMP_MSG_GETBULK);
+            pdu->non_repeaters = 0;
+            pdu->max_repetitions = 10;
+        }
+
+        snmp_add_null_var(pdu, current_oid, current_len);
+
+        status = snmp_synch_response(ss, pdu, &response);
+
+        if (status == STAT_SUCCESS && response->errstat == SNMP_ERR_NOERROR) {
+            for(last_var = vars = response->variables; vars; last_var=vars, vars = vars->next_variable) {
+                /* Check for leafing of subtree */
+                if (snmp_oid_ncompare(querycmd->oid, querycmd->len, vars->name, vars->name_length, querycmd->len) != 0) {
+                    snmp_free_pdu(response);
+                    table->row = index/cols;
+                    return status;
+                }
+                if (alloc <= index) {
+                    alloc += 10;
+                    table->var = mp_realloc(table->var, alloc*sizeof(netsnmp_variable_list*));
+                }
+                if (mp_verbose > 1)
+                    print_variable(vars->name, vars->name_length, vars);
+
+                table->var[index] = mp_malloc(sizeof(netsnmp_variable_list));
+
+                snmp_clone_var(vars, table->var[index]);
+                index++;
+            }
+
+            memcpy(current_oid, last_var->name, last_var->name_length * sizeof(oid));
+            current_len = last_var->name_length;
+
+        } else {
+            /* FAILURE: print what went wrong! */
+
+            if (status == STAT_SUCCESS) {
+                critical("Error in snmp packet: %s\n",
+                        snmp_errstring(response->errstat));
+            } else if (status == STAT_TIMEOUT) {
+                critical("Timeout: No response from %s.\n",
+                        (*ss).peername);
+            } else {
+                snmp_sess_perror(progname, ss);
+            }
+        }
+        if (response)
+          snmp_free_pdu(response);
+        if (mp_verbose > 1)
+            printf("----------\n");
+    }
+
+    return status;
+}
+
 
 int mp_snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd) {
 
