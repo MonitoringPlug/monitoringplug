@@ -46,6 +46,7 @@ AC_LIB_LDNS([],[], [AC_MSG_WARN([Skipping ldns])])
 LIBCURL_CHECK_CONFIG([yes],[7.7.2], [], [AC_MSG_WARN([Skipping curl])])
 PKG_CHECK_MODULES([XMLRPC], [xmlrpc_client],[],[AC_MSG_WARN([Skipping xmlrpc-c])])
 PKG_CHECK_MODULES([SELINUX], [libselinux],[],[AC_MSG_WARN([Skipping SELinux])])
+PKG_CHECK_MODULES([GNUTLS], [gnutls], [],[AC_MSG_WARN([Skipping gnutls])])
 
 
 # SNMP Option
@@ -103,6 +104,7 @@ AM_CONDITIONAL([HAVE_NET_SNMP], [test x$NETSNMP_LIBS != x])
 AM_CONDITIONAL([HAVE_XMLRPC], [test x$XMLRPC_LIBS != x])
 AM_CONDITIONAL([HAVE_SELINUX], [test "x$SELINUX_LIBS" != x])
 AM_CONDITIONAL([HAVE_CHECK], [test "x$CHECK_LIBS" != x])
+AM_CONDITIONAL([HAVE_GNUTLS], [test "x$GNUTLS_LIBS" != x])
 
 
 # GCC Opts
@@ -154,6 +156,7 @@ AC_CONFIG_FILES([Makefile
                  curl/Makefile
                  dns/Makefile
                  dummy/Makefile
+		 gnutls/Makefile
                  rhcs/Makefile
 		 selinux/Makefile
                  snmp/Makefile
