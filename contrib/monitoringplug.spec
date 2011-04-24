@@ -1,5 +1,5 @@
 Name:           monitoringplug
-Version:        0.2
+Version:        0.3
 Release:        1%{?dist}
 Summary:        Collection of monitoring plugins for Nagios and similar monitoring systems.
 
@@ -13,8 +13,7 @@ BuildRequires:  ldns-devel
 BuildRequires:  libselinux-devel
 %if 0%{?rhel} <= 5
 BuildRequires:	curl-devel
-%endif
-%if 0%{?rhel} >= 6
+%else
 BuildRequires:	libcurl-devel
 %endif
 BuildRequires:	xmlrpc-c-devel
@@ -31,8 +30,7 @@ Summary:        Collection of curl-based monitoring plugins for Nagios and simil
 Group:          Applications/System
 %if 0%{?rhel} <= 5
 Requires:       curl
-%endif
-%if 0%{?rhel} >= 6
+%else
 Requires:       libcurl
 %endif
 Requires:       monitoringplug
@@ -155,13 +153,16 @@ rm -rf $RPM_BUILD_ROOT
 
 %files snmp
 %defattr(-,root,root,-)
+%{_libdir}/nagios/plugins/check_arc_raid
 %{_libdir}/nagios/plugins/check_apc_pdu
 %{_libdir}/nagios/plugins/check_qnap_disks
+%{_libdir}/nagios/plugins/check_qnap_vols
 
 %files xmlrpc
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_rhn_entitlements
-
+%{_libdir}/nagios/plugins/check_koji_builder
+%{_libdir}/nagios/plugins/check_koji_hub
 
 %changelog
 * Sun Mar 20 2011 Marius Rieder <marius.rieder@durchmesser.ch> - 0.2-1
