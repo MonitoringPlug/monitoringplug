@@ -449,6 +449,7 @@ void getopt_snmp(int c) {
 }
 
 void print_help_snmp(void) {
+    print_help_host();
     printf(" -C, --community=COMUNITY\n");
     printf("      SNMP community (defaults to public, used with SNMP v1 and v2c)\n");
     printf(" -S, --snmp=VERSION\n");
