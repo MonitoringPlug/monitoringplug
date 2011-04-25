@@ -269,7 +269,7 @@ void getopt_port(const char *optarg, int *port);
 
 void getopt_wc(int c, const char *optarg, thresholds **threshold);
 void getopt_wc_time(int c, const char *optarg, thresholds **threshold);
-void getopt_46(int c, int *ipv4, int *ipv6);
+void getopt_46(int c, int *family);
 
 /** optstring for help, version, verbose */
 #define MP_OPTSTR_DEFAULT   "hVv"
@@ -313,10 +313,18 @@ void getopt_46(int c, int *ipv4, int *ipv6);
 #define MP_LONGOPTS_PORT    {"port", required_argument, NULL, (int)'P'}
 
 /** optstring for ipv4 and ipv6 */
+#ifdef USE_IPV6
 #define MP_OPTSTR_IPV       "46"
+#else
+#define MP_OPTSTR_IPV
+#endif
 /** longopts option for ipv4 and ipv6 */
+#ifdef USE_IPV6
 #define MP_LONGOPTS_IPV     {"ipv4", no_argument, NULL, (int)'4'}, \
                             {"ipv6", no_argument, NULL, (int)'6'}
+#else
+#define MP_OPTSTR_IPV
+#endif
 
 /** optstring for warn and crit */
 #define MP_OPTSTR_WC        "w:c:"

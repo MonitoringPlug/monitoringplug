@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/socket.h>
 
 /**
  *  helper functions
@@ -307,11 +308,13 @@ void print_help_crit(const char *limit, const char *def) {
 }
 
 void print_help_46(void) {
+#ifdef USE_IPV6
     printf("\
  -4, --ipv4\n\
       Use IPv4 to check.\n\
  -6, --ipv6\n\
       Use IPv6 to check.\n");
+#endif
 }
 
 void getopt_timeout(const char *optarg) {
@@ -356,16 +359,22 @@ void getopt_wc_time(int c, const char *optarg, thresholds **threshold) {
     }
 }
 
-void getopt_46(int c, int *ipv4, int *ipv6) {
+void getopt_46(int c, int *family) {
+#ifdef USE_IPV6
     if (c == '4') {
-        *ipv4 = 2;
-        if(*ipv6 != 2)
-            *ipv6 = 0;
+        if (*family == AF_UNSPEC)
+            *family = AF_INET;
+        else if (*family == AF_INET6)
+            *family = AF_UNSPEC;
     } else if (c == '6') {
-        *ipv6 = 2;
-        if(*ipv4 != 2)
-            *ipv6 = 0;
+        if (*family == AF_UNSPEC)
+            *family = AF_INET6;
+        else if (*family == AF_INET)
+            *family = AF_UNSPEC;
     }
+#else
+    *family = AF_INET;
+#endif
 }
 
 /* vim: set ts=4 sw=4 et : */

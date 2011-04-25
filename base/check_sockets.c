@@ -42,8 +42,7 @@ const char *progusage = "--tcp <PORT> [-w <warning count>] [-c <critical count>]
 int tcpport = -1;
 int udpport = -1;
 int rawport = -1;
-int ipv4 = 1;
-int ipv6 = 1;
+int ipv = AF_UNSPEC;
 thresholds *socket_thresholds = NULL;
 
 /* Function prototype */
@@ -305,7 +304,7 @@ int process_arguments (int argc, char **argv) {
         if (c == -1 || c == EOF)
             break;
 
-        getopt_46(c, &ipv4, &ipv6);
+        getopt_46(c, &ipv);
         getopt_wc(c, optarg, &socket_thresholds);
 
         switch (c) {
