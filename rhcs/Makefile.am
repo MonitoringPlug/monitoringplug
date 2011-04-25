@@ -15,7 +15,6 @@ bin_PROGRAMS += check_clustat
 
 check_clustat_CPPFLAGS = $(AM_CPPFLAGS) $(EXPAT_CFLAGS)
 check_clustat_LDFLAGS = $(AM_LDFLAGS) $(EXPAT_LDFLAGS)
-endif
 
 if HAVE_NET_SNMP
 bin_PROGRAMS += check_rhcsnmp
@@ -23,4 +22,6 @@ bin_PROGRAMS += check_rhcsnmp
 check_rhcsnmp_CPPFLAGS = $(AM_CPPFLAGS) $(NETSNMP_CFLAGS)
 check_rhcsnmp_LDFLAGS = $(AM_LDFLAGS) $(NETSNMP_LIBS)
 check_rhcsnmp_LDADD = $(LDADD) ../lib/libsnmputils.a
+endif
+
 endif
