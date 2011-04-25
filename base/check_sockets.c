@@ -37,6 +37,7 @@ const char *progusage = "--tcp <PORT> [-w <warning count>] [-c <critical count>]
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <sys/socket.h>
 
 /* Global Vars */
 int tcpport = -1;
@@ -67,14 +68,24 @@ int main (int argc, char **argv) {
     alarm(mp_timeout);
 
     if (mp_verbose) {
-        printf("IPv4/6: %d %d\n",ipv4, ipv6);
+        switch (ipv) {
+            case AF_INET:
+                printf("IPv: 4\n");
+                break;
+            case AF_INET6:
+                printf("IPv: 6\n");
+                break;
+            case AF_UNSPEC:
+                printf("IPv: 4 and 6\n");
+                break;
+        }
         printf("TCP: %d\n", tcpport);
         printf("UDP: %d\n", udpport);
         printf("RAW: %d\n", rawport);
     }
 
     if (tcpport >=0) {
-        if(ipv4 > 0) {
+        if(ipv == AF_UNSPEC || ipv == AF_INET) {
             count = countSocket("/proc/net/tcp",tcpport);
             if (count >= 0) {
                 lstatus = get_status(count, socket_thresholds);
@@ -100,7 +111,7 @@ int main (int argc, char **argv) {
                     break;
             }
         }
-        if(ipv6 > 0) {
+        if(ipv == AF_UNSPEC || ipv == AF_INET6) {
             count = countSocket("/proc/net/tcp6",tcpport);
             if (count >= 0) {
                 lstatus = get_status(count, socket_thresholds);
@@ -127,7 +138,7 @@ int main (int argc, char **argv) {
         }
     }
     if (udpport >=0) {
-        if(ipv4 > 0) {
+        if(ipv == AF_UNSPEC || ipv == AF_INET) {
             count = countSocket("/proc/net/udp",udpport);
             if (count >= 0) {
                 lstatus = get_status(count, socket_thresholds);
@@ -153,7 +164,7 @@ int main (int argc, char **argv) {
                     break;
             }
         }
-        if(ipv6 > 0) {
+        if(ipv == AF_UNSPEC || ipv == AF_INET6) {
             count = countSocket("/proc/net/udp6",udpport);
             if (count >= 0) {
                 lstatus = get_status(count, socket_thresholds);
@@ -181,7 +192,7 @@ int main (int argc, char **argv) {
         }
     }
     if (rawport >=0) {
-        if(ipv4 > 0) {
+        if(ipv == AF_UNSPEC || ipv == AF_INET) {
             count = countSocket("/proc/net/raw",rawport);
             if (count >= 0) {
                 lstatus = get_status(count, socket_thresholds);
@@ -207,7 +218,7 @@ int main (int argc, char **argv) {
                     break;
             }
         }
-        if(ipv6 > 0) {
+        if(ipv == AF_UNSPEC || ipv == AF_INET6) {
             count = countSocket("/proc/net/raw6",rawport);
             if (count >= 0) {
                 lstatus = get_status(count, socket_thresholds);
