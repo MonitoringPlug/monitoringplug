@@ -19,6 +19,7 @@ BuildRequires:	libcurl-devel
 BuildRequires:	xmlrpc-c-devel
 BuildRequires:	expat-devel
 BuildRequires:	net-snmp-devel
+BuildRequires:  gnutls-devel
 
 %package base
 Summary:        Collection of basic monitoring plugins for Nagios and similar monitoring systems.
@@ -39,6 +40,12 @@ Requires:       monitoringplug
 Summary:        Collection of dns monitoring plugins for Nagios and similar monitoring systems.
 Group:          Applications/System
 Requires:	ldns
+Requires:       monitoringplug
+
+%package gnutls
+Summary:        Collection of dns monitoring plugins for Nagios and similar monitoring systems.
+Group:          Applications/System
+Requires:	gnutls
 Requires:       monitoringplug
 
 %package rhcs
@@ -81,6 +88,10 @@ This package contains the curl based plugins.
 %description dns
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the dns plugins which use the ldns library.
+
+%description gnutls
+Collection of monitoring plugins for Nagios and similar monitoring systems.
+This package contains the dns plugins which use the gnutls library.
 
 %description rhcs
 Collection of monitoring plugins for Nagios and similar monitoring systems.
@@ -141,6 +152,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/nagios/plugins/check_dns_*
 %{_libdir}/nagios/plugins/check_dnssec_*
 
+%files gnutls
+%defattr(-,root,root,-)
+%{_libdir}/nagios/plugins/check_ssl_cert
+
 %files rhcs
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_clustat
@@ -165,6 +180,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/nagios/plugins/check_koji_hub
 
 %changelog
+* Mon Apr 25 2011 Marius Rieder <marius.rieder@durchmesser.ch> - 0.3-1
+- version bump
+
 * Sun Mar 20 2011 Marius Rieder <marius.rieder@durchmesser.ch> - 0.2-1
 - version bump
 
