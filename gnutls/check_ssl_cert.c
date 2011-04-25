@@ -51,12 +51,17 @@ thresholds *expire_thresholds = NULL;
 const char *hostname = NULL;
 int port = 0;
 int ipv = AF_UNSPEC;
+char **ca_file = NULL;
+int ca_files = 0;
 
 int main (int argc, char **argv) {
     /* Local Vars */
     int socket;
     int ret;
     int status;
+    unsigned int cstatus;
+    int i;
+    char *untrusted = NULL;
     char *out;
     char *buf;
     size_t len;
@@ -64,6 +69,9 @@ int main (int argc, char **argv) {
     time_t expire;
     gnutls_session_t session;
     gnutls_certificate_credentials_t xcred;
+    gnutls_x509_crt_t cert;
+    const gnutls_datum_t *cert_list;
+    unsigned int cert_list_size;
 
 
     /* Set signal handling and alarm */
@@ -87,7 +95,7 @@ int main (int argc, char **argv) {
     gnutls_session_set_ptr (session, (void *) hostname);
     ret = gnutls_priority_set_direct(session, "PERFORMANCE", &err);
     gnutls_credentials_set(session, GNUTLS_CRD_CERTIFICATE, xcred);
-    
+
     gnutls_transport_set_ptr (session, (gnutls_transport_ptr_t) socket);
 
     // SSL Handshake
@@ -101,12 +109,8 @@ int main (int argc, char **argv) {
     } else if (mp_verbose >= 1) {
         printf ("- Handshake was completed\n");
     }
-    
-    expire = gnutls_certificate_expiration_time_peers(session);
 
-    gnutls_x509_crt_t cert;
-    const gnutls_datum_t *cert_list;
-    unsigned int cert_list_size;
+    expire = gnutls_certificate_expiration_time_peers(session);
 
     if (gnutls_x509_crt_init (&cert) < 0) {
         gnutls_deinit(session);
@@ -134,17 +138,52 @@ int main (int argc, char **argv) {
     buf = mp_malloc(len);
     gnutls_x509_crt_get_dn_by_oid(cert, GNUTLS_OID_X520_COMMON_NAME, 0, 0, buf, &len);
 
-    out = mp_malloc(len + 16);
-    mp_sprintf(out, "Cert: %s expires", buf);
+    out = mp_malloc(len + 8);
+    mp_sprintf(out, "Cert: %s", buf);
 
-    uint32_t now = time(0);
-    status = get_status((expire-now), expire_thresholds);
+    ret = gnutls_certificate_verify_peers2(session, &cstatus);
+    if (ret < 0) {
+        mp_disconnect(socket);
+        gnutls_deinit (session);
+        gnutls_certificate_free_credentials (xcred);
+        gnutls_global_deinit ();
+        critical("Can't verify cert.");
+    }
 
-    struct tm *tmp;
-    tmp = localtime(&expire);
-    strftime(buf, 200, "%F", tmp);
+    if (cstatus & GNUTLS_CERT_EXPIRED) {
+        mp_strcat_space(&out, "is expired");
+        status = STATE_CRITICAL;
+    } else if (cstatus & GNUTLS_CERT_NOT_ACTIVATED) {
+        mp_strcat_space(&out, "is not yet activated");
+        status = STATE_CRITICAL;
+    } else {
+        status = get_status((expire-time(0)), expire_thresholds);
+        strftime(buf, 200, "expires %F", localtime(&expire));
+        mp_strcat_space(&out, buf);
+    }
+    free(buf);
 
-    mp_strcat_space(&out, buf);
+    for(i = 0; i < ca_files; i++) {
+        buf = strsep(&ca_file[i], ":");
+        if (ca_file[i] == NULL) {
+            ca_file[i] = buf;
+        }
+        if (mp_verbose >= 1)
+            printf("Check file: %s named %s\n", buf, ca_file[i]);
+        gnutls_certificate_free_cas(xcred);
+        gnutls_certificate_set_x509_trust_file(xcred, ca_file[i], GNUTLS_X509_FMT_PEM);
+
+        ret = gnutls_certificate_verify_peers2(session, &cstatus);
+        if (cstatus & GNUTLS_CERT_INVALID || cstatus & GNUTLS_CERT_SIGNER_NOT_FOUND) {
+            mp_strcat_comma(&untrusted, buf);
+        }
+    }
+
+    if (untrusted != NULL) {
+        mp_strcat_space(&out, "untrusted in:");
+        mp_strcat_space(&out, untrusted);
+        status = STATE_CRITICAL;
+    }
 
     // Dissconnect
     mp_disconnect(socket);
@@ -181,7 +220,7 @@ int process_arguments (int argc, char **argv) {
     setCritTime(&expire_thresholds, "10d:");
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"H:P:46w:c:", longopts, &option);
+        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"H:P:46w:c:C:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -200,6 +239,12 @@ int process_arguments (int argc, char **argv) {
             /* Port opt */
             case 'P':
                 getopt_port(optarg, &port);
+                break;
+            /* CAs opt */
+            case 'C':
+                ca_file =  mp_realloc(ca_file, sizeof(char*)*(ca_files+1));
+                ca_file[ca_files] = optarg;
+                ca_files++;
                 break;
         }
     }
@@ -227,9 +272,7 @@ void print_help (void) {
 #ifdef USE_IPV6
     print_help_46();
 #endif //USE_IPV6
-    //printf(" -f, --file=filename\n");
-    //printf("      The file to test.\n");
-    printf(" -c, --trusted-ca=[NAME:]FILE\n");
+    printf(" -C, --trusted-ca=[NAME:]FILE\n");
     printf("      File to read trust-CAs from.\n");
     print_help_warn_time("30 days");
     print_help_crit_time("10 days");
