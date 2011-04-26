@@ -46,7 +46,7 @@ AC_LIB_LDNS([],[], [AC_MSG_WARN([Skipping ldns])])
 LIBCURL_CHECK_CONFIG([yes],[7.7.2], [], [AC_MSG_WARN([Skipping curl])])
 PKG_CHECK_MODULES([XMLRPC], [xmlrpc_client],[],[AC_MSG_WARN([Skipping xmlrpc-c])])
 PKG_CHECK_MODULES([SELINUX], [libselinux],[],[AC_MSG_WARN([Skipping SELinux])])
-PKG_CHECK_MODULES([GNUTLS], [gnutls], [],[AC_MSG_WARN([Skipping gnutls])])
+PKG_CHECK_MODULES([GNUTLS], [gnutls >= 2.8.0], [],[AC_MSG_WARN([Skipping gnutls])])
 
 
 # SNMP Option

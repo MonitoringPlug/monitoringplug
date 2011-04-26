@@ -1,3 +1,13 @@
+%if 0%{?rhel}
+%if 0%{?rhel} >= 6
+%define gnutls 1
+%else
+%define gnutls 0
+%endif
+%else
+%define gnutls 1
+%endif
+
 Name:           monitoringplug
 Version:        0.3
 Release:        1%{?dist}
@@ -11,7 +21,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  ldns-devel
 BuildRequires:  libselinux-devel
-%if 0%{?rhel} <= 5
+%if 0%{?rhel} == 5
 BuildRequires:	curl-devel
 %else
 BuildRequires:	libcurl-devel
@@ -19,7 +29,9 @@ BuildRequires:	libcurl-devel
 BuildRequires:	xmlrpc-c-devel
 BuildRequires:	expat-devel
 BuildRequires:	net-snmp-devel
+%if %{gnutls}
 BuildRequires:  gnutls-devel
+%endif
 
 %package base
 Summary:        Collection of basic monitoring plugins for Nagios and similar monitoring systems.
@@ -42,11 +54,13 @@ Group:          Applications/System
 Requires:	ldns
 Requires:       monitoringplug
 
+%if %{gnutls}
 %package gnutls
 Summary:        Collection of dns monitoring plugins for Nagios and similar monitoring systems.
 Group:          Applications/System
 Requires:	gnutls
 Requires:       monitoringplug
+%endif
 
 %package rhcs
 Summary:        Collection of RedHat Cluster Suitmonitoring plugins for Nagios and similar monitoring systems.
@@ -89,9 +103,11 @@ This package contains the curl based plugins.
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the dns plugins which use the ldns library.
 
+%if %{gnutls}
 %description gnutls
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the dns plugins which use the gnutls library.
+%endif
 
 %description rhcs
 Collection of monitoring plugins for Nagios and similar monitoring systems.
@@ -152,9 +168,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/nagios/plugins/check_dns_*
 %{_libdir}/nagios/plugins/check_dnssec_*
 
+%if %{gnutls}
 %files gnutls
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_ssl_cert
+%endif
 
 %files rhcs
 %defattr(-,root,root,-)
