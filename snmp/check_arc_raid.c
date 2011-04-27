@@ -36,6 +36,7 @@ const char *progusage = "[--help] [--timeout TIMEOUT]";
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 /* Library Includes */
 #include <net-snmp/net-snmp-config.h>
 #include <net-snmp/net-snmp-includes.h>
@@ -91,8 +92,13 @@ int main (int argc, char **argv) {
 
         vars2 = mp_snmp_table_get(table_state, 1, i);
 
-        char *t = (char *)malloc(5 + vars->val_len + vars2->val_len);
-        sprintf(t, "%s is %s", vars2->val.string, vars->val.string);
+        char *t = vars2->val.string + vars2->val_len - 1;
+        while (*t == ' ') {
+            *t = '\0';
+            t--;
+        }
+        t = (char *)malloc(7 + vars->val_len + vars2->val_len);
+        sprintf(t, "'%s' is %s", vars2->val.string, vars->val.string);
         mp_strcat_comma(&output, t);
         free(t);
 
