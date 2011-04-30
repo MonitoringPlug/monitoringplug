@@ -62,9 +62,15 @@ extern char *mp_perfdata;
 enum {
    OK = 0,              /**<  0 - Work as expected */
    ERROR = -1,          /**< -1 - A Error occured */
-   FALSE = 0,           /**<  0 - False */
-   TRUE = 1             /**<  1 - True */
 };
+
+#ifndef FALSE
+#   define FALSE    (0)
+#endif
+#ifndef TRUE
+#   define TRUE (1)
+#endif
+
 
 /**
  * Nagios Plugin return value enum.

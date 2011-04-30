@@ -33,6 +33,11 @@ libxmlrpcutils_a_SOURCES = xmlrpc_utils.c xmlrpc_utils.h
 libxmlrpcutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(XMLRPC_CFLAGS)
 endif
 
+noinst_LIBRARIES += librpcutils.a
+
+librpcutils_a_SOURCES = rpc_utils.c rpc_utils.h
+librpcutils_a_CPPFLAGS = $(AM_CPPFLAGS)
+
 libmonitoringplug_a_SOURCES = mp_common.c mp_common.h \
 							  mp_utils.c mp_utils.h \
 							  mp_args.c mp_args.h \
@@ -40,5 +45,6 @@ libmonitoringplug_a_SOURCES = mp_common.c mp_common.h \
 							  mp_popen.c mp_popen.h \
 							  mp_eopt.c mp_eopt.h \
 							  mp_net.c mp_net.h
+							  
 							  
 

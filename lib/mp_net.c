@@ -59,10 +59,9 @@ char *mp_ip2str(const struct sockaddr *sa) {
     return ip;
 }
 
-int mp_connect(const char *hostname, int port, int family, int type) {
-    int sd;
+struct addrinfo *mp_getaddrinfo(const char *hostname, int port, int family, int type) {
     struct addrinfo hints;
-    struct addrinfo *result, *rp;
+    struct addrinfo *result;
     char *buffer;
 
     memset (&hints, 0, sizeof (hints));
@@ -78,17 +77,24 @@ int mp_connect(const char *hostname, int port, int family, int type) {
     buffer = mp_malloc(6);
     mp_snprintf(buffer, 6, "%d", port);
 
-    if (getaddrinfo (hostname, buffer, &hints, &result) != 0)
+    if (getaddrinfo (hostname, buffer, &hints, &result) != 0) {
+        free(buffer);
         unknown("Can't resolv %s", hostname);
-
+    }
     free(buffer);
+
+    return result;
+}
+
+int mp_connect(const char *hostname, int port, int family, int type) {
+    int sd;
+    struct addrinfo *result, *rp;
+
+    result = mp_getaddrinfo(hostname, port, family, type);
 
     for(rp = result; rp != NULL; rp = rp->ai_next) {
         if (mp_verbose >= 1) {
-            buffer = mp_malloc(INET6_ADDRSTRLEN+1);
-            buffer = mp_ip2str(rp->ai_addr);
-            printf("Connect to %s\n", buffer);
-            free(buffer);
+            printf("Connect to %s\n", mp_ip2str(rp->ai_addr));
         }
         sd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
 

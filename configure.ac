@@ -156,12 +156,13 @@ AC_CONFIG_FILES([Makefile
                  curl/Makefile
                  dns/Makefile
                  dummy/Makefile
-		 gnutls/Makefile
+                 gnutls/Makefile
                  rhcs/Makefile
-		 selinux/Makefile
+                 rpc/Makefile
+                 selinux/Makefile
                  snmp/Makefile
                  xmlrpc/Makefile
-		 contrib/Makefile
+                 contrib/Makefile
                  doc/Makefile
                  tests/Makefile])
 AC_OUTPUT
