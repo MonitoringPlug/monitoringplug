@@ -8,5 +8,5 @@ AM_DEFAULT_SOURCE_EXT = .c
 
 LDADD = ../lib/*.a
 
-bin_PROGRAMS = check_nfs
+bin_PROGRAMS = check_nfs check_rpc_ping
 

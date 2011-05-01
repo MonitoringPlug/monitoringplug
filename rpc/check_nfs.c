@@ -29,7 +29,6 @@ const char *progusage = "-H hostname [--help] [--timeout TIMEOUT]";
 
 /* MP Includes */
 #include "mp_common.h"
-#include "mp_net.h"
 #include "rpc_utils.h"
 /* Default Includes */
 #include <getopt.h>
@@ -56,13 +55,13 @@ char **rpctransport = NULL;
 int rpctransports = 0;
 
 /* Function prototype */
-int check_export(struct rpcent *programm, unsigned long version, char *proto);
+int check_export(struct rpcent *program, unsigned long version, char *proto);
 
 int main (int argc, char **argv) {
     /* Local Vars */
     int i, j;
     char *buf;
-    struct rpcent *programm;
+    struct rpcent *program;
     struct rpcent *nfs;
 
     /* Set signal handling and alarm */
@@ -79,16 +78,16 @@ int main (int argc, char **argv) {
     to.tv_usec = 0;
 
     // PLUGIN CODE
-    programm = rpc_getrpcent("showmount");
-    if (programm == NULL)
-        programm = rpc_getrpcent("mount");
-    if (programm == NULL)
-        programm = rpc_getrpcent("mountd");
+    program = rpc_getrpcent("showmount");
+    if (program == NULL)
+        program = rpc_getrpcent("mount");
+    if (program == NULL)
+        program = rpc_getrpcent("mountd");
     nfs = rpc_getrpcent("showmount");
 
     for(i=0; i < rpcversions; i++) {
         for(j=0; j < rpctransports; j++) {
-            check_export(programm, atoi(rpcversion[i]), rpctransport[j]);
+            check_export(program, atoi(rpcversion[i]), rpctransport[j]);
 
             if (rpc_ping((char *)hostname, nfs, atoi(rpcversion[i]), rpctransport[j], to) != RPC_SUCCESS) {
                 buf = mp_malloc(128);
@@ -127,19 +126,19 @@ int main (int argc, char **argv) {
     critical("You should never reach this point.");
 }
 
-int check_export(struct rpcent *programm, unsigned long version, char *proto) {
+int check_export(struct rpcent *program, unsigned long version, char *proto) {
     CLIENT *client;
     char *buf;
     int ret;
     exports exportlist;
 
     buf = mp_malloc(128);
-    mp_snprintf(buf, 128, "%s:%sv%ld", proto, programm->r_name, version);
+    mp_snprintf(buf, 128, "%s:%sv%ld", proto, program->r_name, version);
 
     if (mp_verbose >= 1)
-        printf("Connect to %s:%sv%ld", proto, programm->r_name, version);
+        printf("Connect to %s:%sv%ld", proto, program->r_name, version);
 
-    client = clnt_create((char *)hostname, programm->r_number, version, proto);
+    client = clnt_create((char *)hostname, program->r_number, version, proto);
     if (client == NULL) {
         if (mp_verbose >= 1)
             printf("   faild!\n");
@@ -290,11 +289,13 @@ void print_help (void) {
     print_usage();
 
     print_help_default();
+    print_help_host();
+    printf(" -T, --transport=transport[,transport]");
+    printf("      Transports to check.\n");
+    printf(" -r, --rpcversion=version[,version]");
+    printf("      Versions to check.\n");
     printf(" -e, --export=parh\n");
     printf("      Check it server exports path.\n");
-    //printf(" -f, --file=filename\n");
-    //printf("      The file to test.\n");
-
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */
