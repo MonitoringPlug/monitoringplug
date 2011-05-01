@@ -61,4 +61,9 @@ void mp_strcat_space(char **target, char *source);
  */
 void mp_strcat_comma(char **target, char *source);
 
+/**
+ * push a string or some comma separated strings to a array.
+ */
+void mp_array_push(char ***array, char *obj, int *num);
+
 #endif /* MP_UTILS_H_ */

@@ -25,13 +25,13 @@
 #define RPC_UTILS_H_
 
 #include <rpc/rpc.h>
+#include <rpcsvc/mount.h>
 
 #define RPC_BUF_LEN 128
 
-
-CLIENT *rpc_udp_connect(struct sockaddr_in *addr, const char *prog, const int vers);
-CLIENT *rpc_tcp_connect(struct sockaddr_in *addr, const char *prog, const int vers);
-static u_long rpc_getprognum(const char *prog);
+struct rpcent *rpc_getrpcent(const char *prog);
+unsigned long rpc_getprognum(const char *prog);
+bool_t mp_xdr_exports(XDR *xdrs, exports *export);
 
 
 #endif /* RPC_UTILS_H_ */

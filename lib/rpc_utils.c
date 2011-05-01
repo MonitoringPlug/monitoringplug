@@ -29,56 +29,124 @@
 
 #include <rpc/rpc.h>
 
-
-CLIENT *rpc_udp_connect(struct sockaddr_in *addr, const char *prog, const int vers) {
-    unsigned long prognum;
-    CLIENT *client;
-    struct timeval to;
-    int sock = RPC_ANYSOCK;
-
-    to.tv_sec = mp_timeout;
-    to.tv_usec = 0;
-
-    prognum = rpc_getprognum(prog);
-
-    client = clntudp_create(addr, prognum, vers, to, &sock);
-    if (client == NULL) {
-        if (mp_verbose)
-            clnt_pcreateerror("rpcinfo");
-        printf("program %s is not available", prog);
+struct rpcent *rpc_getrpcent(const char *prog) {
+    if (isalpha(*prog)) {
+        return getrpcbyname(prog);
+    } else {
+        return getrpcbynumber(atoi(prog));
     }
-
-    return client;
 }
 
-CLIENT *rpc_tcp_connect(struct sockaddr_in *addr, const char *prog, const int vers) {
-    unsigned long prognum;
-    CLIENT *client;
-    int sock = RPC_ANYSOCK;
-
-    prognum = rpc_getprognum(prog);
-
-    client = clnttcp_create(addr, prognum, vers, &sock, 0, 0);
-    if (client == NULL) {
-        if (mp_verbose)
-            clnt_pcreateerror("rpcinfo");
-        printf("program %s is not available", prog);
-    }
-
-    return client;
-}
-
-static u_long rpc_getprognum(const char *prog) {
+unsigned long rpc_getprognum(const char *prog) {
     struct rpcent *rpc;
 
     if (isalpha(*prog)) {
         rpc = getrpcbyname(prog);
         if (rpc == NULL) {
-            unknown("%s is unknown service\n", prog);
+            return 0;
         }
         return rpc->r_number;
     } else {
         return (u_long) atoi(prog);
     }
 }
+
+bool_t mp_xdr_exports(XDR *xdrs, exports *export) {
+    bool_t more;
+
+    switch (xdrs->x_op) {
+        /* Free export list */
+        case XDR_FREE: {
+            exportnode *node;
+            exportnode *next;
+            groupnode *group;
+            groupnode *next_group;
+
+            for(node = *export; node; node = next) {
+                // Free mount path
+                if (!xdr_string(xdrs, &node->ex_dir, MNTPATHLEN))
+                    return (FALSE);
+
+                for(group = node->ex_groups; group; group = next_group) {
+                    if (!xdr_string(xdrs, &group->gr_name, MNTNAMLEN))
+                        return (FALSE);
+                    next_group = group->gr_next;
+                    free(group);
+                }
+
+                next = node->ex_next;
+                free(node);
+            }
+            break;
+        }
+        case XDR_ENCODE: {
+            critical("mp_xdr_exports XDR_ENCODE not supported.");
+        }
+        case XDR_DECODE: {
+            /* Decode struct */
+            exportnode *node;
+            exportnode *prev = NULL;
+            groupnode *group;
+            groupnode *prev_group = NULL;
+
+            *export = NULL;
+
+            if (!xdr_bool(xdrs, &more))
+                return (FALSE);
+
+            while (more) {
+                // Init new exportnode
+                node = (exportnode *)mp_malloc(sizeof (struct exportnode));
+                node->ex_dir = NULL;
+                node->ex_groups = NULL;
+                node->ex_next = NULL;
+
+                // Read mount path
+                if (!xdr_string(xdrs, &node->ex_dir, MNTPATHLEN))
+                    return (FALSE);
+
+                // Read group list
+                if (!xdr_bool(xdrs, &more))
+                    return (FALSE);
+                while (more) {
+                    // Init new groupnode
+                    group = (groupnode *)mp_malloc(sizeof (struct groupnode));
+                    group->gr_name = NULL;
+                    group->gr_next = NULL;
+
+                    // Read group name
+                    if (!xdr_string(xdrs, &group->gr_name, MNTNAMLEN))
+                        return (FALSE);
+
+                    if (node->ex_groups == NULL) {
+                        node->ex_groups = group;
+                        prev_group = group;
+                    } else {
+                        prev_group->gr_next = group;
+                        prev_group = group;
+                    }
+
+                    // More group list
+                    if (!xdr_bool(xdrs, &more))
+                        return (FALSE);
+                }
+
+                if (*export == NULL) {
+                    *export = node;
+                    prev = node;
+                } else {
+                    prev->ex_next = node;
+                    prev = node;
+                }
+
+                // More export list
+                if (!xdr_bool(xdrs, &more))
+                    return (FALSE);
+            }
+            break;
+        }
+    }
+    return (TRUE);
+}
+
 

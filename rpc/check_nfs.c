@@ -25,7 +25,7 @@ const char *progname  = "check_nfs";
 const char *progvers  = "0.1";
 const char *progcopy  = "2011";
 const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
-const char *progusage = "[--help] [--timeout TIMEOUT]";
+const char *progusage = "-H hostname [--help] [--timeout TIMEOUT]";
 
 /* MP Includes */
 #include "mp_common.h"
@@ -37,29 +37,29 @@ const char *progusage = "[--help] [--timeout TIMEOUT]";
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netdb.h>
-#include <arpa/inet.h>
 #include <rpc/rpc.h>
 #include <rpcsvc/mount.h>
 /* Library Includes */
 
 /* Global Vars */
 const char *hostname = NULL;
-int port = 111;
-int udp = 0;
-int tcp = 0;
-int version = 0;
+const char *export = NULL;
+char *noconnection = NULL;
+char *callfaild = NULL;
+char *noexport = NULL;
+char *exportok = NULL;
+struct timeval to;
+char **rpcversion = NULL;
+int rpcversions = 0;
+char **rpctransport = NULL;
+int rpctransports = 0;
 
 /* Function prototype */
+int check_export(struct rpcent *programm, unsigned long version, char *proto);
 
 int main (int argc, char **argv) {
     /* Local Vars */
-    struct addrinfo *result, *rp;
-    CLIENT *clnt = NULL;
-    struct timeval to;
-    exports exportlist;
+    struct rpcent *programm;
 
     /* Set signal handling and alarm */
     if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
@@ -75,29 +75,128 @@ int main (int argc, char **argv) {
     to.tv_usec = 0;
 
     // PLUGIN CODE
-    result = mp_getaddrinfo(hostname, port, AF_INET, SOCK_DGRAM);
+    programm = rpc_getrpcent("showmount");
+    if (programm == NULL)
+        programm = rpc_getrpcent("mount");
+    if (programm == NULL)
+        programm = rpc_getrpcent("mountd");
 
-    for(rp = result; rp != NULL; rp = rp->ai_next) {
-        if (mp_verbose >= 1) {
-            printf("Connect to %s\n", mp_ip2str(rp->ai_addr));
+    int i, j;
+    for(i=0; i < rpcversions; i++) {
+        for(j=0; j < rpctransports; j++) {
+            check_export(programm, atoi(rpcversion[i]), rpctransport[j]);
         }
-
-        clnt = rpc_udp_connect((struct sockaddr_in *)rp->ai_addr, "mountd", 1);
-
-        if (clnt) break;
     }
 
-    if (!clnt)
-        critical("Can't connect!");
-
-    //freeaddrinfo(result);
-
-    printf("::1 0x%X\n", clnt);
-    int i = clnt_call(clnt, MOUNTPROC_EXPORT, (xdrproc_t) xdr_void, NULL, (xdrproc_t) xdr_exports, (caddr_t) &exportlist, to);
-    printf("::2 %d\n", i);
-
+    if (noconnection || callfaild || noexport) {
+        char *out;
+        if (noconnection) {
+            out = strdup("Can't connect to:");
+            mp_strcat_space(&out, noconnection);
+        }
+        if (callfaild) {
+            mp_strcat_space(&out, "Call faild by:");
+            mp_strcat_space(&out, callfaild);
+        }
+        if (noexport) {
+            mp_strcat_space(&out, "No export found by:");
+            mp_strcat_space(&out, noexport);
+        }
+        critical(out);
+    } else {
+        if(export)
+            ok("%s exported by %s", export, exportok);
+        ok("mountd export by %s", exportok);
+    }
 
     critical("You should never reach this point.");
+}
+
+int check_export(struct rpcent *programm, unsigned long version, char *proto) {
+    CLIENT *client;
+    char *buf;
+    int ret;
+    exports exportlist;
+
+    buf = mp_malloc(128);
+    mp_snprintf(buf, 128, "%s:%sv%ld", proto, programm->r_name, version);
+
+    if (mp_verbose >= 1)
+        printf("Connect to %s:%sv%ld", proto, programm->r_name, version);
+
+    client = clnt_create((char *)hostname, programm->r_number, version, proto);
+    if (client == NULL) {
+        if (mp_verbose >= 1)
+            printf("   faild!\n");
+        mp_strcat_comma(&noconnection, buf);
+        free(buf);
+        return 1;
+    }
+
+    if (mp_verbose >= 1)
+        printf("   ok\n");
+
+    memset(&exportlist, '\0', sizeof(exportlist));
+
+    ret = clnt_call(client, MOUNTPROC_EXPORT, (xdrproc_t) xdr_void, NULL,
+            (xdrproc_t) mp_xdr_exports, (caddr_t) &exportlist, to);
+    if (ret != RPC_SUCCESS) {
+        if (mp_verbose >= 1)
+            printf("Get export tailed. %d: %s\n", ret, clnt_sperrno(ret));
+        mp_strcat_comma(&callfaild, buf);
+        free(buf);
+        return 1;
+    }
+
+    if (mp_verbose >= 1) {
+        exports exl;
+        groups grouplist;
+        exl = exportlist;
+        while (exl) {
+
+            printf("%-*s ", 40, exl->ex_dir);
+            grouplist = exl->ex_groups;
+            if (grouplist)
+                while (grouplist) {
+                    printf("%s%s", grouplist->gr_name,
+                            grouplist->gr_next ? "," : "");
+                    grouplist = grouplist->gr_next;
+                }
+            else
+                printf("(everyone)");
+
+            printf("\n");
+            exl = exl->ex_next;
+        }
+    }
+
+    if (export != NULL) {
+
+        while (exportlist) {
+            if (strcmp(export, exportlist->ex_dir) == 0)
+                break;
+            exportlist = exportlist->ex_next;
+        }
+
+        clnt_freeres(client, (xdrproc_t) mp_xdr_exports, (caddr_t) &exportlist);
+        clnt_destroy(client);
+
+        if (exportlist==NULL) {
+            mp_strcat_comma(&noexport, buf);
+            free(buf);
+            return 1;
+        }
+    } else {
+        if (exportlist==NULL) {
+            mp_strcat_comma(&noexport, buf);
+            free(buf);
+            return 1;
+        }
+    }
+
+    mp_strcat_comma(&exportok, buf);
+    free(buf);
+    return 0;
 }
 
 int process_arguments (int argc, char **argv) {
@@ -108,14 +207,15 @@ int process_arguments (int argc, char **argv) {
         MP_LONGOPTS_DEFAULT,
         MP_LONGOPTS_HOST,
         // PLUGIN OPTS
-        {"tcp", no_argument, 0, 'T'},
-        {"udp", no_argument, 0, 'U'},
+        {"export", required_argument, 0, 'e'},
+        {"rpcversion", required_argument, 0, 'r'},
+        {"transport", required_argument, 0, 'T'},
         MP_LONGOPTS_TIMEOUT,
         MP_LONGOPTS_END
     };
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"1234H:TU", longopts, &option);
+        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"H:e:r:T:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -128,24 +228,16 @@ int process_arguments (int argc, char **argv) {
                 getopt_host(optarg, &hostname);
                 break;
             /* Plugin opts */
-            case '1':
-                version |= 1;
+            case 'e':
+                export = optarg;
                 break;
-            case '2':
-                version |= 2;
+            case 'r':
+                mp_array_push(&rpcversion, optarg, &rpcversions);
                 break;
-            case '3':
-                version |= 4;
+            case 'T': {
+                mp_array_push(&rpctransport, optarg, &rpctransports);
                 break;
-            case '4':
-                version |= 8;
-                break;
-            case 'T':
-                tcp = 1;
-                break;
-            case 'U':
-                udp = 1;
-                break;
+            }
             /* Timeout opt */
             case 't':
                 getopt_timeout(optarg);
@@ -158,8 +250,12 @@ int process_arguments (int argc, char **argv) {
         usage("Hostname is mandatory.");
 
     /* Aplly defaults */
-    udp = (udp || tcp) ? udp : 1;
-    version = version ? version : 4;
+    if (rpcversion == NULL)
+        mp_array_push(&rpcversion, "3", &rpcversions);
+    if (rpctransport == NULL) {
+        mp_array_push(&rpctransport, "udp", &rpctransports);
+        mp_array_push(&rpctransport, "tcp", &rpctransports);
+    }
 
     return(OK);
 }
@@ -170,13 +266,15 @@ void print_help (void) {
 
     printf("\n");
 
-    printf("Check description: check_nfs");
+    printf("Check description: Check if the Host is exporting at least one or the named path.");
 
     printf("\n\n");
 
     print_usage();
 
     print_help_default();
+    printf(" -e, --export=parh\n");
+    printf("      Check it server exports path.\n");
     //printf(" -f, --file=filename\n");
     //printf("      The file to test.\n");
 
