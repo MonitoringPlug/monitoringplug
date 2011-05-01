@@ -47,6 +47,7 @@ const char *export = NULL;
 char *noconnection = NULL;
 char *callfaild = NULL;
 char *noexport = NULL;
+char *nonfs = NULL;
 char *exportok = NULL;
 struct timeval to;
 char **rpcversion = NULL;
@@ -59,7 +60,10 @@ int check_export(struct rpcent *programm, unsigned long version, char *proto);
 
 int main (int argc, char **argv) {
     /* Local Vars */
+    int i, j;
+    char *buf;
     struct rpcent *programm;
+    struct rpcent *nfs;
 
     /* Set signal handling and alarm */
     if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
@@ -80,15 +84,22 @@ int main (int argc, char **argv) {
         programm = rpc_getrpcent("mount");
     if (programm == NULL)
         programm = rpc_getrpcent("mountd");
+    nfs = rpc_getrpcent("showmount");
 
-    int i, j;
     for(i=0; i < rpcversions; i++) {
         for(j=0; j < rpctransports; j++) {
             check_export(programm, atoi(rpcversion[i]), rpctransport[j]);
+
+            if (rpc_ping((char *)hostname, nfs, atoi(rpcversion[i]), rpctransport[j], to) != RPC_SUCCESS) {
+                buf = mp_malloc(128);
+                mp_snprintf(buf, 128, "%s:v%s", rpctransport[j], rpcversion[i]);
+                mp_strcat_comma(&nonfs, buf);
+                free(buf);
+            }
         }
     }
 
-    if (noconnection || callfaild || noexport) {
+    if (noconnection || callfaild || noexport || nonfs) {
         char *out;
         if (noconnection) {
             out = strdup("Can't connect to:");
@@ -101,6 +112,10 @@ int main (int argc, char **argv) {
         if (noexport) {
             mp_strcat_space(&out, "No export found by:");
             mp_strcat_space(&out, noexport);
+        }
+        if (nonfs) {
+            mp_strcat_space(&out, "NFS not responding:");
+            mp_strcat_space(&out, nonfs);
         }
         critical(out);
     } else {
@@ -145,6 +160,7 @@ int check_export(struct rpcent *programm, unsigned long version, char *proto) {
             printf("Get export tailed. %d: %s\n", ret, clnt_sperrno(ret));
         mp_strcat_comma(&callfaild, buf);
         free(buf);
+        clnt_destroy(client);
         return 1;
     }
 
@@ -196,6 +212,7 @@ int check_export(struct rpcent *programm, unsigned long version, char *proto) {
 
     mp_strcat_comma(&exportok, buf);
     free(buf);
+
     return 0;
 }
 

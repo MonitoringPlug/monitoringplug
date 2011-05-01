@@ -30,11 +30,19 @@
 #include <rpc/rpc.h>
 
 struct rpcent *rpc_getrpcent(const char *prog) {
+    struct rpcent *ent, *ret;
+    ret = mp_malloc(sizeof(struct rpcent));
+
     if (isalpha(*prog)) {
-        return getrpcbyname(prog);
+        ent = getrpcbyname(prog);
     } else {
-        return getrpcbynumber(atoi(prog));
+        ent = getrpcbynumber(atoi(prog));
     }
+
+    ret->r_name = strdup(ent->r_name);
+    ret->r_number = ent->r_number;
+
+    return ret;
 }
 
 unsigned long rpc_getprognum(const char *prog) {
@@ -49,6 +57,24 @@ unsigned long rpc_getprognum(const char *prog) {
     } else {
         return (u_long) atoi(prog);
     }
+}
+
+int rpc_ping(char *hostname, struct rpcent *programm, unsigned long version, char *proto, struct timeval to) {
+    CLIENT *client;
+    int ret;
+
+    client = clnt_create(hostname, programm->r_number, version, proto);
+    if (client == NULL) {
+        return -1;
+    }
+
+    ret = clnt_call(client, RPCTEST_NULL_PROC, (xdrproc_t) xdr_void, (char *) NULL,
+            (xdrproc_t) xdr_void, (char *)NULL, to);
+
+
+    clnt_destroy(client);
+
+    return ret;
 }
 
 bool_t mp_xdr_exports(XDR *xdrs, exports *export) {

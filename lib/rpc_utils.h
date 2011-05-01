@@ -31,6 +31,7 @@
 
 struct rpcent *rpc_getrpcent(const char *prog);
 unsigned long rpc_getprognum(const char *prog);
+int rpc_ping(char *hostname, struct rpcent *programm, unsigned long version, char *proto, struct timeval to);
 bool_t mp_xdr_exports(XDR *xdrs, exports *export);
 
 
