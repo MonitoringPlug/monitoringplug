@@ -1,5 +1,5 @@
 Name:           monitoringplug
-Version:        0.3
+Version:        0.4
 Release:        1%{?dist}
 Summary:        Collection of monitoring plugins for Nagios and similar monitoring systems.
 
@@ -19,7 +19,9 @@ BuildRequires:	libcurl-devel
 BuildRequires:	xmlrpc-c-devel
 BuildRequires:	expat-devel
 BuildRequires:	net-snmp-devel
+%if 0%{?rhel} >= 6
 BuildRequires:  gnutls-devel
+%endif
 
 %package base
 Summary:        Collection of basic monitoring plugins for Nagios and similar monitoring systems.
@@ -42,17 +44,24 @@ Group:          Applications/System
 Requires:	ldns
 Requires:       monitoringplug
 
+%if 0%{?rhel} >= 6
 %package gnutls
 Summary:        Collection of dns monitoring plugins for Nagios and similar monitoring systems.
 Group:          Applications/System
 Requires:	gnutls
 Requires:       monitoringplug
+%endif
 
 %package rhcs
 Summary:        Collection of RedHat Cluster Suitmonitoring plugins for Nagios and similar monitoring systems.
 Group:          Applications/System
 Requires:	net-snmp-libs
 Requires:	expat
+Requires:       monitoringplug
+
+%package rpc
+Summary:        Collection of SUN RPC plugins for Nagios and similar monitoring systems.
+Group:          Applications/System
 Requires:       monitoringplug
 
 %package selinux
@@ -89,13 +98,19 @@ This package contains the curl based plugins.
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the dns plugins which use the ldns library.
 
+%if 0%{?rhel} >= 6
 %description gnutls
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the dns plugins which use the gnutls library.
+%endif
 
 %description rhcs
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the RedHat Cluster Suite plugins using snmp and expat.
+
+%description rpc
+Collection of monitoring plugins for Nagios and similar monitoring systems.
+This package contains the SUN RPC plugins.
 
 %description selinux
 Collection of monitoring plugins for Nagios and similar monitoring systems.
@@ -152,14 +167,21 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/nagios/plugins/check_dns_*
 %{_libdir}/nagios/plugins/check_dnssec_*
 
+%if 0%{?rhel} >= 6
 %files gnutls
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_ssl_cert
+%endif
 
 %files rhcs
 %defattr(-,root,root,-)
-%{_libdir}/nagios/plugins/check_clustat
+%attr(4755, root, root) %{_libdir}/nagios/plugins/check_clustat
 %{_libdir}/nagios/plugins/check_rhcsnmp
+
+%files rpc
+%defattr(-,root,root,-)
+%{_libdir}/nagios/plugins/check_nfs
+%{_libdir}/nagios/plugins/check_rpc_ping
 
 %files selinux
 %defattr(-,root,root,-)
