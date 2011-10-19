@@ -75,7 +75,7 @@ int main(int argc, char **argv) {
 
     /* Start plugin timeout */
     alarm(mp_timeout);
-    
+
     rd_domain = ldns_dname_new_frm_str(domainname);
     if (!rd_domain)
         unknown("Illegal domain name");
@@ -87,7 +87,7 @@ int main(int argc, char **argv) {
      } else {
         rd_trace = ldns_dname_new_frm_str(".");
      }
-    
+
     /* Check domain is subdomain from trace start */
     if (!ldns_dname_is_subdomain(rd_domain, rd_trace)) {
         ldns_rr_list_deep_free(trusted_keys);
@@ -105,21 +105,21 @@ int main(int argc, char **argv) {
             ldns_rr_list_push_rr(rrl_valid_keys, ldns_rr_clone(rr));
     }
     ldns_rr_list_deep_free(trusted_keys);
-    
+
     if (ldns_rr_list_rr_count(rrl_valid_keys) == 0) {
         ldns_rdf_deep_free(rd_domain);
         ldns_rdf_deep_free(rd_trace);
         ldns_rr_list_deep_free(rrl_valid_keys);
         critical("No trusted key for trace start '%s'", domaintrace?domaintrace:".");
     }
-    
+
     if (mp_verbose >= 2) {
         printf("--[ Trusted keys used ]-------------------------------------\n");
         ldns_rr_list_sort(rrl_valid_keys);
         ldns_rr_list_print(stdout, rrl_valid_keys);
         printf("------------------------------------------------------------\n");
-    }                                 
-   
+    }
+
     /* create a new resolver with dns_server or server from /etc/resolv.conf */
     res = createResolver(hostname);
     if (!res) {
@@ -132,9 +132,9 @@ int main(int argc, char **argv) {
     ldns_resolver_set_dnssec_anchors(res, rrl_valid_keys);
 
     /* check domain exists */
-    pkt = mp_ldns_resolver_query(res, rd_domain, LDNS_RR_TYPE_ANY,
+    pkt = mp_ldns_resolver_query(res, rd_domain, LDNS_RR_TYPE_SOA,
                               LDNS_RR_CLASS_IN, LDNS_RD);
-    
+
     if (pkt == NULL || ldns_pkt_get_rcode(pkt) != LDNS_RCODE_NOERROR) {
         ldns_rdf_deep_free(rd_domain);
         ldns_rdf_deep_free(rd_trace);
@@ -147,7 +147,7 @@ int main(int argc, char **argv) {
         ldns_pkt_free(pkt);
         critical("Unable to get SOA for %s.", domainname);
     }
-    
+
     rrl_domain_soa = ldns_pkt_rr_list_by_name_and_type(pkt, rd_domain,
                                                        LDNS_RR_TYPE_SOA,
                                                        LDNS_SECTION_ANSWER);
@@ -175,13 +175,17 @@ int main(int argc, char **argv) {
         critical("Domain '%s' not signed.", domainname);
     }
 
+    dns_pkt_free(pkt);
+    pkt = ldns_resolver_query(res, rd_domain, LDNS_RR_TYPE_NS,
+            LDNS_RR_CLASS_IN, LDNS_RD);
+
     rrl_domain_ns = ldns_pkt_rr_list_by_name_and_type(pkt, rd_domain,
                                                       LDNS_RR_TYPE_NS,
                                                       LDNS_SECTION_ANSWER);
     rrl_domain_ns_rrsig = ldns_dnssec_pkt_get_rrsigs_for_name_and_type(pkt,
                                                       rd_domain,
                                                       LDNS_RR_TYPE_NS);
-    
+
     ldns_pkt_free(pkt);
 
     if (mp_verbose >= 2) {
@@ -220,7 +224,7 @@ int main(int argc, char **argv) {
 
         ldns_rdf_deep_free(rd_cdomain);
     }
-    
+
     ldns_rdf_deep_free(rd_trace);
     ldns_rdf_deep_free(rd_domain);
 
@@ -248,7 +252,7 @@ int main(int argc, char **argv) {
     /* Validate NS */
     for(i = 0; i < ldns_rr_list_rr_count(rrl_domain_ns_rrsig); i++) {
         rr = ldns_rr_list_rr(rrl_domain_ns_rrsig, i);
-        
+
         status = ldns_verify_rrsig_keylist(rrl_domain_ns, rr, rrl_valid_keys, NULL);
         if (status == LDNS_STATUS_OK)
             ns_valid++;
@@ -257,7 +261,7 @@ int main(int argc, char **argv) {
     ldns_rr_list_deep_free(rrl_domain_ns);
     ldns_rr_list_deep_free(rrl_domain_ns_rrsig);
     ldns_resolver_deep_free(res);
-    
+
     if (ns_valid == 0) {
         critical("No valid Signatur for NS of '%s'", domainname);
         free(domainname);
@@ -265,7 +269,7 @@ int main(int argc, char **argv) {
         return checkState;
     }
 
-    ok("Trust for '%s' successfull traces from '%s'", domainname, 
+    ok("Trust for '%s' successfull traces from '%s'", domainname,
         domaintrace);
     free(domainname);
     free(domaintrace);
@@ -275,7 +279,7 @@ int main(int argc, char **argv) {
 int process_arguments (int argc, char **argv) {
     int c;
     int option = 0;
-    
+
     static struct option long_opts[] = {
         MP_LONGOPTS_DEFAULT,
         MP_LONGOPTS_HOST,
@@ -290,7 +294,7 @@ int process_arguments (int argc, char **argv) {
         print_help();
         exit (STATE_OK);
     }
-        
+
     while (1) {
         c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"t:H:D:T:k:", long_opts, &option);
         if (c == -1 || c == EOF)
@@ -328,7 +332,7 @@ int process_arguments (int argc, char **argv) {
     /* Check requirements */
     if(!domainname)
         usage("Domain is mandatory");
-    
+
     return OK;
 }
 
