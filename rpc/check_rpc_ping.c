@@ -35,6 +35,8 @@ const char *progusage = "--rpcprogramm <PROGRAMM> [--help] [--timeout TIMEOUT]";
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <signal.h>
+#include <unistd.h>
 /* Library Includes */
 #include <rpc/rpc.h>
 
@@ -63,7 +65,7 @@ int main (int argc, char **argv) {
         critical("Setup SIGALRM trap faild!");
 
     /* Process check arguments */
-    if (process_arguments(argc, argv) == OK)
+    if (process_arguments(argc, argv) != OK)
         unknown("Parsing arguments faild!");
 
     /* Start plugin timeout */
@@ -79,7 +81,10 @@ int main (int argc, char **argv) {
     for(i=0; i < rpcversions; i++) {
         for(j=0; j < rpctransports; j++) {
             buf = mp_malloc(128);
-            mp_snprintf(buf, 128, "%s:%sv%ld", rpctransport[j], program->r_name, rpcversion[i]);
+            mp_snprintf(buf, 128, "%s:%sv%s", rpctransport[j], program->r_name, rpcversion[i]);
+
+            int ret;
+            ret = rpc_ping((char *)hostname, program, atoi(rpcversion[i]), rpctransport[j], to);
 
             if (rpc_ping((char *)hostname, program, atoi(rpcversion[i]), rpctransport[j], to) != RPC_SUCCESS) {
                 mp_strcat_comma(&ping_faild, buf);
@@ -114,7 +119,7 @@ int process_arguments (int argc, char **argv) {
     };
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"P:r:T:t:", longopts, &option);
+        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"H:P:r:T:t:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -147,6 +152,14 @@ int process_arguments (int argc, char **argv) {
     /* Check requirements */
     if (!hostname || !program_name)
         usage("Hostname and Programm are mandatory.");
+
+    /* Apply defaults */
+    if (rpcversion == NULL)
+        mp_array_push(&rpcversion, "3", &rpcversions);
+    if (rpctransport == NULL) {
+        mp_array_push(&rpctransport, "udp", &rpctransports);
+        mp_array_push(&rpctransport, "tcp", &rpctransports);
+    }
 
     return(OK);
 }

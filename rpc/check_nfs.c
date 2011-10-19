@@ -35,10 +35,12 @@ const char *progusage = "-H hostname [--help] [--timeout TIMEOUT]";
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <signal.h>
+#include <unistd.h>
 #include <ctype.h>
+/* Library Includes */
 #include <rpc/rpc.h>
 #include <rpcsvc/mount.h>
-/* Library Includes */
 
 /* Global Vars */
 const char *hostname = NULL;
@@ -83,7 +85,7 @@ int main (int argc, char **argv) {
         program = rpc_getrpcent("mount");
     if (program == NULL)
         program = rpc_getrpcent("mountd");
-    nfs = rpc_getrpcent("showmount");
+    nfs = rpc_getrpcent("nfs");
 
     for(i=0; i < rpcversions; i++) {
         for(j=0; j < rpctransports; j++) {
@@ -98,8 +100,13 @@ int main (int argc, char **argv) {
         }
     }
 
+    free(program->r_name);
+    free(program);
+    free(nfs->r_name);
+    free(nfs);
+
     if (noconnection || callfaild || noexport || nonfs) {
-        char *out;
+        char *out = NULL;
         if (noconnection) {
             out = strdup("Can't connect to:");
             mp_strcat_space(&out, noconnection);
@@ -138,7 +145,7 @@ int check_export(struct rpcent *program, unsigned long version, char *proto) {
     if (mp_verbose >= 1)
         printf("Connect to %s:%sv%ld", proto, program->r_name, version);
 
-    client = clnt_create((char *)hostname, program->r_number, version, proto);
+    client = clnt_create((char *)hostname, program->r_number, 3, proto);
     if (client == NULL) {
         if (mp_verbose >= 1)
             printf("   faild!\n");
@@ -193,9 +200,6 @@ int check_export(struct rpcent *program, unsigned long version, char *proto) {
             exportlist = exportlist->ex_next;
         }
 
-        clnt_freeres(client, (xdrproc_t) mp_xdr_exports, (caddr_t) &exportlist);
-        clnt_destroy(client);
-
         if (exportlist==NULL) {
             mp_strcat_comma(&noexport, buf);
             free(buf);
@@ -208,6 +212,9 @@ int check_export(struct rpcent *program, unsigned long version, char *proto) {
             return 1;
         }
     }
+
+    clnt_freeres(client, (xdrproc_t) mp_xdr_exports, (caddr_t) &exportlist);
+    clnt_destroy(client);
 
     mp_strcat_comma(&exportok, buf);
     free(buf);
@@ -265,7 +272,7 @@ int process_arguments (int argc, char **argv) {
     if (!hostname)
         usage("Hostname is mandatory.");
 
-    /* Aplly defaults */
+    /* Apply defaults */
     if (rpcversion == NULL)
         mp_array_push(&rpcversion, "3", &rpcversions);
     if (rpctransport == NULL) {
@@ -290,9 +297,9 @@ void print_help (void) {
 
     print_help_default();
     print_help_host();
-    printf(" -T, --transport=transport[,transport]");
+    printf(" -T, --transport=transport[,transport]\n");
     printf("      Transports to check.\n");
-    printf(" -r, --rpcversion=version[,version]");
+    printf(" -r, --rpcversion=version[,version]\n");
     printf("      Versions to check.\n");
     printf(" -e, --export=parh\n");
     printf("      Check it server exports path.\n");

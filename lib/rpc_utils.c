@@ -27,11 +27,13 @@
 #include <ctype.h>
 #include <string.h>
 
+#include <unistd.h>
+#include <sys/types.h>
+
 #include <rpc/rpc.h>
 
 struct rpcent *rpc_getrpcent(const char *prog) {
     struct rpcent *ent, *ret;
-    ret = mp_malloc(sizeof(struct rpcent));
 
     if (isalpha(*prog)) {
         ent = getrpcbyname(prog);
@@ -39,6 +41,10 @@ struct rpcent *rpc_getrpcent(const char *prog) {
         ent = getrpcbynumber(atoi(prog));
     }
 
+    if (ent == NULL)
+       return NULL;
+
+    ret = mp_malloc(sizeof(struct rpcent));
     ret->r_name = strdup(ent->r_name);
     ret->r_number = ent->r_number;
 
@@ -68,9 +74,10 @@ int rpc_ping(char *hostname, struct rpcent *programm, unsigned long version, cha
         return -1;
     }
 
-    ret = clnt_call(client, RPCTEST_NULL_PROC, (xdrproc_t) xdr_void, (char *) NULL,
-            (xdrproc_t) xdr_void, (char *)NULL, to);
+    client->cl_auth = authunix_create_default();
 
+    ret = clnt_call(client, ((u_long)0), (xdrproc_t) xdr_void,  NULL,
+            (xdrproc_t) xdr_void, NULL, to);
 
     clnt_destroy(client);
 
