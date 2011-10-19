@@ -153,6 +153,7 @@ rm -rf $RPM_BUILD_ROOT
 %files base
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_file
+%{_libdir}/nagios/plugins/check_bonding
 %{_libdir}/nagios/plugins/check_sockets
 %{_libdir}/nagios/plugins/check_dummy
 %{_libdir}/nagios/plugins/check_timeout
