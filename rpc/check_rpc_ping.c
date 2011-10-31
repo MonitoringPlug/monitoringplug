@@ -170,7 +170,7 @@ void print_help (void) {
 
     printf("\n");
 
-    printf("Check description: check_rpc_ping");
+    printf("Check description: Check if named RPC program is responding.");
 
     printf("\n\n");
 
@@ -180,9 +180,9 @@ void print_help (void) {
     print_help_host();
     printf(" -P, --rpcprogramm=program\n");
     printf("      RPC program to ping.\n");
-    printf(" -T, --transport=transport[,transport]");
+    printf(" -T, --transport=transport[,transport]\n");
     printf("      Transports to ping.\n");
-    printf(" -r, --rpcversion=version[,version]");
+    printf(" -r, --rpcversion=version[,version]\n");
     printf("      Versions to ping.\n");
 
 }

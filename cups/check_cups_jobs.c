@@ -220,7 +220,7 @@ void print_help (void) {
 
     printf("\n");
 
-    printf("Check description: check_cups_jobs");
+    printf("Check description: Check CUPS job count and age.");
 
     printf("\n\n");
 

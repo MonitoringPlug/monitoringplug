@@ -14,6 +14,9 @@
 # RHCS
 /usr/lib(64)?/nagios/plugins/check_clustat		system_u:object_r:nagios_unconfined_plugin_exec_t:s0
 /usr/lib(64)?/nagios/plugins/check_rhcsnmp		system_u:object_r:nagios_services_plugin_exec_t:s0
+# RPC
+/usr/lib(64)?/nagios/plugins/check_nfs			system_u:object_r:nagios_services_plugin_exec_t:s0
+/usr/lib(64)?/nagios/plugins/check_rpc_.*		system_u:object_r:nagios_services_plugin_exec_t:s0
 # SELINUX
 /usr/lib(64)?/nagios/plugins/check_sebool		system_u:object_r:nagios_system_plugin_exec_t:s0
 /usr/lib(64)?/nagios/plugins/check_enforce		system_u:object_r:nagios_system_plugin_exec_t:s0

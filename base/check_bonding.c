@@ -22,11 +22,11 @@
  * $Id$
  */
 
-const char *progname  = "check_sockets";
+const char *progname  = "check_bonding";
 const char *progvers  = "0.1";
 const char *progcopy  = "2010";
 const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
-const char *progusage = "--tcp <PORT> [-w <warning count>] [-c <critical count>]";
+const char *progusage = "[--bond=BOND]";
 
 /* MP Includes */
 #include "mp_common.h"
