@@ -342,20 +342,20 @@ void getopt_port(const char *optarg, int *port) {
 void getopt_wc(int c, const char *optarg, thresholds **threshold) {
     if (c == 'w') {
         if (setWarn(threshold, optarg, BISI) == ERROR)
-            usage("Illegal -c warning '%s'.", optarg);
+            usage("Illegal -w threshold '%s'.", optarg);
     } else if (c == 'c') {
-        if (setCrit(threshold, optarg, BISI) == ERROR) \
-                usage("Illegal -c warning '%s'.", optarg);
+        if (setCrit(threshold, optarg, BISI) == ERROR)
+                usage("Illegal -c threshold '%s'.", optarg);
     }
 }
 
 void getopt_wc_time(int c, const char *optarg, thresholds **threshold) {
     if (c == 'w') {
         if (setWarnTime(threshold, optarg) == ERROR)
-            usage("Illegal -c warning '%s'.", optarg);
+            usage("Illegal -w threshold '%s'.", optarg);
     } else if (c == 'c') {
-        if (setCritTime(threshold, optarg) == ERROR) \
-                usage("Illegal -c warning '%s'.", optarg);
+        if (setCritTime(threshold, optarg) == ERROR)
+                usage("Illegal -c threshold '%s'.", optarg);
     }
 }
 

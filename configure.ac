@@ -43,6 +43,7 @@ AC_C_CONST
 PKG_CHECK_MODULES([CHECK], [check >= 0.9.4],[],[AC_MSG_WARN([Skipping check])])
 AX_LIB_EXPAT()
 AC_LIB_LDNS([],[], [AC_MSG_WARN([Skipping ldns])])
+AC_LIB_CUPS([],[], [AC_MSG_WARN([Skipping cups])])
 LIBCURL_CHECK_CONFIG([yes],[7.7.2], [], [AC_MSG_WARN([Skipping curl])])
 PKG_CHECK_MODULES([XMLRPC], [xmlrpc xmlrpc_client],[],[AC_MSG_WARN([Skipping xmlrpc-c])])
 PKG_CHECK_MODULES([SELINUX], [libselinux],[],[AC_MSG_WARN([Skipping SELinux])])
@@ -96,12 +97,13 @@ AC_DEFINE_UNQUOTED([BIN_FALSE], ["$ac_cv_path_BIN_FALSE"],
             [false path.])
 
 # Conditionals
-AM_CONDITIONAL([HAVE_LDNS], [test x$LDNS_CFLAGS != x])
-AM_CONDITIONAL([HAVE_CURL], [test x$CURL_CFLAGS != x])
-AM_CONDITIONAL([HAVE_CURL_TFTP], [test x$libcurl_protocol_TFTP != x])
-AM_CONDITIONAL([HAVE_EXPAT], [test x$EXPAT_CFLAGS != x])
-AM_CONDITIONAL([HAVE_NET_SNMP], [test x$NETSNMP_LIBS != x])
-AM_CONDITIONAL([HAVE_XMLRPC], [test x$XMLRPC_LIBS != x])
+AM_CONDITIONAL([HAVE_LDNS], [test "x$LDNS_CFLAGS" != x])
+AM_CONDITIONAL([HAVE_CUPS], [test "x$CUPS_CFLAGS" != x])
+AM_CONDITIONAL([HAVE_CURL], [test "x$CURL_CFLAGS" != x])
+AM_CONDITIONAL([HAVE_CURL_TFTP], [test "x$libcurl_protocol_TFTP" != x])
+AM_CONDITIONAL([HAVE_EXPAT], [test "x$EXPAT_CFLAGS" != x])
+AM_CONDITIONAL([HAVE_NET_SNMP], [test "x$NETSNMP_LIBS" != x])
+AM_CONDITIONAL([HAVE_XMLRPC], [test "x$XMLRPC_LIBS" != x])
 AM_CONDITIONAL([HAVE_SELINUX], [test "x$SELINUX_LIBS" != x])
 AM_CONDITIONAL([HAVE_CHECK], [test "x$CHECK_LIBS" != x])
 AM_CONDITIONAL([HAVE_GNUTLS], [test "x$GNUTLS_LIBS" != x])
@@ -153,6 +155,7 @@ AC_CHECK_FUNCS([alarm memset strdup strerror strspn strstr strtol])
 AC_CONFIG_FILES([Makefile
                  lib/Makefile
                  base/Makefile
+		 cups/Makefile
                  curl/Makefile
                  dns/Makefile
                  dummy/Makefile
@@ -164,5 +167,6 @@ AC_CONFIG_FILES([Makefile
                  xmlrpc/Makefile
                  contrib/Makefile
                  doc/Makefile
+		 policy/Makefile
                  tests/Makefile])
 AC_OUTPUT

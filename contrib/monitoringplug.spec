@@ -1,3 +1,13 @@
+%if 0%{?rhel}
+%if 0%{?rhel} >= 6
+%define gnutls 1
+%else
+%define gnutls 0
+%endif
+%else
+%define gnutls 1
+%endif
+
 Name:           monitoringplug
 Version:        0.4
 Release:        1%{?dist}
@@ -11,6 +21,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  ldns-devel
 BuildRequires:  libselinux-devel
+BuildRequires:	cups-devel
 %if 0%{?rhel} <= 5
 BuildRequires:	curl-devel
 %else
@@ -19,7 +30,7 @@ BuildRequires:	libcurl-devel
 BuildRequires:	xmlrpc-c-devel
 BuildRequires:	expat-devel
 BuildRequires:	net-snmp-devel
-%if 0%{?rhel} >= 6
+%if %{gnutls}
 BuildRequires:  gnutls-devel
 %endif
 
@@ -27,6 +38,11 @@ BuildRequires:  gnutls-devel
 Summary:        Collection of basic monitoring plugins for Nagios and similar monitoring systems.
 Group:          Applications/System
 Requires:	monitoringplug
+
+%package cups
+Summary:        Collection of cups monitoring plugins for Nagios and similar monitoring systems.
+Group:          Applications/System
+Requires:	cups
 
 %package curl
 Summary:        Collection of curl-based monitoring plugins for Nagios and similar monitoring systems.
@@ -44,7 +60,7 @@ Group:          Applications/System
 Requires:	ldns
 Requires:       monitoringplug
 
-%if 0%{?rhel} >= 6
+%if %{gnutls}
 %package gnutls
 Summary:        Collection of dns monitoring plugins for Nagios and similar monitoring systems.
 Group:          Applications/System
@@ -89,6 +105,10 @@ Collection of monitoring plugins for Nagios and similar monitoring systems.
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the base and dummy plugins which don't need any
 additional libraries.
+
+%description cups
+Collection of monitoring plugins for Nagios and similar monitoring systems.
+This package contains the cups based plugins.
 
 %description curl
 Collection of monitoring plugins for Nagios and similar monitoring systems.
@@ -136,19 +156,42 @@ This package contains the xmlrpc plugins.
 %endif
 make %{?_smp_mflags}
 
+cd policy
+make -f /usr/share/selinux/devel/Makefile
+bzip2 %{name}.pp
+cd ..
+
 %check
 make %{?_smp_mflags} check
 
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
+%{__install} -d %{buildroot}%{_datadir}/selinux/packages/
+%{__install} -m 0644 policy/%{name}.pp.bz2 %{buildroot}%{_datadir}/selinux/packages/
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%post
+if [ "$1" -eq "1" ]; then
+    /usr/sbin/semodule -i %{_datadir}/selinux/packages/%{name}.pp.bz2
+    /sbin/restorecon -F -R -v %{_libdir}/nagios/plugins/
+fi
+if [ "$1" -eq "2" ]; then
+    /usr/sbin/semodule -u %{_datadir}/selinux/packages/%{name}.pp.bz2
+fi
+
+%postun
+if [ "$1" -eq "0" ]; then
+    /usr/sbin/semodule -r %{name}
+fi
+
+
 %files
 %defattr(-,root,root,-)
 %doc %{_defaultdocdir}/%{name}
+%{_datadir}/selinux/packages/
 
 %files base
 %defattr(-,root,root,-)
@@ -157,6 +200,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/nagios/plugins/check_sockets
 %{_libdir}/nagios/plugins/check_dummy
 %{_libdir}/nagios/plugins/check_timeout
+
+%files cups
+%defattr(-,root,root,-)
+%{_libdir}/nagios/plugins/check_cups_*
 
 %files curl
 %defattr(-,root,root,-)
@@ -168,7 +215,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/nagios/plugins/check_dns_*
 %{_libdir}/nagios/plugins/check_dnssec_*
 
-%if 0%{?rhel} >= 6
+%if %{gnutls}
 %files gnutls
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_ssl_cert
@@ -203,6 +250,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/nagios/plugins/check_koji_hub
 
 %changelog
+* Mon Oct 31 2011 Marius Rieder <marius.rieder@durchmesser.ch> - 0.4-1
+- version bump
+
 * Mon Apr 25 2011 Marius Rieder <marius.rieder@durchmesser.ch> - 0.3-1
 - version bump
 

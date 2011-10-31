@@ -175,7 +175,7 @@ int main(int argc, char **argv) {
         critical("Domain '%s' not signed.", domainname);
     }
 
-    dns_pkt_free(pkt);
+    ldns_pkt_free(pkt);
     pkt = ldns_resolver_query(res, rd_domain, LDNS_RR_TYPE_NS,
             LDNS_RR_CLASS_IN, LDNS_RD);
 
