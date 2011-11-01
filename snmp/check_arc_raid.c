@@ -92,7 +92,7 @@ int main (int argc, char **argv) {
 
         vars2 = mp_snmp_table_get(table_state, 1, i);
 
-        char *t = vars2->val.string + vars2->val_len - 1;
+        char *t = (char *)(vars2->val.string + vars2->val_len - 1);
         while (*t == ' ') {
             *t = '\0';
             t--;
