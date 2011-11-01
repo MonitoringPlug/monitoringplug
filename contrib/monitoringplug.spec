@@ -21,11 +21,11 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  ldns-devel
 BuildRequires:  libselinux-devel
-BuildRequires:	cups-devel
 %if 0%{?rhel} <= 5
 BuildRequires:	curl-devel
 %else
 BuildRequires:	libcurl-devel
+BuildRequires:  cups-devel
 %endif
 BuildRequires:	xmlrpc-c-devel
 BuildRequires:	expat-devel
@@ -33,16 +33,19 @@ BuildRequires:	net-snmp-devel
 %if %{gnutls}
 BuildRequires:  gnutls-devel
 %endif
+BuildRequires:	selinux-policy
 
 %package base
 Summary:        Collection of basic monitoring plugins for Nagios and similar monitoring systems.
 Group:          Applications/System
 Requires:	monitoringplug
 
+%if 0%{?rhel} >= 6
 %package cups
 Summary:        Collection of cups monitoring plugins for Nagios and similar monitoring systems.
 Group:          Applications/System
 Requires:	cups
+%endif
 
 %package curl
 Summary:        Collection of curl-based monitoring plugins for Nagios and similar monitoring systems.
@@ -106,9 +109,11 @@ Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the base and dummy plugins which don't need any
 additional libraries.
 
+%if 0%{?rhel} >= 6
 %description cups
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the cups based plugins.
+%endif
 
 %description curl
 Collection of monitoring plugins for Nagios and similar monitoring systems.
@@ -201,9 +206,11 @@ fi
 %{_libdir}/nagios/plugins/check_dummy
 %{_libdir}/nagios/plugins/check_timeout
 
+%if 0%{?rhel} >= 6
 %files cups
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_cups_*
+%endif
 
 %files curl
 %defattr(-,root,root,-)
