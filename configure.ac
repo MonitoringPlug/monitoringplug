@@ -48,7 +48,7 @@ LIBCURL_CHECK_CONFIG([yes],[7.7.2], [], [AC_MSG_WARN([Skipping curl])])
 PKG_CHECK_MODULES([XMLRPC], [xmlrpc xmlrpc_client],[],[AC_MSG_WARN([Skipping xmlrpc-c])])
 PKG_CHECK_MODULES([SELINUX], [libselinux],[],[AC_MSG_WARN([Skipping SELinux])])
 PKG_CHECK_MODULES([GNUTLS], [gnutls >= 2.8.0], [],[AC_MSG_WARN([Skipping gnutls])])
-
+PKG_CHECK_MODULES([JSON], [json], [],[AC_MSG_WARN([Skipping json-c])])
 
 # SNMP Option
 AC_ARG_WITH([netsnmp],
@@ -99,7 +99,7 @@ AC_DEFINE_UNQUOTED([BIN_FALSE], ["$ac_cv_path_BIN_FALSE"],
 # Conditionals
 AM_CONDITIONAL([HAVE_LDNS], [test "x$LDNS_CFLAGS" != x])
 AM_CONDITIONAL([HAVE_CUPS], [test "x$CUPS_CFLAGS" != x])
-AM_CONDITIONAL([HAVE_CURL], [test "x$CURL_CFLAGS" != x])
+AM_CONDITIONAL([HAVE_CURL], [test "x$LIBCURL" != x])
 AM_CONDITIONAL([HAVE_CURL_TFTP], [test "x$libcurl_protocol_TFTP" != x])
 AM_CONDITIONAL([HAVE_EXPAT], [test "x$EXPAT_CFLAGS" != x])
 AM_CONDITIONAL([HAVE_NET_SNMP], [test "x$NETSNMP_LIBS" != x])
@@ -107,7 +107,7 @@ AM_CONDITIONAL([HAVE_XMLRPC], [test "x$XMLRPC_LIBS" != x])
 AM_CONDITIONAL([HAVE_SELINUX], [test "x$SELINUX_LIBS" != x])
 AM_CONDITIONAL([HAVE_CHECK], [test "x$CHECK_LIBS" != x])
 AM_CONDITIONAL([HAVE_GNUTLS], [test "x$GNUTLS_LIBS" != x])
-
+AM_CONDITIONAL([HAVE_JSON], [test "x$JSON_LIBS" != x])
 
 # GCC Opts
 #AX_CFLAGS_WARN_ALL()
