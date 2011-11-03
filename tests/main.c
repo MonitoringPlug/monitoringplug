@@ -33,10 +33,10 @@ const char *progauth  = "TEST";
 const char *progusage = "TEST";
 
 int main (void) {
-    
+
   int number_failed;
   SRunner *sr;
-  
+
   sr = srunner_create( make_lib_common_suite() );
   srunner_add_suite(sr, make_lib_args_suite() );
   srunner_add_suite(sr, make_lib_check_suite() );

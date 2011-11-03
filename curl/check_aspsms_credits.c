@@ -75,75 +75,75 @@ int main (int argc, char **argv) {
 
     /* Start plugin timeout */
     alarm(mp_timeout);
-    
+
     /* Build query */
     xml = mp_malloc(strlen(userkey) + strlen(password) + 134);
     mp_sprintf(xml, "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n<aspsms>"
         "\n<Userkey>%s</Userkey>\n<Password>%s</Password>\n"
         "<Action>ShowCredits</Action>\n</aspsms>", userkey, password);
     xmlp = xml;
-    
+
     if (mp_verbose > 0) {
         printf("CURL Version: %s\n", curl_version());
         printf("smsXML Url %s\n", xml_url);
         print_thresholds("credit_thresholds", credit_thresholds);
         printf("XML: '%s'\n", xml);
     }
-    
+
     curl_global_init(CURL_GLOBAL_ALL);
-    
+
     /* Set Header */
     c = mp_malloc(24);
     mp_snprintf(c, 24, "Content-Length: %d", (int)strlen(xml));
     headers = curl_slist_append (headers, "Content-Type: text/html");
     headers = curl_slist_append (headers, c);
     free( c );
-    
+
     curl = curl_easy_init();
     if(curl) {
         curl_easy_setopt(curl, CURLOPT_URL, xml_url);
         curl_easy_setopt(curl, CURLOPT_POST, 1);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, my_fwrite);
         curl_easy_setopt(curl, CURLOPT_READFUNCTION, my_fread);
-        
+
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-        
+
         if (mp_verbose > 1)
             curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-            
+
         res = curl_easy_perform(curl);
-        
+
         curl_easy_cleanup(curl);
         if(CURLE_OK != res) {
             critical(curl_easy_strerror(res));
         }
     }
-    
+
     curl_global_cleanup();
-    
+
     if (mp_verbose > 1) {
         printf("Answer: '%s'\n", answer);
     }
-    
+
     /* Parse Answer */
     xmlp = answer;
-    
+
     while((c = strsep(&xmlp, "<>"))) {
         if (strcmp(c, "ErrorCode") == 0) {
             errorCode = strtol(strsep(&xmlp, "<>"), NULL, 10);
         } else if (strcmp(c, "ErrorDescription") == 0) {
             errorDescription = strdup(strsep(&xmlp, "<>"));
         } else if (strcmp(c, "Credits") == 0) {
-            credits = strtof(strsep(&xmlp, "<>"), NULL);
+            credits = (float) strtod(strsep(&xmlp, "<>"), NULL);
         }
     }
-    
+
     if (mp_verbose > 0) {
         printf("errorCode %d\n", errorCode);
         printf("errorDescription %s\n", errorDescription);
         printf("credits %f\n", credits);
     }
-    
+
     /* XML Error Code */
     if (errorCode != 1)
         unknown(errorDescription);
@@ -156,7 +156,7 @@ int main (int argc, char **argv) {
         case STATE_CRITICAL:
             critical("ASP SMS %.2f credits left for %s.", credits, userkey);
     }
-       
+
     critical("You should never reach this point.");
 }
 
@@ -196,7 +196,7 @@ int process_arguments (int argc, char **argv) {
         MP_LONGOPTS_TIMEOUT,
         MP_LONGOPTS_END
     };
-   
+
     if (argc < 4) {
         print_help();
         exit(STATE_OK);
@@ -205,7 +205,7 @@ int process_arguments (int argc, char **argv) {
     /* Set default */
     setWarnTime(&credit_thresholds, "100:");
     setCritTime(&credit_thresholds, "50:");
-    
+
     while (1) {
         c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"U:P:w:c:t:", longopts, &option);
 
@@ -213,7 +213,7 @@ int process_arguments (int argc, char **argv) {
             break;
 
         getopt_wc_time(c, optarg, &credit_thresholds);
-        
+
         switch (c) {
             /* Default opts */
             MP_GETOPTS_DEFAULT
@@ -242,7 +242,7 @@ void print_help (void) {
     print_copyright();
 
     printf("\n");
-  
+
     printf ("This plugin check for available ASPSMS credits.");
     printf ("\n\n\tWARNING: Password is sent unencryptet.");
 

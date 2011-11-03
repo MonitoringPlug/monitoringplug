@@ -56,7 +56,7 @@ int main (int argc, char **argv) {
     int clusterquorum;
     int clusternodes;
     netsnmp_session *ss;
-    
+
     /* OIDs to query */
     struct mp_snmp_query_cmd snmpcmd[] = {
         {{1,3,6,1,4,1,2312,8,2,1,0}, 11, ASN_OCTET_STR, (void *)&clustername},
@@ -90,14 +90,14 @@ int main (int argc, char **argv) {
         case STAT_TIMEOUT:
             critical("Timeout in libnetsnmp");
     }
-    
+
     /* Finish Net-SNMP */
     mp_snmp_deinit();
 
     /* Perfdata */
     if (mp_showperfdata)
         perfdata_int("votes", clustervotes, "", clusterquorum, clusterquorum-1, 0, clusternodes);
-    
+
     /* Output and return */
     if (clusterstatus < 2)
         ok("%s [%s]", clustername, clusterstatusdesc);

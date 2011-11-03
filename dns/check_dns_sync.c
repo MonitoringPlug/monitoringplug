@@ -362,7 +362,7 @@ int process_arguments (int argc, char **argv) {
         MP_LONGOPTS_END
     };
 
-   
+
     if (argc < 2) {
         print_help();
         exit(STATE_OK);

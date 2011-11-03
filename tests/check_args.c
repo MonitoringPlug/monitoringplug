@@ -19,7 +19,7 @@
  * Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
- 
+
 #include "main.h"
 
 #include <check.h>
@@ -35,7 +35,7 @@ static struct string_return test_multi_case[] = {
     { "k",  1000 },                     { "K",  1024 },
     { "kB", 1000 },                     { "KB", 1024 },
     { "m",  1000000 },                  { "M",  1048578 },
-    { "mB", 1000000 },                  { "MB", 1048578 }, 
+    { "mB", 1000000 },                  { "MB", 1048578 },
     { "g",  1000000000 },               { "G",  1073741824 },
     { "gB", 1000000000 },               { "GB", 1073741824 },
     { "t",  1000000000000LL },          { "T",  1099511627776LL },
@@ -81,7 +81,7 @@ void threshold_teardown(void) {
 
 START_TEST (test_multi) {
     struct string_return *c = &test_multi_case[_i];
-    
+
     fail_unless (parse_multiplier_string(c->string) == c->returning,
         "Fail: parse_multiplier_string(%s) is not %0.f", c->string,c->returning);
 }
@@ -89,7 +89,7 @@ END_TEST
 
 START_TEST (test_multi_time) {
     struct string_return *c = &test_multi_time_case[_i];
-    
+
     fail_unless (parse_time_multiplier_string(c->string) == c->returning,
         "Fail: parse_time_multiplier_string(%s) is not %0.f", c->string,c->returning);
 }
@@ -98,7 +98,7 @@ END_TEST
 START_TEST (test_range_simple) {
     fail_unless (parse_range_string(my_range, "10", 0) == 0,
         "Parse range string '10' faild");
-    
+
     double i;
     for (i = -10; i < 20; i++) {
         fail_unless (check_range(i, my_range) == (i<0 || i>10),
@@ -110,7 +110,7 @@ END_TEST
 START_TEST (test_range_toinf) {
   fail_unless (parse_range_string(my_range, "10:", 0) == 0,
 	       "Parse range string '10:' faild");
-    
+
     double i;
     for (i = -10; i < 20; i++) {
         fail_unless (check_range(i, my_range) == (i<10),
@@ -122,19 +122,19 @@ END_TEST
 START_TEST (test_range_frominf) {
   fail_unless (parse_range_string(my_range, "~:10", 0) == 0,
 	       "Parse range string '~:10' faild");
-    
+
     double i;
     for (i = -10; i < 20; i++) {
         fail_unless (check_range(i, my_range) == (i>10),
 	       "Range check for %g in '~:10' faild.", i);
-    }		       
+    }		
 }
 END_TEST
 
 START_TEST (test_range_fromto) {
   fail_unless (parse_range_string(my_range, "10:20", 0) == 0,
 	       "Parse range string '10:20' faild");
-    
+
     double i;
     for (i = -10; i < 30; i++) {
         fail_unless (check_range(i, my_range) == (i<10 || i>20),
@@ -146,7 +146,7 @@ END_TEST
 START_TEST (test_range_fromto_out) {
   fail_unless (parse_range_string(my_range, "@10:20", 0) == 0,
 	       "Parse range string '@10:20' faild");
-    
+
     double i;
     for (i = -10; i < 30; i++) {
         fail_unless (check_range(i, my_range) == (i>=10 && i<=20),
@@ -161,7 +161,7 @@ START_TEST (test_threshold_simple) {
         "Parse range string '10' faild");
     fail_unless (setCrit(&my_thresholds, "20", 0) == 0,
         "Parse range string '10' faild");
-    
+
     double i;
     for (i = -10; i < 20; i++) {
         fail_unless (get_status(i, my_thresholds) == 2-(i>=0 && i<=10)-(i>=0 && i<=20),
@@ -172,15 +172,15 @@ END_TEST
 
 
 Suite* make_lib_args_suite(void) {
-    
+
     Suite *s = suite_create ("Args");
-    
+
     /* Range test case */
     TCase *tc_multi = tcase_create ("Multiplier");
     tcase_add_loop_test(tc_multi, test_multi, 0, 24);
     tcase_add_loop_test(tc_multi, test_multi_time, 0, 10);
     suite_add_tcase(s, tc_multi);
-    
+
     /* Range test case */
     TCase *tc_range = tcase_create ("Range");
     tcase_add_checked_fixture (tc_range, range_setup, range_teardown);
@@ -190,13 +190,13 @@ Suite* make_lib_args_suite(void) {
     tcase_add_test (tc_range, test_range_fromto);
     tcase_add_test (tc_range, test_range_fromto_out);
     suite_add_tcase (s, tc_range);
-    
+
     /* Threshold test case */
     TCase *tc_threshold = tcase_create ("Threshold");
     tcase_add_checked_fixture (tc_threshold, threshold_setup, threshold_teardown);
     tcase_add_test (tc_threshold, test_threshold_simple);
     suite_add_tcase (s, tc_threshold);
-    
+
     return s;
 }
 

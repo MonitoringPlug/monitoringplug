@@ -38,7 +38,7 @@ ldns_resolver* createResolver(const char *dnsserver) {
         res = ldns_resolver_new();
         if (!res)
             return NULL;
-        
+
         // Create rdf from dnsserver
         ns_rdf = ldns_rdf_new_frm_str(LDNS_RDF_TYPE_A, dnsserver);
 #ifdef USE_IPV6
@@ -279,7 +279,7 @@ ldns_rr_list* loadAnchorfile(const char *filename) {
     // Read File
     do {
         c = getc(key_file);
-        
+
         if ((c == '\n' && grouped == 0) || c == EOF) {
             linebuffer[col] = '\0';
             line++;
@@ -289,7 +289,7 @@ ldns_rr_list* loadAnchorfile(const char *filename) {
                 tk_section = 1;
                 continue;
             }
-            
+
             // Strip leading spaces.
             char *cur = linebuffer;
             cur += strspn(linebuffer," \t\n");
@@ -310,17 +310,17 @@ ldns_rr_list* loadAnchorfile(const char *filename) {
 
             ldns_str2rdf_dname(&rd, t);
             ldns_rr_set_owner(rr, rd);
-            
+
             t = strsep(&cur, " \t");
 
             ldns_str2rdf_int16(&rd, t);
             ldns_rr_push_rdf(rr, rd);
-            
+
             t = strsep(&cur, " \t");
 
             ldns_str2rdf_int8(&rd, t);
             ldns_rr_push_rdf(rr, rd);
-            
+
             t = strsep(&cur, " \t");
 
             ldns_str2rdf_alg(&rd, t);

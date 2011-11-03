@@ -68,10 +68,10 @@ int main (int argc, char **argv) {
     for (c = optind; c < argc; c++)
         msglen += strlen(argv[c]) + 1;
     msg = (char *) mp_malloc((size_t)msglen);
-    
+
     if (msg == NULL)
         unknown("Can't allocate memory.");
-    
+
     msgc = msg;
     for (c = optind; c < argc; c++) {
         strncpy(msgc, argv[c], strlen(argv[c]));
@@ -99,7 +99,7 @@ int main (int argc, char **argv) {
         case STATE_DEPENDENT:
             unknown(msg);
     }
-    
+
     critical("You should never reach this point.");
 }
 

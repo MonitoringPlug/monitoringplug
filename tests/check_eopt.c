@@ -19,7 +19,7 @@
  * Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
- 
+
 #include "main.h"
 
 #include <check.h>
@@ -39,13 +39,13 @@ START_TEST (test_eopt_file) {
     int args = 4;
     int res_args = 9;
     int i = 0;
-    
+
     optind = 2;
-    
+
     new_argv = mp_eopt(&args, argv, NULL);
-    
+
     fail_unless (args == res_args, "Wrong arg count. %d %d",args, res_args);
-    
+
     for(i=0; i < args; i++) {
         fail_unless (strcmp(new_argv[i], res_argv[i]) == 0,
         "Wrong arg at index: %d", i);
@@ -61,13 +61,13 @@ START_TEST (test_eopt_section_file) {
     int args = 4;
     int res_args = 9;
     int i = 0;
-    
+
     optind = 2;
-    
+
     new_argv = mp_eopt(&args, argv, NULL);
-    
+
     fail_unless (args == res_args, "Wrong arg count. %d %d",args, res_args);
-    
+
     for(i=0; i < args; i++) {
         fail_unless (strcmp(new_argv[i], res_argv[i]) == 0,
         "Wrong arg at index: %d", i);
@@ -77,16 +77,16 @@ END_TEST
 
 
 Suite* make_lib_eopt_suite(void) {
-    
+
     Suite *s = suite_create ("EOpt");
-    
+
     /* Range test case */
     TCase *tc_eopt = tcase_create ("EOpt");
     tcase_add_test (tc_eopt, test_eopt_file);
     tcase_add_test (tc_eopt, test_eopt_section_file);
-    
+
     suite_add_tcase (s, tc_eopt);
-    
+
     return s;
 }
 

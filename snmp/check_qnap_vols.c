@@ -85,7 +85,7 @@ int main (int argc, char **argv) {
     for (i = 0; i<table_state.row; i++) {
         vars = mp_snmp_table_get(table_state, 5, i);
 
-        if (strcmp((char *)vars->val.string, "Ready") == 0) { 
+        if (strcmp((char *)vars->val.string, "Ready") == 0) {
             continue;
         }
 

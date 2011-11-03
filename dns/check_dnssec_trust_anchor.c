@@ -51,7 +51,7 @@ int main(int argc, char **argv) {
     ldns_rdf        *rd_owner;
     ldns_rr         *rr;
     ldns_rr_list    *rrl_keys;
-    
+
 
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
@@ -65,41 +65,41 @@ int main(int argc, char **argv) {
 
     /* Start plugin timeout */
     alarm(mp_timeout);
-    
+
     if (mp_verbose > 1)
         ldns_rr_list_print(stdout,trusted_keys);
-    
+
     /* Create a new resolver with hostname or server from /etc/resolv.conf */
     res = createResolver(hostname);
     if (!res)
         unknown("Creating resolver faild.");
     resolverEnableDnssec(res);
-    
+
     /* Test all trust anchors */
     for(i = 0; i < ldns_rr_list_rr_count(trusted_keys); i++) {
         rr = ldns_rr_list_rr(trusted_keys, i);
         rd_owner = ldns_rr_owner(rr);
-        
+
         if (mp_verbose >= 1)
             printf("Test: %s\n", ldns_rdf2str(rd_owner));
-            
-        
-    
+
+
+
         /* Create a new resolver with hostname or server from /etc/resolv.conf */
         res = createResolver(hostname);
         if (!res)
             unknown("Creating resolver faild.");
-        
+
         rrl_keys = ldns_validate_domain_dnskey(res, rd_owner, trusted_keys);
-        
+
         ldns_resolver_deep_free(res);
-        
+
         if (mp_verbose >= 2) {
             printf("--[ Valid Domain Key ]----------------------------------------\n");
             ldns_rr_list_print(stdout, rrl_keys);
             printf("------------------------------------------------------------\n");
         }
-        
+
         if (!rrl_keys) {
             if (mp_verbose >= 1)
                 printf("  Invalid.\n");
@@ -107,9 +107,9 @@ int main(int argc, char **argv) {
         }
         ldns_rr_list_deep_free(rrl_keys);
     }
-    
+
     ldns_rr_list_deep_free(trusted_keys);
-    
+
     if (invalid)
         critical("Invalid KEYs in trusted-keys for '%s'", invalid);
     else
@@ -119,7 +119,7 @@ int main(int argc, char **argv) {
 int process_arguments (int argc, char **argv) {
     int c;
     int option = 0;
-    
+
     static struct option long_opts[] = {
         MP_LONGOPTS_DEFAULT,
         MP_LONGOPTS_HOST,
@@ -133,12 +133,12 @@ int process_arguments (int argc, char **argv) {
         print_help();
         exit (STATE_OK);
     }
-        
+
     while (1) {
         c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"t:H:k:w:c:", long_opts, &option);
         if (c == -1 || c == EOF)
             break;
-                    
+
         switch (c) {
             /* Default opts */
             MP_GETOPTS_DEFAULT
@@ -159,7 +159,7 @@ int process_arguments (int argc, char **argv) {
                 break;
         }
     }
-    
+
     return OK;
 }
 

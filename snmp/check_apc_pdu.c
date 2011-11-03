@@ -103,12 +103,12 @@ int main (int argc, char **argv) {
 
             if (*vars->val.integer != 1) {
                 vars = mp_snmp_table_get(table_state, 1, i);
-                
+
                 char *t = (char *)malloc(9 + vars->val_len);
                 memcpy(t, vars->val.string, vars->val_len);
                 t[vars->val_len] = '\0';
                 strcat(t, " is off!");
-                
+
                 mp_strcat_space(&output, t);
                 free(t);
                 status = STATE_CRITICAL;
@@ -131,11 +131,11 @@ int main (int argc, char **argv) {
                 }
                 if (i >= table_state.row)
                     continue;
-                
+
                 vars = mp_snmp_table_get(table_state, 3, i);
                 if (*vars->val.integer != 1) {
                     vars = mp_snmp_table_get(table_state, 1, i);
-                    
+
                     char *t = (char *)malloc(9 + vars->val_len);
                     memcpy(t, vars->val.string, vars->val_len);
                     t[vars->val_len] = '\0';
@@ -163,11 +163,11 @@ int main (int argc, char **argv) {
                 }
                 if (i >= table_state.row)
                     continue;
-                
+
                 vars = mp_snmp_table_get(table_state, 3, i);
                 if (*vars->val.integer != 2) {
                     vars = mp_snmp_table_get(table_state, 1, i);
-                    
+
                     char *t = (char *)malloc(9 + vars->val_len);
                     memcpy(t, vars->val.string, vars->val_len);
                     t[vars->val_len] = '\0';
@@ -180,7 +180,7 @@ int main (int argc, char **argv) {
             free( p );
         }
     }
-    
+
     /* Output and return */
     if (status == STATE_OK)
         ok("APC PDU %s", pdu_name);
@@ -257,12 +257,12 @@ void print_help (void) {
     printf("\n\n");
 
     print_usage();
-    
+
     printf("\nIf no On/Off-Ports are defines all ports are asumed as should be On.\n");
     printf("\nOn/Off-Ports can be named or nubered. ex: --on '1,Outlet 3,4'\n");
 
     print_help_default();
-    
+
     printf(" -o, --on=PORT[,PORTS]\n");
     printf("      Ports which should be On.\n");
     printf(" -O, --off=PORT[,PORTS]\n");

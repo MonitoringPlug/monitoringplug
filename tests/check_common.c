@@ -60,9 +60,9 @@ START_TEST (test_exit_unknown) {
 END_TEST
 
 Suite* make_lib_common_suite(void) {
-    
+
     Suite *s = suite_create ("Common");
-    
+
     /* Range test case */
     TCase *tc_exit = tcase_create ("Exit");
     tcase_add_checked_fixture (tc_exit, exit_setup, exit_teardown);

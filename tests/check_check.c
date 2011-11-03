@@ -49,7 +49,7 @@ static struct string_return test_net_name_case[] = {
 
 START_TEST (test_is_integer) {
     char teststring[20];
-    
+
     sprintf(teststring, "%'.0f", (double) INT_MAX + 1);
     fail_unless (is_integer(teststring) == 0,
         "is_integer(%s) faild1", teststring);
@@ -67,7 +67,7 @@ END_TEST
 
 START_TEST (test_net_addr) {
     struct string_return *c = &test_net_addr_case[_i];
-    
+
     fail_unless (is_hostaddr(c->string) == c->returning,
         "Fail: is_hostaddr(%s) is not %0.f", c->string,c->returning);
 }
@@ -75,7 +75,7 @@ END_TEST
 
 START_TEST (test_net_addr6) {
     struct string_return *c = &test_net_addr6_case[_i];
-    
+
     fail_unless (is_hostaddr(c->string) == c->returning,
         "Fail: is_hostaddr(%s) is not %0.f", c->string,c->returning);
 }
@@ -83,20 +83,20 @@ END_TEST
 
 START_TEST (test_net_name) {
     struct string_return *c = &test_net_name_case[_i];
-    
+
     fail_unless (is_hostname(c->string) == c->returning,
         "Fail: is_hostname(%s) is not %0.f", c->string,c->returning);
 }
 END_TEST
 
 Suite* make_lib_check_suite(void) {
-    
+
     Suite *s = suite_create ("Check");
-    
+
     /* String test case */
     TCase *tc_str = tcase_create ("String");
     tcase_add_test(tc_str, test_is_integer);
-    
+
     /* Network test case */
     TCase *tc_net = tcase_create ("Network");
     tcase_add_loop_test(tc_net, test_net_addr, 0, 4);

@@ -67,43 +67,43 @@ int main (int argc, char **argv) {
 
     /* Start plugin timeout */
     alarm(mp_timeout);
-    
+
     /* Magik */
-    
+
     size_t urllen = strlen(hostname)+strlen(filename) + 9;
-    
+
     url = mp_malloc(urllen);
-    
+
     snprintf(url, urllen, "tftp://%s/%s", hostname, filename);
-    
+
     if (mp_verbose > 0) {
         printf("CURL Version: %s\n", curl_version());
         printf("Try fetch %s\n", url);
         print_thresholds("fetch_thresholds", fetch_thresholds);
     }
-    
+
     curl_global_init(CURL_GLOBAL_ALL);
-    
+
     curl = curl_easy_init();
     if(curl) {
         if (curl_easy_setopt(curl, CURLOPT_PROTOCOLS, CURLPROTO_TFTP) == CURLE_UNSUPPORTED_PROTOCOL)
             unknown("libcurl don't support tftp.");
         curl_easy_setopt(curl, CURLOPT_URL, url);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, my_fwrite);
-        
+
         if (mp_verbose > 1)
             curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-        
+
         if (port != 0)
             curl_easy_setopt(curl, CURLOPT_LOCALPORT, port);
-            
+
         res = curl_easy_perform(curl);
-        
-        
+
+
         curl_easy_getinfo(curl, CURLINFO_CONNECT_TIME, &time);
-        
+
         curl_easy_getinfo(curl, CURLINFO_SIZE_DOWNLOAD , &size);
-        
+
         curl_easy_cleanup(curl);
         if(CURLE_OK != res) {
             critical(curl_easy_strerror(res));
@@ -111,7 +111,7 @@ int main (int argc, char **argv) {
     }
 
     curl_global_cleanup();
-    
+
     free(url);
 
     switch(get_status(time, fetch_thresholds)) {
@@ -122,7 +122,7 @@ int main (int argc, char **argv) {
         case STATE_CRITICAL:
             critical("Received %'.0fbyte in %fs.", size, time);
     }
-       
+
     critical("You should never reach this point.");
 }
 
@@ -143,7 +143,7 @@ int process_arguments (int argc, char **argv) {
         MP_LONGOPTS_TIMEOUT,
         MP_LONGOPTS_END
     };
-   
+
     if (argc < 4) {
         print_help();
         exit(STATE_OK);
@@ -152,7 +152,7 @@ int process_arguments (int argc, char **argv) {
     /* Set default */
     setWarnTime(&fetch_thresholds, "5s");
     setCritTime(&fetch_thresholds, "9s");
-    
+
     while (1) {
         c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"H:P:F:w:c:t:", longopts, &option);
 
@@ -194,7 +194,7 @@ void print_help (void) {
     print_copyright();
 
     printf("\n");
-  
+
     printf ("This plugin check if a file can be downloaded from tftp.");
 
     printf("\n\n");
