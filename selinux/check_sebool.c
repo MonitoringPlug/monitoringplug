@@ -147,14 +147,10 @@ int process_arguments (int argc, char **argv) {
             /* Default opts */
             MP_GETOPTS_DEFAULT
             case LONGOPT_ON:
-                bool_on = mp_realloc(bool_on, sizeof(char*)*(bools_on+1));
-                bool_on[bools_on] = optarg;
-                bools_on++;
+                mp_array_push(&bool_on, optarg, &bools_on);
                 break;
             case LONGOPT_OFF:
-                bool_off = mp_realloc(bool_off, sizeof(char*)*(bools_off+1));
-                bool_off[bools_off] = optarg;
-                bools_off++;
+                mp_array_push(&bool_off, optarg, &bools_off);
                 break;
         }
     }

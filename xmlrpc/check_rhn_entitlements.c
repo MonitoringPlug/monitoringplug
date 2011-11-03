@@ -302,14 +302,10 @@ int process_arguments (int argc, char **argv) {
                 pass = optarg;
                 break;
             case 'C':
-                channel = mp_realloc(channel, sizeof(char*)*(channels+1));
-                channel[channels] = optarg;
-                channels++;
+		mp_array_push(&channel, optarg, &channels);
                 break;
             case 'S':
-                system_name = mp_realloc(system_name, sizeof(char*)*(systems+1));
-                system_name[systems] = optarg;
-                systems++;
+		mp_array_push(&system_name, optarg, &systems);
                 break;
             /* Timeout opt */
             case 't':

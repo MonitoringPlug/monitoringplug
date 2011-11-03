@@ -96,7 +96,7 @@ int main (int argc, char **argv) {
     ret = gnutls_priority_set_direct(session, "PERFORMANCE", &err);
     gnutls_credentials_set(session, GNUTLS_CRD_CERTIFICATE, xcred);
 
-    gnutls_transport_set_ptr (session, (gnutls_transport_ptr_t) socket);
+    gnutls_transport_set_ptr(session, (gnutls_transport_ptr_t) socket);
 
     // SSL Handshake
     ret = gnutls_handshake (session);
@@ -242,9 +242,7 @@ int process_arguments (int argc, char **argv) {
                 break;
             /* CAs opt */
             case 'C':
-                ca_file =  mp_realloc(ca_file, sizeof(char*)*(ca_files+1));
-                ca_file[ca_files] = optarg;
-                ca_files++;
+                mp_array_push(&ca_file, optarg, &ca_files);
                 break;
         }
     }
