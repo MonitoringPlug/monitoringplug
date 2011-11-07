@@ -172,7 +172,27 @@ int main (int argc, char **argv) {
     perfdata_float("cpuTime", (float)info.cpuTime/1000000000, "s", 0, 0, 0, 0);
 
     /* Output and return */
-    ok(domainname);
+    switch(info.state) {
+        case VIR_DOMAIN_RUNNING:
+            ok("%s is running", domainname);
+            break;
+        case VIR_DOMAIN_BLOCKED:
+            critical("%s is blocked on resource", domainname);
+            break;
+        case VIR_DOMAIN_PAUSED:
+            critical("%s is paused by user", domainname);
+            break;
+        case VIR_DOMAIN_SHUTDOWN:
+            critical("%s is being shut down", domainname);
+        case VIR_DOMAIN_SHUTOFF:
+            critical("%s is shutt off", domainname);
+            break;
+        case VIR_DOMAIN_CRASHED:
+            critical("%s is crashed", domainname);
+            break;
+        default:
+            critical("%s is in unknown state.", domainname);
+    }
 }
 
 int process_arguments (int argc, char **argv) {
@@ -228,7 +248,7 @@ void print_help (void) {
 
     printf("\n");
 
-    printf("This plugin check the function of libvirtd.");
+    printf("Check description: Check if a given domain is running.");
 
     printf("\n\n");
 

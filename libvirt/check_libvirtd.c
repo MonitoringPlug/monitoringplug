@@ -146,7 +146,7 @@ void print_help (void) {
 
     printf("\n");
 
-    printf("This plugin check the function of libvirtd.");
+    printf("Check description: Check the libvirtd itself.");
 
     printf("\n\n");
 
