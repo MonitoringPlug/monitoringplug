@@ -40,7 +40,7 @@ virConnectPtr virt_connect();
 
 void virt_showError(virConnectPtr conn);
 
-static int virt_authCallback(virConnectCredentialPtr cred, unsigned int ncred, void *cbdata);
+int virt_authCallback(virConnectCredentialPtr cred, unsigned int ncred, void *cbdata);
 
 /**
  * Handle libvirt related command line options.

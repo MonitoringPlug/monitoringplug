@@ -25,7 +25,7 @@ const char *progname  = "check_libvirtd";
 const char *progvers  = "0.1";
 const char *progcopy  = "2011";
 const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
-const char *progusage = "[--help] [--timeout TIMEOUT]";
+const char *progusage = "[--connect qemu+ssh://kvm/system]";
 
 /* MP Includes */
 #include "mp_common.h"
@@ -43,7 +43,6 @@ const char *progusage = "[--help] [--timeout TIMEOUT]";
 int main (int argc, char **argv) {
     /* Local Vars */
     virConnectPtr   conn;
-    const char      *uri;
     const char      *hvType;
     unsigned long libVer, libMajor, libMinor, libRelease;
     unsigned long hvVer, hvMajor, hvMinor, hvRelease;
@@ -61,25 +60,6 @@ int main (int argc, char **argv) {
 
     // PLUGIN CODE
     conn = virt_connect();
-
-    if (NULL == conn) {
-        if (mp_verbose > 0) {
-            virt_showError(conn);
-        }
-        critical("No connection to hypervisor '%s'.", mp_virt_uri);
-    }
-
-    uri = virConnectGetURI(conn);
-    if (uri == NULL) {
-        if (mp_verbose > 0) {
-            virt_showError(conn);
-        }
-        critical("Failed to get URI for hypervisor connection.");
-    }
-
-    if (mp_verbose > 0) {
-        printf("Connected to hypervisor at \"%s\"\n", uri);
-    }
 
     hvType = virConnectGetType(conn);
     if (hvType == NULL) {

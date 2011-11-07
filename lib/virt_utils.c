@@ -38,92 +38,109 @@ char *mp_virt_uri = "qemu:///system";
 
 /* The list of credential types supported by our auth callback */
 static int mp_virt_credTypes[] = {
-   VIR_CRED_AUTHNAME,
-   VIR_CRED_PASSPHRASE
+    VIR_CRED_AUTHNAME,
+    VIR_CRED_PASSPHRASE
 };
 
 /* The auth struct that will be passed to virConnectOpenAuth */
 static virConnectAuth mp_virt_auth = {
-   mp_virt_credTypes,
-   sizeof(mp_virt_credTypes) / sizeof(int),
-   virt_authCallback,
-   NULL, // cbdata will be initialized in main
+    mp_virt_credTypes,
+    sizeof(mp_virt_credTypes) / sizeof(int),
+    virt_authCallback,
+    NULL, // cbdata will be initialized in main
 };
 
 virConnectPtr  virt_connect() {
-   virConnectPtr conn;
+    virConnectPtr conn;
+    char *uri;
 
-   conn = virConnectOpenAuth(mp_virt_uri, &mp_virt_auth, VIR_CONNECT_RO);
+    conn = virConnectOpenAuth(mp_virt_uri, &mp_virt_auth, VIR_CONNECT_RO);
+
+    if (NULL == conn) {
+        if (mp_verbose > 0) {
+            virt_showError(conn);
+        }
+        critical("No connection to hypervisor '%s'.", mp_virt_uri);
+    }
+
+    uri = virConnectGetURI(conn);
+    if (uri == NULL) {
+        if (mp_verbose > 0) {
+            virt_showError(conn);
+        }
+        critical("Failed to get URI for hypervisor connection.");
+    }
+    free(uri);
+
+    if (mp_verbose > 0) {
+        printf("Connected to hypervisor at \"%s\"\n", uri);
+    }
 
    return conn;
 }
 
 void virt_showError(virConnectPtr conn) {
-   int ret;
-   virErrorPtr err;
+    int ret;
+    virErrorPtr err;
 
-   err = mp_malloc(sizeof(*err));
+    err = mp_malloc(sizeof(*err));
 
-   ret = virConnCopyLastError(conn, err);
+    ret = virConnCopyLastError(conn, err);
 
-   switch (ret) {
-      case 0:
-	 printf("No error found\n");
-	 break;
-      case -1:
-	 printf("Parameter error when attempting to get last error\n");
-	 break;
-      default:
-	 printf("libvirt reported: \"%s\"\n", err->message);
-	 break;
-   } // switch (ret)
-   virResetError(err);
-   free(err);
+    switch (ret) {
+        case 0:
+            printf("No error found\n");
+            break;
+        case -1:
+            printf("Parameter error when attempting to get last error\n");
+            break;
+        default:
+            printf("libvirt reported: \"%s\"\n", err->message);
+            break;
+    } // switch (ret)
+    virResetError(err);
+    free(err);
 }
 
-static int virt_authCallback(virConnectCredentialPtr cred, unsigned int ncred, void *cbdata) {
-   int i;
+int virt_authCallback(virConnectCredentialPtr cred, unsigned int ncred, void *cbdata) {
+    int i;
 
-   printf("virt_authCallback\n");
+    printf("virt_authCallback\n");
 
-   for (i = 0; i < ncred ; ++i) {
-      switch (cred[i].type) {
-	 case VIR_CRED_AUTHNAME:
-	    cred[i].result = strdup(mp_virt_username);
+    for (i = 0; i < ncred ; ++i) {
+        switch (cred[i].type) {
+            case VIR_CRED_AUTHNAME:
+                cred[i].result = strdup(mp_virt_username);
+                if (cred[i].result == NULL)
+                    return -1;
+                cred[i].resultlen = strlen(cred[i].result);
+                break;
+            case VIR_CRED_PASSPHRASE:
+                cred[i].result = strdup(mp_virt_password);
+                if (cred[i].result == NULL)
+                    return -1;
+                cred[i].resultlen = strlen(cred[i].result);
+                break;
+            default:
+                return -1;
+        }
+    }
 
-	    if (cred[i].result == NULL)
-	       return -1;
-
-	    cred[i].resultlen = strlen(cred[i].result);
-	    break;
-	 case VIR_CRED_PASSPHRASE:
-	    cred[i].result = strdup(mp_virt_password);
-
-	    if (cred[i].result == NULL)
-	       return -1;
-
-	    cred[i].resultlen = strlen(cred[i].result);
-	    break;
-	 default:
-	    return -1;
-      }
-   }
-
-   return 0;
+    return 0;
 }
 
 void getopt_virt(int c) {
-   switch ( c ) {
-      case 'C':
-	 mp_virt_uri = optarg;
-	 break;
-      case 'u':
-	 mp_virt_username = optarg;
-	 break;
-      case 'p':
-	 mp_virt_password = optarg;
-	 break;
-   }
+    switch ( c ) {
+        case 'C':
+            mp_virt_uri = optarg;
+            break;
+        case 'u':
+            mp_virt_username = optarg;
+            break;
+        case 'p':
+            mp_virt_password = optarg;
+            break;
+    }
 }
 
 void print_help_virt(void) {

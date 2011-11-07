@@ -48,6 +48,7 @@
 
 AC_DEFUN([AX_LIB_EXPAT],
 [
+    AH_TEMPLATE([HAVE_EXPAT], [Define if expat is available])
     AC_ARG_WITH([expat],
         AS_HELP_STRING([--with-expat=@<:@ARG@:>@],
             [use Expat XML Parser from given prefix (ARG=path); check standard prefixes (ARG=yes); disable (ARG=no)]
@@ -195,6 +196,8 @@ p = NULL;
     if test "$run_expat_test" = "yes"; then
         if test "$expat_header_found" = "yes" -a "$expat_lib_found" = "yes"; then
 
+	    AC_DEFINE(HAVE_EXPAT,1,
+	                 [Define to 1 if you have a functional expat library.])
             AC_SUBST([EXPAT_CFLAGS])
             AC_SUBST([EXPAT_LDFLAGS])
 
