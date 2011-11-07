@@ -67,8 +67,6 @@ int main () {
     printf("*** file is being found. Rerun configure with the --with-cups=PATH option\n");
     printf("*** to specify the prefix where the correct version was installed.\n");
     return 1;
-  } else {
-    printf("\n*** %s > %d.%d.%d ***\n", tmp_version, CUPS_VERSION_MAJOR, CUPS_VERSION_MINOR, CUPS_VERSION_PATCH);
   }
 
   return 0;
