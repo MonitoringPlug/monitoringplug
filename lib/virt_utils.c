@@ -1,5 +1,5 @@
 /***
- * monitoringplug - virt_utils.c
+ * Monitoring Plugin - virt_utils.c
  **
  *
  * Copyright (C) 2010 Marius Rieder <marius.rieder@durchmesser.ch>
@@ -104,8 +104,6 @@ void virt_showError(virConnectPtr conn) {
 
 int virt_authCallback(virConnectCredentialPtr cred, unsigned int ncred, void *cbdata) {
     int i;
-
-    printf("virt_authCallback\n");
 
     for (i = 0; i < ncred ; ++i) {
         switch (cred[i].type) {

@@ -38,7 +38,7 @@ AC_DEFUN([AC_LIB_CUPS], [
     CFLAGS="$CFLAGS $CUPS_CFLAGS"
     LIBS="$CUPS_LIBS $LIBS"
 
-    AC_COMPILE_IFELSE([AC_LANG_SOURCE([AC_INCLUDES_DEFAULT([])
+    AC_RUN_IFELSE([AC_LANG_SOURCE([AC_INCLUDES_DEFAULT([])
 #include <cups/cups.h>
 
 int main () {
@@ -55,11 +55,11 @@ int main () {
     return 1;
   }
 
-  minvers =  ((major<<16)|(minor<<8)|(micro))
-  vers = ((CUPS_VERSION_MAJOR<<16)|(CUPS_VERSION_MINOR<<8)|(CUPS_VERSION_PATCH))
+  minvers =  ((major<<16)|(minor<<8)|(micro));
+  vers = ((CUPS_VERSION_MAJOR<<16)|(CUPS_VERSION_MINOR<<8)|(CUPS_VERSION_PATCH));
 
-  if (minvers < vers) {
-    printf("\n*** An old version of cups was found: %s\n", CUPS_VERSION);
+  if (minvers > vers) {
+    printf("\n*** An old version of cups was found: %f\n", CUPS_VERSION);
     printf("*** You need a version of cups being at least %s.\n", tmp_version);
     printf("***\n"); 
     printf("*** If you have already installed a sufficiently new version, this error\n");
@@ -67,12 +67,14 @@ int main () {
     printf("*** file is being found. Rerun configure with the --with-cups=PATH option\n");
     printf("*** to specify the prefix where the correct version was installed.\n");
     return 1;
+  } else {
+    printf("\n*** %s > %d.%d.%d ***\n", tmp_version, CUPS_VERSION_MAJOR, CUPS_VERSION_MINOR, CUPS_VERSION_PATCH);
   }
 
   return 0;
 
 }
-    ])],, no_cups=yes, [echo $ac_n "cross compiling; assumed OK... $ac_c"])
+    ])],, no_cups=yes,)
 
     CFLAGS="$ac_save_CFLAGS"
     LIBS="$ac_save_LIBS"
@@ -82,7 +84,7 @@ int main () {
       ifelse([$2], , :, [$2])
     else
       AC_MSG_RESULT(no)
-      ifelse([$3], , AC_MSG_ERROR([check not found]), [$3])
+      ifelse([$3], , AC_MSG_ERROR([cups not found]), [$3])
       CUPS_CFLAGS=""
       CUPS_LIBS=""
     fi

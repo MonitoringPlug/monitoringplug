@@ -1,11 +1,17 @@
 %if 0%{?rhel}
 %if 0%{?rhel} >= 6
 %define gnutls 1
+%define libvirt 1
+%define cups 1
 %else
 %define gnutls 0
+%define libvirt 0
+%define cups 0
 %endif
 %else
 %define gnutls 1
+%define libvirt 1
+%define cups 1
 %endif
 
 Name:           monitoringplug
@@ -19,28 +25,38 @@ URL:            http://svn.durchmesser.ch/trac/monitoringplug
 Source0:        %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:  ldns-devel
-BuildRequires:  libselinux-devel
-%if 0%{?rhel} <= 5
-BuildRequires:	curl-devel
+%if 0%{?rhel} == 5
+BuildRequires:  curl-devel
 %else
-BuildRequires:	libcurl-devel
+BuildRequires:  libcurl-devel
+%endif
+%if %{cups} == 1
 BuildRequires:  cups-devel
 %endif
-BuildRequires:	xmlrpc-c-devel
-BuildRequires:	expat-devel
-BuildRequires:	net-snmp-devel
-%if %{gnutls}
+BuildRequires:  expat-devel
+%if %{gnutls} == 1
 BuildRequires:  gnutls-devel
 %endif
-BuildRequires:	selinux-policy
+BuildRequires:	json-c-devel
+BuildRequires:  ldns-devel
+BuildRequires:  libselinux-devel
+%if %{libvirt} == 1
+BuildRequires:  libvirt-devel
+%endif
+BuildRequires:  net-snmp-devel
+%if 0%{?rhel} == 5
+BuildRequires:  selinux-policy
+%else
+BuildRequires:  selinux-policy-devel
+%endif
+BuildRequires:  xmlrpc-c-devel
 
 %package base
 Summary:        Collection of basic monitoring plugins for Nagios and similar monitoring systems.
 Group:          Applications/System
 Requires:	monitoringplug
 
-%if 0%{?rhel} >= 6
+%if %{cups} == 1
 %package cups
 Summary:        Collection of cups monitoring plugins for Nagios and similar monitoring systems.
 Group:          Applications/System
@@ -57,17 +73,36 @@ Requires:       libcurl
 %endif
 Requires:       monitoringplug
 
+%package curl-json
+Summary:        Collection of curl ans json based monitoring plugins for Nagios and similar       monitoring systems.
+Group:          Applications/System
+%if 0%{?rhel} <= 5
+Requires:       curl
+%else
+Requires:       libcurl
+%endif
+Requires:	json-c
+Requires:       monitoringplug
+
 %package dns
 Summary:        Collection of dns monitoring plugins for Nagios and similar monitoring systems.
 Group:          Applications/System
 Requires:	ldns
 Requires:       monitoringplug
 
-%if %{gnutls}
+%if %{gnutls} == 1
 %package gnutls
 Summary:        Collection of dns monitoring plugins for Nagios and similar monitoring systems.
 Group:          Applications/System
 Requires:	gnutls
+Requires:       monitoringplug
+%endif
+
+%if %{libvirt} == 1
+%package libvirt
+Summary:        Collection of libvirt monitoring plugins for Nagios and similar monitoring   systems.
+Group:          Applications/System
+Requires:       libvirt-client
 Requires:       monitoringplug
 %endif
 
@@ -109,7 +144,7 @@ Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the base and dummy plugins which don't need any
 additional libraries.
 
-%if 0%{?rhel} >= 6
+%if %{cups} == 1
 %description cups
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the cups based plugins.
@@ -119,14 +154,24 @@ This package contains the cups based plugins.
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the curl based plugins.
 
+%description curl-json
+Collection of monitoring plugins for Nagios and similar monitoring systems.
+This package contains the curl and json based plugins.
+
 %description dns
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the dns plugins which use the ldns library.
 
-%if 0%{?rhel} >= 6
+%if %{gnutls} == 1
 %description gnutls
 Collection of monitoring plugins for Nagios and similar monitoring systems.
-This package contains the dns plugins which use the gnutls library.
+This package contains the plugins which use the gnutls library.
+%endif
+
+%if %{libvirt} == 1
+%description libvirt
+Collection of monitoring plugins for Nagios and similar monitoring systems.
+This package contains the libvirt based plugins.
 %endif
 
 %description rhcs
@@ -153,10 +198,9 @@ This package contains the xmlrpc plugins.
 %setup -q
 
 %build
-%if 0%{?rhel} <= 5
+%if 0%{?rhel} == 5
 %configure SELINUX_CFLAGS=" " SELINUX_LIBS=-lselinux
-%endif
-%if 0%{?rhel} >= 6
+%else
 %configure
 %endif
 make %{?_smp_mflags}
@@ -206,7 +250,7 @@ fi
 %{_libdir}/nagios/plugins/check_dummy
 %{_libdir}/nagios/plugins/check_timeout
 
-%if 0%{?rhel} >= 6
+%if 0%{?rhel} != 5
 %files cups
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_cups_*
@@ -217,15 +261,25 @@ fi
 %{_libdir}/nagios/plugins/check_aspsms_credits
 %{_libdir}/nagios/plugins/check_tftp
 
+%files curl-json
+%defattr(-,root,root,-)
+%{_libdir}/nagios/plugins/check_buildbot_slave
+
 %files dns
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_dns_*
 %{_libdir}/nagios/plugins/check_dnssec_*
 
-%if %{gnutls}
+%if %{gnutls} == 1
 %files gnutls
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_ssl_cert
+%endif
+
+%if %{libvirt} == 1
+%files libvirt
+%defattr(-,root,root,-)
+%{_libdir}/nagios/plugins/check_libvirt*
 %endif
 
 %files rhcs

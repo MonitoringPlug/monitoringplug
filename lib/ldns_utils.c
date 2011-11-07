@@ -1,5 +1,5 @@
 /***
- * Monitoring Plugin - dns_utils.h
+ * Monitoring Plugin - ldns_utils.c
  **
  *
  * Copyright (C) 2010 Marius Rieder <marius.rieder@durchmesser.ch>
