@@ -1,5 +1,5 @@
 /***
- * monitoringplug - check_cups_jobs.c
+ * Monitoring Plugin - check_cups_jobs.c
  **
  *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>

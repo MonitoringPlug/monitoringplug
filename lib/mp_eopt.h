@@ -2,7 +2,7 @@
  * Monitoring Plugin - mp_eopt.h
  **
  *
- * Copyright (C) 2010 Marius Rieder <marius.rieder@durchmesser.ch>
+ * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

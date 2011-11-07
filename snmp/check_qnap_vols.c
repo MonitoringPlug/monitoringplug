@@ -1,5 +1,5 @@
 /***
- * monitoringplug - check_qnap_vols.c
+ * Monitoring Plugin - check_qnap_vols.c
  **
  *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>

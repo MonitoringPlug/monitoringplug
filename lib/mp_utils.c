@@ -1,5 +1,5 @@
 /***
- * monitoringplug - mp_utils.c
+ * Monitoring Plugin - mp_utils.c
  **
  *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>

@@ -1,5 +1,5 @@
 /***
- * monitoringplug - rpc_utils.h
+ * Monitoring Plugin - rpc_utils.h
  **
  *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>

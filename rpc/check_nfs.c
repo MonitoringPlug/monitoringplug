@@ -1,5 +1,5 @@
 /***
- * monitoringplug - check_nfs.c
+ * Monitoring Plugin - check_nfs.c
  **
  *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>

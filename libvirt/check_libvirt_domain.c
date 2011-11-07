@@ -1,5 +1,5 @@
 /***
- * monitoringplug - check_libvirt_domain.c
+ * Monitoring Plugin - check_libvirt_domain.c
  **
  *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>

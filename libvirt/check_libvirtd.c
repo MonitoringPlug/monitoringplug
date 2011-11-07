@@ -1,5 +1,5 @@
 /***
- * monitoringplug - check_libvirtd.c
+ * Monitoring Plugin - check_libvirtd.c
  **
  *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>

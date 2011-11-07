@@ -1,5 +1,5 @@
 /***
- * monitoringplug - check_ssl_cert.c
+ * Monitoring Plugin - check_ssl_cert.c
  **
  *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>

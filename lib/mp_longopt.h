@@ -1,5 +1,5 @@
 /***
- * monitoringplug - mp_longopt.h
+ * Monitoring Plugin - mp_longopt.h
  **
  *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>

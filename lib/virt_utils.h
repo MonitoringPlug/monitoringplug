@@ -1,5 +1,5 @@
 /***
- * monitoringplug - virt_utils.h
+ * Monitoring Plugin - virt_utils.h
  **
  *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>

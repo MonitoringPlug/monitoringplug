@@ -1,5 +1,5 @@
 /***
- * monitoringplug - check_rpc_ping.c
+ * Monitoring Plugin - check_rpc_ping.c
  **
  *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>

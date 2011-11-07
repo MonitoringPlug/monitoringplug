@@ -1,5 +1,5 @@
 /***
- * monitoringplug - check_arc_raid.c
+ * Monitoring Plugin - check_arc_raid.c
  **
  *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>

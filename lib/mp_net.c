@@ -1,5 +1,5 @@
 /***
- * monitoringplug - mp_net.c
+ * Monitoring Plugin - mp_net.c
  **
  *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>
