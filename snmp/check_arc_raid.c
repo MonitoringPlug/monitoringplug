@@ -72,7 +72,7 @@ int main (int argc, char **argv) {
     /* OIDs to query */
     struct mp_snmp_query_cmd snmpcmd_table = {{1,3,6,1,4,1,18928,1,2,4,1}, 11, 0, (void *)&table_state};
 
-    status = mp_snmp_table_query_new(ss, &snmpcmd_table, 8);
+    status = mp_snmp_table_query(ss, &snmpcmd_table, 8);
     if (status != STAT_SUCCESS) {
         char *string;
         snmp_error(ss, NULL, NULL, &string);

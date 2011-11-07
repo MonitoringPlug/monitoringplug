@@ -83,7 +83,7 @@ int main (int argc, char **argv) {
 
     mp_snmp_query(ss, snmpcmd);
 
-    mp_snmp_table_query_new(ss, &snmpcmd_table, 7);
+    mp_snmp_table_query(ss, &snmpcmd_table, 7);
 
     mp_snmp_deinit();
 

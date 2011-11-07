@@ -97,8 +97,7 @@ int mp_snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd)
  * \param[in|out] querycmd Table query command
  * \return return a status value like snmp.
  */
-int mp_snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd);
-int mp_snmp_table_query_new(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd, int cols);
+int mp_snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd, int cols);
 
 
 /**
