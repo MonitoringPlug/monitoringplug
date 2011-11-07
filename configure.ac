@@ -49,6 +49,7 @@ PKG_CHECK_MODULES([XMLRPC], [xmlrpc xmlrpc_client],[],[AC_MSG_WARN([Skipping xml
 PKG_CHECK_MODULES([SELINUX], [libselinux],[],[AC_MSG_WARN([Skipping SELinux])])
 PKG_CHECK_MODULES([GNUTLS], [gnutls >= 2.8.0], [],[AC_MSG_WARN([Skipping gnutls])])
 PKG_CHECK_MODULES([JSON], [json], [],[AC_MSG_WARN([Skipping json-c])])
+PKG_CHECK_MODULES([LIBVIRT],[libvirt], [],[AC_MSG_WARN([Skipping libvirt])])
 
 # SNMP Option
 AC_ARG_WITH([netsnmp],
@@ -108,6 +109,7 @@ AM_CONDITIONAL([HAVE_SELINUX], [test "x$SELINUX_LIBS" != x])
 AM_CONDITIONAL([HAVE_CHECK], [test "x$CHECK_LIBS" != x])
 AM_CONDITIONAL([HAVE_GNUTLS], [test "x$GNUTLS_LIBS" != x])
 AM_CONDITIONAL([HAVE_JSON], [test "x$JSON_LIBS" != x])
+AM_CONDITIONAL([HAVE_LIBVIRT], [test "x$LIBVIRT_LIBS" != x])
 
 # GCC Opts
 #AX_CFLAGS_WARN_ALL()
@@ -128,6 +130,7 @@ MPLIB_LIBS="-monitoringplug"
 SNMPUTIL_LIBS="-lsnmputils"
 RHCSUTIL_LIBS="-lrhcsutils"
 LDNSUTIL_LIBS="-lldnsutils"
+LIBVIRTUTIL_LIBS="-lvirturils"
 XMLRPCUTIL_LIBS="-lxmlrpcutils"
 
 AC_SUBST(MPLIB_LIBS)
@@ -160,6 +163,7 @@ AC_CONFIG_FILES([Makefile
                  dns/Makefile
                  dummy/Makefile
                  gnutls/Makefile
+		 libvirt/Makefile
                  rhcs/Makefile
                  rpc/Makefile
                  selinux/Makefile

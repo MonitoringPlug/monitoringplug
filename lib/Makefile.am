@@ -19,6 +19,13 @@ libldnsutils_a_SOURCES = ldns_utils.c ldns_utils.h
 libldnsutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(LDNS_CFLAGS)
 endif
 
+if HAVE_LIBVIRT
+noinst_LIBRARIES += libvirtutils.a
+
+libvirtutils_a_SOURCES = virt_utils.c virt_utils.h
+libvirtutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(LIBVIRT_CFLAGS)
+endif
+
 if HAVE_NET_SNMP	
 noinst_LIBRARIES += libsnmputils.a
 
