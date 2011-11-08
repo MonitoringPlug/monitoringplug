@@ -45,9 +45,9 @@ BuildRequires:  libvirt-devel
 %endif
 BuildRequires:  net-snmp-devel
 %if 0%{?rhel} == 5
-BuildRequires:  selinux-policy
-%else
 BuildRequires:  selinux-policy-devel
+%else
+BuildRequires:  selinux-policy
 %endif
 BuildRequires:  xmlrpc-c-devel
 
