@@ -112,12 +112,6 @@ int process_arguments (int argc, char **argv) {
             MP_LONGOPTS_END
     };
 
-    if (argc < 3) {
-       print_help();
-       exit(STATE_OK);
-    }
-
-
     while (1) {
         c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"t:"VIRT_OPTSTR, longopts, &option);
 
