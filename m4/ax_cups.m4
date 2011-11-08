@@ -55,8 +55,9 @@ int main () {
     return 1;
   }
 
-  minvers =  ((major<<16)|(minor<<8)|(micro));
-  vers = ((CUPS_VERSION_MAJOR<<16)|(CUPS_VERSION_MINOR<<8)|(CUPS_VERSION_PATCH));
+  minvers =  major*1000000 + minor*1000 + micro;
+  vers = CUPS_VERSION_MAJOR*1000000 + CUPS_VERSION_MINOR*1000 + CUPS_VERSION_PATCH;
+
 
   if (minvers > vers) {
     printf("\n*** An old version of cups was found: %f\n", CUPS_VERSION);
