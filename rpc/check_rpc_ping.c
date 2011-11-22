@@ -45,20 +45,25 @@ const char *hostname = NULL;
 const char *export = NULL;
 const char *program_name = NULL;
 char *ping_ok = NULL;
+char *ping_warn = NULL;
 char *ping_faild = NULL;
 struct timeval to;
 char **rpcversion = NULL;
 int rpcversions = 0;
 char **rpctransport = NULL;
 int rpctransports = 0;
+thresholds *time_threshold = NULL;
 
 /* Function prototype */
 
 int main (int argc, char **argv) {
     /* Local Vars */
-    int i, j;
+    int i, j, ret;
+    int tstate;
     char *buf;
     struct rpcent *program;
+    struct timeval start_time;
+    double time_delta;
 
     /* Set signal handling and alarm */
     if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
@@ -83,11 +88,20 @@ int main (int argc, char **argv) {
             buf = mp_malloc(128);
             mp_snprintf(buf, 128, "%s:%sv%s", rpctransport[j], program->r_name, rpcversion[i]);
 
-            int ret;
+            gettimeofday(&start_time, NULL);
+
             ret = rpc_ping((char *)hostname, program, atoi(rpcversion[i]), rpctransport[j], to);
 
-            if (rpc_ping((char *)hostname, program, atoi(rpcversion[i]), rpctransport[j], to) != RPC_SUCCESS) {
+            time_delta = mp_time_delta(start_time);
+
+            perfdata_float(buf, (float)time_delta, "s", time_threshold->warning->end, time_threshold->critical->end,0,0);
+
+            tstate = get_status(time_delta, time_threshold);
+
+            if (ret != RPC_SUCCESS || tstate == STATE_CRITICAL) {
                 mp_strcat_comma(&ping_faild, buf);
+            } else if(tstate == STATE_WARNING) {
+                mp_strcat_comma(&ping_warn, buf);
             } else {
                 mp_strcat_comma(&ping_ok, buf);
             }
@@ -95,10 +109,23 @@ int main (int argc, char **argv) {
         }
     }
 
-    if (ping_faild == NULL)
+    buf = strdup(" ");
+    if (ping_warn) {
+        mp_strcat_space(&buf, "warn:");
+        mp_strcat_space(&buf, ping_warn);
+    }
+    if (ping_ok) {
+        mp_strcat_space(&buf, "ok:");
+        mp_strcat_space(&buf, ping_ok);
+    }
+
+    if (ping_faild) {
+        critical("RPC Ping faild: %s%s", ping_faild, buf);
+    } else if (ping_warn) {
+        warning("RPC Ping%s", buf);
+    } else {
         ok("RPC Ping: %s", ping_ok);
-    else
-        critical("RPC Ping faild: %s", ping_faild);
+    }
 
     critical("You should never reach this point.");
 }
@@ -118,11 +145,17 @@ int process_arguments (int argc, char **argv) {
         MP_LONGOPTS_END
     };
 
+    /* Set default */
+    setWarnTime(&time_threshold, "0.5s");
+    setCritTime(&time_threshold, "1s");
+
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"H:P:r:T:t:", longopts, &option);
+        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"H:P:w:c:r:T:t:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
+
+        getopt_wc_time(c, optarg, &time_threshold);
 
         switch (c) {
             /* Default opts */
@@ -184,6 +217,8 @@ void print_help (void) {
     printf("      Transports to ping.\n");
     printf(" -r, --rpcversion=version[,version]\n");
     printf("      Versions to ping.\n");
+    print_help_warn_time("0.5s");
+    print_help_crit_time("1s");
 
 }
 

@@ -122,20 +122,18 @@ void perfdata_float(const char *label, float value, const char *unit,
    if (!mp_showperfdata)
        return;
 
-   tmp=malloc(32);
-   sprintf(tmp,"'%s'=%0.2f%s;%0.2f;%0.2f;%0.2f;%0.2f", label, value, unit, warn, crit, min, max);
+   tmp=malloc(128);
+   sprintf(tmp,"'%s'=%0.4f%s;%0.2f;%0.2f;%0.2f;%0.2f", label, value, unit, warn, crit, min, max);
 
    if (mp_perfdata != NULL) {
       mp_perfdata = mp_realloc(mp_perfdata, strlen(mp_perfdata) + strlen(tmp) + 2);
       strncat(mp_perfdata, " ", 1);
       strncat(mp_perfdata, tmp, strlen(tmp));
    } else {
-      mp_perfdata = mp_malloc(strlen(tmp) + 1);
-      strncpy(mp_perfdata, tmp, strlen(tmp));
+      mp_perfdata = strdup(tmp);
    }
 
    free(tmp);
-
 }
 
 void print_usage (void) {

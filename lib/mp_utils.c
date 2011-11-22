@@ -109,3 +109,11 @@ void mp_array_push(char ***array, char *obj, int *num) {
 	(*num)++;
     }
 }
+
+double mp_time_delta(struct timeval time_start) {
+   struct timeval time_end;
+
+   gettimeofday(&time_end, NULL);
+   return ((double)(time_end.tv_sec - time_start.tv_sec) +
+	 (double)(time_end.tv_usec - time_start.tv_usec) / (double)1000000);
+}

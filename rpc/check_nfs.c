@@ -48,23 +48,28 @@ const char *export = NULL;
 char *noconnection = NULL;
 char *callfaild = NULL;
 char *noexport = NULL;
-char *nonfs = NULL;
+char *nfs_warn = NULL;
+char *nfs_crit = NULL;
 char *exportok = NULL;
 struct timeval to;
 char **rpcversion = NULL;
 int rpcversions = 0;
 char **rpctransport = NULL;
 int rpctransports = 0;
+thresholds *time_threshold = NULL;
 
 /* Function prototype */
 int check_export(struct rpcent *program, unsigned long version, char *proto);
 
 int main (int argc, char **argv) {
     /* Local Vars */
-    int i, j;
+    int i, j, ret;
+    int tstate;
     char *buf;
     struct rpcent *program;
     struct rpcent *nfs;
+    struct timeval start_time;
+    double time_delta;
 
     /* Set signal handling and alarm */
     if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
@@ -91,12 +96,26 @@ int main (int argc, char **argv) {
         for(j=0; j < rpctransports; j++) {
             check_export(program, atoi(rpcversion[i]), rpctransport[j]);
 
-            if (rpc_ping((char *)hostname, nfs, atoi(rpcversion[i]), rpctransport[j], to) != RPC_SUCCESS) {
-                buf = mp_malloc(128);
-                mp_snprintf(buf, 128, "%s:v%s", rpctransport[j], rpcversion[i]);
-                mp_strcat_comma(&nonfs, buf);
-                free(buf);
+            gettimeofday(&start_time, NULL);
+
+            ret = rpc_ping((char *)hostname, nfs, atoi(rpcversion[i]), rpctransport[j], to);
+
+            time_delta = mp_time_delta(start_time);
+
+            tstate = get_status(time_delta, time_threshold);
+
+            buf = mp_malloc(128);
+            mp_snprintf(buf, 128, "%s:v%s", rpctransport[j], rpcversion[i]);
+
+            perfdata_float(buf, (float)time_delta, "s", time_threshold->warning->end, time_threshold->critical->end,0,0);
+
+            if (ret != RPC_SUCCESS || tstate == STATE_CRITICAL) {
+                mp_strcat_comma(&nfs_crit, buf);
+            } else if(tstate == STATE_WARNING)  {
+                mp_strcat_comma(&nfs_warn, buf);
             }
+
+            free(buf);
         }
     }
 
@@ -105,7 +124,7 @@ int main (int argc, char **argv) {
     free(nfs->r_name);
     free(nfs);
 
-    if (noconnection || callfaild || noexport || nonfs) {
+    if (noconnection || callfaild || noexport || nfs_crit) {
         char *out = NULL;
         if (noconnection) {
             out = strdup("Can't connect to:");
@@ -119,11 +138,17 @@ int main (int argc, char **argv) {
             mp_strcat_space(&out, "No export found by:");
             mp_strcat_space(&out, noexport);
         }
-        if (nonfs) {
-            mp_strcat_space(&out, "NFS not responding:");
-            mp_strcat_space(&out, nonfs);
+        if (nfs_crit) {
+            mp_strcat_space(&out, "NFS Critical:");
+            mp_strcat_space(&out, nfs_crit);
+        }
+        if (nfs_warn) {
+            mp_strcat_space(&out, "NFS Warning:");
+            mp_strcat_space(&out, nfs_warn);
         }
         critical(out);
+    } else if (nfs_warn) {
+        warning("NFS Warning: %s", nfs_warn);
     } else {
         if(export)
             ok("%s exported by %s", export, exportok);
@@ -237,11 +262,17 @@ int process_arguments (int argc, char **argv) {
         MP_LONGOPTS_END
     };
 
+    /* Set default */
+    setWarnTime(&time_threshold, "0.5s");
+    setCritTime(&time_threshold, "1s");
+
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"H:e:r:T:", longopts, &option);
+        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"H:w:c:e:r:T:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
+
+        getopt_wc_time(c, optarg, &time_threshold);
 
         switch (c) {
             /* Default opts */
@@ -303,6 +334,8 @@ void print_help (void) {
     printf("      Versions to check.\n");
     printf(" -e, --export=parh\n");
     printf("      Check it server exports path.\n");
+    print_help_warn_time("0.5s");
+    print_help_crit_time("1s");
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */

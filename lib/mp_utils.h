@@ -66,4 +66,9 @@ void mp_strcat_comma(char **target, char *source);
  */
 void mp_array_push(char ***array, char *obj, int *num);
 
+/**
+ * Return time in secound since tv.
+ */
+double mp_time_delta(struct timeval tv);
+
 #endif /* MP_UTILS_H_ */
