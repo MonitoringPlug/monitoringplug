@@ -56,7 +56,7 @@ int main (int argc, char **argv) {
     cups_dest_t *dests;
     int         dest_num;
     cups_job_t *jobs;
-    int jobs_num;
+    int jobs_num = 0;
     int jobs_total = 0;
     int state = STATE_OK;
     int lstate;
@@ -84,6 +84,7 @@ int main (int argc, char **argv) {
     // Get printer List
     if (printers == 0) {
         dest_num = cupsGetDests(&dests);
+        mp_perfdata_int("printers", dest_num, "", NULL);
     } else {
         dest_num = printers;
         dests = mp_malloc(sizeof(cups_dest_t)*printers);
@@ -137,6 +138,19 @@ int main (int argc, char **argv) {
         }
 
         cupsFreeJobs(jobs_num, jobs);
+    }
+
+    if (summerize == 1) {
+        lstate = get_status((double)jobs_num, count_threshold);
+        state = lstate > state ? lstate : state;
+        if (lstate == STATE_WARNING) {
+            mp_snprintf(buf, 64, "Total Jobs: %d", jobs_total);
+            mp_strcat_comma(&warn, buf);
+        } else if (lstate == STATE_CRITICAL) {
+            mp_snprintf(buf, 64, "Total Jobs: %d", jobs_total);
+            mp_strcat_comma(&crit, buf);
+        }
+        mp_perfdata_int("jobs", jobs_total, "", count_threshold);
     }
 
     cupsFreeDests(dest_num, dests);

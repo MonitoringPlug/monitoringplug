@@ -50,7 +50,6 @@ int main (int argc, char **argv) {
     /* Local Vars */
     xmlrpc_env env;
     xmlrpc_value *result;
-    xmlrpc_value *val;
     xmlrpc_bool ready;
     xmlrpc_bool enabled;
     xmlrpc_double load;

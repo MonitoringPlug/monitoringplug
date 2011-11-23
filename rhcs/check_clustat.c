@@ -51,9 +51,18 @@ int main (int argc, char **argv) {
     char                    *foreign = NULL;
     rhcs_clustat            *clustat;
     rhcs_clustat_group      **groups;
+    rhcs_clustat_node       **nodes;
     rhcs_conf               *conf;
     rhcs_conf_fodom_node    **fodomnode;
     rhcs_conf_service       **service;
+    // Perfdata
+    int services_total = 0;
+    int services_local = 0;
+    int services_stopped = 0;
+    int services_failed = 0;
+    int services_started = 0;
+    int nodes_total = 0;
+    int nodes_online = 0;
 
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
@@ -106,14 +115,32 @@ int main (int argc, char **argv) {
     for(groups = clustat->group; *groups != NULL ; groups++) {
         localprio = 0;
         ownerprio = 0;
-	autostart = 1;
+        autostart = 1;
         bestprio = INT_MAX;
+
+        // Perfdata
+        services_total++;
+        if ((*groups)->owner == clustat->local)
+            services_local++;
+        switch ((*groups)->state) {
+            case 110: // Stopped
+            case 111: // Starting
+            case 113: // Stopping
+            case 119: // Disabled
+                services_stopped++;
+                break;
+            case 112:
+                services_started++;
+                break;
+            default:
+                services_failed++;
+        }
 
         fodomnode = NULL;
         for(service = conf->service; *service != NULL ; service++) {
             if (strcmp((*service)->name, (*groups)->name) == 0) {
                 fodomnode = (*service)->fodomain->node;
-		autostart = (*service)->autostart;
+                autostart = (*service)->autostart;
                 break;
             }
         }
@@ -136,6 +163,22 @@ int main (int argc, char **argv) {
 	    if ((*groups)->owner == NULL && localprio == bestprio && autostart)
 	        mp_strcat_comma(&missing, (*groups)->name);
         }
+    }
+
+    if (mp_showperfdata) {
+        for(nodes = clustat->node; *nodes != NULL ; nodes++) {
+            nodes_total++;
+            if ((*nodes)->rgmanager == 1)
+                nodes_online++;
+        }
+
+        mp_perfdata_int("services_total", services_total, "", NULL);
+        mp_perfdata_int("services_local", services_local, "", NULL);
+        mp_perfdata_int("services_stopped", services_stopped, "", NULL);
+        mp_perfdata_int("services_started", services_started, "", NULL);
+        mp_perfdata_int("services_failed", services_failed, "", NULL);
+        mp_perfdata_int("nodes_total", nodes_total, "", NULL);
+        mp_perfdata_int("nodes_online", nodes_online, "", NULL);
     }
 
     if (foreign == NULL &&  missing == NULL)
