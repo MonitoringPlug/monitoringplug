@@ -1,5 +1,5 @@
 /***
- * Monitoring Plugin - check_koji_builder
+ * Monitoring Plugin - check_koji_builder.c
  **
  *
  * check_koji_builder - Check if a koji builder is online.
@@ -161,3 +161,4 @@ void print_help (void) {
     printf("      URL of the Koji-Hub XML-RPC api.\n");
 }
 
+/* vim: set ts=4 sw=4 et syn=c : */

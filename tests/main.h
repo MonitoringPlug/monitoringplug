@@ -1,5 +1,5 @@
 /***
- * Monitoring Plugin Tests - main.c
+ * Monitoring Plugin Tests - main.h
  **
  *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>

@@ -1,5 +1,5 @@
 /**
- * Monitoring Plugin - check_args.c
+ * Monitoring Plugin - check_common.c
  **
  *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>
@@ -74,4 +74,4 @@ Suite* make_lib_common_suite(void) {
     return s;
 }
 
-/* EOF */
+/* vim: set ts=4 sw=4 et syn=c : */

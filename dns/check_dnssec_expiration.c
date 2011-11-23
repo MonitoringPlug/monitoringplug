@@ -1,5 +1,5 @@
 /***
- * Monitoring Plugin - check_dnssec_expiration
+ * Monitoring Plugin - check_dnssec_expiration.c
  **
  *
  * check_dnssec_expiration - Check if the zone signature expires.

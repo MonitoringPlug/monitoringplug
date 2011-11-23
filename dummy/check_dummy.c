@@ -1,5 +1,5 @@
 /***
- * Monitoring Plugin - check_dummy
+ * Monitoring Plugin - check_dummy.c
  **
  *
  * check_dummy - Dummy plugin.
@@ -141,3 +141,4 @@ void print_help (void) {
 
     print_help_default();
 }
+/* vim: set ts=4 sw=4 et syn=c : */

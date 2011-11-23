@@ -1,5 +1,5 @@
 /***
- * Monitoring Plugin - check_file
+ * Monitoring Plugin - check_file.c
  **
  *
  * check_file - Check a files property.

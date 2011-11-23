@@ -1,5 +1,5 @@
 /***
- * Monitoring Plugin - check_enforce
+ * Monitoring Plugin - check_enforce.c
  **
  *
  * check_enforce - Check SELinux state.

@@ -1,5 +1,5 @@
 /***
- * Monitoring Plugin - check_rhn_entitlements
+ * Monitoring Plugin - check_rhn_entitlements.c
  **
  *
  * check_rhn_entitlements - Check available entitlements.
@@ -354,3 +354,4 @@ void print_help (void) {
     printf("      SYSTEM  entitlement to check.\n");
 }
 
+/* vim: set ts=4 sw=4 et syn=c : */

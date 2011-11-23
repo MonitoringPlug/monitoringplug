@@ -1,5 +1,5 @@
 /***
- * Monitoring Plugin - check_dns_sync
+ * Monitoring Plugin - check_dns_sync.c
  **
  *
  * check_dns_sync - Check if the zone serial are in sync.
@@ -416,4 +416,4 @@ void print_help (void) {
    printf("      The name of the domain to check.\n");
 }
 
-/* vim: set ts=4 sw=4 et : */
+/* vim: set ts=4 sw=4 et syn=c.libdns : */

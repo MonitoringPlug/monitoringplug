@@ -1,5 +1,5 @@
 /***
- * Monitoring Plugin - check_dnssec_trust_anchor
+ * Monitoring Plugin - check_dnssec_trust_anchor.c
  **
  *
  * check_dnssec_trust_anchor - Check if a trust anchor file is uptodate.

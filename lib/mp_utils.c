@@ -118,3 +118,4 @@ double mp_time_delta(struct timeval time_start) {
    return ((double)(time_end.tv_sec - time_start.tv_sec) +
 	 (double)(time_end.tv_usec - time_start.tv_usec) / (double)1000000);
 }
+/* vim: set ts=4 sw=4 et syn=c : */

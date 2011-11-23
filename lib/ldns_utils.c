@@ -365,4 +365,4 @@ void print_help_ldns(void) {
 }
 
 
-/* vim: set ts=4 sw=4 et : */
+/* vim: set ts=4 sw=4 et syn=c : */

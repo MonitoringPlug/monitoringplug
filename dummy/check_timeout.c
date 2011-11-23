@@ -1,5 +1,5 @@
 /**
- * Monitoring Plugin - check_timeout
+ * Monitoring Plugin - check_timeout.c
  **
  *
  * check_timeout - Simulate a plugin timeout.
@@ -105,3 +105,4 @@ void print_help (void) {
     print_help_default();
 }
 
+/* vim: set ts=4 sw=4 et syn=c : */

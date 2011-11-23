@@ -165,4 +165,4 @@ void print_revision_virt(void) {
    printf(" libvirt v%d.%d.%d\n", major, minor, release);
 }
 
-/* vim: set ts=4 sw=4 et : */
+/* vim: set ts=4 sw=4 et syn=c : */

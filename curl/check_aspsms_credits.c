@@ -1,5 +1,5 @@
 /***
- * Monitoring Plugin - check_aspsms_credits
+ * Monitoring Plugin - check_aspsms_credits.c
  **
  *
  * check_aspsms_credits - Check ASPSMS credits by XML.

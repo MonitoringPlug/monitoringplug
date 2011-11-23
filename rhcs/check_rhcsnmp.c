@@ -1,5 +1,5 @@
 /**
- * Monitoring Plugin - check_rhc
+ * Monitoring Plugin - check_rhcsnmp.c
  **
  *
  * check_rhc - Check a RedHat Cluster Suite by snmp.
@@ -172,3 +172,4 @@ void print_help (void) {
     print_help_snmp();
 }
 
+/* vim: set ts=4 sw=4 et syn=c : */

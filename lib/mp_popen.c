@@ -127,3 +127,4 @@ void popen_timeout_alarm_handler(int signo) {
     }
 }
 
+/* vim: set ts=4 sw=4 et syn=c : */

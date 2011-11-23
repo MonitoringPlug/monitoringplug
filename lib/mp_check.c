@@ -93,4 +93,4 @@ int is_hostaddr(const char *address) {
     return FALSE;
 }
 
-/* vim: set ts=4 sw=4 et : */
+/* vim: set ts=4 sw=4 et syn=c : */

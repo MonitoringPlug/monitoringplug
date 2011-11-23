@@ -1,5 +1,5 @@
 /***
- * Monitoring Plugin - check_sockets
+ * Monitoring Plugin - check_sockets.c
  **
  *
  * check_sockets - Check number of open Sockets.

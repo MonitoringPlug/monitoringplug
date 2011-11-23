@@ -1,5 +1,5 @@
 /**
- * Monitoring Plugin - check_apc_pdu
+ * Monitoring Plugin - check_apc_pdu.c
  **
  *
  * check_apc_pdu - Check tyhe outlet status of a APC PDU.
@@ -271,3 +271,4 @@ void print_help (void) {
     print_help_snmp();
 }
 
+/* vim: set ts=4 sw=4 et syn=c : */

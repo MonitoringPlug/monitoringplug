@@ -1,5 +1,5 @@
 /***
- * Monitoring Plugin - check_koji_hub
+ * Monitoring Plugin - check_koji_hub.c
  **
  *
  * check_koji_hub - Check if the koji respons
@@ -193,3 +193,4 @@ void print_help (void) {
     print_help_crit_time("0.2s");
 }
 
+/* vim: set ts=4 sw=4 et syn=c : */

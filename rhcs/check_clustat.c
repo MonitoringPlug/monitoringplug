@@ -1,5 +1,5 @@
 /***
- * Monitoring Plugin - check_dummy
+ * Monitoring Plugin - check_clustat.c
  **
  *
  * check_clustat - Check clustat plugin.
@@ -196,3 +196,4 @@ void print_help (void) {
 
     print_help_default();
 }
+/* vim: set ts=4 sw=4 et syn=c : */

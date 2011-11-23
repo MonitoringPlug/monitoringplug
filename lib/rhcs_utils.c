@@ -277,3 +277,4 @@ void rhcs_conf_stopElement(void *conf, const char *name) {
     if (strcmp(name, "failoverdomain") == 0)
         fodomains++;
 }
+/* vim: set ts=4 sw=4 et syn=c : */

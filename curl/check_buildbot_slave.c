@@ -1,5 +1,5 @@
 /***
- * Monitoring Plugin - check_buildbot_slave
+ * Monitoring Plugin - check_buildbot_slave.c
  **
  *
  * check_buildbot_slave - Check BuildBot slave state by json.

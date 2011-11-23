@@ -1,5 +1,5 @@
 /***
- * Monitoring Plugin - check_dnssec_trace
+ * Monitoring Plugin - check_dnssec_trace.c
  **
  *
  * check_dnssec_trace - Check if the zone signature is tracable.

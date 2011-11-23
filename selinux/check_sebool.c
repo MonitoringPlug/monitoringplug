@@ -1,5 +1,5 @@
 /***
- * Monitoring Plugin - check_sebool
+ * Monitoring Plugin - check_sebool.c
  **
  *
  * check_sebool - Check SELinux boolean.

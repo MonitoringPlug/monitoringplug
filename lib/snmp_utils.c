@@ -374,4 +374,4 @@ void print_revision_snmp(void) {
     printf(" libnetsnmp v%s\n", netsnmp_get_version());
 }
 
-/* vim: set ts=4 sw=4 et : */
+/* vim: set ts=4 sw=4 et syn=c : */

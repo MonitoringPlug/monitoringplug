@@ -1,5 +1,5 @@
 /***
- * Monitoring Plugin - check_tftp
+ * Monitoring Plugin - check_tftp.c
  **
  *
  * check_tftp - Check if a file can be downloaded from tftp.
