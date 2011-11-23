@@ -156,9 +156,9 @@ int main (int argc, char **argv) {
         ret = virDomainInterfaceStats(dom, interface[i], &intStats, sizeof(intStats));
         if (ret == 0) {
             mp_snprintf(buf, 127, "%s_rx", interface[i]);
-            perfdata_int(buf, (int)intStats.rx_bytes/1024, "kB", 0,0,0,0);
+            mp_perfdata_int(buf, (long int)intStats.rx_bytes/1024, "kB", NULL);
             mp_snprintf(buf, 127, "%s_tx", interface[i]);
-            perfdata_int(buf, (int)intStats.tx_bytes/1024, "kB", 0,0,0,0);
+            mp_perfdata_int(buf, (long int)intStats.tx_bytes/1024, "kB", NULL);
         }
     }
 
@@ -168,8 +168,8 @@ int main (int argc, char **argv) {
     virDomainFree(dom);
     virConnectClose(conn);
 
-    perfdata_int("memory", info.memory, "kB", 0,0,0, info.maxMem);
-    perfdata_float("cpuTime", (float)info.cpuTime/1000000000, "s", 0, 0, 0, 0);
+    mp_perfdata_int2("memory", info.memory, "kB", NULL, 0, 0, 1, info.maxMem);
+    mp_perfdata_float("cpuTime", (float)info.cpuTime/1000000000, "s", NULL);
 
     /* Output and return */
     switch(info.state) {

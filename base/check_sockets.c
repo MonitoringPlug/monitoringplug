@@ -90,8 +90,7 @@ int main (int argc, char **argv) {
             if (count >= 0) {
                 lstatus = get_status(count, socket_thresholds);
                 if (mp_showperfdata)
-                    perfdata_int("tcp", count, "", socket_thresholds->warning->end ,
-                            socket_thresholds->critical->end, 0, 1024);
+                    mp_perfdata_int("tcp", count, "", socket_thresholds);
             } else {
                 lstatus = STATE_UNKNOWN;
             }
@@ -116,8 +115,7 @@ int main (int argc, char **argv) {
             if (count >= 0) {
                 lstatus = get_status(count, socket_thresholds);
                 if (mp_showperfdata)
-                    perfdata_int("tcp6", count, "", socket_thresholds->warning->end ,
-                            socket_thresholds->critical->end, 0, 1024);
+                    mp_perfdata_int("tcp6", count, "", socket_thresholds);
             } else {
                 lstatus = STATE_UNKNOWN;
             }
@@ -143,8 +141,7 @@ int main (int argc, char **argv) {
             if (count >= 0) {
                 lstatus = get_status(count, socket_thresholds);
                 if (mp_showperfdata)
-                    perfdata_int("udp", count, "", socket_thresholds->warning->end ,
-                            socket_thresholds->critical->end, 0, 1024);
+                    mp_perfdata_int("udp", count, "", socket_thresholds);
             } else {
                 lstatus = STATE_UNKNOWN;
             }
@@ -169,8 +166,7 @@ int main (int argc, char **argv) {
             if (count >= 0) {
                 lstatus = get_status(count, socket_thresholds);
                 if (mp_showperfdata)
-                    perfdata_int("udp", count, "", socket_thresholds->warning->end ,
-                            socket_thresholds->critical->end, 0, 1024);
+                    mp_perfdata_int("udp", count, "", socket_thresholds);
             } else {
                 lstatus = STATE_UNKNOWN;
             }
@@ -197,8 +193,7 @@ int main (int argc, char **argv) {
             if (count >= 0) {
                 lstatus = get_status(count, socket_thresholds);
                 if (mp_showperfdata)
-                    perfdata_int("raw", count, "", socket_thresholds->warning->end ,
-                            socket_thresholds->critical->end, 0, 1024);
+                    mp_perfdata_int("raw", count, "", socket_thresholds);
             } else {
                 lstatus = STATE_UNKNOWN;
             }
@@ -223,8 +218,7 @@ int main (int argc, char **argv) {
             if (count >= 0) {
                 lstatus = get_status(count, socket_thresholds);
                 if (mp_showperfdata)
-                    perfdata_int("raw6", count, "", socket_thresholds->warning->end ,
-                            socket_thresholds->critical->end, 0, 1024);
+                    mp_perfdata_int("raw6", count, "", socket_thresholds);
             } else {
                 lstatus = STATE_UNKNOWN;
             }

@@ -1,5 +1,5 @@
 /**
- * Monitoring Plugin - mp_common.h
+ * Monitoring Plugin - mp_common.c
  **
  *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>
@@ -32,8 +32,6 @@
 
 unsigned int mp_timeout = 10;
 unsigned int mp_verbose = 0;
-unsigned int mp_showperfdata = 0;
-char *mp_perfdata=NULL;
 
 void ok(const char *fmt, ...) {
     va_list ap;
@@ -91,49 +89,6 @@ void usage(const char *fmt, ...) {
     printf("\n");
     print_usage();
     exit(STATE_UNKNOWN);
-}
-
-void perfdata_int(const char *label, int value, const char *unit,
-                  int warn, int crit, int min, int max) {
-   char *tmp;
-
-   if (!mp_showperfdata)
-       return;
-
-   tmp=malloc(64);
-   sprintf(tmp,"'%s'=%d%s;%d;%d;%d;%d", label, value, unit, warn, crit, min, max);
-
-   if (mp_perfdata != NULL) {
-      mp_perfdata = mp_realloc(mp_perfdata, strlen(mp_perfdata) + strlen(tmp) + 2);
-      strncat(mp_perfdata, " ", 1);
-   } else {
-      mp_perfdata = mp_malloc(strlen(tmp) + 1);
-      mp_perfdata[0] = '\0';
-   }
-   strncat(mp_perfdata, tmp, strlen(tmp));
-
-   free(tmp);
-}
-
-void perfdata_float(const char *label, float value, const char *unit,
-                    float warn, float crit, float  min, float max) {
-   char *tmp;
-
-   if (!mp_showperfdata)
-       return;
-
-   tmp=malloc(128);
-   sprintf(tmp,"'%s'=%0.4f%s;%0.2f;%0.2f;%0.2f;%0.2f", label, value, unit, warn, crit, min, max);
-
-   if (mp_perfdata != NULL) {
-      mp_perfdata = mp_realloc(mp_perfdata, strlen(mp_perfdata) + strlen(tmp) + 2);
-      strncat(mp_perfdata, " ", 1);
-      strncat(mp_perfdata, tmp, strlen(tmp));
-   } else {
-      mp_perfdata = strdup(tmp);
-   }
-
-   free(tmp);
 }
 
 void print_usage (void) {

@@ -163,7 +163,7 @@ int mp_snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd)
                             *(p->target) = (void *)(*vars->val.integer);
                             break;
                         case ASN_OCTET_STR: {
-                            char *t = (char *)malloc(1 + vars->val_len);
+                            char *t = (char *)mp_malloc(1 + vars->val_len);
                             memcpy(t, vars->val.string, vars->val_len);
                             t[vars->val_len] = '\0';
 

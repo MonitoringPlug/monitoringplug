@@ -94,7 +94,7 @@ int main (int argc, char **argv) {
 
             time_delta = mp_time_delta(start_time);
 
-            perfdata_float(buf, (float)time_delta, "s", time_threshold->warning->end, time_threshold->critical->end,0,0);
+            mp_perfdata_float(buf, (float)time_delta, "s", time_threshold);
 
             tstate = get_status(time_delta, time_threshold);
 

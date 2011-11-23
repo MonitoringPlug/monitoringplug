@@ -135,7 +135,7 @@ char **mp_eopt(int *argc, char **orig_argv, char *optarg) {
         }
     }
 
-    eargv = (char**)malloc(sizeof(char *)*(*argc+new_argc));
+    eargv = (char**)mp_malloc(sizeof(char *)*(*argc+new_argc));
     for (i=0; i<optind; i++) eargv[i]=orig_argv[i];
     for (i=0;i<new_argc;i++) eargv[optind+i]=new_argv[i];
     for (i=optind; i<*argc; i++) eargv[new_argc+i]=orig_argv[i];

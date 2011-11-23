@@ -104,6 +104,8 @@ int main (int argc, char **argv) {
 
         curl_easy_getinfo(curl, CURLINFO_SIZE_DOWNLOAD , &size);
 
+        mp_perfdata_float("time", (float)time, "s", fetch_thresholds);
+
         curl_easy_cleanup(curl);
         if(CURLE_OK != res) {
             critical(curl_easy_strerror(res));

@@ -30,6 +30,7 @@
 
 #include "mp_args.h"
 #include "mp_check.h"
+#include "mp_perfdata.h"
 #include "mp_popen.h"
 #include "mp_utils.h"
 #include "mp_longopt.h"
@@ -50,11 +51,6 @@ extern const char *progcopy;
 extern unsigned int mp_timeout;
 /** The global verbose variable. */
 extern unsigned int mp_verbose;
-/** The global perfdata variable. */
-extern unsigned int mp_showperfdata;
-
-/** The global perf data string. */
-extern char *mp_perfdata;
 
 /**
  * Default return values for functions
@@ -108,18 +104,6 @@ void unknown(const char *fmt, ...) __attribute__((__noreturn__));
  * prints to the stdout and exit with STATE_UNKNOWN.
  */
 void usage(const char *fmt, ...) __attribute__((__noreturn__));
-
-/**
- * add integer pref data for printing on exit.
- */
-void perfdata_int(const char *label, int value, const char *unit,
-		  int warn, int crit, int min, int max);
-
-/**
- * add float perf data for printing on exit.
- */
-void perfdata_float(const char *label, float value, const char *unit,
-		    float warn, float crit, float min, float max);
 
 /**
   * Print the program help.

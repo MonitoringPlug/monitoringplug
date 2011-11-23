@@ -107,7 +107,7 @@ int main (int argc, char **argv) {
             buf = mp_malloc(128);
             mp_snprintf(buf, 128, "%s:v%s", rpctransport[j], rpcversion[i]);
 
-            perfdata_float(buf, (float)time_delta, "s", time_threshold->warning->end, time_threshold->critical->end,0,0);
+            mp_perfdata_float(buf, (float)time_delta, "s", time_threshold);
 
             if (ret != RPC_SUCCESS || tstate == STATE_CRITICAL) {
                 mp_strcat_comma(&nfs_crit, buf);

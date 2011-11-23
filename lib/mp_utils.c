@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
+#include <sys/time.h>
 
 int mp_sprintf(char *s, const char *format, ...) {
     int len=0;
