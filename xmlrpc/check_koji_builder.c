@@ -53,7 +53,10 @@ int main (int argc, char **argv) {
     xmlrpc_value *val;
     xmlrpc_bool ready;
     xmlrpc_bool enabled;
-    char *name;
+    xmlrpc_double load;
+    xmlrpc_int hostid;
+    xmlrpc_int tasks;
+    const char *name = NULL;
 
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
@@ -76,15 +79,19 @@ int main (int argc, char **argv) {
     if (xmlrpc_value_type(result) != XMLRPC_TYPE_STRUCT)
        critical("kojid: %s not found.", hostname);
 
-    xmlrpc_struct_read_value(&env, result, "name", &val);
+    xmlrpc_decompose_value(&env, result, "{s:s,s:b,s:b,s:i,s:d,*}",
+            "name", &name, "ready", &ready, "enabled", &enabled,
+            "id", &hostid, "task_load", &load);
     unknown_if_xmlrpc_fault(&env);
-    xmlrpc_parse_value(&env, val, "s", &name);
 
-    xmlrpc_struct_read_value(&env, result, "ready", &val);
-    xmlrpc_parse_value(&env, val, "b", &ready);
+    result = xmlrpc_client_call(&env, url, "listTasks", "({s:i}{s:b})", "host_id", hostid, "countOnly", 1);
+    unknown_if_xmlrpc_fault(&env);
 
-    xmlrpc_struct_read_value(&env, result, "enabled", &val);
-    xmlrpc_parse_value(&env, val, "b", &enabled);
+    xmlrpc_decompose_value(&env, result, "i", &tasks);
+    unknown_if_xmlrpc_fault(&env);
+
+    mp_perfdata_int("tasks", tasks, "c", NULL);
+    mp_perfdata_float("tasks_load", (float)load, "", NULL);
 
     if (!enabled)
        critical("kojid: %s is disabled.", name);

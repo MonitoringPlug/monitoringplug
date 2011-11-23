@@ -82,6 +82,7 @@ int main (int argc, char **argv) {
     }
 
     xmlrpc_parse_value(&env, result, "i", &api);
+    unknown_if_xmlrpc_fault(&env);
 
     if (mp_showperfdata) {
         mp_perfdata_float("time", (float)time_delta, "s", time_threshold);
@@ -103,10 +104,12 @@ int main (int argc, char **argv) {
 
         result = xmlrpc_client_call_params(&env, url, "multiCall", params);
 
-	if (!env.fault_occurred) {
+        if (!env.fault_occurred) {
             xmlrpc_decompose_value(&env, result, "((i)(i)(i)(i)(i)(i)*)",
-		  &tasks[0], &tasks[1], &tasks[2], &tasks[3], &tasks[4],
-	          &tasks[5]);
+                  &tasks[0], &tasks[1], &tasks[2], &tasks[3], &tasks[4],
+                  &tasks[5]);
+        }
+        if (!env.fault_occurred) {
 
             mp_perfdata_int("task_free", tasks[0], "", NULL);
             mp_perfdata_int("task_open", tasks[1], "", NULL);
@@ -114,16 +117,16 @@ int main (int argc, char **argv) {
             mp_perfdata_int("task_canceled", tasks[3], "c", NULL);
             mp_perfdata_int("task_assigned", tasks[4], "", NULL);
             mp_perfdata_int("task_faild", tasks[5], "c", NULL);
-	}
+        }
     }
 
     switch (get_status(time_delta, time_threshold)) {
        case STATE_OK:
-	  ok("Koji-Hub running. (API v%d)", api);
+          ok("Koji-Hub running. (API v%d)", api);
        case STATE_WARNING:
-	  warning("Koji-Hub running slow. (API v%d)", api);
+          warning("Koji-Hub running slow. (API v%d)", api);
        default:
-	  critical("Koji-Hub running to slow. (API v%d)", api);
+          critical("Koji-Hub running to slow. (API v%d)", api);
     }
 }
 
@@ -149,7 +152,7 @@ int process_arguments (int argc, char **argv) {
         if (c == -1 || c == EOF)
             break;
 
-	getopt_wc_time(c, optarg, &time_threshold);
+        getopt_wc_time(c, optarg, &time_threshold);
 
         switch (c) {
             /* Default opts */
