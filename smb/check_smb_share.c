@@ -1,5 +1,5 @@
 /***
- * Monitoring Plugin - check_cups_jobs.c
+ * Monitoring Plugin - check_smb_share.c
  **
  *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>
@@ -21,11 +21,11 @@
  * $Id$
  */
 
-const char *progname  = "check_cups_jobs";
+const char *progname  = "check_smb_share";
 const char *progvers  = "0.1";
 const char *progcopy  = "2011";
 const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
-const char *progusage = "-H <HOSTANME> [--help] [--timeout TIMEOUT]";
+const char *progusage = "--url <URL> [--help] [--timeout TIMEOUT]";
 
 /* MP Includes */
 #include "mp_common.h"
@@ -42,7 +42,7 @@ const char *progusage = "-H <HOSTANME> [--help] [--timeout TIMEOUT]";
 #include <libsmbclient.h>
 
 /* Global Vars */
-const char *url = "smb://";
+const char *url = NULL;
 const char *username = NULL;
 const char *password = NULL;
 const char *workgroup = NULL;
@@ -226,6 +226,10 @@ int process_arguments (int argc, char **argv) {
     }
 
     /* Check requirements */
+    if (!url)
+        usage("URL is mandatory.");
+    if (username && !password)
+        usage("Username requires password.");
 
     /* Apply defaults */
 
@@ -238,24 +242,23 @@ void print_help (void) {
 
     printf("\n");
 
-    printf("Check description: Check CUPS job count and age.");
+    printf("Check description: Check smb share connection.");
 
     printf("\n\n");
 
     print_usage();
 
     print_help_default();
-    print_help_host();
-    printf(" -P, --printer=PRINTER\n");
-    printf("      Check device named PRINTER.\n");
-    printf(" -s, --summarize\n");
-    printf("      Summerize job count over all printers\n");
-    print_help_warn("job count", "none");
-    print_help_crit("job count", "none");
-    printf(" -W, --timewarning=time[d|h|m|s]\n");
-    printf("      Return warning if job processing time exceeds value. Default to 5m\n");
-    printf(" -C, --timecritical=time[d|h|m|s]\n");
-    printf("      Return critical if job processing time exceeds value. Default to 10m\n");
+    printf(" -u, --url=URL\n");
+    printf("      Test given smb url.\n");
+    printf(" -U, --username=USERNAME\n");
+    printf("      Authenticate as USERNAME. (Requires password.)\n");
+    printf(" -D, --password=PASSWORD\n");
+    printf("      Authenticate with PASSWORD.\n");
+    printf(" -W, --workgroup=WORKGROUP\n");
+    printf("      Authenticate to WORKGROUP\n");
+    print_help_warn_time("1s");
+    print_help_crit_time("2s");
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */
