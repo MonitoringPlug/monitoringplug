@@ -50,6 +50,7 @@ PKG_CHECK_MODULES([SELINUX], [libselinux],[],[AC_MSG_WARN([Skipping SELinux])])
 PKG_CHECK_MODULES([GNUTLS], [gnutls >= 2.8.0], [],[AC_MSG_WARN([Skipping gnutls])])
 PKG_CHECK_MODULES([JSON], [json], [],[AC_MSG_WARN([Skipping json-c])])
 PKG_CHECK_MODULES([LIBVIRT],[libvirt], [],[AC_MSG_WARN([Skipping libvirt])])
+PKG_CHECK_MODULES([SMBCLIENT],[smbclient], [],[AC_MSG_WARN([Skipping libsmbclient])])
 
 # SNMP Option
 AC_ARG_WITH([netsnmp],
@@ -110,6 +111,7 @@ AM_CONDITIONAL([HAVE_CHECK], [test "x$CHECK_LIBS" != x])
 AM_CONDITIONAL([HAVE_GNUTLS], [test "x$GNUTLS_LIBS" != x])
 AM_CONDITIONAL([HAVE_JSON], [test "x$JSON_LIBS" != x])
 AM_CONDITIONAL([HAVE_LIBVIRT], [test "x$LIBVIRT_LIBS" != x])
+AM_CONDITIONAL([HAVE_SMBCLIENT], [test "x$SMBCLIENT_LIBS" != x])
 
 # GCC Opts
 #AX_CFLAGS_WARN_ALL()
@@ -167,6 +169,7 @@ AC_CONFIG_FILES([Makefile
                  rhcs/Makefile
                  rpc/Makefile
                  selinux/Makefile
+		 smb/Makefile
                  snmp/Makefile
                  xmlrpc/Makefile
                  contrib/Makefile

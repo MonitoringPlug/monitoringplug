@@ -2,6 +2,7 @@
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = lib base cups curl dns dummy gnutls libvirt rhcs rpc selinux snmp xmlrpc \
-	contrib doc policy tests
+SUBDIRS = lib base cups curl dns dummy gnutls libvirt rhcs rpc selinux \
+	  smb snmp xmlrpc \
+	  contrib doc policy tests
 
