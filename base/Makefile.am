@@ -11,6 +11,6 @@ LDADD = ../lib/libmonitoringplug.a
 bin_PROGRAMS = check_file
 
 if OS_LINUX
-bin_PROGRAMS += check_bonding check_sockets
+bin_PROGRAMS += check_bonding check_mem check_sockets
 endif
 

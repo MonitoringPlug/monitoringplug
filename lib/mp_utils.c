@@ -118,4 +118,36 @@ double mp_time_delta(struct timeval time_start) {
    return ((double)(time_end.tv_sec - time_start.tv_sec) +
 	 (double)(time_end.tv_usec - time_start.tv_usec) / (double)1000000);
 }
+
+char *mp_human_size(long int value) {
+    char *out;
+    float size;
+    int exp;
+
+    size = (float)value;
+    for(exp = 0; exp < 5 && size > 1024; exp++) {
+        size /= 1024;
+    }
+
+    out = mp_malloc(14);
+    sprintf(out, "%.2f ", size);
+
+    switch (exp) {
+        case 1:
+            strcat(out, "KiB");
+            break;
+        case 2:
+            strcat(out, "MiB");
+            break;
+        case 3:
+            strcat(out, "GiB");
+            break;
+        case 4:
+            strcat(out, "TiB");
+            break;
+    }
+
+    return out;
+}
+
 /* vim: set ts=4 sw=4 et syn=c : */
