@@ -43,6 +43,9 @@ char *mp_snmp_privpass;
 int mp_snmp_timeout = 0;
 int mp_snmp_retries = 0;
 
+char *ifOperStatusText[] = {"", "up", "down", "testing", "unknown",
+       "dormant", "notPresent", "lowerLayerDown", ""};
+
 extern char* hostname;
 
 netsnmp_session *mp_snmp_init(void) {
@@ -149,27 +152,37 @@ int mp_snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd)
     /* Process the response. */
     if (status == STAT_SUCCESS && response->errstat == SNMP_ERR_NOERROR) {
         for(vars = response->variables; vars; vars = vars->next_variable) {
+            if (mp_verbose > 1)
+                print_variable(vars->name, vars->name_length, vars);
             for(p = querycmd; p->len; p++) {
                 if (snmp_oid_compare(vars->name, vars->name_length, p->oid, p->len) == 0) {
-                    if (mp_verbose > 1)
-                        print_variable(vars->name, vars->name_length, vars);
 
                     if (vars->type != p->type) {
+                        if (mp_verbose > 1)
+                            printf("TYPE Missmatch 0x%X ~ 0x%X\n", vars->type, p->type);
                         *p->target = NULL;
-                        continue;
+                        break;
                     }
                     switch(vars->type) {
-                        case ASN_INTEGER:
+                        case ASN_INTEGER:       // 0x02
                             *(p->target) = (void *)(*vars->val.integer);
                             break;
-                        case ASN_OCTET_STR: {
+                        case ASN_OCTET_STR: {   // 0x04
                             char *t = (char *)mp_malloc(1 + vars->val_len);
                             memcpy(t, vars->val.string, vars->val_len);
                             t[vars->val_len] = '\0';
 
-                            *p->target = t;}
+                            *p->target = (void*)t;}
                             break;
+                        case ASN_COUNTER:       // 0x41
+                        case ASN_GAUGE:         // 0x42
+                            *(p->target) = (void *)(*vars->val.integer);
+                            break;
+                        default:
+                            printf("Unknown Var type: 0x%X\n", vars->type);
+
                     }
+                    break;
                 }
             }
         }
@@ -184,8 +197,9 @@ int mp_snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd)
         else if (status == STAT_TIMEOUT)
             fprintf(stderr, "Timeout: No response from %s.\n",
                     (*ss).peername);
-        else
+        else {
             snmp_sess_perror(progname, ss);
+        }
 
     }
 

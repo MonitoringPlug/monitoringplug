@@ -38,7 +38,7 @@ extern oid *mp_snmp_authproto;
 extern char *mp_snmp_privpass;
 extern int mp_snmp_timeout;
 extern int mp_snmp_retries;
-
+extern char *ifOperStatusText[];
 
 #define SNMP_OPTSTR "C:S:L:U:K:A:a:X:T:R:"
 #define SNMP_LONGOPTS {"community", required_argument, NULL, (int)'C'}, \
