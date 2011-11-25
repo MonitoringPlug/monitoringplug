@@ -2,7 +2,8 @@
  * Monitoring Plugin - check_sebool.c
  **
  *
- * check_sebool - Check SELinux boolean.
+ * check_sebool - Check the state of selinux booleans.
+ *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -23,9 +24,10 @@
  */
 
 const char *progname  = "check_sebool";
+const char *progdesc  = "Check the state of selinux booleans.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2011";
-const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
+const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "[--on BOOL] [--off BOOL] [--on|off ...]";
 
 /* MP Includes */
@@ -169,7 +171,7 @@ void print_help (void) {
 
     printf("\n");
 
-    printf("This plugin test the selinux boolean state.");
+    printf("Check description: %s", progdesc);
 
     printf("\n\n");
 

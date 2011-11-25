@@ -2,7 +2,8 @@
  * Monitoring Plugin - check_file.c
  **
  *
- * check_file - Check a files property.
+ * check_file - Check age, size, owner, group and permission property of a file.
+ *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -23,9 +24,10 @@
  */
 
 const char *progname  = "check_file";
+const char *progdesc  = "Check age, size, owner, group and permission property of a file.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2010";
-const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
+const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "-f <FILE> [-w <warning age>] [-c <critical age>]";
 
 /* MP Includes */
@@ -323,7 +325,7 @@ void print_help (void) {
 
     printf("\n");
 
-    printf("Check age, size, owner, group and permission property of a file.");
+    printf("Check description: %s", progdesc);
 
     printf("\n\n");
 

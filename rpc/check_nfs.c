@@ -2,6 +2,8 @@
  * Monitoring Plugin - check_nfs.c
  **
  *
+ * check_nfs - Check if the Host is exporting at least one or the named path.
+ *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -22,9 +24,10 @@
  */
 
 const char *progname  = "check_nfs";
+const char *progdesc  = "Check if the Host is exporting at least one or the named path.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2011";
-const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
+const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "-H hostname [--help] [--timeout TIMEOUT]";
 
 /* MP Includes */
@@ -320,7 +323,7 @@ void print_help (void) {
 
     printf("\n");
 
-    printf("Check description: Check if the Host is exporting at least one or the named path.");
+    printf("Check description: %s", progdesc);
 
     printf("\n\n");
 

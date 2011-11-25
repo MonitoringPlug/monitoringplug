@@ -1,7 +1,6 @@
 <?php
 #
-# Monitoring Plugin - check_koji_hub.php
-#
+# Monitoring Plugin PNP - check_koji_hub.php
 #
 # Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>
 #

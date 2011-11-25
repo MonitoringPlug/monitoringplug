@@ -2,7 +2,8 @@
  * Monitoring Plugin - check_enforce.c
  **
  *
- * check_enforce - Check SELinux state.
+ * check_enforce - Check the selinux state and policy.
+ *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -23,9 +24,10 @@
  */
 
 const char *progname  = "check_enforce";
+const char *progdesc  = "Check the selinux state and policy.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2011";
-const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
+const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "[--enforcing|--permissive|--disabled]";
 
 /* MP Includes */
@@ -174,7 +176,7 @@ void print_help (void) {
 
     printf("\n");
 
-    printf("This plugin test the selinux state and policy.");
+    printf("Check description: %s", progdesc);
 
     printf("\n\n");
 

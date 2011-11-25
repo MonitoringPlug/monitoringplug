@@ -3,6 +3,7 @@
  **
  *
  * check_dns_sync - Check if the zone serial are in sync.
+ *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -23,9 +24,10 @@
  */
 
 const char *progname  = "check_dns_sync";
+const char *progdesc  = "Check if the zone serial are in sync.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2010";
-const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
+const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "-D <domain> [-H <host>]";
 
 /* MP Includes */
@@ -404,7 +406,7 @@ void print_help (void) {
 
    printf("\n");
 
-   printf("Check if the zone serial are in sync.");
+   printf("Check description: %s", progdesc);
 
    printf("\n\n");
 
@@ -416,4 +418,4 @@ void print_help (void) {
    printf("      The name of the domain to check.\n");
 }
 
-/* vim: set ts=4 sw=4 et syn=c.libdns : */
+/* vim: set ts=4 sw=4 et syn=c : */

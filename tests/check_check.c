@@ -1,6 +1,8 @@
-/**
+/***
  * Monitoring Plugin - check_check.c
  **
+ *
+ * check_check - 
  *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>
  *
@@ -18,6 +20,7 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
+ * $Id$
  */
 
 #include "mp_common.h"

@@ -2,6 +2,8 @@
  * Monitoring Plugin - check_ssl_cert.c
  **
  *
+ * check_ssl_cert - Check X509 Certification expiration over ssl.
+ *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -22,9 +24,10 @@
  */
 
 const char *progname  = "check_ssl_cert";
+const char *progdesc  = "Check X509 Certification expiration over ssl.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2011";
-const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
+const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "[--help] [--timeout TIMEOUT]";
 
 /* MP Includes */
@@ -260,7 +263,7 @@ void print_help (void) {
 
     printf("\n");
 
-    printf("Check description: check_ssl_cert");
+    printf("Check description: %s", progdesc);
 
     printf("\n\n");
 

@@ -1,8 +1,9 @@
-/**
+/***
  * Monitoring Plugin - check_timeout.c
  **
  *
- * check_timeout - Simulate a plugin timeout.
+ * check_timeout - This plugin simulate a plugin timeout.
+ *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -23,9 +24,10 @@
  */
 
 const char *progname  = "check_timeout";
+const char *progdesc  = "This plugin simulate a plugin timeout.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2010";
-const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
+const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "[-t <timeout>]";
 
 /* MP Includes */
@@ -96,7 +98,7 @@ void print_help (void) {
 
     printf("\n");
 
-    printf("This plugin simulate a plugin timeout.");
+    printf("Check description: %s", progdesc);
 
     printf("\n\n");
 

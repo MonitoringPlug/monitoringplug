@@ -2,7 +2,8 @@
  * Monitoring Plugin - check_koji_hub.c
  **
  *
- * check_koji_hub - Check if the koji respons
+ * check_koji_hub - Check if the koji-hub is working.
+ *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -23,9 +24,10 @@
  */
 
 const char *progname  = "check_koji_hub";
+const char *progdesc  = "Check if the koji-hub is working.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2011";
-const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
+const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "--url URL";
 
 /* MP Includes */
@@ -182,7 +184,7 @@ void print_help (void) {
 
     printf("\n");
 
-    printf("This plugin check a Koji-Hub.");
+    printf("Check description: %s", progdesc);
 
     printf("\n\n");
 

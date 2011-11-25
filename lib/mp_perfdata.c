@@ -1,4 +1,4 @@
-/**
+/***
  * Monitoring Plugin - mp_perfdata.c
  **
  *
@@ -213,4 +213,5 @@ void mp_perfdata_float3(const char *label, float value, const char *unit,
    mp_strcat_space(&mp_perfdata, perfString);
    free(perfString);
 }
+
 /* vim: set ts=4 sw=4 et syn=c : */

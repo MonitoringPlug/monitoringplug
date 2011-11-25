@@ -3,6 +3,7 @@
  **
  *
  * check_aspsms_credits - Check ASPSMS credits by XML.
+ *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -23,9 +24,10 @@
  */
 
 const char *progname  = "check_aspsms_credits";
+const char *progdesc  = "Check ASPSMS credits by XML.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2010";
-const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
+const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "--userkey <userkey> --password <password>";
 
 /* MP Includes */
@@ -243,7 +245,7 @@ void print_help (void) {
 
     printf("\n");
 
-    printf ("This plugin check for available ASPSMS credits.");
+    printf("Check description: %s", progdesc);
     printf ("\n\n\tWARNING: Password is sent unencryptet.");
 
     printf("\n\n");

@@ -1,8 +1,9 @@
-/**
+/***
  * Monitoring Plugin - check_interface.c
  **
  *
- * check_interface - Check tyhe outlet status of a APC PDU.
+ * check_interface - Check interface status by SNMP IF-MIB
+ *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -23,9 +24,10 @@
  */
 
 const char *progname  = "check_interface";
+const char *progdesc  = "Check interface status by SNMP IF-MIB";
 const char *progvers  = "0.1";
 const char *progcopy  = "2010";
-const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
+const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "-H <HOST> [-on <PORTS>] [-off <PORTS>]";
 
 /* MP Includes */
@@ -175,21 +177,20 @@ void print_help (void) {
 
     printf("\n");
 
-    printf("This plugin check the psu and outlet status of a APC PDU.");
+    printf("Check description: %s", progdesc);
 
     printf("\n\n");
 
     print_usage();
 
-    printf("\nIf no On/Off-Ports are defines all ports are asumed as should be On.\n");
-    printf("\nOn/Off-Ports can be named or nubered. ex: --on '1,Outlet 3,4'\n");
-
     print_help_default();
 
-    printf(" -o, --on=PORT[,PORTS]\n");
-    printf("      Ports which should be On.\n");
-    printf(" -O, --off=PORT[,PORTS]\n");
-    printf("      Ports which should be Off.\n");
+    printf(" -I, --interface=[INDEX]\n");
+    printf("      Index of Interface to check.\n");
+    printf(" -d, --down\n");
+    printf("      Check for interface being down.\n");
+    printf(" -sm --should=[STATE]\n");
+    printf("      Check for interface being in STATE.\n");
 
     print_help_snmp();
 }

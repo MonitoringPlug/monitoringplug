@@ -3,6 +3,7 @@
  **
  *
  * check_dnssec_trace - Check if the zone signature is tracable.
+ *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -23,9 +24,10 @@
  */
 
 const char *progname  = "check_dnssec_trace";
+const char *progdesc  = "Check if the zone signature is tracable.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2009 - 2010";
-const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
+const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "[-H host] -D domain [-T domain] [-k file] [-t timeout]";
 
 /* MP Includes */
@@ -342,7 +344,7 @@ void print_help (void) {
 
     printf("\n");
 
-    printf("Check if the zone serial are in sync.");
+    printf("Check description: %s", progdesc);
 
     printf("\n\n");
 
@@ -360,4 +362,4 @@ void print_help (void) {
     print_help_crit_time("1 day");
 }
 
-/* vim: set ts=4 sw=4 et syn=c.libdns : */
+/* vim: set ts=4 sw=4 et syn=c : */

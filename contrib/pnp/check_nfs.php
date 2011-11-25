@@ -1,7 +1,6 @@
 <?php
 #
-# Monitoring Plugin - check_smb_share.c
-#
+# Monitoring Plugin PNP - check_nfs.php
 #
 # Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>
 #

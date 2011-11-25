@@ -3,6 +3,7 @@
  **
  *
  * check_tftp - Check if a file can be downloaded from tftp.
+ *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -23,9 +24,10 @@
  */
 
 const char *progname  = "check_tftp";
+const char *progdesc  = "Check if a file can be downloaded from tftp.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2010";
-const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
+const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "-H host -F file [-t timeout] [-w warn] [-c crit]";
 
 /* MP Includes */
@@ -197,7 +199,7 @@ void print_help (void) {
 
     printf("\n");
 
-    printf ("This plugin check if a file can be downloaded from tftp.");
+    printf("Check description: %s", progdesc);
 
     printf("\n\n");
 

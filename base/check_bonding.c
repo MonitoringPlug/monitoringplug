@@ -2,7 +2,8 @@
  * Monitoring Plugin - check_bonding.c
  **
  *
- * check_sockets - Check number of open Sockets.
+ * check_bonding - Check bonding status.
+ *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -23,9 +24,10 @@
  */
 
 const char *progname  = "check_bonding";
+const char *progdesc  = "Check bonding status.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2010";
-const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
+const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "[--bond=BOND]";
 
 /* MP Includes */
@@ -240,7 +242,7 @@ void print_help (void) {
 
     printf("\n");
 
-    printf("Check bonding status.");
+    printf("Check description: %s", progdesc);
 
     printf("\n\n");
 

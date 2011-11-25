@@ -1,6 +1,8 @@
-/**
- * Monitoring Plugin Tests - main.c
+/***
+ * Monitoring Plugin - main.c
  **
+ *
+ * main - 
  *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>
  *
@@ -18,6 +20,7 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
+ * $Id$
  */
 
 #include "mp_common.h"
@@ -51,6 +54,5 @@ int main (void) {
 
 void print_help(void) {
 }
-
 
 /* vim: set ts=4 sw=4 et syn=c : */

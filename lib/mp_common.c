@@ -1,4 +1,4 @@
-/**
+/***
  * Monitoring Plugin - mp_common.c
  **
  *
@@ -116,4 +116,5 @@ void mp_noneroot_die(void) {
         usage("This plugin must be run as root.");
     }
 }
+
 /* vim: set ts=4 sw=4 et syn=c : */

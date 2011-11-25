@@ -3,6 +3,7 @@
  **
  *
  * check_buildbot_slave - Check BuildBot slave state by json.
+ *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -23,9 +24,10 @@
  */
 
 const char *progname  = "check_buildbot_slave";
+const char *progdesc  = "Check BuildBot slave state by json.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2010";
-const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
+const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "--hostname <BUILDBOTHOST> [--slave <SLAVENAME>]";
 
 /* MP Includes */
@@ -254,7 +256,7 @@ void print_help (void) {
 
     printf("\n");
 
-    printf ("Check BuildBot slave state by json.");
+    printf("Check description: %s", progdesc);
 
     printf("\n\n");
 

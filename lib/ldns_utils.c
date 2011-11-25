@@ -364,5 +364,4 @@ void print_help_ldns(void) {
     printf("      Use TCP for DNS queries.\n");
 }
 
-
 /* vim: set ts=4 sw=4 et syn=c : */

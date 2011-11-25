@@ -2,7 +2,8 @@
  * Monitoring Plugin - check_clustat.c
  **
  *
- * check_clustat - Check clustat plugin.
+ * check_clustat - Check RedHat Cluster status with clustat.
+ *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -23,9 +24,10 @@
  */
 
 const char *progname  = "check_clustat";
+const char *progdesc  = "Check RedHat Cluster status with clustat.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2010";
-const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
+const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "";
 
 /* MP Includes */
@@ -231,7 +233,7 @@ void print_help (void) {
 
     printf("\n");
 
-    printf("This plugin test nothing.");
+    printf("Check description: %s", progdesc);
 
     printf("\n\n");
 
@@ -239,4 +241,5 @@ void print_help (void) {
 
     print_help_default();
 }
+
 /* vim: set ts=4 sw=4 et syn=c : */

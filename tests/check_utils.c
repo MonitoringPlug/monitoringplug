@@ -2,6 +2,8 @@
  * Monitoring Plugin - check_utils.c
  **
  *
+ * check_utils - 
+ *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>
  *
  * This program is free software; you can redistribute it and/or modify

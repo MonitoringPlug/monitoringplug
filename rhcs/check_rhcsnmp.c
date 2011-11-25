@@ -1,8 +1,9 @@
-/**
+/***
  * Monitoring Plugin - check_rhcsnmp.c
  **
  *
- * check_rhc - Check a RedHat Cluster Suite by snmp.
+ * check_rhcsnmp - Check a RedHat Cluster Suite by snmp.
+ *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -24,9 +25,10 @@
 
 
 const char *progname  = "check_rhc";
+const char *progdesc  = "Check a RedHat Cluster Suite by snmp.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2010";
-const char *progauth = "Marius Rieder <marius.rieder@durchmesser.ch>";
+const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
 const char *progusage = "-H <HOST>";
 
 /* MP Includes */
@@ -161,7 +163,7 @@ void print_help (void) {
 
     printf("\n");
 
-    printf("This plugin check a RedHat Cluster Suite by snmp..");
+    printf("Check description: %s", progdesc);
 
     printf("\n\n");
 

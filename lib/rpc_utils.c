@@ -182,5 +182,4 @@ bool_t mp_xdr_exports(XDR *xdrs, exports *export) {
     return (TRUE);
 }
 
-
 /* vim: set ts=4 sw=4 et syn=c : */
