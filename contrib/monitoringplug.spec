@@ -1,21 +1,5 @@
-%if 0%{?rhel}
-%if 0%{?rhel} >= 6
-%define gnutls 1
-%define libvirt 1
-%define cups 1
-%else
-%define gnutls 0
-%define libvirt 0
-%define cups 0
-%endif
-%else
-%define gnutls 1
-%define libvirt 1
-%define cups 1
-%endif
-
 Name:           monitoringplug
-Version:        0.4
+Version:        0.5
 Release:        1%{?dist}
 Summary:        Collection of monitoring plugins for Nagios and similar monitoring systems.
 
@@ -25,38 +9,32 @@ URL:            http://svn.durchmesser.ch/trac/monitoringplug
 Source0:        %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-%if 0%{?rhel} == 5
-BuildRequires:  curl-devel
-%else
-BuildRequires:  libcurl-devel
-%endif
-%if %{cups} == 1
-BuildRequires:  cups-devel
-%endif
 BuildRequires:  expat-devel
-%if %{gnutls} == 1
-BuildRequires:  gnutls-devel
-%endif
 BuildRequires:	json-c-devel
 BuildRequires:  ldns-devel
 BuildRequires:  libselinux-devel
-%if %{libvirt} == 1
-BuildRequires:  libvirt-devel
-%endif
 BuildRequires:  net-snmp-devel
+BuildRequires:  xmlrpc-c-devel
+
 %if 0%{?rhel} == 5
+BuildRequires:  curl-devel
 BuildRequires:  selinux-policy-devel
 %else
+BuildRequires:  libcurl-devel
 BuildRequires:  selinux-policy
+# Thing RHEL5 is to old fore
+BuildRequires:  cups-devel
+BuildRequires:  gnutls-devel
+BuildRequires:  libvirt-devel
+BuildRequires:  libsmbclient-devel
 %endif
-BuildRequires:  xmlrpc-c-devel
 
 %package base
 Summary:        Collection of basic monitoring plugins for Nagios and similar monitoring systems.
 Group:          Applications/System
 Requires:	monitoringplug
 
-%if %{cups} == 1
+%if 0%{?rhel} != 5
 %package cups
 Summary:        Collection of cups monitoring plugins for Nagios and similar monitoring systems.
 Group:          Applications/System
@@ -90,15 +68,13 @@ Group:          Applications/System
 Requires:	ldns
 Requires:       monitoringplug
 
-%if %{gnutls} == 1
+%if 0%{?rhel} != 5
 %package gnutls
 Summary:        Collection of dns monitoring plugins for Nagios and similar monitoring systems.
 Group:          Applications/System
 Requires:	gnutls
 Requires:       monitoringplug
-%endif
 
-%if %{libvirt} == 1
 %package libvirt
 Summary:        Collection of libvirt monitoring plugins for Nagios and similar monitoring   systems.
 Group:          Applications/System
@@ -124,6 +100,14 @@ Group:          Applications/System
 Requires:	libselinux
 Requires:       monitoringplug
 
+%if 0%{?rhel} != 5
+%package smb
+Summary:        Collection of smb-based monitoring plugins for Nagios and similar monitoring systems.
+Group:          Applications/System
+Requires:       libsmbclient
+Requires:       monitoringplug
+%endif
+
 %package snmp
 Summary:        Collection of snmp-based monitoring plugins for Nagios and similar monitoring systems.
 Group:          Applications/System
@@ -144,7 +128,7 @@ Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the base and dummy plugins which don't need any
 additional libraries.
 
-%if %{cups} == 1
+%if 0%{?rhel} != 5
 %description cups
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the cups based plugins.
@@ -162,13 +146,11 @@ This package contains the curl and json based plugins.
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the dns plugins which use the ldns library.
 
-%if %{gnutls} == 1
+%if 0%{?rhel} != 5
 %description gnutls
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the plugins which use the gnutls library.
-%endif
 
-%if %{libvirt} == 1
 %description libvirt
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the libvirt based plugins.
@@ -185,6 +167,12 @@ This package contains the SUN RPC plugins.
 %description selinux
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the selinux plugins.
+
+%if 0%{?rhel} != 5
+%description smb
+Collection of monitoring plugins for Nagios and similar monitoring systems.
+This package contains the smb/cifs based plugins.
+%endif
 
 %description snmp
 Collection of monitoring plugins for Nagios and similar monitoring systems.
@@ -218,22 +206,23 @@ rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 %{__install} -d %{buildroot}%{_datadir}/selinux/packages/
 %{__install} -m 0644 policy/%{name}.pp.bz2 %{buildroot}%{_datadir}/selinux/packages/
+%{__mv} %{buildroot}%{_libdir}/nagios/plugins/check_dummy %{buildroot}%{_libdir}/nagios/plugins/check_dummy_mp
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %post
 if [ "$1" -eq "1" ]; then
-    /usr/sbin/semodule -i %{_datadir}/selinux/packages/%{name}.pp.bz2
-    /sbin/restorecon -F -R -v %{_libdir}/nagios/plugins/
+    /usr/sbin/semodule -i %{_datadir}/selinux/packages/%{name}.pp.bz2 2>/dev/null || :
+    /sbin/restorecon -F -R %{_libdir}/nagios/plugins/ 2>/dev/null || :
 fi
 if [ "$1" -eq "2" ]; then
-    /usr/sbin/semodule -u %{_datadir}/selinux/packages/%{name}.pp.bz2
+    /usr/sbin/semodule -u %{_datadir}/selinux/packages/%{name}.pp.bz2 2>/dev/null || :
 fi
 
 %postun
 if [ "$1" -eq "0" ]; then
-    /usr/sbin/semodule -r %{name}
+    /usr/sbin/semodule -r %{name} 2>/dev/null || :
 fi
 
 
@@ -246,8 +235,9 @@ fi
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_file
 %{_libdir}/nagios/plugins/check_bonding
+%{_libdir}/nagios/plugins/check_mem
 %{_libdir}/nagios/plugins/check_sockets
-%{_libdir}/nagios/plugins/check_dummy
+%{_libdir}/nagios/plugins/check_dummy_mp
 %{_libdir}/nagios/plugins/check_timeout
 
 %if 0%{?rhel} != 5
@@ -270,13 +260,11 @@ fi
 %{_libdir}/nagios/plugins/check_dns_*
 %{_libdir}/nagios/plugins/check_dnssec_*
 
-%if %{gnutls} == 1
+%if 0%{?rhel} != 5
 %files gnutls
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_ssl_cert
-%endif
 
-%if %{libvirt} == 1
 %files libvirt
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_libvirt*
@@ -297,10 +285,17 @@ fi
 %{_libdir}/nagios/plugins/check_enforce
 %{_libdir}/nagios/plugins/check_sebool
 
+%if 0%{?rhel} != 5
+%files smb
+%defattr(-,root,root,-)
+%{_libdir}/nagios/plugins/check_smb_*
+%endif
+
 %files snmp
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_arc_raid
 %{_libdir}/nagios/plugins/check_apc_pdu
+%{_libdir}/nagios/plugins/check_interface
 %{_libdir}/nagios/plugins/check_qnap_disks
 %{_libdir}/nagios/plugins/check_qnap_vols
 
@@ -311,6 +306,9 @@ fi
 %{_libdir}/nagios/plugins/check_koji_hub
 
 %changelog
+* Fri Nov 25 2011 Marius Rieder <marius.rieder@durchmesser.ch> - 0.5-1
+- version bump
+
 * Mon Oct 31 2011 Marius Rieder <marius.rieder@durchmesser.ch> - 0.4-1
 - version bump
 

@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.59])
 
-AC_INIT([monitoringplug],[0.4],[marius.rieder@durchmesser.ch])
+AC_INIT([monitoringplug],[0.5],[marius.rieder@durchmesser.ch])
 AC_CONFIG_AUX_DIR(build-aux)
 AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADERS([config.h])

@@ -1,3 +1,3 @@
 ## Process this file with automake to produce Makefile.in
 
-EXTRA_DIST = monitoringplug.spec
+EXTRA_DIST = monitoringplug.spec pnp/*.php
