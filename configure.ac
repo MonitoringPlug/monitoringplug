@@ -44,6 +44,7 @@ PKG_CHECK_MODULES([CHECK], [check >= 0.9.4],[],[AC_MSG_WARN([Skipping check])])
 AX_LIB_EXPAT()
 AC_LIB_LDNS([],[], [AC_MSG_WARN([Skipping ldns])])
 AC_LIB_CUPS([1.4.0],[], [AC_MSG_WARN([Skipping cups])])
+AX_LIB_MYSQL()
 LIBCURL_CHECK_CONFIG([yes],[7.7.2], [], [AC_MSG_WARN([Skipping curl])])
 PKG_CHECK_MODULES([XMLRPC], [xmlrpc xmlrpc_client xmlrpc_util],[],[AC_MSG_WARN([Skipping xmlrpc-c])])
 PKG_CHECK_MODULES([SELINUX], [libselinux],[],[AC_MSG_WARN([Skipping SELinux])])
@@ -112,6 +113,7 @@ AM_CONDITIONAL([HAVE_GNUTLS], [test "x$GNUTLS_LIBS" != x])
 AM_CONDITIONAL([HAVE_JSON], [test "x$JSON_LIBS" != x])
 AM_CONDITIONAL([HAVE_LIBVIRT], [test "x$LIBVIRT_LIBS" != x])
 AM_CONDITIONAL([HAVE_SMBCLIENT], [test "x$SMBCLIENT_LIBS" != x])
+AM_CONDITIONAL([HAVE_MYSQL], [test "x$MYSQL_CFLAGS" != x])
 
 # GCC Opts
 #AX_CFLAGS_WARN_ALL()
@@ -166,6 +168,7 @@ AC_CONFIG_FILES([Makefile
                  dummy/Makefile
                  gnutls/Makefile
 		 libvirt/Makefile
+		 mysql/Makefile
                  rhcs/Makefile
                  rpc/Makefile
                  selinux/Makefile

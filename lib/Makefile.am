@@ -12,7 +12,7 @@ librhcsutils_a_SOURCES = rhcs_utils.c rhcs_utils.h
 librhcsutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(EXPAT_CFLAGS)
 endif
 
-if HAVE_LDNS	
+if HAVE_LDNS
 noinst_LIBRARIES += libldnsutils.a
 
 libldnsutils_a_SOURCES = ldns_utils.c ldns_utils.h
@@ -26,7 +26,14 @@ libvirtutils_a_SOURCES = virt_utils.c virt_utils.h
 libvirtutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(LIBVIRT_CFLAGS)
 endif
 
-if HAVE_NET_SNMP	
+if HAVE_MYSQL
+noinst_LIBRARIES += libmysqlutils.a
+
+libmysqlutils_a_SOURCES = mysql_utils.c mysql_utils.h
+libmysqlutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(MYSQL_CFLAGS)
+endif
+
+if HAVE_NET_SNMP
 noinst_LIBRARIES += libsnmputils.a
 
 libsnmputils_a_SOURCES = snmp_utils.c snmp_utils.h
