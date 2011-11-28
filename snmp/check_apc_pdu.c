@@ -57,6 +57,7 @@ int main (int argc, char **argv) {
     long        pdu_psu1;
     long        pdu_psu2;
     int         i;
+    int         ret;
     struct mp_snmp_table    table_state;
     netsnmp_session         *ss;
     netsnmp_variable_list   *vars;
@@ -83,9 +84,9 @@ int main (int argc, char **argv) {
     };
     struct mp_snmp_query_cmd snmpcmd_table = {{1,3,6,1,4,1,318,1,1,12,3,5,1}, 13, 0, (void *)&table_state};
 
-    mp_snmp_query(ss, snmpcmd);
+    ret = mp_snmp_query(ss, snmpcmd);
 
-    mp_snmp_table_query(ss, &snmpcmd_table, 7);
+    ret = mp_snmp_table_query(ss, &snmpcmd_table, 7);
 
     mp_snmp_deinit();
 
