@@ -52,11 +52,11 @@ int main (int argc, char **argv) {
     /* Local Vars */
     int status;
     char *clustername;
-    int clusterstatus;
+    long int clusterstatus;
     char *clusterstatusdesc;
-    int clustervotes;
-    int clusterquorum;
-    int clusternodes;
+    long int clustervotes;
+    long int clusterquorum;
+    long int clusternodes;
     netsnmp_session *ss;
 
     /* OIDs to query */

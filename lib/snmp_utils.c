@@ -36,7 +36,7 @@ char *mp_snmp_community;
 int mp_snmp_version = SNMP_VERSION_2c;
 int mp_snmp_seclevel;
 char *mp_snmp_secname;
-char *mp_snmp_context;
+char *mp_snmp_context = "";
 char *mp_snmp_authpass;
 oid *mp_snmp_authproto;
 char *mp_snmp_privpass;
@@ -156,7 +156,6 @@ int mp_snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd)
                 print_variable(vars->name, vars->name_length, vars);
             for(p = querycmd; p->len; p++) {
                 if (snmp_oid_compare(vars->name, vars->name_length, p->oid, p->len) == 0) {
-
                     if (vars->type != p->type) {
                         if (mp_verbose > 1)
                             printf("TYPE Missmatch 0x%X ~ 0x%X\n", vars->type, p->type);
@@ -187,20 +186,14 @@ int mp_snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd)
             }
         }
     } else {
-        /* FAILURE: print what went wrong! */
+        char *err;
+        snmp_error(ss, NULL, NULL, &err);
 
-        if (status == STAT_SUCCESS) {
-            fprintf(stderr, "Error in packet\nReason: %s\n",
-                    snmp_errstring(response->errstat));
-            status = STAT_ERROR;
-        }
-        else if (status == STAT_TIMEOUT)
-            fprintf(stderr, "Timeout: No response from %s.\n",
-                    (*ss).peername);
-        else {
-            snmp_sess_perror(progname, ss);
-        }
+        if (response)
+            snmp_free_pdu(response);
+        mp_snmp_deinit();
 
+        critical("SNMP Error: %s", err);
     }
 
     if (response)
@@ -269,17 +262,14 @@ int mp_snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *que
             current_len = last_var->name_length;
 
         } else {
-            /* FAILURE: print what went wrong! */
+            char *err;
+            snmp_error(ss, NULL, NULL, &err);
 
-            if (status == STAT_SUCCESS) {
-                critical("Error in snmp packet: %s\n",
-                        snmp_errstring(response->errstat));
-            } else if (status == STAT_TIMEOUT) {
-                critical("Timeout: No response from %s.\n",
-                        (*ss).peername);
-            } else {
-                snmp_sess_perror(progname, ss);
-            }
+            if (response)
+                snmp_free_pdu(response);
+            mp_snmp_deinit();
+
+            critical("SNMP Error: %s", err);
         }
         if (response)
           snmp_free_pdu(response);
