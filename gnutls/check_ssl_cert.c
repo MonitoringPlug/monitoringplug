@@ -99,7 +99,7 @@ int main (int argc, char **argv) {
     ret = gnutls_priority_set_direct(session, "PERFORMANCE", &err);
     gnutls_credentials_set(session, GNUTLS_CRD_CERTIFICATE, xcred);
 
-    gnutls_transport_set_ptr(session, (gnutls_transport_ptr_t) socket);
+    gnutls_transport_set_ptr(session, (gnutls_transport_ptr_t) (__SWORD_TYPE)socket);
 
     // SSL Handshake
     ret = gnutls_handshake (session);
@@ -270,6 +270,8 @@ void print_help (void) {
     print_usage();
 
     print_help_default();
+    print_help_host();
+    print_help_port("none");
 #ifdef USE_IPV6
     print_help_46();
 #endif //USE_IPV6

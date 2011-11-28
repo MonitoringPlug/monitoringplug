@@ -99,7 +99,9 @@ int main (int argc, char **argv) {
     virConnectPtr   conn;
     virDomainPtr    dom = NULL;
     virDomainInfo   info;
+#ifdef HAVE_EXPAT
     virDomainInterfaceStatsStruct intStats;
+#endif
     int             ret;
 
     /* Set signal handling and alarm */

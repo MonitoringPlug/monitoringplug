@@ -25,6 +25,7 @@
 #define MP_UTILS_H_
 
 #include <stdlib.h>
+#include <sys/time.h>
 
 /**
  * Call sprintf, call critical if faild.
