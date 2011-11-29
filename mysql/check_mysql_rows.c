@@ -1,8 +1,8 @@
 /***
- * Monitoring Plugin - check_dummy.c
+ * Monitoring Plugin - check_mysql_rows.c
  **
  *
- * check_dummy - This plugin test nothing.
+ * check_mysql_rows - Check mysql table row count.
  *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>
  *

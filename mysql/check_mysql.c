@@ -1,8 +1,8 @@
 /***
- * Monitoring Plugin - check_dummy.c
+ * Monitoring Plugin - check_mysql.c
  **
  *
- * check_dummy - This plugin test nothing.
+ * check_mysql - Check MySQL connectivity and status.
  *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>
  *
@@ -23,12 +23,12 @@
  * $Id$
  */
 
-const char *progname  = "check_dummy";
-const char *progdesc  = "This plugin test nothing.";
+const char *progname  = "check_mysql";
+const char *progdesc  = "Check MySQL connectivity and status.";
 const char *progvers  = "0.1";
-const char *progcopy  = "2010";
+const char *progcopy  = "2011";
 const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
-const char *progusage = "<state> [message]";
+const char *progusage = "-H <HOST>";
 
 /* MP Includes */
 #include "mp_common.h"
