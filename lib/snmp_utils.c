@@ -185,7 +185,7 @@ int mp_snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd)
                 }
             }
         }
-    } else {
+    } else if (status != STAT_SUCCESS) {
         char *err;
         snmp_error(ss, NULL, NULL, &err);
 
