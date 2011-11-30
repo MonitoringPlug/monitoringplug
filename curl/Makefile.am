@@ -11,7 +11,7 @@ LDADD = ../lib/libmonitoringplug.a
 bin_PROGRAMS = 
 
 if HAVE_CURL
-bin_PROGRAMS += check_aspsms_credits
+bin_PROGRAMS += check_aspsms_credits check_webdav
 
 if HAVE_JSON
 bin_PROGRAMS += check_buildbot_slave
