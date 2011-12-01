@@ -32,6 +32,7 @@ const char *progusage = "-H host -F file [-t timeout] [-w warn] [-c crit]";
 
 /* MP Includes */
 #include "mp_common.h"
+#include "curl_utils.h"
 /* Default Includes */
 #include <getopt.h>
 #include <signal.h>
@@ -102,7 +103,7 @@ int main (int argc, char **argv) {
         res = curl_easy_perform(curl);
 
 
-        curl_easy_getinfo(curl, CURLINFO_CONNECT_TIME, &time);
+        curl_easy_getinfo(curl, CURLINFO_TOTAL_TIME, &time);
 
         curl_easy_getinfo(curl, CURLINFO_SIZE_DOWNLOAD , &size);
 
@@ -195,6 +196,7 @@ int process_arguments (int argc, char **argv) {
 
 void print_help (void) {
     print_revision();
+    print_revision_curl();
     print_copyright();
 
     printf("\n");

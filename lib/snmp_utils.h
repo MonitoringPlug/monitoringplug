@@ -123,4 +123,5 @@ void print_help_snmp(void);
  * Print the Net-SNMP library revision.
  */
 void print_revision_snmp(void);
+
 #endif /* _SNMP_UTILS_H_ */

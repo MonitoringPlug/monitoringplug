@@ -5,9 +5,18 @@ AM_CPPFLAGS = -I$(top_srcdir)
 noinst_LIBRARIES  = libmonitoringplug.a
 noinst_HEADERS = mp_longopt.h
 
-if HAVE_EXPAT
-noinst_LIBRARIES += librhcsutils.a
+if HAVE_CURL
+noinst_LIBRARIES += libcurlutils.a
 
+libcurlutils_a_SOURCES = curl_utils.c curl_utils.h
+libcurlutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(CURL_CFLAGS)
+endif
+
+if HAVE_EXPAT
+noinst_LIBRARIES += libexpatutils.a librhcsutils.a
+
+libexpatutils_a_SOURCES = expat_utils.c expat_utils.h
+libexpatutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(EXPAT_CFLAGS)
 librhcsutils_a_SOURCES = rhcs_utils.c rhcs_utils.h
 librhcsutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(EXPAT_CFLAGS)
 endif

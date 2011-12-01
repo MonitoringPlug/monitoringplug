@@ -32,6 +32,7 @@ const char *progusage = "--userkey <userkey> --password <password>";
 
 /* MP Includes */
 #include "mp_common.h"
+#include "curl_utils.h"
 /* Default Includes */
 #include <getopt.h>
 #include <signal.h>
@@ -241,6 +242,7 @@ int process_arguments (int argc, char **argv) {
 
 void print_help (void) {
     print_revision();
+    print_revision_curl();
     print_copyright();
 
     printf("\n");

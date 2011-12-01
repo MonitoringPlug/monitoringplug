@@ -47,19 +47,17 @@ const char *progusage = "-H <HOST>";
 /* Global Vars */
 const char  *hostname = NULL;
 int         port = 161;
+int         sensorport = -1;
+char        *degreeeUnit[] = { "F", "C" };
 
 int main (int argc, char **argv) {
     /* Local Vars */
-    int i;
-    char        *temp_name;
-    long int    temp;
-    long int    temp_unit;
-    long int    temp_state;
-    long int    temp_warn;
-    long int    temp_crit;
-    int         state = STATE_OK;
-    char        *output;
-    netsnmp_session         *ss;
+    int             i;
+    int             last = 10;
+    int             state = STATE_OK;
+    char            *output = NULL;
+    char            *buf;
+    netsnmp_session *ss;
 
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
@@ -74,11 +72,21 @@ int main (int argc, char **argv) {
 
     ss = mp_snmp_init();
 
+    if (sensorport == -1)
+        sensorport = 0;
+    else
+        last = sensorport + 1;
+
+    buf = mp_malloc(32);
+
     /* Query Temp */
-    for (i = 0; i < 10; i++) {
-        temp_state = 0;
+    for (i = sensorport; i < last; i++) {
+        long int temp;
+        long int temp_state = 0;
+        long int temp_warn, temp_crit;
+        long int temp_unit;
+
         struct mp_snmp_query_cmd snmpcmd[] = {
-            {{1,3,6,1,4,1,3854,1,2,2,1,16,1,1,i}, 15, ASN_OCTET_STR, (void *)&temp_name},
             {{1,3,6,1,4,1,3854,1,2,2,1,16,1,3,i}, 15, ASN_INTEGER, (void *)&temp},
             {{1,3,6,1,4,1,3854,1,2,2,1,16,1,4,i}, 15, ASN_INTEGER, (void *)&temp_state},
             {{1,3,6,1,4,1,3854,1,2,2,1,16,1,7,i}, 15, ASN_INTEGER, (void *)&temp_warn},
@@ -94,68 +102,76 @@ int main (int argc, char **argv) {
 
         switch (temp_state) {
             case 2:
+                mp_snprintf(buf, 32, "Temperature%d: %ld%s", i+1, temp, degreeeUnit[temp_unit]);
                 break;
             case 3:
             case 5:
                 state = state == STATE_OK ? STATE_WARNING : state;
-                mp_strcat_comma(&output, temp_name);
-                mp_strcat_space(&output, "warning");
+                mp_snprintf(buf, 32, "Warning Temperature%d: %ld%s", i+1, temp, degreeeUnit[temp_unit]);
                 break;
             default:
                 state = STATE_CRITICAL;
-                mp_strcat_comma(&output, temp_name);
-                mp_strcat_space(&output, "critical");
+                mp_snprintf(buf, 32, "Critical Temperature%d: %ld%s", i+1, temp, degreeeUnit[temp_unit]);
         }
 
-        mp_perfdata_int3(temp_name, temp, "", 1, temp_warn, 1, temp_crit, 0,0,0,0);
+        mp_strcat_comma(&output, buf);
+
+        mp_snprintf(buf, 32, "temp%d", i+1);
+        mp_perfdata_int3(buf, temp, degreeeUnit[temp_unit], 1, temp_warn, 1, temp_crit, 0,0,0,0);
     }
 
     /* Query Hum */
-    for (i = 0; i < 10; i++) {
-        temp_state = 0;
+    for (i = sensorport; i < last; i++) {
+        long int    hum;
+        long int    hum_state = 0;
+        long int    hum_warn, hum_crit;
+
         struct mp_snmp_query_cmd snmpcmd[] = {
-            {{1,3,6,1,4,1,3854,1,2,2,1,17,1,1,i}, 15, ASN_OCTET_STR, (void *)&temp_name},
-            {{1,3,6,1,4,1,3854,1,2,2,1,17,1,3,i}, 15, ASN_INTEGER, (void *)&temp},
-            {{1,3,6,1,4,1,3854,1,2,2,1,17,1,4,i}, 15, ASN_INTEGER, (void *)&temp_state},
-            {{1,3,6,1,4,1,3854,1,2,2,1,17,1,7,i}, 15, ASN_INTEGER, (void *)&temp_warn},
-            {{1,3,6,1,4,1,3854,1,2,2,1,17,1,8,i}, 15, ASN_INTEGER, (void *)&temp_crit},
+            {{1,3,6,1,4,1,3854,1,2,2,1,17,1,3,i}, 15, ASN_INTEGER, (void *)&hum},
+            {{1,3,6,1,4,1,3854,1,2,2,1,17,1,4,i}, 15, ASN_INTEGER, (void *)&hum_state},
+            {{1,3,6,1,4,1,3854,1,2,2,1,17,1,7,i}, 15, ASN_INTEGER, (void *)&hum_warn},
+            {{1,3,6,1,4,1,3854,1,2,2,1,17,1,8,i}, 15, ASN_INTEGER, (void *)&hum_crit},
             {{0}, 0, 0, NULL},
         };
 
         mp_snmp_query(ss, snmpcmd);
 
-        if (temp_state == 0)
+        if (hum_state == 0)
             break;
 
-        switch (temp_state) {
+        switch (hum_state) {
             case 2:
+                mp_snprintf(buf, 32, "Humidity%d: %ld%%", i+1, hum);
                 break;
             case 3:
             case 5:
                 state = state == STATE_OK ? STATE_WARNING : state;
-                mp_strcat_comma(&output, temp_name);
-                mp_strcat_space(&output, "warning");
+                mp_snprintf(buf, 32, "Warning Humidity%d: %ld%%", i+1, hum);
                 break;
             default:
                 state = STATE_CRITICAL;
-                mp_strcat_comma(&output, temp_name);
-                mp_strcat_space(&output, "critical");
+                mp_snprintf(buf, 32, "Critical Humidity%d: %ld%%", i+1, hum);
         }
 
-        mp_perfdata_int3(temp_name, temp, "%", 1, temp_warn, 1, temp_crit, 1,0,1,100);
+        mp_strcat_comma(&output, buf);
+
+        mp_snprintf(buf, 32, "hum%d", i+1);
+        mp_perfdata_int3(buf, hum, "%", 1, hum_warn, 1, hum_crit, 1,0,1,100);
     }
+
+    free(buf);
 
     mp_snmp_deinit();
 
     switch (state) {
         case STATE_OK:
-            ok("AKCP");
+            ok("AKCP - %s", output);
         case STATE_WARNING:
-            warning("AKCP %s", output);
+            warning("AKCP - %s", output);
         case STATE_CRITICAL:
-            critical("AKCP %s", output);
+            critical("AKCP - %s", output);
         default:
-            unknown("AKCP %s", output);
+            unknown("AKCP - %s", output);
     }
 }
 
@@ -167,9 +183,7 @@ int process_arguments (int argc, char **argv) {
             MP_LONGOPTS_DEFAULT,
             MP_LONGOPTS_HOST,
             MP_LONGOPTS_PORT,
-            {"interface", required_argument, NULL, (int)'I'},
-            {"down",      no_argument,       NULL, (int)'d'},
-            {"should",    required_argument, NULL, (int)'s'},
+            {"sensor", required_argument, NULL, (int)'s'},
             SNMP_LONGOPTS,
             MP_LONGOPTS_TIMEOUT,
             MP_LONGOPTS_END
@@ -184,7 +198,7 @@ int process_arguments (int argc, char **argv) {
 
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"t:H:p:I:ds:"SNMP_OPTSTR, longopts, &option);
+        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"t:H:p:s:"SNMP_OPTSTR, longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -203,6 +217,8 @@ int process_arguments (int argc, char **argv) {
                 getopt_port(optarg, &port);
                 break;
             /* Plugin opt */
+            case 's':
+                sensorport = (int)strtol(optarg, NULL, 10);
             /* Timeout opt */
             case 't':
                 getopt_timeout(optarg);

@@ -6,12 +6,17 @@ AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/lib $(LIBCURL_CPPFLAGS)
 AM_LDFLAGS = $(LIBCURL)
 AM_DEFAULT_SOURCE_EXT = .c
 
-LDADD = ../lib/libmonitoringplug.a
+LDADD = ../lib/libmonitoringplug.a ../lib/libcurlutils.a
 
 bin_PROGRAMS = 
 
 if HAVE_CURL
 bin_PROGRAMS += check_aspsms_credits check_webdav
+
+if HAVE_EXPAT
+check_webdav_LDFLAGS = $(AM_LDFLAGS) $(EXPAT_LDFLAGS)
+check_webdav_LDADD = $(LDADD) ../lib/libexpatutils.a
+endif
 
 if HAVE_JSON
 bin_PROGRAMS += check_buildbot_slave

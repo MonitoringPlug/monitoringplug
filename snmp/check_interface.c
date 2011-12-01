@@ -28,7 +28,7 @@ const char *progdesc  = "Check interface status by SNMP IF-MIB";
 const char *progvers  = "0.1";
 const char *progcopy  = "2010";
 const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
-const char *progusage = "-H <HOST> [-on <PORTS>] [-off <PORTS>]";
+const char *progusage = "-H <HOST> -I <ifIndex>";
 
 /* MP Includes */
 #include "mp_common.h"
@@ -189,7 +189,7 @@ void print_help (void) {
     printf("      Index of Interface to check.\n");
     printf(" -d, --down\n");
     printf("      Check for interface being down.\n");
-    printf(" -sm --should=[STATE]\n");
+    printf(" -s --should=[STATE]\n");
     printf("      Check for interface being in STATE.\n");
 
     print_help_snmp();

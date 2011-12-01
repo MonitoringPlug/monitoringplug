@@ -32,6 +32,10 @@ const char *progusage = "--url <URL>";
 
 /* MP Includes */
 #include "mp_common.h"
+#include "curl_utils.h"
+#ifdef HAVE_EXPAT
+#include "expat_utils.h"
+#endif
 /* Default Includes */
 #include <getopt.h>
 #include <signal.h>
@@ -42,6 +46,9 @@ const char *progusage = "--url <URL>";
 #include <ctype.h>
 /* Library Includes */
 #include <curl/curl.h>
+#ifdef HAVE_EXPAT
+#include <expat.h>
+#endif
 
 /* Global Vars */
 const char *url = NULL;
@@ -53,15 +60,35 @@ int allowShoulds = 0;
 char *contentType = NULL;
 char *contentTypeShould = NULL;
 thresholds *fetch_thresholds = NULL;
+int do_list = 0;
+
+#ifdef HAVE_EXPAT
+struct webdav_list {
+    char *path;
+    char *type;
+    char *status;
+    struct webdav_list *next;
+};
+
+struct webdav_parser {
+    char *name;
+    struct webdav_list *list;
+};
+#endif
 
 /* Function prototype */
-static size_t my_hwrite( void *ptr, size_t size, size_t nmemb, void *userdata);
+#ifdef HAVE_EXPAT
+void webdav_startElement(void *userData, const char *name, const char **atts);
+void webdav_stopElement(void *userData, const char *name);
+void webdav_charData(void *userData, const XML_Char *s, int len);
+#endif
 
 int main (int argc, char **argv) {
     /* Local Vars */
     CURL        *curl;
-    CURLcode    res;
     double      time;
+    double      time_total;
+    long        code;
     int         i;
     char        *output = NULL;
     int         status = STATE_OK;
@@ -77,33 +104,181 @@ int main (int argc, char **argv) {
     /* Start plugin timeout */
     alarm(mp_timeout);
 
+    /* H */
+    struct mp_curl_header headers[] = {
+        {"DAV", &dav}, {"Allow", &allow}, {"Content-Type", &contentType},
+        {NULL, NULL}
+    };
+
     /* Build query */
+    curl = mp_curl_init();
 
-    if (mp_verbose > 0) {
-        printf("CURL Version: %s\n", curl_version());
-        printf("Url: %s\n", url);
-    }
-    curl_global_init(CURL_GLOBAL_ALL);
+    /* WebDAV OPTIONS */
+    curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "OPTIONS");
+    curl_easy_setopt(curl, CURLOPT_URL, url);
+    curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, mp_curl_recv_header);
+    curl_easy_setopt(curl, CURLOPT_HEADERDATA, (void *)headers);
 
-    curl = curl_easy_init();
-    if(curl) {
-        curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "OPTIONS");
-        curl_easy_setopt(curl, CURLOPT_URL, url);
-        curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, my_hwrite);
+    code = mp_curl_perform(curl);
 
-        if (mp_verbose > 2)
-            curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+    if (code != 200)
+        critical("WebDav - HTTP Response Code %ld", code);
 
-        res = curl_easy_perform(curl);
+    curl_easy_getinfo(curl, CURLINFO_TOTAL_TIME, &time_total);
 
-        curl_easy_cleanup(curl);
-        if(CURLE_OK != res) {
-            critical(curl_easy_strerror(res));
+    if (do_list) {
+        struct curl_slist *header = NULL;
+        struct mp_curl_data query;
+        struct mp_curl_data answer;
+
+        /* Init query and answer */
+        query.data = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\
+                      <D:propfind xmlns:D=\"DAV:\"><D:prop><D:resourcetype/>\
+                      </D:prop></D:propfind>";
+        query.size = strlen(query.data);
+        query.start = 0;
+        answer.data = NULL;
+        answer.size = 0;
+
+        /* Disable header callback */
+        curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, mp_curl_recv_blackhole);
+
+        /* Set header */
+        header = curl_slist_append(header, "Depth: 0");
+        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, header);
+
+        /* Set method */
+        curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PROPFIND");
+        curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L);
+
+        /* IO Callback */
+        curl_easy_setopt(curl, CURLOPT_READFUNCTION, mp_curl_send_data);
+        curl_easy_setopt(curl, CURLOPT_READDATA, (void *)&query);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, mp_curl_recv_data);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&answer);
+
+        code = mp_curl_perform(curl);
+        curl_easy_getinfo(curl, CURLINFO_TOTAL_TIME, &time);
+        time_total += time;
+
+        if (code != 207) {
+            mp_perfdata_float("time", (float)time_total, "s", fetch_thresholds);
+            critical("WebDav - HTTP Response Code %ld", code);
+        }
+
+#ifdef HAVE_EXPAT
+        XML_Parser  parser;
+        struct webdav_parser *parserInfo;
+        struct webdav_list *list, *nextList;
+
+        parser = XML_ParserCreateNS(NULL, 0);
+
+        parserInfo = mp_malloc(sizeof(struct webdav_parser));
+        parserInfo->name = NULL;
+        parserInfo->list = NULL;
+
+        XML_SetUserData(parser, parserInfo);
+        XML_SetElementHandler(parser, webdav_startElement, webdav_stopElement);
+        XML_SetCharacterDataHandler(parser, webdav_charData);
+
+        if (!XML_Parse(parser, answer.data, answer.size, 1)) {
+            unknown("%s at line %d\n",
+                    XML_ErrorString(XML_GetErrorCode(parser)),
+                    (int) XML_GetCurrentLineNumber(parser));
+        }
+        XML_ParserFree(parser);
+
+        /* Check return */
+        if (parserInfo->list == NULL)
+            critical("WebDAV - Parsing PROPFIND response faild!");
+        if (parserInfo->list->next != NULL)
+            critical("WebDAV - Too many answers for PROPFIND Depth:0!");
+        if(strstr(parserInfo->list->status, "200") == NULL)
+            critical("WebDAV - PROPFIND status is %s", parserInfo->list->status);
+
+        /* For DAV:collection list Depth:1 */
+        if (parserInfo->list->type && (strcmp(parserInfo->list->type, "DAV:collection") == 0)) {
+
+            /* Free parserInfo */
+            if(mp_verbose > 3)
+                printf("PROPFIND %s (Depth:0)\n", url);
+            for (list = parserInfo->list; list; list = nextList) {
+                if(mp_verbose > 3)
+                    printf(" * %s (%s) [%s]\n", list->path, list->type, list->status);
+
+                free(list->path);
+                free(list->type);
+                free(list->status);
+
+                nextList = list->next;
+                free(list);
+            }
+            parserInfo->list = NULL;
+            parserInfo->name = NULL;
+
+            /* New Headers */
+            curl_slist_free_all(header);
+            header = NULL;
+            header = curl_slist_append(header, "Depth: 1");
+            curl_easy_setopt(curl, CURLOPT_HTTPHEADER, header);
+
+            /* Reset query and answer*/
+            query.start = 0;
+            free(answer.data);
+            answer.data = NULL;
+            answer.size = 0;
+
+            /* Set method */
+            curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PROPFIND");
+            curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L);
+
+            curl_easy_setopt(curl, CURLOPT_READFUNCTION, mp_curl_send_data);
+            curl_easy_setopt(curl, CURLOPT_READDATA, (void *)&query);
+
+            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, mp_curl_recv_data);
+            curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&answer);
+
+            code = mp_curl_perform(curl);
+            curl_easy_getinfo(curl, CURLINFO_TOTAL_TIME, &time);
+            time_total += time;
+
+            if (code != 207) {
+                mp_perfdata_float("time", (float)time_total, "s", fetch_thresholds);
+                critical("WebDav - HTTP Response Code %ld", code);
+            }
+
+            parser = XML_ParserCreateNS(NULL, 0);
+            XML_SetUserData(parser, parserInfo);
+            XML_SetElementHandler(parser, webdav_startElement, webdav_stopElement);
+            XML_SetCharacterDataHandler(parser, webdav_charData);
+
+            if (!XML_Parse(parser, answer.data, answer.size, 1)) {
+                unknown("%s at line %d\n",
+                        XML_ErrorString(XML_GetErrorCode(parser)),
+                        (int) XML_GetCurrentLineNumber(parser));
+            }
+            XML_ParserFree(parser);
+
+            /* Free parserInfo */
+            if(mp_verbose > 3)
+                printf("PROPFIND %s (Depth:1)\n", url);
+            for (list = parserInfo->list; list; list = nextList) {
+                if(mp_verbose > 3)
+                    printf(" * %s (%s) [%s]\n", list->path, list->type, list->status);
+                free(list->path);
+                free(list->type);
+                free(list->status);
+
+                nextList = list->next;
+                free(list);
+            }
         }
     }
+#endif
 
-    curl_easy_getinfo(curl, CURLINFO_CONNECT_TIME, &time);
-    mp_perfdata_float("time", (float)time, "s", fetch_thresholds);
+    curl_easy_cleanup(curl);
+
+    mp_perfdata_float("time", (float)time_total, "s", fetch_thresholds);
 
     curl_global_cleanup();
 
@@ -155,23 +330,61 @@ int main (int argc, char **argv) {
     unknown("WebDAV %s - %s", dav, output);
 }
 
-static size_t my_hwrite( void *ptr, size_t size, size_t nmemb, void *userdata) {
-    if (dav == NULL && strncmp("DAV:", ptr, 4) == 0) {
-        dav = mp_malloc(size*nmemb-4);
-        strncpy(dav, ptr+5, size*nmemb-5);
-        dav[size*nmemb-7] = '\0';
-    } else if (allow == NULL && strncmp("Allow:", ptr, 6) == 0) {
-        allow = mp_malloc(size*nmemb-6);
-        strncpy(allow, ptr+7, size*nmemb-7);
-        allow[size*nmemb-9] = '\0';
-    } else if (contentType == NULL && strncmp("Content-Type:", ptr, 13) == 0) {
-        contentType = mp_malloc(size*nmemb-13);
-        strncpy(contentType, ptr+14, size*nmemb-14);
-        contentType[size*nmemb-16] = '\0';
+#ifdef HAVE_EXPAT
+void webdav_startElement(void *userData, const char *name, const char **atts) {
+    struct webdav_parser *parserInfo = (struct webdav_parser *)userData;
+    struct webdav_list *listNew;
+
+    if (parserInfo->name && (strcmp("DAV:resourcetype", parserInfo->name) == 0)) {
+        parserInfo->list->type = strdup(name);
     }
 
-    return size*nmemb;
+    if (parserInfo->name) {
+        free(parserInfo->name);
+        parserInfo->name = NULL;
+    }
+
+    if (strcmp("DAV:response", name) == 0) {
+        listNew = mp_malloc(sizeof(struct webdav_list));
+        listNew->path = NULL;
+        listNew->next = parserInfo->list;
+        listNew->type = NULL;
+        listNew->status = NULL;
+
+        parserInfo->list = listNew;
+    } else if (strcmp("DAV:href", name) == 0) {
+        parserInfo->name = strdup(name);
+    } else if (strcmp("DAV:status", name) == 0) {
+        parserInfo->name = strdup(name);
+    } else if (strcmp("DAV:resourcetype", name) == 0) {
+        parserInfo->name = strdup(name);
+    }
 }
+void webdav_stopElement(void *userData, const char *name) {
+    struct webdav_parser *parserInfo = (struct webdav_parser *)userData;
+
+    if (parserInfo->name) {
+        free(parserInfo->name);
+        parserInfo->name = NULL;
+    }
+}
+void webdav_charData(void *userData, const XML_Char *s, int len) {
+    struct webdav_parser *parserInfo = (struct webdav_parser *)userData;
+
+    if (parserInfo->name == NULL)
+        return;
+
+    if (strcmp("DAV:href", parserInfo->name) == 0) {
+        parserInfo->list->path = mp_malloc(len);
+        memcpy(parserInfo->list->path, s, len);
+        parserInfo->list->path[len] = '\0';
+    } else if (strcmp("DAV:status", parserInfo->name) == 0) {
+        parserInfo->list->status = mp_malloc(len);
+        memcpy(parserInfo->list->status, s, len);
+        parserInfo->list->status[len] = '\0';
+    }
+}
+#endif
 
 int process_arguments (int argc, char **argv) {
     int c;
@@ -183,6 +396,7 @@ int process_arguments (int argc, char **argv) {
         {"url", required_argument, 0, (int)'u'},
         {"content-type", required_argument, 0, (int)'C'},
         {"allow", required_argument, 0, (int)'a'},
+        {"ls", no_argument, &do_list, 1},
         MP_LONGOPTS_WC,
         MP_LONGOPTS_TIMEOUT,
         MP_LONGOPTS_END
@@ -233,6 +447,10 @@ int process_arguments (int argc, char **argv) {
 
 void print_help (void) {
     print_revision();
+    print_revision_curl();
+#ifdef HAVE_EXPAT
+    print_revision_expat();
+#endif
     print_copyright();
 
     printf("\n");
@@ -250,6 +468,8 @@ void print_help (void) {
     printf("      Content-Type URL should report.\n");
     printf(" -a, --allow=METHOD[,METHOD]\n");
     printf("      Method or methods which should be allowed.\n");
+    printf("     --ls\n");
+    printf("      List the directory and check the response.\n");
     print_help_warn_time("5 sec");
     print_help_crit_time("9 sec");
 }
