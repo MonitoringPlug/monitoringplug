@@ -2,7 +2,7 @@
  * Monitoring Plugin - check_webdav.c
  **
  *
- * check_webdav - Check BuildBot slave state by json.
+ * check_webdav - Check WebDAV share.
  *
  * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>
  *
