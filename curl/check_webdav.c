@@ -308,7 +308,7 @@ int main (int argc, char **argv) {
         free(contentType);
     }
 
-    switch(get_status(time, fetch_thresholds)) {
+    switch(get_status(time_total, fetch_thresholds)) {
         case STATE_WARNING:
             status = status == STATE_OK ? STATE_WARNING : status;
             mp_strcat_space(&output, "Slow answer");

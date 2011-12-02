@@ -237,7 +237,7 @@ int mp_snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *que
 
         status = snmp_synch_response(ss, pdu, &response);
 
-        if (status == STAT_SUCCESS && response->errstat == SNMP_ERR_NOERROR) {
+        if (status == STAT_SUCCESS && response->errstat == SNMP_ERR_NOERROR && response->variables != NULL) {
             for(last_var = vars = response->variables; vars; last_var=vars, vars = vars->next_variable) {
                 /* Check for leafing of subtree */
                 if (snmp_oid_ncompare(querycmd->oid, querycmd->len, vars->name, vars->name_length, querycmd->len) != 0) {

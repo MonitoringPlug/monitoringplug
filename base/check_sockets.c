@@ -273,8 +273,8 @@ int countSocket(const char *filename, int port) {
     while (fgets(buffer, 256, input) != NULL) {
         if (port > 0) {
             next = buffer;
-            c = strsep(&next, ":");
-            c = strsep(&next, ":");
+            strsep(&next, ":");
+            strsep(&next, ":");
             c = strsep(&next, " ");
             if(port == strtol(c, NULL, 16)) {
                 count++;

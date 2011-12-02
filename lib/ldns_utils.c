@@ -217,15 +217,8 @@ ldns_rr_list* getaddr(ldns_resolver *res, const char *hostname) {
 }
 
 ldns_rr_list* loadKeyfile(const char *filename) {
-printf("loadKeyfile");
-    //int     col = 0;
-    //int     line = 0;
     FILE    *key_file;
-    //char    c;
-    //char    linebuffer[LDNS_MAX_PACKETLEN];
-
     ldns_status     status;
-    //ldns_rr         *rr;
     ldns_rr_list    *trusted_keys;
     ldns_zone		*trusted_zone;
 
@@ -243,9 +236,18 @@ printf("loadKeyfile");
     // Read key file
     status = ldns_zone_new_frm_fp(&trusted_zone, key_file, origin, 900, LDNS_RR_CLASS_IN);
 
+    ldns_rdf_deep_free(origin);
+
     fclose(key_file);
-    trusted_keys = ldns_rr_list_clone(ldns_zone_rrs(trusted_zone));
-    ldns_zone_deep_free(trusted_zone);
+
+    if (status == LDNS_STATUS_OK) {
+        trusted_keys = ldns_rr_list_clone(ldns_zone_rrs(trusted_zone));
+        ldns_zone_deep_free(trusted_zone);
+    } else {
+        if (mp_verbose >= 1)
+            fprintf(stderr,"loading keyfile faild.");
+        return NULL;
+    }
 
     return trusted_keys;
 }

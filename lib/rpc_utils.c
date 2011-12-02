@@ -151,7 +151,7 @@ bool_t mp_xdr_exports(XDR *xdrs, exports *export) {
                     if (!xdr_string(xdrs, &group->gr_name, MNTNAMLEN))
                         return (FALSE);
 
-                    if (node->ex_groups == NULL) {
+                    if (node->ex_groups == NULL || prev_group == NULL) {
                         node->ex_groups = group;
                         prev_group = group;
                     } else {

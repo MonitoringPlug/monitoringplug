@@ -1,0 +1,2 @@
+scan-build -o report/ ./configure
+scan-build -o report/ make

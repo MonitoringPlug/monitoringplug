@@ -201,7 +201,7 @@ int check_access(mode_t fmode) {
                 if ((fmode & access_mask) != 0)
                     return -1;
             } else if (mask_function == 0) {
-                if ((fmode & subject_mask) != (access_mask &= subject_mask))
+                if ((fmode & subject_mask) != (access_mask & subject_mask))
                     return -1;
             } else if (mask_function == 1) {
                 access_mask &= subject_mask;
@@ -253,7 +253,7 @@ int check_access(mode_t fmode) {
         if ((fmode & access_mask) != 0)
             return -1;
     } else if (mask_function == 0) {
-        if ((fmode & subject_mask) != (access_mask &= subject_mask))
+        if ((fmode & subject_mask) != (access_mask & subject_mask))
             return -1;
     } else if (mask_function == 1) {
         access_mask &= subject_mask;
