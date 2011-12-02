@@ -114,6 +114,7 @@ int main (int argc, char **argv) {
     /* Cleanup libcurl */
     curl_easy_cleanup(curl);
     curl_global_cleanup();
+    free(url);
 
     if (code != 200) {
         critical("Buildbot - HTTP Status %ld.", code);
@@ -173,6 +174,10 @@ int main (int argc, char **argv) {
 
         }
     }
+
+    /* free */
+    free(buf);
+    json_object_put(obj);
 
     if (faild && connected) {
         critical("%s, (OK: %s)", faild, connected);

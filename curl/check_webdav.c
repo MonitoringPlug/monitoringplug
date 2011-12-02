@@ -163,6 +163,7 @@ int main (int argc, char **argv) {
 
         if (code != 207) {
             mp_perfdata_float("time", (float)time_total, "s", fetch_thresholds);
+            free_threshold(fetch_thresholds);
             critical("WebDav - HTTP Response Code %ld", code);
         }
 
@@ -244,6 +245,7 @@ int main (int argc, char **argv) {
 
             if (code != 207) {
                 mp_perfdata_float("time", (float)time_total, "s", fetch_thresholds);
+                free_threshold(fetch_thresholds);
                 critical("WebDav - HTTP Response Code %ld", code);
             }
 
@@ -317,6 +319,8 @@ int main (int argc, char **argv) {
             status = STATE_CRITICAL;
             mp_strcat_space(&output, "Answer too slow");
     }
+
+    free_threshold(fetch_thresholds);
 
     switch(status) {
         case STATE_OK:

@@ -84,6 +84,9 @@ int main (int argc, char **argv) {
         "\n<Userkey>%s</Userkey>\n<Password>%s</Password>\n"
         "<Action>ShowCredits</Action>\n</aspsms>", userkey, password);
     query.size = strlen(query.data);
+    query.start = 0;
+    answer.data = NULL;
+    answer.size = 0;
 
     if (mp_verbose > 0) {
         printf("CURL Version: %s\n", curl_version());
@@ -109,8 +112,8 @@ int main (int argc, char **argv) {
     mp_snprintf(c, 24, "Content-Length: %d", (int)query.size);
     headers = curl_slist_append(headers, "Content-Type: text/html");
     headers = curl_slist_append(headers, c);
-    free( c );
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+    free(c);
 
     /* Perform request */
     code = mp_curl_perform(curl);
@@ -120,8 +123,10 @@ int main (int argc, char **argv) {
     mp_perfdata_float("time", (float)time, "s", NULL);
 
     /* Cleanup libcurl */
-    curl_easy_cleanup(curl); 
+    curl_slist_free_all(headers);
+    curl_easy_cleanup(curl);
     curl_global_cleanup();
+    free(query.data);
 
     if (mp_verbose > 1) {
         printf("Answer: '%s'\n", answer.data);
@@ -143,6 +148,8 @@ int main (int argc, char **argv) {
         }
     }
 
+    free(answer.data);
+
     if (mp_verbose > 0) {
         printf("errorCode %d\n", errorCode);
         printf("errorDescription %s\n", errorDescription);
@@ -152,13 +159,17 @@ int main (int argc, char **argv) {
     /* XML Error Code */
     if (errorCode != 1)
         unknown(errorDescription);
+    free(errorDescription);
 
     switch(get_status((int)credits, credit_thresholds)) {
         case STATE_OK:
+            free_threshold(credit_thresholds);
             ok("ASP SMS %.2f credits left for %s.", credits, userkey);
         case STATE_WARNING:
+            free_threshold(credit_thresholds);
             warning("ASP SMS %.2f credits left for %s.", credits, userkey);
         case STATE_CRITICAL:
+            free_threshold(credit_thresholds);
             critical("ASP SMS %.2f credits left for %s.", credits, userkey);
     }
 

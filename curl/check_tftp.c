@@ -110,12 +110,16 @@ int main (int argc, char **argv) {
 
     switch(get_status(time, fetch_thresholds)) {
         case STATE_OK:
+            free_threshold(fetch_thresholds);
             ok("Received %'.0fbyte in %fs.", size, time);
         case STATE_WARNING:
+            free_threshold(fetch_thresholds);
             warning("Received %'.0fbyte in %fs.", size, time);
         case STATE_CRITICAL:
+            free_threshold(fetch_thresholds);
             critical("Received %'.0fbyte in %fs.", size, time);
     }
+    free_threshold(fetch_thresholds);
 
     critical("You should never reach this point.");
 }
