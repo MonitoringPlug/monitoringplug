@@ -122,10 +122,14 @@ int main (int argc, char **argv) {
         }
     }
 
+    /* Free */
     free(program->r_name);
     free(program);
     free(nfs->r_name);
     free(nfs);
+    free(rpcversion);
+    free(rpctransport);
+    free_threshold(time_threshold);
 
     if (noconnection || callfaild || noexport || nfs_crit) {
         char *out = NULL;
@@ -165,7 +169,7 @@ int check_export(struct rpcent *program, unsigned long version, char *proto) {
     CLIENT *client;
     char *buf;
     int ret;
-    exports exportlist;
+    exports exportlist, exportlistPtr;
 
     buf = mp_malloc(128);
     mp_snprintf(buf, 128, "%s:%sv%ld", proto, program->r_name, version);
@@ -199,13 +203,12 @@ int check_export(struct rpcent *program, unsigned long version, char *proto) {
     }
 
     if (mp_verbose >= 1) {
-        exports exl;
         groups grouplist;
-        exl = exportlist;
-        while (exl) {
+        exportlistPtr = exportlist;
+        while (exportlistPtr) {
 
-            printf("%-*s ", 40, exl->ex_dir);
-            grouplist = exl->ex_groups;
+            printf("%-*s ", 40, exportlistPtr->ex_dir);
+            grouplist = exportlistPtr->ex_groups;
             if (grouplist)
                 while (grouplist) {
                     printf("%s%s", grouplist->gr_name,
@@ -216,27 +219,31 @@ int check_export(struct rpcent *program, unsigned long version, char *proto) {
                 printf("(everyone)");
 
             printf("\n");
-            exl = exl->ex_next;
+            exportlistPtr = exportlistPtr->ex_next;
         }
     }
 
     if (export != NULL) {
-
-        while (exportlist) {
-            if (strcmp(export, exportlist->ex_dir) == 0)
+        exportlistPtr=exportlist;
+        while (exportlistPtr) {
+            if (strcmp(export, exportlistPtr->ex_dir) == 0)
                 break;
-            exportlist = exportlist->ex_next;
+            exportlistPtr = exportlistPtr->ex_next;
         }
 
-        if (exportlist==NULL) {
+        if (exportlistPtr==NULL) {
             mp_strcat_comma(&noexport, buf);
             free(buf);
+            clnt_freeres(client, (xdrproc_t) mp_xdr_exports, (caddr_t) &exportlist);
+            clnt_destroy(client);
             return 1;
         }
     } else {
-        if (exportlist==NULL) {
+        if (exportlistPtr==NULL) {
             mp_strcat_comma(&noexport, buf);
             free(buf);
+            clnt_freeres(client, (xdrproc_t) mp_xdr_exports, (caddr_t) &exportlist);
+            clnt_destroy(client);
             return 1;
         }
     }
