@@ -47,7 +47,7 @@ START_TEST (test_exit_ok) {
 }
 END_TEST
 
-START_TEST (test_exit_warning) {
+START_TEST (test_exit_warn) {
     warning("TEST WARNING");
 }
 END_TEST
@@ -70,7 +70,7 @@ Suite* make_lib_common_suite(void) {
     TCase *tc_exit = tcase_create ("Exit");
     tcase_add_checked_fixture (tc_exit, exit_setup, exit_teardown);
     tcase_add_exit_test(tc_exit, test_exit_ok, 0);
-    tcase_add_exit_test(tc_exit, test_exit_warning, 1);
+    tcase_add_exit_test(tc_exit, test_exit_warn, 1);
     tcase_add_exit_test(tc_exit, test_exit_critical, 2);
     tcase_add_exit_test(tc_exit, test_exit_unknown, 3);
     suite_add_tcase (s, tc_exit);
