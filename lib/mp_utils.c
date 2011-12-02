@@ -106,8 +106,8 @@ void mp_strcat_comma(char **target, char *source) {
 void mp_array_push(char ***array, char *obj, int *num) {
     while(obj != NULL) {
         *array = realloc(*array, sizeof(char*)*((*num)+1));
-	(*array)[*num] = strsep(&obj, ",");
-	(*num)++;
+        (*array)[*num] = strsep(&obj, ",");
+        (*num)++;
     }
 }
 

@@ -39,8 +39,10 @@ void ok(const char *fmt, ...) {
     va_start(ap, fmt);
     vprintf(fmt, ap);
     va_end(ap);
-    if (mp_showperfdata && mp_perfdata)
+    if (mp_showperfdata && mp_perfdata) {
        printf("| %s", mp_perfdata);
+       free(mp_perfdata);
+    }
     printf("\n");
     exit(STATE_OK);
 }
@@ -51,8 +53,10 @@ void warning(const char *fmt, ...) {
     va_start(ap, fmt);
     vprintf(fmt, ap);
     va_end(ap);
-    if (mp_showperfdata && mp_perfdata)
+    if (mp_showperfdata && mp_perfdata) {
        printf(" | %s", mp_perfdata);
+       free(mp_perfdata);
+    }
     printf("\n");
     exit(STATE_WARNING);
 }
@@ -63,8 +67,10 @@ void critical(const char *fmt, ...) {
     va_start(ap, fmt);
     vprintf(fmt, ap);
     va_end(ap);
-    if (mp_showperfdata && mp_perfdata)
+    if (mp_showperfdata && mp_perfdata) {
        printf(" | %s", mp_perfdata);
+       free(mp_perfdata);
+    }
     printf("\n");
     exit(STATE_CRITICAL);
 }
@@ -75,8 +81,10 @@ void unknown(const char *fmt, ...) {
     va_start(ap, fmt);
     vprintf(fmt, ap);
     va_end(ap);
-    if (mp_showperfdata && mp_perfdata)
+    if (mp_showperfdata && mp_perfdata) {
        printf(" | %s", mp_perfdata);
+       free(mp_perfdata);
+    }
     printf("\n");
     exit(STATE_UNKNOWN);
 }

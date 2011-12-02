@@ -48,6 +48,7 @@ CURL *mp_curl_init(void) {
     ret = curl_easy_setopt(curl, CURLOPT_USERAGENT, buf);
     if (ret != CURLE_OK)
         critical("libcurt setting User-Agent faild");
+    free(buf);
 
     /* Debug setup */
     if (mp_verbose > 2)

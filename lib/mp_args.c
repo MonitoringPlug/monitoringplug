@@ -85,6 +85,7 @@ void free_threshold(thresholds *threshold) {
             free(threshold->critical);
         if(threshold->warning != NULL)
             free(threshold->warning);
+        free(threshold);
     }
 }
 

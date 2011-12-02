@@ -79,6 +79,7 @@ int rpc_ping(char *hostname, struct rpcent *programm, unsigned long version, cha
     ret = clnt_call(client, ((u_long)0), (xdrproc_t) xdr_void,  NULL,
             (xdrproc_t) xdr_void, NULL, to);
 
+    auth_destroy(client->cl_auth);
     clnt_destroy(client);
 
     return ret;
