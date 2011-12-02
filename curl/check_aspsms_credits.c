@@ -50,19 +50,18 @@ const char *xml_url = "http://xml1.aspsms.com:5061/xmlsvr.asp";
 const char *userkey = NULL;
 const char *password = NULL;
 thresholds *credit_thresholds = NULL;
-char *xmlp;
-char *answer = NULL;
 
 /* Function prototype */
-static size_t my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream);
-static size_t my_fread(void *buffer, size_t size, size_t nmemb, void *stream);
 
 int main (int argc, char **argv) {
     /* Local Vars */
     CURL        *curl;
-    CURLcode    res;
+    long int    code;
+    double      time;
+    struct mp_curl_data query;
+    struct mp_curl_data answer;
     struct curl_slist *headers = NULL;
-    char        *xml;
+    char        *xmlp;
     char        *c;
     int         errorCode = 0;
     float       credits = 0;
@@ -80,56 +79,59 @@ int main (int argc, char **argv) {
     alarm(mp_timeout);
 
     /* Build query */
-    xml = mp_malloc(strlen(userkey) + strlen(password) + 134);
-    mp_sprintf(xml, "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n<aspsms>"
+    query.data = mp_malloc(strlen(userkey) + strlen(password) + 134);
+    mp_sprintf(query.data, "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n<aspsms>"
         "\n<Userkey>%s</Userkey>\n<Password>%s</Password>\n"
         "<Action>ShowCredits</Action>\n</aspsms>", userkey, password);
-    xmlp = xml;
+    query.size = strlen(query.data);
 
     if (mp_verbose > 0) {
         printf("CURL Version: %s\n", curl_version());
         printf("smsXML Url %s\n", xml_url);
         print_thresholds("credit_thresholds", credit_thresholds);
-        printf("XML: '%s'\n", xml);
+        printf("XML: '%s'\n", query.data);
     }
 
-    curl_global_init(CURL_GLOBAL_ALL);
+    /* Init libcurl */
+    curl = mp_curl_init();
 
-    /* Set Header */
+    /* Setup request */
+    curl_easy_setopt(curl, CURLOPT_URL, xml_url);
+    curl_easy_setopt(curl, CURLOPT_POST, 1L);
+
+    curl_easy_setopt(curl, CURLOPT_READFUNCTION, mp_curl_send_data);
+    curl_easy_setopt(curl, CURLOPT_READDATA, (void *)&query);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, mp_curl_recv_data);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&answer);
+
+    /* Set header */
     c = mp_malloc(24);
-    mp_snprintf(c, 24, "Content-Length: %d", (int)strlen(xml));
-    headers = curl_slist_append (headers, "Content-Type: text/html");
-    headers = curl_slist_append (headers, c);
+    mp_snprintf(c, 24, "Content-Length: %d", (int)query.size);
+    headers = curl_slist_append(headers, "Content-Type: text/html");
+    headers = curl_slist_append(headers, c);
     free( c );
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
-    curl = curl_easy_init();
-    if(curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, xml_url);
-        curl_easy_setopt(curl, CURLOPT_POST, 1);
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, my_fwrite);
-        curl_easy_setopt(curl, CURLOPT_READFUNCTION, my_fread);
+    /* Perform request */
+    code = mp_curl_perform(curl);
 
-        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+    /* Get metric */
+    curl_easy_getinfo(curl, CURLINFO_TOTAL_TIME, &time);
+    mp_perfdata_float("time", (float)time, "s", NULL);
 
-        if (mp_verbose > 1)
-            curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-
-        res = curl_easy_perform(curl);
-
-        curl_easy_cleanup(curl);
-        if(CURLE_OK != res) {
-            critical(curl_easy_strerror(res));
-        }
-    }
-
+    /* Cleanup libcurl */
+    curl_easy_cleanup(curl); 
     curl_global_cleanup();
 
     if (mp_verbose > 1) {
-        printf("Answer: '%s'\n", answer);
+        printf("Answer: '%s'\n", answer.data);
     }
 
+    if (code != 200)
+        critical("API HTTP-Response %ld.", code);
+
     /* Parse Answer */
-    xmlp = answer;
+    xmlp = answer.data;
 
     while((c = strsep(&xmlp, "<>"))) {
         if (strcmp(c, "ErrorCode") == 0) {
@@ -161,30 +163,6 @@ int main (int argc, char **argv) {
     }
 
     critical("You should never reach this point.");
-}
-
-static size_t my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream) {
-    if (answer == NULL) {
-        answer = mp_malloc(size*nmemb + 1);
-        xmlp = answer;
-    } else {
-        answer = mp_realloc(answer, strlen(answer) + size*nmemb + 1);
-    }
-    memcpy(xmlp, buffer, size*nmemb);
-    xmlp[size*nmemb] = '\0';
-    xmlp += size*nmemb;
-
-    return size*nmemb;
-}
-
-static size_t my_fread(void *buffer, size_t size, size_t nmemb, void *stream) {
-    size_t s = strlen(xmlp);
-    if (s > size*nmemb)
-        s = size*nmemb;
-
-    strncpy(buffer, xmlp, s);
-    xmlp += s;
-    return s;
 }
 
 int process_arguments (int argc, char **argv) {

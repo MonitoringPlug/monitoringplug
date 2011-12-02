@@ -50,12 +50,10 @@ thresholds *fetch_thresholds = NULL;
 int port = 0;
 
 /* Function prototype */
-static size_t my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream);
 
 int main (int argc, char **argv) {
     /* Local Vars */
     CURL        *curl;
-    CURLcode    res;
     char        *url;
     double      size;
     double      time;
@@ -85,38 +83,29 @@ int main (int argc, char **argv) {
         print_thresholds("fetch_thresholds", fetch_thresholds);
     }
 
-    curl_global_init(CURL_GLOBAL_ALL);
+    /* Init libcurl */
+    curl = mp_curl_init();
 
-    curl = curl_easy_init();
-    if(curl) {
-        if (curl_easy_setopt(curl, CURLOPT_PROTOCOLS, CURLPROTO_TFTP) == CURLE_UNSUPPORTED_PROTOCOL)
-            unknown("libcurl don't support tftp.");
-        curl_easy_setopt(curl, CURLOPT_URL, url);
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, my_fwrite);
+    /* Setup request */
+    if (curl_easy_setopt(curl, CURLOPT_PROTOCOLS, CURLPROTO_TFTP) == CURLE_UNSUPPORTED_PROTOCOL)
+        unknown("libcurl don't support tftp.");
+    curl_easy_setopt(curl, CURLOPT_URL, url);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, mp_curl_recv_blackhole);
+    if (port != 0)
+        curl_easy_setopt(curl, CURLOPT_LOCALPORT, port);
 
-        if (mp_verbose > 1)
-            curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+    /* Perform Request */
+    mp_curl_perform(curl);
 
-        if (port != 0)
-            curl_easy_setopt(curl, CURLOPT_LOCALPORT, port);
+    /* Get metric */
+    curl_easy_getinfo(curl, CURLINFO_TOTAL_TIME, &time);
+    curl_easy_getinfo(curl, CURLINFO_SIZE_DOWNLOAD , &size);
 
-        res = curl_easy_perform(curl);
-
-
-        curl_easy_getinfo(curl, CURLINFO_TOTAL_TIME, &time);
-
-        curl_easy_getinfo(curl, CURLINFO_SIZE_DOWNLOAD , &size);
-
-        mp_perfdata_float("time", (float)time, "s", fetch_thresholds);
-
-        curl_easy_cleanup(curl);
-        if(CURLE_OK != res) {
-            critical(curl_easy_strerror(res));
-        }
-    }
-
+    /* Clenup libcurl */
+    curl_easy_cleanup(curl);
     curl_global_cleanup();
 
+    mp_perfdata_float("time", (float)time, "s", fetch_thresholds);
     free(url);
 
     switch(get_status(time, fetch_thresholds)) {
@@ -129,10 +118,6 @@ int main (int argc, char **argv) {
     }
 
     critical("You should never reach this point.");
-}
-
-static size_t my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream) {
-    return size*nmemb;
 }
 
 int process_arguments (int argc, char **argv) {

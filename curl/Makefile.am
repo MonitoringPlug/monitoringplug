@@ -16,6 +16,9 @@ bin_PROGRAMS += check_aspsms_credits check_webdav
 if HAVE_EXPAT
 check_webdav_LDFLAGS = $(AM_LDFLAGS) $(EXPAT_LDFLAGS)
 check_webdav_LDADD = $(LDADD) ../lib/libexpatutils.a
+else
+check_webdav_LDFLAGS = $(AM_LDFLAGS)
+check_webdav_LDADD = $(LDADD)
 endif
 
 if HAVE_JSON

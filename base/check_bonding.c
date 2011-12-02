@@ -222,8 +222,6 @@ int process_arguments (int argc, char **argv) {
         if (c == -1 || c == EOF)
             break;
 
-        //getopt_wc(c, optarg, &socket_thresholds);
-
         switch (c) {
             /* Default opts */
             MP_GETOPTS_DEFAULT

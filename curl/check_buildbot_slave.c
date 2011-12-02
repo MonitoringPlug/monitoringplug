@@ -50,18 +50,17 @@ const char *hostname = NULL;
 int port = 8010;
 char **slave = NULL;
 int slaves = 0;
-char *answer = NULL;
-char *xmlp;
 
 /* Function prototype */
-static size_t my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream);
 
 int main (int argc, char **argv) {
     /* Local Vars */
     CURL                *curl;
-    CURLcode            res;
     char                *url;
     int                 i, j;
+    char                *buf;
+    struct mp_curl_data answer;
+    long int            code;
     struct json_object  *obj;
     struct json_object  *slaveobj;
     unsigned int        slave_connected;
@@ -98,41 +97,42 @@ int main (int argc, char **argv) {
         printf("CURL Version: %s\n", curl_version());
         printf("Url: %s\n", url);
     }
-    curl_global_init(CURL_GLOBAL_ALL);
 
-    curl = curl_easy_init();
-    if(curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, url);
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, my_fwrite);
+    /* Init libcurl */
+    curl = mp_curl_init();
+    answer.data = NULL;
+    answer.size = 0;
 
-        if (mp_verbose > 2)
-            curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+    /* Setup request */
+    curl_easy_setopt(curl, CURLOPT_URL, url);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, mp_curl_recv_data);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&answer);
 
-        res = curl_easy_perform(curl);
+    /* Get url */
+    code = mp_curl_perform(curl);
 
-        curl_easy_cleanup(curl);
-        if(CURLE_OK != res) {
-            critical(curl_easy_strerror(res));
-        }
-    }
-
+    /* Cleanup libcurl */
+    curl_easy_cleanup(curl);
     curl_global_cleanup();
 
+    if (code != 200) {
+        critical("Buildbot - HTTP Status %ld.", code);
+    }
+
     if (mp_verbose > 1) {
-        printf("Answer: '%s'\n", answer);
+        printf("Answer: '%s'\n", answer.data);
     }
 
     /* Parse Answer */
-    char *buf;
     buf = mp_malloc(128);
 
-    obj = json_tokener_parse(answer);
+    obj = json_tokener_parse(answer.data);
 
     if (slaves) {
         for(i=0; i<slaves; i++) {
             slaveobj = json_object_object_get(obj, slave[i]);
             if(json_object_object_get(slaveobj,"error")) {
-                mp_snprintf(buf, 127, "%s - %s", slave[i], json_object_get_string(json_object_object_get(slaveobj,"error")));
+                mp_snprintf(buf, 128, "%s - %s", slave[i], json_object_get_string(json_object_object_get(slaveobj,"error")));
                 mp_strcat_comma(&faild, buf);
                 continue;
             }
@@ -144,7 +144,7 @@ int main (int argc, char **argv) {
                 slave_host[j] = '\0';
             }
 
-            mp_snprintf(buf, 127, "%s - %s (v%s)", slave[i], slave_host, slave_version);
+            mp_snprintf(buf, 128, "%s - %s (v%s)", slave[i], slave_host, slave_version);
 
             if (slave_connected) {
                 mp_strcat_comma(&connected, buf);
@@ -163,7 +163,7 @@ int main (int argc, char **argv) {
                 slave_host[j] = '\0';
             }
 
-            mp_snprintf(buf, 127, "%s - %s (v%s)", key, slave_host, slave_version);
+            mp_snprintf(buf, 128, "%s - %s (v%s)", key, slave_host, slave_version);
 
             if (slave_connected) {
                 mp_strcat_comma(&connected, buf);
@@ -182,20 +182,6 @@ int main (int argc, char **argv) {
         ok(connected);
     }
     warning("No Slaves found");
-}
-
-static size_t my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream) {
-    if (answer == NULL) {
-        answer = mp_malloc(size*nmemb + 1);
-        xmlp = answer;
-    } else {
-        answer = mp_realloc(answer, strlen(answer) + size*nmemb + 1);
-    }
-    memcpy(xmlp, buffer, size*nmemb);
-    xmlp[size*nmemb] = '\0';
-    xmlp += size*nmemb;
-
-    return size*nmemb;
 }
 
 int process_arguments (int argc, char **argv) {

@@ -273,14 +273,14 @@ int main (int argc, char **argv) {
                 free(list);
             }
         }
-    }
 #endif
+    }
 
+    /* Cleanup libcurl */
     curl_easy_cleanup(curl);
+    curl_global_cleanup();
 
     mp_perfdata_float("time", (float)time_total, "s", fetch_thresholds);
-
-    curl_global_cleanup();
 
     for (i=0; i < allowShoulds; i++) {
         char *ptr;
@@ -375,11 +375,11 @@ void webdav_charData(void *userData, const XML_Char *s, int len) {
         return;
 
     if (strcmp("DAV:href", parserInfo->name) == 0) {
-        parserInfo->list->path = mp_malloc(len);
+        parserInfo->list->path = mp_malloc(len+1);
         memcpy(parserInfo->list->path, s, len);
         parserInfo->list->path[len] = '\0';
     } else if (strcmp("DAV:status", parserInfo->name) == 0) {
-        parserInfo->list->status = mp_malloc(len);
+        parserInfo->list->status = mp_malloc(len+1);
         memcpy(parserInfo->list->status, s, len);
         parserInfo->list->status[len] = '\0';
     }
