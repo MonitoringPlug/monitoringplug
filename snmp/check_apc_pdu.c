@@ -57,7 +57,6 @@ int main (int argc, char **argv) {
     long        pdu_psu1;
     long        pdu_psu2;
     int         i;
-    int         ret;
     struct mp_snmp_table    table_state;
     netsnmp_session         *ss;
     netsnmp_variable_list   *vars;

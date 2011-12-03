@@ -40,17 +40,43 @@ AC_PROG_RANLIB
 AC_C_CONST
 
 # Checks for libraries.
-PKG_CHECK_MODULES([CHECK], [check >= 0.9.4],[],[AC_MSG_WARN([Skipping check])])
+# Ckeck
+AC_ARG_WITH([check], AS_HELP_STRING([--without-check], [Build without the check library]))
+AS_IF([test "x$with_check" != "xno"], [
+       PKG_CHECK_MODULES([CHECK], [check >= 0.9.4],[],[AC_MSG_WARN([Skipping check])])
+       ],[AC_MSG_WARN([Skipping check])])
+# Expat
 AX_LIB_EXPAT()
 AC_LIB_LDNS([],[], [AC_MSG_WARN([Skipping ldns])])
 AC_LIB_CUPS([1.4.0],[], [AC_MSG_WARN([Skipping cups])])
 AX_LIB_MYSQL()
 LIBCURL_CHECK_CONFIG([yes],[7.7.2], [], [AC_MSG_WARN([Skipping curl])])
-PKG_CHECK_MODULES([XMLRPC], [xmlrpc xmlrpc_client xmlrpc_util],[],[AC_MSG_WARN([Skipping xmlrpc-c])])
-PKG_CHECK_MODULES([SELINUX], [libselinux],[],[AC_MSG_WARN([Skipping SELinux])])
-PKG_CHECK_MODULES([GNUTLS], [gnutls >= 2.8.0], [],[AC_MSG_WARN([Skipping gnutls])])
-PKG_CHECK_MODULES([JSON], [json], [],[AC_MSG_WARN([Skipping json-c])])
-PKG_CHECK_MODULES([LIBVIRT],[libvirt], [],[AC_MSG_WARN([Skipping libvirt])])
+# xmlrpc-c
+AC_ARG_WITH([xmlrpc], AS_HELP_STRING([--without-xmlrpc], [Build without xmlrpc]))
+AS_IF([test "x$with_xmlrpc" != "xno"], [
+       PKG_CHECK_MODULES([XMLRPC], [xmlrpc xmlrpc_client xmlrpc_util],[],[AC_MSG_WARN([Skipping xmlrpc-c])])
+       ],[AC_MSG_WARN([Skipping xmlrpc-c])])
+# selinux
+AC_ARG_WITH([selinux], AS_HELP_STRING([--without-selinux], [Build without selinux]))
+AS_IF([test "x$with_selinux" != "xno"], [
+       PKG_CHECK_MODULES([SELINUX], [libselinux],[],[AC_MSG_WARN([Skipping SELinux])])
+       ],[AC_MSG_WARN([Skipping SELinux])])
+# gnutls
+AC_ARG_WITH([gnutls], AS_HELP_STRING([--without-gnutls], [Build without gnutls]))
+AS_IF([test "x$with_gnutls" != "xno"], [
+       PKG_CHECK_MODULES([GNUTLS], [gnutls >= 2.8.0], [],[AC_MSG_WARN([Skipping gnutls])])
+       ],[AC_MSG_WARN([Skipping gnutls])])
+# json-c
+AC_ARG_WITH([json], AS_HELP_STRING([--without-json], [Build without json]))
+AS_IF([test "x$with_json" != "xno"], [
+       PKG_CHECK_MODULES([JSON], [json], [],[AC_MSG_WARN([Skipping json-c])])
+       ],[AC_MSG_WARN([Skipping json-c])])
+# libvirt
+AC_ARG_WITH([libvirt], AS_HELP_STRING([--without-libvirt], [Build without libvirt]))
+AS_IF([test "x$with_libvirt" != "xno"], [
+       PKG_CHECK_MODULES([LIBVIRT],[libvirt], [],[AC_MSG_WARN([Skipping libvirt])])
+       ],[AC_MSG_WARN([Skipping libvirt])])
+# smbclient
 PKG_CHECK_MODULES([SMBCLIENT],[smbclient], [],[AC_MSG_WARN([Skipping libsmbclient])])
 
 # SNMP Option
