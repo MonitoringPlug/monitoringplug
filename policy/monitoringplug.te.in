@@ -1,0 +1,2 @@
+policy_module(monitoringplug, @PACKAGE_VERSION@.0)
+

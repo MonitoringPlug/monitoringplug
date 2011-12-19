@@ -9,12 +9,15 @@
 /usr/lib(64)?/nagios/plugins/check_aspsms_credits	system_u:object_r:nagios_services_plugin_exec_t:s0
 /usr/lib(64)?/nagios/plugins/check_buildbot_slave	system_u:object_r:nagios_services_plugin_exec_t:s0
 /usr/lib(64)?/nagios/plugins/check_tftp			system_u:object_r:nagios_services_plugin_exec_t:s0
+/usr/lib(64)?/nagios/plugins/check_webdav               system_u:object_r:nagios_services_plugin_exec_t:s0
 # DNS
 /usr/lib(64)?/nagios/plugins/check_dns(sec)?_.*		system_u:object_r:nagios_services_plugin_exec_t:s0
 # GNUTLS
-/usr/lib(64)?/nagios/plugins/check_ssl_cert		system_u:object_r:nagios_system_plugin_exec_t:s0
+/usr/lib(64)?/nagios/plugins/check_ssl_cert		system_u:object_r:nagios_unconfined_plugin_exec_t:s0
 # LIBVIRT
 /usr/lib(64)?/nagios/plugins/check_libvirt.*		system_u:object_r:nagios_services_plugin_exec_t:s0
+# MySQL
+/usr/lib(64)?/nagios/plugins/check_mysql.*              system_u:object_r:nagios_services_plugin_exec_t:s0
 # RHCS
 /usr/lib(64)?/nagios/plugins/check_clustat		system_u:object_r:nagios_unconfined_plugin_exec_t:s0
 /usr/lib(64)?/nagios/plugins/check_rhcsnmp		system_u:object_r:nagios_services_plugin_exec_t:s0
@@ -27,6 +30,7 @@
 # SMB
 /usr/lib(64)?/nagios/plugins/check_smb_.*		system_u:object_r:nagios_services_plugin_exec_t:s0
 # SNMP
+/usr/lib(64)?/nagios/plugins/check_akcp                 system_u:object_r:nagios_services_plugin_exec_t:s0
 /usr/lib(64)?/nagios/plugins/check_apc_pdu		system_u:object_r:nagios_services_plugin_exec_t:s0
 /usr/lib(64)?/nagios/plugins/check_arc_raid		system_u:object_r:nagios_services_plugin_exec_t:s0
 /usr/lib(64)?/nagios/plugins/check_interface		system_u:object_r:nagios_services_plugin_exec_t:s0

@@ -1,5 +1,5 @@
 Name:           monitoringplug
-Version:        0.5
+Version:        0.6
 Release:        1%{?dist}
 Summary:        Collection of monitoring plugins for Nagios and similar monitoring systems.
 
@@ -13,6 +13,7 @@ BuildRequires:  expat-devel
 BuildRequires:	json-c-devel
 BuildRequires:  ldns-devel
 BuildRequires:  libselinux-devel
+BuildRequires:  mysql-devel
 BuildRequires:  net-snmp-devel
 BuildRequires:  xmlrpc-c-devel
 
@@ -81,6 +82,12 @@ Group:          Applications/System
 Requires:       libvirt-client
 Requires:       monitoringplug
 %endif
+
+%package mysql
+Summary:        Collection of MySQL plugins for Nagios and similar monitoring systems.
+Group:          Applications/System
+Requires:       mysql-libs
+Requires:       monitoringplug
 
 %package rhcs
 Summary:        Collection of RedHat Cluster Suitmonitoring plugins for Nagios and similar monitoring systems.
@@ -155,6 +162,10 @@ This package contains the plugins which use the gnutls library.
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the libvirt based plugins.
 %endif
+
+%description mysql
+Collection of monitoring plugins for Nagios and similar monitoring systems.
+This package contains the mysql based plugins.
 
 %description rhcs
 Collection of monitoring plugins for Nagios and similar monitoring systems.
@@ -250,6 +261,7 @@ fi
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_aspsms_credits
 %{_libdir}/nagios/plugins/check_tftp
+%{_libdir}/nagios/plugins/check_webdav
 
 %files curl-json
 %defattr(-,root,root,-)
@@ -269,6 +281,10 @@ fi
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_libvirt*
 %endif
+
+%files mysql
+%defattr(-,root,root,-)
+%{_libdir}/nagios/plugins/check_mysql*
 
 %files rhcs
 %defattr(-,root,root,-)
@@ -293,6 +309,7 @@ fi
 
 %files snmp
 %defattr(-,root,root,-)
+%{_libdir}/nagios/plugins/check_akcp
 %{_libdir}/nagios/plugins/check_arc_raid
 %{_libdir}/nagios/plugins/check_apc_pdu
 %{_libdir}/nagios/plugins/check_interface
