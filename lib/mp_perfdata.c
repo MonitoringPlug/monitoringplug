@@ -85,12 +85,14 @@ void mp_perfdata_int3(const char *label, long int value, const char *unit,
       int have_warn, long int warn, int have_crit, long int crit,
       int have_min, long int min, int have_max, long int max) {
    char *perfString;
+   char *valString;
    char *end;
 
    if (!mp_showperfdata)
       return;
 
    perfString = mp_malloc(128);
+   valString = mp_malloc(16);
 
    if (strpbrk (label, "'= ")) {
       sprintf(perfString, "'%s'=%ld%s;", label, value, unit);
@@ -98,23 +100,31 @@ void mp_perfdata_int3(const char *label, long int value, const char *unit,
       sprintf(perfString, "%s=%ld%s;", label, value, unit);
    }
 
-   if (have_warn)
-      sprintf(perfString, "%s%ld;", perfString, warn);
-   else
+   if (have_warn) {
+      snprintf(valString, 16, "%ld", warn);
+      strcat(perfString,valString);
+   } else {
       strcat(perfString, ";");
+   }
 
-   if (have_crit)
-      sprintf(perfString, "%s%ld;", perfString, crit);
-   else
+   if (have_crit) {
+      snprintf(valString, 16, "%ld", crit);
+      strcat(perfString,valString);
+   } else {
       strcat(perfString, ";");
+   }
 
-   if(have_min)
-      sprintf(perfString, "%s%ld;", perfString, min);
-   else
+   if(have_min) {
+      snprintf(valString, 16, "%ld", min);
+      strcat(perfString,valString);
+   } else {
       strcat(perfString, ";");
+   }
 
-   if(have_max)
-      sprintf(perfString, "%s%ld;", perfString, max);
+   if(have_max) {
+      snprintf(valString, 16, "%ld", max);
+      strcat(perfString,valString);
+   }
 
    for( end = perfString + strlen(perfString) - 1; *(end-1) == ';'; end--) {
       *end = '\0';
@@ -146,15 +156,16 @@ void perfdata_float(const char *label, float value, const char *unit,
 
 void mp_perfdata_float(const char *label, float value, const char *unit,
       thresholds *threshold) {
-   if (threshold)
+   if (threshold) {
       mp_perfdata_float3(label, value, unit,
             (threshold->warning != NULL), (float)(threshold->warning ? threshold->warning->end : 0),
             (threshold->critical != NULL), (float)(threshold->critical ? threshold->critical->end : 0),
             0, 0, 0, 0);
-   else
+   } else {
       mp_perfdata_float3(label, value, unit,
             0, 0, 0, 0,
             0, 0, 0, 0);
+   }
 }
 
 void mp_perfdata_float2(const char *label, float value, const char *unit,
@@ -175,12 +186,14 @@ void mp_perfdata_float3(const char *label, float value, const char *unit,
       int have_warn, float warn, int have_crit, float crit,
       int have_min, float min, int have_max, float max) {
    char *perfString;
+   char *valString;
    char *end;
 
    if (!mp_showperfdata)
       return;
 
    perfString = mp_malloc(128);
+   valString = mp_malloc(9);
 
    if (strpbrk (label, "'= ")) {
       sprintf(perfString, "'%s'=%f%s;", label, value, unit);
@@ -188,23 +201,31 @@ void mp_perfdata_float3(const char *label, float value, const char *unit,
       sprintf(perfString, "%s=%f%s;", label, value, unit);
    }
 
-   if (have_warn)
-      sprintf(perfString, "%s%f;", perfString, warn);
-   else
+   if (have_warn) {
+      snprintf(valString, 9, "%f", warn);
+      strcat(perfString, valString);
+   } else {
       strcat(perfString, ";");
+   }
 
-   if (have_crit)
-      sprintf(perfString, "%s%f;", perfString, crit);
-   else
+   if (have_crit) {
+      snprintf(valString, 9, "%f", crit);
+      strcat(perfString, valString);
+   } else {
       strcat(perfString, ";");
+   }
 
-   if(have_min)
-      sprintf(perfString, "%s%f;", perfString, min);
-   else
+   if(have_min) {
+      snprintf(valString, 9, "%f", min);
+      strcat(perfString, valString);
+   } else {
       strcat(perfString, ";");
+   }
 
-   if(have_max)
-      sprintf(perfString, "%s%f;", perfString, max);
+   if(have_max) {
+      snprintf(valString, 9, "%f", max);
+      strcat(perfString, valString);
+   }
 
    for( end = perfString + strlen(perfString) - 1; *(end-1) == ';'; end--) {
       *end = '\0';
@@ -212,6 +233,7 @@ void mp_perfdata_float3(const char *label, float value, const char *unit,
 
    mp_strcat_space(&mp_perfdata, perfString);
    free(perfString);
+   free(valString);
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */
