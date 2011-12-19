@@ -185,7 +185,7 @@ int process_arguments (int argc, char **argv) {
         MP_LONGOPTS_DEFAULT,
         MP_LONGOPTS_HOST,
         // PLUGIN OPTS
-        {{"url", required_argument, NULL, (int)'u'},
+        {"url", required_argument, NULL, (int)'u'},
         {"username", required_argument, NULL, (int)'U'},
         {"password", required_argument, NULL, (int)'P'},
         {"workgroup", required_argument, NULL, (int)'W'},

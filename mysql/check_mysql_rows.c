@@ -28,7 +28,7 @@ const char *progdesc  = "Check mysql table row count.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2011";
 const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
-const char *progusage = "<state> [message]";
+const char *progusage = "--database <DB> --table <TABLE>";
 
 /* MP Includes */
 #include "mp_common.h"

@@ -239,7 +239,7 @@ int check_export(struct rpcent *program, unsigned long version, char *proto) {
             return 1;
         }
     } else {
-        if (exportlistPtr==NULL) {
+        if (exportlist==NULL) {
             mp_strcat_comma(&noexport, buf);
             free(buf);
             clnt_freeres(client, (xdrproc_t) mp_xdr_exports, (caddr_t) &exportlist);
