@@ -99,10 +99,13 @@ int main (int argc, char **argv) {
     switch (get_status(rows, row_thresholds)) {
         case STATE_OK:
             ok("Rowcount for %s.%s %ld", mp_mysql_db, table, rows);
+            break;
         case STATE_WARNING:
             warning("Rowcount for %s.%s %ld", mp_mysql_db, table, rows);
+            break;
         case STATE_CRITICAL:
             critical("Rowcount for %s.%s %ld", mp_mysql_db, table, rows);
+            break;
     }
 
     critical("You should never reach this point.");
@@ -134,6 +137,7 @@ int process_arguments (int argc, char **argv) {
             MP_GETOPTS_DEFAULT
             case 'T':
                 table = optarg;
+                break;
             /* Timeout opt */
             case 't':
                 getopt_timeout(optarg);

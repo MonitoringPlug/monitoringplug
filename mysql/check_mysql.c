@@ -70,7 +70,7 @@ int main (int argc, char **argv) {
     MYSQL_ROW row;
     int ret;
     int i;
-    char *server_version;
+    const char *server_version;
     struct timeval  start_time;
     double          time_delta;
 
@@ -154,6 +154,8 @@ int process_arguments (int argc, char **argv) {
                 else
                     mp_array_push(&unit, "", &variables);
                                    }
+            break;
+
             /* Timeout opt */
             case 't':
                 getopt_timeout(optarg);

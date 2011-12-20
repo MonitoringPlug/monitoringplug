@@ -24,7 +24,7 @@
 #include "mp_common.h"
 #include "mysql_utils.h"
 
-#include <mysql/mysql.h>
+#include <mysql.h>
 
 #include <getopt.h>
 #include <string.h>
@@ -67,6 +67,7 @@ void getopt_mysql(int c) {
     switch ( c ) {
         case 'H':
             getopt_host(optarg, (const char **)&mp_mysql_host);
+            break;
         case 'u':
             mp_mysql_user = optarg;
             break;
@@ -81,6 +82,7 @@ void getopt_mysql(int c) {
             break;
         case 'S':
             mp_mysql_socket = optarg;
+            break;
     }
 }
 

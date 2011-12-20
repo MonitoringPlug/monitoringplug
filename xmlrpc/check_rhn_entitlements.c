@@ -165,10 +165,10 @@ int main (int argc, char **argv) {
                     mp_strcat_space(&out, tmp);
                     free(tmp);
 
-                    perfdata_int(label, used_slots, "",
-                            (total_slots - free_thresholds->warning->start),
-                            (total_slots - free_thresholds->critical->start),
-                            0, total_slots);
+                    mp_perfdata_int3(label, used_slots, "",
+                    		1, (total_slots - free_thresholds->warning->start),
+                    		1, (total_slots - free_thresholds->critical->start),
+                    		1, 0, 1, total_slots);
 
                     if (state < get_status((total_slots-used_slots),free_thresholds)) {
                         state = get_status((total_slots-used_slots),free_thresholds);
@@ -238,10 +238,10 @@ int main (int argc, char **argv) {
                     mp_strcat_space(&out, tmp);
                     free(tmp);
 
-                    perfdata_int(label, used_slots, "",
-                            (total_slots - free_thresholds->warning->start),
-                            (total_slots - free_thresholds->critical->start),
-                            0, total_slots);
+                    mp_perfdata_int3(label, used_slots, "",
+                    		1, (total_slots - free_thresholds->warning->start),
+                    		1, (total_slots - free_thresholds->critical->start),
+                    		1, 0, 1, total_slots);
 
                     if (state < get_status((total_slots-used_slots),free_thresholds)) {
                         state = get_status((total_slots-used_slots),free_thresholds);
@@ -254,10 +254,13 @@ int main (int argc, char **argv) {
     switch ( state ) {
         case STATE_OK:
             ok(out);
+            break;
         case STATE_WARNING:
             warning(out);
+            break;
         case STATE_CRITICAL:
             critical(out);
+            break;
     }
 
     unknown(out);

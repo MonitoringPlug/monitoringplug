@@ -99,7 +99,7 @@ int main (int argc, char **argv) {
     gnutls_priority_set_direct(session, "PERFORMANCE", &err);
     gnutls_credentials_set(session, GNUTLS_CRD_CERTIFICATE, xcred);
 
-    gnutls_transport_set_ptr(session, (gnutls_transport_ptr_t) (__SWORD_TYPE)socket);
+    gnutls_transport_set_ptr(session, (gnutls_transport_ptr_t) (intptr_t)socket);
 
     // SSL Handshake
     ret = gnutls_handshake (session);
@@ -179,7 +179,7 @@ int main (int argc, char **argv) {
         ret = gnutls_certificate_verify_peers2(session, &cstatus);
         if ( ret < 0)
             critical("gnutls_certificate_verify_peers2 faild!");
-        if (cstatus & GNUTLS_CERT_INVALID || cstatus & GNUTLS_CERT_SIGNER_NOT_FOUND) {
+        if ((cstatus & GNUTLS_CERT_INVALID) || (cstatus & GNUTLS_CERT_SIGNER_NOT_FOUND)) {
             mp_strcat_comma(&untrusted, buf);
         }
     }
@@ -199,10 +199,13 @@ int main (int argc, char **argv) {
     switch (status) {
         case STATE_OK:
             ok(out);
+            break;
         case STATE_WARNING:
             warning(out);
+            break;
         case STATE_CRITICAL:
             critical(out);
+            break;
     }
 
     critical("You should never reach this point.");

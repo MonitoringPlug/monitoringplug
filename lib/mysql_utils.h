@@ -25,7 +25,7 @@
 #define _MYSQL_UTILS_H_
 
 #include "config.h"
-#include <mysql/mysql.h>
+#include <mysql.h>
 
 extern char *mp_mysql_host;
 extern char *mp_mysql_user;

@@ -38,6 +38,7 @@ AC_PROG_MAKE_SET
 AC_PROG_RANLIB
 
 AC_C_CONST
+AC_TYPE_INTPTR_T
 
 # Checks for libraries.
 # Ckeck
