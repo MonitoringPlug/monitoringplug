@@ -114,6 +114,7 @@ int main (int argc, char **argv) {
     mp_mysql_deinit(conn);
 
     time_delta = mp_time_delta(start_time);
+    mp_perfdata_float("time", (float)time_delta, "s", NULL);
 
     ok("MySQL v%s", server_version);
 
