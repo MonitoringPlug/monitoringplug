@@ -6,7 +6,7 @@ AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/lib $(MYSQL_CFLAGS)
 AM_LDFLAGS = $(MYSQL_LDFLAGS)
 AM_DEFAULT_SOURCE_EXT = .c
 
-LDADD = ../lib/libmonitoringplug.a ../lib/libmysqlutils.a
+LDADD = ../lib/libmonitoringplug.a ../lib/libmysqlutils.a -lmysqlclient
 
 bin_PROGRAMS = 
 
