@@ -95,34 +95,34 @@ void mp_perfdata_int3(const char *label, long int value, const char *unit,
    valString = mp_malloc(16);
 
    if (strpbrk (label, "'= ")) {
-      sprintf(perfString, "'%s'=%ld%s;", label, value, unit);
+      snprintf(perfString, 64, "'%s'=%ld%s;", label, value, unit);
    } else {
-      sprintf(perfString, "%s=%ld%s;", label, value, unit);
+      snprintf(perfString, 64, "%s=%ld%s;", label, value, unit);
    }
 
    if (have_warn) {
-      snprintf(valString, 16, "%ld", warn);
+      snprintf(valString, 16, "%ld;", warn);
       strcat(perfString,valString);
    } else {
       strcat(perfString, ";");
    }
 
    if (have_crit) {
-      snprintf(valString, 16, "%ld", crit);
+      snprintf(valString, 16, "%ld;", crit);
       strcat(perfString,valString);
    } else {
       strcat(perfString, ";");
    }
 
    if(have_min) {
-      snprintf(valString, 16, "%ld", min);
+      snprintf(valString, 16, "%ld;", min);
       strcat(perfString,valString);
    } else {
       strcat(perfString, ";");
    }
 
    if(have_max) {
-      snprintf(valString, 16, "%ld", max);
+      snprintf(valString, 16, "%ld;", max);
       strcat(perfString,valString);
    }
 
@@ -193,37 +193,37 @@ void mp_perfdata_float3(const char *label, float value, const char *unit,
       return;
 
    perfString = mp_malloc(128);
-   valString = mp_malloc(9);
+   valString = mp_malloc(16);
 
    if (strpbrk (label, "'= ")) {
-      sprintf(perfString, "'%s'=%f%s;", label, value, unit);
+      snprintf(perfString, 64, "'%s'=%f%s;", label, value, unit);
    } else {
-      sprintf(perfString, "%s=%f%s;", label, value, unit);
+      snprintf(perfString, 64, "%s=%f%s;", label, value, unit);
    }
 
    if (have_warn) {
-      snprintf(valString, 9, "%f", warn);
+      snprintf(valString, 16, "%f;", warn);
       strcat(perfString, valString);
    } else {
       strcat(perfString, ";");
    }
 
    if (have_crit) {
-      snprintf(valString, 9, "%f", crit);
+      snprintf(valString, 16, "%f;", crit);
       strcat(perfString, valString);
    } else {
       strcat(perfString, ";");
    }
 
    if(have_min) {
-      snprintf(valString, 9, "%f", min);
+      snprintf(valString, 16, "%f;", min);
       strcat(perfString, valString);
    } else {
       strcat(perfString, ";");
    }
 
    if(have_max) {
-      snprintf(valString, 9, "%f", max);
+      snprintf(valString, 16, "%f;", max);
       strcat(perfString, valString);
    }
 
