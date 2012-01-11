@@ -4,7 +4,7 @@
  *
  * check_aspsms_credits - Check ASPSMS credits by XML.
  *
- * Copyright (C) 2011 Marius Rieder <marius.rieder@durchmesser.ch>
+ * Copyright (C) 2012 Marius Rieder <marius.rieder@durchmesser.ch>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
