@@ -93,7 +93,7 @@ int main (int argc, char **argv) {
 
     time_delta = mp_time_delta(start_time);
 
-    mp_perfdata_int("rows", rows, "", row_thresholds);
+    mp_perfdata_int("rows", rows, "c", row_thresholds);
     mp_perfdata_float("time", (float)time_delta, "s", NULL);
 
     switch (get_status(rows, row_thresholds)) {
