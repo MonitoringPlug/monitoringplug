@@ -29,6 +29,9 @@
 #include <stdarg.h>
 #include <string.h>
 
+#define T_WARN (threshold->warning ? (threshold->warning->end ? threshold->warning->end : threshold->warning->start) : 0)
+#define T_CRIT (threshold->critical ? (threshold->critical->end ? threshold->critical->end : threshold->critical->start) : 0)
+
 unsigned int mp_showperfdata = 0;
 char *mp_perfdata=NULL;
 
@@ -58,8 +61,8 @@ void mp_perfdata_int(const char *label, long int value, const char *unit,
       thresholds *threshold) {
    if (threshold)
       mp_perfdata_int3(label, value, unit,
-	    (threshold->warning != NULL), (long int)(threshold->warning ? threshold->warning->end : 0),
-	    (threshold->critical != NULL), (long int)(threshold->critical ? threshold->critical->end : 0),
+	    (threshold->warning != NULL), (long int)T_WARN,
+	    (threshold->critical != NULL), (long int)T_CRIT,
 	    0, 0, 0, 0);
    else
       mp_perfdata_int3(label, value, unit,
@@ -72,8 +75,8 @@ void mp_perfdata_int2(const char *label, long int value, const char *unit,
       int have_max, long int max) {
    if (threshold)
       mp_perfdata_int3(label, value, unit,
-	    (threshold->warning != NULL), (long int)(threshold->warning ? threshold->warning->end : 0),
-	    (threshold->critical != NULL), (long int)(threshold->critical ? threshold->critical->end : 0),
+	    (threshold->warning != NULL), (long int)T_WARN,
+	    (threshold->critical != NULL), (long int)T_CRIT,
 	    have_min, min, have_max, max);
    else
       mp_perfdata_int3(label, value, unit,
@@ -158,8 +161,8 @@ void mp_perfdata_float(const char *label, float value, const char *unit,
       thresholds *threshold) {
    if (threshold) {
       mp_perfdata_float3(label, value, unit,
-            (threshold->warning != NULL), (float)(threshold->warning ? threshold->warning->end : 0),
-            (threshold->critical != NULL), (float)(threshold->critical ? threshold->critical->end : 0),
+            (threshold->warning != NULL), (float)T_WARN,
+            (threshold->critical != NULL), (float)T_CRIT,
             0, 0, 0, 0);
    } else {
       mp_perfdata_float3(label, value, unit,
@@ -173,8 +176,8 @@ void mp_perfdata_float2(const char *label, float value, const char *unit,
       int have_max, float max) {
    if (threshold)
       mp_perfdata_float3(label, value, unit,
-            (threshold->warning != NULL), (float)(threshold->warning ? threshold->warning->end : 0),
-            (threshold->critical != NULL), (float)(threshold->critical ? threshold->critical->end : 0),
+            (threshold->warning != NULL), (float)T_WARN,
+            (threshold->critical != NULL), (float)T_CRIT,
             have_min, min, have_max, max);
    else
       mp_perfdata_float3(label, value, unit,
