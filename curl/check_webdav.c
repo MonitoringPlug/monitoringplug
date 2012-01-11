@@ -427,7 +427,7 @@ int process_arguments (int argc, char **argv) {
             /* Default opts */
             MP_GETOPTS_DEFAULT
             case 'u':
-                url = optarg;
+                getopt_url(optarg, &url);
                 break;
             case 'C':
                 contentTypeShould = optarg;
@@ -445,6 +445,8 @@ int process_arguments (int argc, char **argv) {
     /* Check requirements */
     if (!url)
         usage("url is mandatory.");
+    if (!is_url_scheme(url, "http") && !is_url_scheme(url, "https"))
+        usage("Only http(s) urls are allowed.");
 
     return(OK);
 }

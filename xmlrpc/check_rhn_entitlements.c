@@ -166,9 +166,9 @@ int main (int argc, char **argv) {
                     free(tmp);
 
                     mp_perfdata_int3(label, used_slots, "",
-                    		1, (total_slots - free_thresholds->warning->start),
-                    		1, (total_slots - free_thresholds->critical->start),
-                    		1, 0, 1, total_slots);
+                            1, (total_slots - free_thresholds->warning->start),
+                            1, (total_slots - free_thresholds->critical->start),
+                            1, 0, 1, total_slots);
 
                     if (state < get_status((total_slots-used_slots),free_thresholds)) {
                         state = get_status((total_slots-used_slots),free_thresholds);
@@ -239,9 +239,9 @@ int main (int argc, char **argv) {
                     free(tmp);
 
                     mp_perfdata_int3(label, used_slots, "",
-                    		1, (total_slots - free_thresholds->warning->start),
-                    		1, (total_slots - free_thresholds->critical->start),
-                    		1, 0, 1, total_slots);
+                            1, (total_slots - free_thresholds->warning->start),
+                            1, (total_slots - free_thresholds->critical->start),
+                            1, 0, 1, total_slots);
 
                     if (state < get_status((total_slots-used_slots),free_thresholds)) {
                         state = get_status((total_slots-used_slots),free_thresholds);
@@ -297,7 +297,7 @@ int process_arguments (int argc, char **argv) {
             MP_GETOPTS_DEFAULT
             /* Local opts */
             case 'U':
-                url = optarg;
+                getopt_url(optarg, &url);
                 break;
             case 'u':
                 user = optarg;
@@ -306,10 +306,10 @@ int process_arguments (int argc, char **argv) {
                 pass = optarg;
                 break;
             case 'C':
-		mp_array_push(&channel, optarg, &channels);
+                mp_array_push(&channel, optarg, &channels);
                 break;
             case 'S':
-		mp_array_push(&system_name, optarg, &systems);
+                mp_array_push(&system_name, optarg, &systems);
                 break;
             /* Timeout opt */
             case 't':
@@ -323,6 +323,8 @@ int process_arguments (int argc, char **argv) {
     /* Check requirements */
     if (!url)
         usage("URL is mandatory.");
+    if (!is_url_scheme(url, "http") && !is_url_scheme(url, "https"))
+        usage("Only http(s) urls are allowed.");
     if (!user)
         usage("Username is mandatory.");
     if (!pass)

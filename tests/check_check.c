@@ -47,7 +47,27 @@ static struct string_return test_net_name_case[] = {
     { "www.!.durchmesser.ch", 0 },
     {0,0}
 };
-
+static struct string_return test_net_url_case[] = {
+    { "http://www.durchmesser.ch", 1},
+    { "http://www.durchmesser.ch/", 1},
+    { "h12-+.://www.durchmesser.ch", 1},
+    { "1http://www.durchmesser.ch", 0},
+    { "ht?tp://www.durchmesser.ch", 0},
+    { "http://user@www.durchmesser.ch", 1},
+    { "http://user:pass!$&'()*+,;=@www.durchmesser.ch", 1},
+    { "http://user:pass!$&'()*?+,;=@www.durchmesser.ch", 0},
+    { "http://user:pass%20%aa@www.durchmesser.ch", 1},
+    { "http://user:pass%2g@www.durchmesser.ch", 0},
+    { "http://user:pass%2@www.durchmesser.ch", 0},
+    { "http://[::1]", 1},
+    { "http://[::1]/", 1},
+    { "http://[127.0.0.1]", 0},
+    { "http://127.0.0.1", 1},
+    { "http://127.0.0.1/", 1},
+    { "http:///", 1},
+    { "http:///path", 1},
+    {0,0}
+};
 
 
 START_TEST (test_is_integer) {
@@ -92,6 +112,14 @@ START_TEST (test_net_name) {
 }
 END_TEST
 
+START_TEST (test_net_url) {
+    struct string_return *c = &test_net_url_case[_i];
+
+    fail_unless (is_url(c->string) == c->returning,
+            "Fail: is_url(%s) is not %0.f", c->string,c->returning);
+}
+END_TEST
+
 Suite* make_lib_check_suite(void) {
 
     Suite *s = suite_create ("Check");
@@ -107,6 +135,7 @@ Suite* make_lib_check_suite(void) {
     tcase_add_loop_test(tc_net, test_net_addr6, 0, 4);
 #endif /* USE_IPV6*/
     tcase_add_loop_test(tc_net, test_net_name, 0, 5);
+    tcase_add_loop_test(tc_net, test_net_url, 0, 17);
     suite_add_tcase (s, tc_net);
     return s;
 }

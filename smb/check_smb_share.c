@@ -210,7 +210,7 @@ int process_arguments (int argc, char **argv) {
             MP_GETOPTS_DEFAULT
             /* Host opt */
             case 'u':
-                url = optarg;
+                getopt_url(optarg, &url);
                 break;
             /* Plugin opts */
             case 'U':
@@ -232,6 +232,8 @@ int process_arguments (int argc, char **argv) {
     /* Check requirements */
     if (!url)
         usage("URL is mandatory.");
+    if (!is_url_scheme(url, "smb") && !is_url_scheme(url, "cifs"))
+        usage("Only smb and cifs urls are allowed.");
     if (username && !password)
         usage("Username requires password.");
 

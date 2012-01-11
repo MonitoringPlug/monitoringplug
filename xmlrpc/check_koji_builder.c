@@ -130,20 +130,20 @@ int process_arguments (int argc, char **argv) {
                break;
             /* Local opts */
             case 'U':
-                url = optarg;
+                getopt_url(optarg, &url);
                 break;
             /* Timeout opt */
             case 't':
                 getopt_timeout(optarg);
                 break;
         }
-
-//        getopt_wc(c, optarg, &free_thresholds);
     }
 
     /* Check requirements */
     if (!url)
         usage("URL is mandatory.");
+    if (!is_url_scheme(url, "http") && !is_url_scheme(url, "https"))
+        usage("Only http(s) urls are allowed.");
     if (!hostname)
        usage("Hostname is mandatory.");
 

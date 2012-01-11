@@ -93,4 +93,137 @@ int is_hostaddr(const char *address) {
     return FALSE;
 }
 
+int is_url(const char *url) {
+    char *buf, *buf2;
+    char *remain = strdup(url);
+
+    /* Schema */
+    buf = strsep(&remain, ":");
+    if (!remain)
+        return FALSE;
+    if (!isalpha(*buf))
+        return FALSE;
+    while(*(++buf)) {
+        if (isalnum(*buf) || *buf == '+' || *buf == '-' || *buf == '.')
+            continue;
+        return FALSE;
+    }
+    if (*(remain) != '/' || *(remain+1) != '/')
+        return FALSE;
+    remain+=2;
+
+    /* Authority */
+    buf = strsep(&remain, "/?#");
+
+    if (*buf != '\0') {
+
+        /* Authority - Userinfo */
+        if (strstr(buf, "@")) {
+            buf2 = strsep(&buf, "@");
+
+            do {
+                if (isalnum(*buf2) || *buf2 == '+' || *buf2 == '-' || *buf2 == '.' ||
+                        *buf2 == '~' || *buf2 == '!' || *buf2 == '$' || *buf2 == '&' ||
+                        *buf2 == '\'' || *buf2 == '(' || *buf2 == ')' || *buf2 == '*' ||
+                        *buf2 == ',' || *buf2 == ';' || *buf2 == '=' || *buf2 == ':')
+                    continue;
+                if (*buf2 == '%' && isxdigit(*(buf2+1)) && isxdigit(*(buf2+2))) {
+                    buf2+=2;
+                    continue;
+                }
+                return FALSE;
+            } while(*(++buf2));
+        }
+
+        /* Authority - Host */
+        if (*buf == '[') {
+            buf++;
+            buf2 = strsep(&buf, "]");
+            if(*buf2 == ':')
+                buf2++;
+            if (!buf)
+                return FALSE;
+            do {
+                if (isxdigit(*buf2) || *buf2 == ':')
+                    continue;
+                return FALSE;
+            } while(*(++buf2));
+        } else if (isdigit(*buf)) {
+            buf2 = strsep(&buf, ":");
+            if (!is_hostaddr(buf2))
+                return FALSE;
+        } else {
+            buf2 = strsep(&buf, ":");
+            if (!is_hostname(buf2))
+                return FALSE;
+        }
+
+        /* Authority - Port */
+        if (buf && *buf != '\0') {
+            do {
+                if (isdigit(*buf))
+                    continue;
+                return FALSE;
+            } while(*(++buf));
+        }
+
+    }
+
+    if (!remain || *remain == '\0')
+        return TRUE;
+
+    /* Path */
+    buf = strsep(&remain, "?#");
+    while(1) {
+        if (*buf == '\0')
+            break;
+        if (isalnum(*buf) || *buf == '+' || *buf == '-' || *buf == '.' ||
+                *buf == '~' || *buf == '!' || *buf == '$' || *buf == '&' ||
+                *buf == '\'' || *buf == '(' || *buf == ')' || *buf == '*' ||
+                *buf == ',' || *buf == ';' || *buf == '=' || *buf == ':' ||
+                *buf == '@' || *buf == '/') {
+            buf++;
+            continue;
+        }
+        if (*buf == '%' && isxdigit(*(buf+1)) && isxdigit(*(buf+2))) {
+            buf+=3;
+            continue;
+        }
+        return FALSE;
+    }
+
+    if (!remain || *remain == '\0')
+        return TRUE;
+
+    /* Query & Fragment */
+    buf = remain;
+    while(1) {
+        if (*buf == '\0')
+            break;
+        if (isalnum(*buf) || *buf == '+' || *buf == '-' || *buf == '.' ||
+                *buf == '~' || *buf == '!' || *buf == '$' || *buf == '&' ||
+                *buf == '\'' || *buf == '(' || *buf == ')' || *buf == '*' ||
+                *buf == ',' || *buf == ';' || *buf == '=' || *buf == ':' ||
+                *buf == '@' || *buf == '/' || *buf == '?' || *buf == '#') {
+            buf++;
+            continue;
+        }
+        if (*buf == '%' && isxdigit(*(buf+1)) && isxdigit(*(buf+2))) {
+            buf+=3;
+            continue;
+        }
+        return FALSE;
+    }
+
+    return TRUE;
+}
+
+int is_url_scheme(const char *url, const char *schema) {
+    if (strncmp(url, schema, strlen(schema)) != 0)
+        return FALSE;
+    if (url[strlen(schema)] != ':')
+        return FALSE;
+    return TRUE;
+}
+
 /* vim: set ts=4 sw=4 et syn=c : */

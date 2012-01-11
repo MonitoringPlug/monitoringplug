@@ -340,6 +340,12 @@ void getopt_port(const char *optarg, int *port) {
     *port = (int) strtol(optarg, NULL, 10);
 }
 
+void getopt_url(const char *optarg, const char **url) {
+    if (!is_url(optarg))
+        usage("Illegal url '%s'.", optarg);
+    *url = optarg;
+}
+
 void getopt_wc(int c, const char *optarg, thresholds **threshold) {
     if (c == 'w') {
         if (setWarn(threshold, optarg, BISI) == ERROR)

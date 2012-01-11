@@ -45,5 +45,20 @@ int is_hostname(const char *address);
  */
 int is_hostaddr(const char *address);
 
+/**
+ * Check if string is a url.
+ * \param[in] url string to check
+ * \return return 1 if string is a url 0 otherwise.
+ **/
+int is_url(const char *url);
+
+/**
+ * Check if url is of given schema
+ * \param[in] url string to check
+ * \param[in] schema schema to check
+ * \return return 1 if url is of given schema 0 otherwise.
+ **/
+int is_url_scheme(const char *url, const char *schema);
+
 #endif /* _MP_CHECK_H_ */
 

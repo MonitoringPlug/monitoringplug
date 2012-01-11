@@ -267,6 +267,13 @@ void getopt_host_ip(const char *optarg, const char **hostname);
  */
 void getopt_port(const char *optarg, int *port);
 
+/**
+ * Parse the option for url.
+ *  \param[in] optarg option argument
+ * \param[out] url url variable to set
+ */
+void getopt_url(const char *optarg, const char **url);
+
 void getopt_wc(int c, const char *optarg, thresholds **threshold);
 void getopt_wc_time(int c, const char *optarg, thresholds **threshold);
 void getopt_46(int c, int *family);
