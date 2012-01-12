@@ -69,6 +69,7 @@ int main (int argc, char **argv) {
     int                 sb_idle = 0;
     int                 sb_open = 0;
     char                *buf = NULL, *key, *val;
+    char                *server = NULL;
 
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
@@ -88,6 +89,11 @@ int main (int argc, char **argv) {
         print_thresholds("open_thresholds", open_thresholds);
     }
 
+    /* Headers */
+    struct mp_curl_header headers[] = {
+        {"Server", &server}, {NULL, NULL}
+    };
+
     /* Init libcurl */
     curl = mp_curl_init();
     answer.data = NULL;
@@ -97,6 +103,8 @@ int main (int argc, char **argv) {
     curl_easy_setopt(curl, CURLOPT_URL, url);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, mp_curl_recv_data);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&answer);
+    curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, mp_curl_recv_header);
+    curl_easy_setopt(curl, CURLOPT_HEADERDATA, (void *)headers);
 
     /* Get url */
     code = mp_curl_perform(curl);
@@ -107,7 +115,10 @@ int main (int argc, char **argv) {
 
     if (mp_verbose > 1) {
         printf("Code: %ld\n", code);
-        printf("Answer: '%s'\n", answer.data);
+        printf("Server: %s\n", server);
+        if (mp_verbose > 2) {
+            printf("Answer: '%s'\n", answer.data);
+        }
     }
 
     /* Parse Answer */
@@ -181,16 +192,16 @@ int main (int argc, char **argv) {
         switch(get_status(sb_open, open_thresholds)) {
         case STATE_OK:
             free_threshold(open_thresholds);
-            ok("Apache HTTPD status");
+            ok("Apache HTTPD status - %s", server);
         case STATE_WARNING:
             free_threshold(open_thresholds);
-            warning("Apache HTTPD status");
+            warning("Apache HTTPD low on open slots - %s", server);
         case STATE_CRITICAL:
             free_threshold(open_thresholds);
-            critical("Apache HTTPD status");
+            critical("Apache HTTPD not enough open slots - %s", server);
         }
     }
-    ok("Apache HTTPD status");
+    ok("Apache HTTPD status - %s", server);
 }
 
 int process_arguments (int argc, char **argv) {
@@ -256,6 +267,15 @@ int process_arguments (int argc, char **argv) {
         u = mp_malloc(len);
         mp_snprintf(u, len , "http://%s:%d/server-status?auto", hostname, port);
         url = u;
+    } else {
+        char *u;
+        u = url + strlen(url) - 5;
+        if (strcmp(u, "?auto") != 0) {
+            u = mp_malloc(strlen(url) + 6);
+            strcpy(u, url);
+            strcat(u, "?auto");
+            url = u;
+        }
     }
 
     return(OK);
