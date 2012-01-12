@@ -35,28 +35,6 @@
 unsigned int mp_showperfdata = 0;
 char *mp_perfdata=NULL;
 
-void perfdata_int(const char *label, int value, const char *unit,
-                  int warn, int crit, int min, int max) {
-   char *tmp;
-
-   if (!mp_showperfdata)
-       return;
-
-   tmp=mp_malloc(64);
-   sprintf(tmp,"'%s'=%d%s;%d;%d;%d;%d", label, value, unit, warn, crit, min, max);
-
-   if (mp_perfdata != NULL) {
-      mp_perfdata = mp_realloc(mp_perfdata, strlen(mp_perfdata) + strlen(tmp) + 2);
-      strncat(mp_perfdata, " ", 1);
-   } else {
-      mp_perfdata = mp_malloc(strlen(tmp) + 1);
-      mp_perfdata[0] = '\0';
-   }
-   strncat(mp_perfdata, tmp, strlen(tmp));
-
-   free(tmp);
-}
-
 void mp_perfdata_int(const char *label, long int value, const char *unit,
       thresholds *threshold) {
    if (threshold)
@@ -134,27 +112,6 @@ void mp_perfdata_int3(const char *label, long int value, const char *unit,
    }
    mp_strcat_space(&mp_perfdata, perfString);
    free(perfString);
-}
-
-void perfdata_float(const char *label, float value, const char *unit,
-                    float warn, float crit, float  min, float max) {
-   char *tmp;
-
-   if (!mp_showperfdata)
-       return;
-
-   tmp=mp_malloc(128);
-   sprintf(tmp,"'%s'=%0.4f%s;%0.2f;%0.2f;%0.2f;%0.2f", label, value, unit, warn, crit, min, max);
-
-   if (mp_perfdata != NULL) {
-      mp_perfdata = mp_realloc(mp_perfdata, strlen(mp_perfdata) + strlen(tmp) + 2);
-      strncat(mp_perfdata, " ", 1);
-      strncat(mp_perfdata, tmp, strlen(tmp));
-   } else {
-      mp_perfdata = strdup(tmp);
-   }
-
-   free(tmp);
 }
 
 void mp_perfdata_float(const char *label, float value, const char *unit,

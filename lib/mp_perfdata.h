@@ -37,31 +37,89 @@ extern unsigned int mp_showperfdata;
 extern char *mp_perfdata;
 
 /**
- * add integer pref data for printing on exit.
+ * Add (long) int perfdata
+ * \param[in] label perfdata label string
+ * \param[in] value perfdata value
+ * \param[in] unit perfdata unit string
+ * \param[in] threshold perfdata threshold
  */
-void perfdata_int(const char *label, int value, const char *unit,
-		  int warn, int crit, int min, int max);
-
 void mp_perfdata_int(const char *label, long int value, const char *unit,
       thresholds *threshold);
+
+/**
+ * Add (long) int perfdata
+ * \param[in] label perfdata label string
+ * \param[in] value perfdata value
+ * \param[in] unit perfdata unit string
+ * \param[in] threshold perfdata threshold
+ * \param[in] have_min perfdata should list minimum value
+ * \param[in] min perfdata minimum value
+ * \param[in] have_max perfdata should list maximum value
+ * \param[in] max perfdata maximum value
+ */
 void mp_perfdata_int2(const char *label, long int value, const char *unit,
       thresholds *threshold, int have_min, long int min,
       int have_max, long int max);
+
+/**
+ * Add (long) int perfdata
+ * \param[in] label perfdata label string
+ * \param[in] value perfdata value
+ * \param[in] unit perfdata unit string
+ * \param[in] threshold perfdata threshold
+ * \param[in] have_min perfdata should list minimum value
+ * \param[in] min perfdata minimum value
+ * \param[in] have_max perfdata should list maximum value
+ * \param[in] max perfdata maximum value
+ * \param[in] have_warn perfdata should list warning threshold
+ * \param[in] warn perfdata warning threshold
+ * \param[in] have_crit perfdata should list critical threshold
+ * \param[in] crit perfdata critical threshold
+ */
 void mp_perfdata_int3(const char *label, long int value, const char *unit,
       int have_warn, long int warn, int have_crit, long int crit,
       int have_min, long int min, int have_max, long int max);
 
 /**
- * add float perf data for printing on exit.
+ * Add float perfdata
+ * \param[in] label perfdata label string
+ * \param[in] value perfdata value
+ * \param[in] unit perfdata unit string
+ * \param[in] threshold perfdata threshold
  */
-void perfdata_float(const char *label, float value, const char *unit,
-		    float warn, float crit, float min, float max);
-
 void mp_perfdata_float(const char *label, float value, const char *unit,
       thresholds *threshold);
+
+/**
+ * Add float perfdata
+ * \param[in] label perfdata label string
+ * \param[in] value perfdata value
+ * \param[in] unit perfdata unit string
+ * \param[in] threshold perfdata threshold
+ * \param[in] have_min perfdata should list minimum value
+ * \param[in] min perfdata minimum value
+ * \param[in] have_max perfdata should list maximum value
+ * \param[in] max perfdata maximum value
+ */
 void mp_perfdata_float2(const char *label, float value, const char *unit,
       thresholds *threshold, int have_min, float min,
       int have_max, float max);
+
+/**
+ * Add float perfdata
+ * \param[in] label perfdata label string
+ * \param[in] value perfdata value
+ * \param[in] unit perfdata unit string
+ * \param[in] threshold perfdata threshold
+ * \param[in] have_min perfdata should list minimum value
+ * \param[in] min perfdata minimum value
+ * \param[in] have_max perfdata should list maximum value
+ * \param[in] max perfdata maximum value
+ * \param[in] have_warn perfdata should list warning threshold
+ * \param[in] warn perfdata warning threshold
+ * \param[in] have_crit perfdata should list critical threshold
+ * \param[in] crit perfdata critical threshold
+ */
 void mp_perfdata_float3(const char *label, float value, const char *unit,
       int have_warn, float warn, int have_crit, float crit,
       int have_min, float min, int have_max, float max);

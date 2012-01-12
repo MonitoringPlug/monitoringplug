@@ -26,7 +26,18 @@
 
 #include <stdio.h>
 
+/**
+ * MP wrapper arount popen
+ * \param[in] command Command to run
+ * \return return the filehandle.
+ */
 FILE *mp_popen(char *command[]);
+
+/**
+ * MP wrapper arount pclose
+ * \param[in] file popen filehandle to close
+ * \return return returncode of called command.
+ */
 int mp_pclose(FILE * file);
 
 

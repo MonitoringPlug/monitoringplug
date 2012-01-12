@@ -269,13 +269,32 @@ void getopt_port(const char *optarg, int *port);
 
 /**
  * Parse the option for url.
- *  \param[in] optarg option argument
+ * \param[in] optarg option argument
  * \param[out] url url variable to set
  */
 void getopt_url(const char *optarg, const char **url);
 
+/**
+ * Parse the option for warning and critical value.
+ * \param[in] c commantline switch
+ * \param[in] optarg option argument
+ * \param[out] threshold threshold to apply range to
+ */
 void getopt_wc(int c, const char *optarg, thresholds **threshold);
+
+/**
+ * Parse the option for warning and critical time range value.
+ * \param[in] c commantline switch
+ * \param[in] optarg option argument
+ * \param[out] threshold threshold to apply range to
+ */
 void getopt_wc_time(int c, const char *optarg, thresholds **threshold);
+
+/**
+ * Parse the option for IPv4/IPv6 flags.
+ * \param[in] c commantline switch
+ * \param[out] family IP protocol families to use.
+ */
 void getopt_46(int c, int *family);
 
 /** optstring for help, version, verbose */
@@ -341,5 +360,5 @@ void getopt_46(int c, int *family);
 
 /** longopts final */
 #define MP_LONGOPTS_END     {0, 0, NULL, 0}
-      
+
 #endif /* _MP_ARGS_H_ */
