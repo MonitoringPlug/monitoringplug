@@ -91,7 +91,9 @@ int main (int argc, char **argv) {
     if (fp == NULL)
        unknown("Can't exec clustat");
     clustat = parse_rhcs_clustat(fp);
-    fclose(fp);
+
+    if (mp_pclose(fp) != 0)
+        critical("Clustat faild!");
 
     if (clustat->local->rgmanager != 1)
         critical("%s [%s] rgmanager not running!", clustat->name, clustat->local->name);
