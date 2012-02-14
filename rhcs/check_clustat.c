@@ -92,8 +92,11 @@ int main (int argc, char **argv) {
        unknown("Can't exec clustat");
     clustat = parse_rhcs_clustat(fp);
 
-    if (mp_pclose(fp) != 0)
-        critical("Clustat faild!");
+    if (nonroot == 0)
+        if (mp_pclose(fp) != 0)
+            critical("Clustat faild!");
+    else
+        fclose(fp);
 
     if (clustat->local->rgmanager != 1)
         critical("%s [%s] rgmanager not running!", clustat->name, clustat->local->name);
@@ -106,10 +109,7 @@ int main (int argc, char **argv) {
     if (fp == NULL)
        unknown("Can't read cluster.conf.");
     conf = parse_rhcs_conf(fp);
-    if (nonroot == 0)
-        mp_pclose(fp);
-    else
-        fclose(fp);
+    fclose(fp);
 
     int localprio;
     int ownerprio;
