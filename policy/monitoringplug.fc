@@ -6,6 +6,7 @@
 # CUPS
 /usr/lib(64)?/nagios/plugins/check_cups_.*		system_u:object_r:nagios_unconfined_plugin_exec_t:s0
 # CURL
+/usr/lib(64)?/nagios/plugins/check_apache_status        system_u:object_r:nagios_services_plugin_exec_t:s0
 /usr/lib(64)?/nagios/plugins/check_aspsms_credits	system_u:object_r:nagios_services_plugin_exec_t:s0
 /usr/lib(64)?/nagios/plugins/check_buildbot_slave	system_u:object_r:nagios_services_plugin_exec_t:s0
 /usr/lib(64)?/nagios/plugins/check_tftp			system_u:object_r:nagios_services_plugin_exec_t:s0

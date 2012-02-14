@@ -1,5 +1,5 @@
 Name:           monitoringplug
-Version:        0.6
+Version:        0.7
 Release:        1%{?dist}
 Summary:        Collection of monitoring plugins for Nagios and similar monitoring systems.
 
@@ -225,11 +225,11 @@ rm -rf $RPM_BUILD_ROOT
 %post
 if [ "$1" -eq "1" ]; then
     /usr/sbin/semodule -i %{_datadir}/selinux/packages/%{name}.pp.bz2 2>/dev/null || :
-    /sbin/restorecon -F -R %{_libdir}/nagios/plugins/ 2>/dev/null || :
 fi
 if [ "$1" -eq "2" ]; then
     /usr/sbin/semodule -u %{_datadir}/selinux/packages/%{name}.pp.bz2 2>/dev/null || :
 fi
+/bin/rpm -qla "monitoringplug*" | /usr/bin/xargs /sbin/restorecon -F ||:
 
 %postun
 if [ "$1" -eq "0" ]; then
@@ -259,6 +259,7 @@ fi
 
 %files curl
 %defattr(-,root,root,-)
+%{_libdir}/nagios/plugins/check_apache_status
 %{_libdir}/nagios/plugins/check_aspsms_credits
 %{_libdir}/nagios/plugins/check_tftp
 %{_libdir}/nagios/plugins/check_webdav
@@ -323,6 +324,12 @@ fi
 %{_libdir}/nagios/plugins/check_koji_hub
 
 %changelog
+* Tue Feb 14 2012 Marius Rieder <marius.rieder@durchmesser.ch> - 0.7-1
+- version bump
+
+* Tue Jan 03 2012 Marius Rieder <marius.rieder@durchmesser.ch> - 0.6-1
+- version bump
+
 * Fri Nov 25 2011 Marius Rieder <marius.rieder@durchmesser.ch> - 0.5-1
 - version bump
 
