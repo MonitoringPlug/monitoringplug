@@ -45,7 +45,7 @@ const char *progusage = "--tcp <PORT> [-w <warning count>] [-c <critical count>]
 thresholds *usage_thresholds = NULL;
 
 /* Function prototype */
-long int readValue(char *str);
+float readValue(char *str);
 
 int main (int argc, char **argv) {
     /* Local Vars */
@@ -53,13 +53,13 @@ int main (int argc, char **argv) {
     char    line[64];
     char    *line_ptr;
     char    *key;
-    long int    mem_total = 0, mem_free = 0;
-    long int    slab = 0;
-    long int    swap_cached = 0, swap_total = 0, swap_free = 0;
-    long int    page_tables = 0;
-    long int    buffers = 0;
-    long int    cached = 0;
-    long int    apps, swap, used;
+    float       mem_total = 0, mem_free = 0;
+    float       slab = 0;
+    float       swap_cached = 0, swap_total = 0, swap_free = 0;
+    float       page_tables = 0;
+    float       buffers = 0;
+    float       cached = 0;
+    float       apps, swap, used;
     float       usedp;
 
     /* Set signal handling and alarm */
@@ -112,15 +112,15 @@ int main (int argc, char **argv) {
 
     usedp = (float)(used*100)/(float)mem_total;
 
-    mp_perfdata_int("memtotal", mem_total, "", NULL);
-    mp_perfdata_int2("slab", slab, "", NULL, 1, 0, 1, mem_total);
-    mp_perfdata_int2("swapcached", swap_cached, "", NULL, 1, 0, 1, mem_total);
-    mp_perfdata_int2("pagetables", page_tables, "", NULL, 1, 0, 1, mem_total);
-    mp_perfdata_int2("apps", apps, "", NULL, 1, 0, 1, mem_total);
-    mp_perfdata_int2("memfree", mem_free, "", NULL, 1, 0, 1, mem_total);
-    mp_perfdata_int2("buffers", buffers, "", NULL, 1, 0, 1, mem_total);
-    mp_perfdata_int2("cached", cached, "", NULL, 1, 0, 1, mem_total);
-    mp_perfdata_int2("swap", swap, "", NULL, 1, 0, 1, mem_total);
+    mp_perfdata_float("memtotal", mem_total, "", NULL);
+    mp_perfdata_float2("slab", slab, "", NULL, 1, 0, 1, mem_total);
+    mp_perfdata_float2("swapcached", swap_cached, "", NULL, 1, 0, 1, mem_total);
+    mp_perfdata_float2("pagetables", page_tables, "", NULL, 1, 0, 1, mem_total);
+    mp_perfdata_float2("apps", apps, "", NULL, 1, 0, 1, mem_total);
+    mp_perfdata_float2("memfree", mem_free, "", NULL, 1, 0, 1, mem_total);
+    mp_perfdata_float2("buffers", buffers, "", NULL, 1, 0, 1, mem_total);
+    mp_perfdata_float2("cached", cached, "", NULL, 1, 0, 1, mem_total);
+    mp_perfdata_float2("swap", swap, "", NULL, 1, 0, 1, mem_total);
 
     switch (get_status(usedp, usage_thresholds)) {
         case STATE_OK:
@@ -134,15 +134,15 @@ int main (int argc, char **argv) {
     unknown("Memory - %2.2f%% (%s of %s) used", usedp, mp_human_size(used), mp_human_size(mem_total));
 }
 
-long int readValue(char *str) {
-    long int value;
+float readValue(char *str) {
+    float value;
     char *unit;
 
     while (isspace(str[0])) {
         str++;
     }
 
-    value = strtol(str, &unit, 10);
+    value = (float)strtod(str, &unit);
 
     if (unit && !isspace(unit[1])) {
         switch(unit[1]) {

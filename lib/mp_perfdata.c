@@ -28,6 +28,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
+#include <math.h>
 
 #define T_WARN (threshold->warning ? (threshold->warning->end ? threshold->warning->end : threshold->warning->start) : 0)
 #define T_CRIT (threshold->critical ? (threshold->critical->end ? threshold->critical->end : threshold->critical->start) : 0)
@@ -148,42 +149,48 @@ void mp_perfdata_float3(const char *label, float value, const char *unit,
    char *perfString;
    char *valString;
    char *end;
+   int precision = 3;
 
    if (!mp_showperfdata)
       return;
+
+   if (value >= 9999)
+       precision = 0;
+   else if (value == 0)
+       precision = 0;
 
    perfString = mp_malloc(128);
    valString = mp_malloc(16);
 
    if (strpbrk (label, "'= ")) {
-      snprintf(perfString, 64, "'%s'=%f%s;", label, value, unit);
+      snprintf(perfString, 64, "'%s'=%.*f%s;", label, precision, value, unit);
    } else {
-      snprintf(perfString, 64, "%s=%f%s;", label, value, unit);
+      snprintf(perfString, 64, "%s=%.*f%s;", label, precision, value, unit);
    }
 
    if (have_warn) {
-      snprintf(valString, 16, "%f;", warn);
+      snprintf(valString, 16, "%.*f;", precision, warn);
       strcat(perfString, valString);
    } else {
       strcat(perfString, ";");
    }
 
    if (have_crit) {
-      snprintf(valString, 16, "%f;", crit);
+      snprintf(valString, 16, "%.*f;", precision, crit);
       strcat(perfString, valString);
    } else {
       strcat(perfString, ";");
    }
 
    if(have_min) {
-      snprintf(valString, 16, "%f;", min);
+      snprintf(valString, 16, "%.*f;", precision, min);
       strcat(perfString, valString);
    } else {
       strcat(perfString, ";");
    }
 
    if(have_max) {
-      snprintf(valString, 16, "%f;", max);
+      snprintf(valString, 16, "%.*f;", precision, max);
       strcat(perfString, valString);
    }
 

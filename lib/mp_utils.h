@@ -75,6 +75,6 @@ double mp_time_delta(struct timeval tv);
 /**
  * Return a human readable size.
  */
-char *mp_human_size(long int size);
+char *mp_human_size(float size);
 
 #endif /* MP_UTILS_H_ */

@@ -119,12 +119,10 @@ double mp_time_delta(struct timeval time_start) {
 	 (double)(time_end.tv_usec - time_start.tv_usec) / (double)1000000);
 }
 
-char *mp_human_size(long int value) {
+char *mp_human_size(float size) {
     char *out;
-    float size;
     int exp;
 
-    size = (float)value;
     for(exp = 0; exp < 5 && size > 1024; exp++) {
         size /= 1024;
     }
