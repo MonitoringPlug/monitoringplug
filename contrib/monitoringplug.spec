@@ -1,5 +1,5 @@
 Name:           monitoringplug
-Version:        0.7
+Version:        0.8
 Release:        1%{?dist}
 Summary:        Collection of monitoring plugins for Nagios and similar monitoring systems.
 
