@@ -51,6 +51,7 @@ int main (int argc, char **argv) {
     char        line[128];
     int         failed = 0;
     int         lines = 0;
+    uid_t       uid;
 
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
@@ -70,10 +71,16 @@ int main (int argc, char **argv) {
     alarm(mp_timeout);
 
     // Parse clustat
-    if (nonroot == 0)
+    if (nonroot == 0) {
+        uid = getuid();
+        setuid(0);
         fp = mp_popen((char *[]) {"/sbin/multipath","-l", NULL});
-    else
-        fp = fopen("multipath","r");
+        if (uid != 0)
+            setuid(uid);
+    } else {
+        fp = mp_popen((char *[]) {"/usr/bin/sudo", "/sbin/multipath","-l", NULL});
+    }
+
     if (fp == NULL)
        unknown("Can't exec multipath");
 
@@ -89,12 +96,9 @@ int main (int argc, char **argv) {
 
     }
 
-    if (nonroot == 0) {
-        if (mp_pclose(fp) != 0) {
-            critical("Executing multipath faild!");
-        }
-    } else {
-        fclose(fp);
+    int r = mp_pclose(fp);
+    if (r != 0) {
+        critical("Executing multipath faild! (%d)", r);
     }
 
     if (lines == 0)
