@@ -45,7 +45,7 @@ FILE *mp_popen(char *command[]) {
     struct stat fileStat;
 
 
-    if(access(command[0], R_OK | X_OK) != 0)
+    if(access(command[0], X_OK) != 0)
         return NULL;
 
     if (stat(command[0], &fileStat) < 0)
