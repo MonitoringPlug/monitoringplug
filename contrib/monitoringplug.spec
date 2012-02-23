@@ -247,6 +247,8 @@ fi
 %{_libdir}/nagios/plugins/check_file
 %{_libdir}/nagios/plugins/check_bonding
 %{_libdir}/nagios/plugins/check_mem
+%attr(4111, root, root) %{_libdir}/nagios/plugins/check_multipath
+%{_libdir}/nagios/plugins/check_nrped
 %{_libdir}/nagios/plugins/check_sockets
 %{_libdir}/nagios/plugins/check_dummy_mp
 %{_libdir}/nagios/plugins/check_timeout
@@ -289,7 +291,7 @@ fi
 
 %files rhcs
 %defattr(-,root,root,-)
-%attr(4755, root, root) %{_libdir}/nagios/plugins/check_clustat
+%attr(4111, root, root) %{_libdir}/nagios/plugins/check_clustat
 %{_libdir}/nagios/plugins/check_rhcsnmp
 
 %files rpc
