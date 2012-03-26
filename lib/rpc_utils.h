@@ -29,6 +29,7 @@
 
 #define RPC_BUF_LEN 128
 
+void rpc_timeout_alarm_handler(int signo);
 struct rpcent *rpc_getrpcent(const char *prog);
 unsigned long rpc_getprognum(const char *prog);
 int rpc_ping(char *hostname, struct rpcent *programm, unsigned long version, char *proto, struct timeval to);

@@ -56,6 +56,7 @@ int rpcversions = 0;
 char **rpctransport = NULL;
 int rpctransports = 0;
 thresholds *time_threshold = NULL;
+CLIENT *client = NULL;
 
 /* Function prototype */
 
@@ -69,7 +70,7 @@ int main (int argc, char **argv) {
     double time_delta;
 
     /* Set signal handling and alarm */
-    if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
+    if (signal (SIGALRM, rpc_timeout_alarm_handler) == SIG_ERR)
         critical("Setup SIGALRM trap faild!");
 
     /* Process check arguments */

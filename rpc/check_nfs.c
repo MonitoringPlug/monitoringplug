@@ -60,6 +60,7 @@ int rpcversions = 0;
 char **rpctransport = NULL;
 int rpctransports = 0;
 thresholds *time_threshold = NULL;
+CLIENT *client = NULL;
 
 /* Function prototype */
 int check_export(struct rpcent *program, unsigned long version, char *proto);
@@ -75,7 +76,7 @@ int main (int argc, char **argv) {
     double time_delta;
 
     /* Set signal handling and alarm */
-    if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
+    if (signal (SIGALRM, rpc_timeout_alarm_handler) == SIG_ERR)
         critical("Setup SIGALRM trap faild!");
 
     /* Process check arguments */
@@ -84,7 +85,7 @@ int main (int argc, char **argv) {
 
     /* Start plugin timeout */
     alarm(mp_timeout);
-    to.tv_sec = mp_timeout;
+    to.tv_sec = (time_t)mp_timeout;
     to.tv_usec = 0;
 
     // PLUGIN CODE
@@ -166,7 +167,6 @@ int main (int argc, char **argv) {
 }
 
 int check_export(struct rpcent *program, unsigned long version, char *proto) {
-    CLIENT *client;
     char *buf;
     int ret;
     exports exportlist, exportlistPtr;
@@ -277,7 +277,7 @@ int process_arguments (int argc, char **argv) {
     setCritTime(&time_threshold, "1s");
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"H:w:c:e:r:T:", longopts, &option);
+        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"H:w:c:e:r:T:t:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;

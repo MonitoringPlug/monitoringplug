@@ -26,11 +26,23 @@
 #include <mp_common.h>
 #include <ctype.h>
 #include <string.h>
+#include <signal.h>
 
 #include <unistd.h>
 #include <sys/types.h>
 
 #include <rpc/rpc.h>
+
+extern CLIENT *client;
+
+void rpc_timeout_alarm_handler(int signo) {
+    if (signo == SIGALRM) {
+        if (client) {
+            clnt_destroy(client);
+        }
+        critical("RPC timed out after %d seconds\n", mp_timeout);
+    }
+}
 
 struct rpcent *rpc_getrpcent(const char *prog) {
     struct rpcent *ent, *ret;
@@ -66,7 +78,6 @@ unsigned long rpc_getprognum(const char *prog) {
 }
 
 int rpc_ping(char *hostname, struct rpcent *programm, unsigned long version, char *proto, struct timeval to) {
-    CLIENT *client;
     int ret;
 
     client = clnt_create(hostname, programm->r_number, version, proto);
