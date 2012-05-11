@@ -1,5 +1,5 @@
 Name:           monitoringplug
-Version:        0.8
+Version:        0.9
 Release:        1%{?dist}
 Summary:        Collection of monitoring plugins for Nagios and similar monitoring systems.
 
@@ -229,8 +229,49 @@ fi
 if [ "$1" -eq "2" ]; then
     /usr/sbin/semodule -u %{_datadir}/selinux/packages/%{name}.pp.bz2 2>/dev/null || :
 fi
-/sbin/load_policy
-/bin/rpm -qla "monitoringplug*" | /usr/bin/xargs /sbin/restorecon -F ||:
+/sbin/fixfiles -F -R monitoringplug restore ||:
+
+%post base
+/sbin/fixfiles -F -R monitoringplug-base restore ||:
+
+%post cups
+/sbin/fixfiles -F -R monitoringplug-cups restore ||:
+
+%post curl
+/sbin/fixfiles -F -R monitoringplug-curl restore ||:
+
+%post curl-json
+/sbin/fixfiles -F -R monitoringplug-curl-json restore ||:
+
+%post dns
+/sbin/fixfiles -F -R monitoringplug-dns restore ||:
+
+%post gnutls
+/sbin/fixfiles -F -R monitoringplug-gnutls restore ||:
+
+%post libvirt
+/sbin/fixfiles -F -R monitoringplug-libvirt restore ||:
+
+%post mysql
+/sbin/fixfiles -F -R monitoringplug-mysql restore ||:
+
+%post rhcs
+/sbin/fixfiles -F -R monitoringplug-rhcs restore ||:
+
+%post rpc
+/sbin/fixfiles -F -R monitoringplug-rpc restore ||:
+
+%post selinux
+/sbin/fixfiles -F -R monitoringplug-selinux restore ||:
+
+%post smb
+/sbin/fixfiles -F -R monitoringplug-smb restore ||:
+
+%post snmp
+/sbin/fixfiles -F -R monitoringplug-snmp restore ||:
+
+%post xmlrpc
+/sbin/fixfiles -F -R monitoringplug-xmlrpc restore ||:
 
 %postun
 if [ "$1" -eq "0" ]; then
@@ -327,6 +368,9 @@ fi
 %{_libdir}/nagios/plugins/check_koji_hub
 
 %changelog
+* Fri May 11 2012 Marius Rieder <marius.rieder@durchmesser.ch> - 0.9-1
+- version bump
+
 * Thu Feb 23 2012 Marius Rieder <marius.rieder@durchmesser.ch> - 0.8-1
 - version bump
 
