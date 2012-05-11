@@ -108,10 +108,13 @@ int main (int argc, char **argv) {
         critical("%s [%s] rgmanager not running!", clustat->name, clustat->local->name);
 
     // Parse cluster.conf
-    if (nonroot == 0)
+    if (nonroot == 0) {
         fp = fopen("/etc/cluster/cluster.conf","r");
-    else
+        if (uid != 0)
+            setuid(uid);
+    } else {
         fp = fopen("cluster.conf","r");
+    }
     if (fp == NULL)
        unknown("Can't read cluster.conf.");
     conf = parse_rhcs_conf(fp);
@@ -123,8 +126,8 @@ int main (int argc, char **argv) {
     int autostart;
 
     for(groups = clustat->group; *groups != NULL ; groups++) {
-        localprio = 0;
-        ownerprio = 0;
+        localprio = INT_MAX;
+        ownerprio = INT_MAX;
         autostart = 1;
         bestprio = INT_MAX;
 
@@ -170,8 +173,8 @@ int main (int argc, char **argv) {
             if ((*groups)->owner != clustat->local && localprio < ownerprio)
                 mp_strcat_comma(&missing, (*groups)->name);
 
-	    if ((*groups)->owner == NULL && localprio == bestprio && autostart)
-	        mp_strcat_comma(&missing, (*groups)->name);
+	        if ((*groups)->owner == NULL && localprio == bestprio && autostart)
+	            mp_strcat_comma(&missing, (*groups)->name);
         }
     }
 
