@@ -57,6 +57,7 @@ int main (int argc, char **argv) {
     rhcs_conf               *conf;
     rhcs_conf_fodom_node    **fodomnode;
     rhcs_conf_service       **service;
+    uid_t                   uid;
     // Perfdata
     int services_total = 0;
     int services_local = 0;
@@ -84,10 +85,13 @@ int main (int argc, char **argv) {
     alarm(mp_timeout);
 
     // Parse clustat
-    if (nonroot == 0)
+    if (nonroot == 0) {
+        uid = getuid();
+        setuid(0);
         fp = mp_popen((char *[]) {"/usr/sbin/clustat","-x", NULL});
-    else
+    } else {
         fp = fopen("clustat.xml","r");
+    }
     if (fp == NULL)
        unknown("Can't exec clustat");
     clustat = parse_rhcs_clustat(fp);
