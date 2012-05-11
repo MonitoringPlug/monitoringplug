@@ -229,6 +229,7 @@ fi
 if [ "$1" -eq "2" ]; then
     /usr/sbin/semodule -u %{_datadir}/selinux/packages/%{name}.pp.bz2 2>/dev/null || :
 fi
+/sbin/load_policy
 /bin/rpm -qla "monitoringplug*" | /usr/bin/xargs /sbin/restorecon -F ||:
 
 %postun
@@ -326,6 +327,9 @@ fi
 %{_libdir}/nagios/plugins/check_koji_hub
 
 %changelog
+* Thu Feb 23 2012 Marius Rieder <marius.rieder@durchmesser.ch> - 0.8-1
+- version bump
+
 * Tue Feb 14 2012 Marius Rieder <marius.rieder@durchmesser.ch> - 0.7-1
 - version bump
 
