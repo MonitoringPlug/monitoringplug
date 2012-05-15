@@ -37,6 +37,7 @@ const char *progusage = "[--touch <FILE>]";
 #include <stdio.h>
 #include <signal.h>
 #include <unistd.h>
+#include <sys/stat.h>
 #include <fcntl.h>
 #include <utime.h>
 
