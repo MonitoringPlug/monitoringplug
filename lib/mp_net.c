@@ -43,12 +43,12 @@ char *mp_ip2str(const struct sockaddr *sa) {
 
     switch(sa->sa_family) {
         case AF_INET:
-            inet_ntop(AF_INET, &(((struct sockaddr_in *)sa)->sin_addr),
+            inet_ntop(AF_INET, &(((struct sockaddr_in *)(void *)sa)->sin_addr),
                     ip, INET_ADDRSTRLEN);
             break;
 #ifdef USE_IPV6
         case AF_INET6:
-            inet_ntop(AF_INET6, &(((struct sockaddr_in6 *)sa)->sin6_addr),
+            inet_ntop(AF_INET6, &(((struct sockaddr_in6 *)(void *)sa)->sin6_addr),
                     ip, INET6_ADDRSTRLEN);
             break;
 #endif

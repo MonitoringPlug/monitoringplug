@@ -35,12 +35,10 @@ const char *progusage = "[--touch <FILE>]";
 /* Default Includes */
 #include <getopt.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <signal.h>
 #include <unistd.h>
-#include <sys/stat.h>
 #include <fcntl.h>
+#include <utime.h>
 
 /* Global Vars */
 char *filename = NULL;

@@ -269,7 +269,7 @@ int process_arguments (int argc, char **argv) {
         url = u;
     } else {
         char *u;
-        u = url + strlen(url) - 5;
+        u = (char *)(url + strlen(url) - 5);
         if (strcmp(u, "?auto") != 0) {
             u = mp_malloc(strlen(url) + 6);
             strcpy(u, url);

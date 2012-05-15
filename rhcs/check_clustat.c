@@ -57,7 +57,7 @@ int main (int argc, char **argv) {
     rhcs_conf               *conf;
     rhcs_conf_fodom_node    **fodomnode;
     rhcs_conf_service       **service;
-    uid_t                   uid;
+    uid_t                   uid = 0;
     // Perfdata
     int services_total = 0;
     int services_local = 0;
