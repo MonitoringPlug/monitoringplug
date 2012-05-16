@@ -14,3 +14,4 @@ if HAVE_CUPS
 bin_PROGRAMS += check_cups_jobs
 
 endif
+## vim: set ts=4 sw=4 syn=automake :

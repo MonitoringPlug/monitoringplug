@@ -15,3 +15,4 @@ bin_PROGRAMS += check_enforce check_sebool
 endif
 
 
+## vim: set ts=4 sw=4 syn=automake :

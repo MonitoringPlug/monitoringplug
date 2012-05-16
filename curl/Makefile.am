@@ -34,3 +34,4 @@ if HAVE_CURL_TFTP
 bin_PROGRAMS += check_tftp
 endif
 
+## vim: set ts=4 sw=4 syn=automake :

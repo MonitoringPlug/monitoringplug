@@ -14,3 +14,4 @@ if HAVE_MYSQL
 bin_PROGRAMS += check_mysql check_mysql_rows
 
 endif
+## vim: set ts=4 sw=4 syn=automake :

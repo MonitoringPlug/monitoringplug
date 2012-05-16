@@ -14,3 +14,4 @@ if HAVE_SMBCLIENT
 bin_PROGRAMS += check_smb_share
 
 endif
+## vim: set ts=4 sw=4 syn=automake :

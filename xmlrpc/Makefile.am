@@ -15,3 +15,4 @@ bin_PROGRAMS += check_rhn_entitlements check_koji_hub check_koji_builder
 endif
 
 
+## vim: set ts=4 sw=4 syn=automake :

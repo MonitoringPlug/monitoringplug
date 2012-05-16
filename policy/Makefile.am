@@ -10,4 +10,4 @@ all: monitoringplug.pp
 monitoringplug.pp: monitoringplug.te monitoringplug.fc
 	make -f /usr/share/selinux/devel/Makefile || :
 
-endif
+endif## vim: set ts=4 sw=4 syn=automake :

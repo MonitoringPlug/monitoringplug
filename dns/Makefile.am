@@ -17,3 +17,4 @@ bin_PROGRAMS += check_dns_sync \
                 check_dnssec_trust_anchor
 endif
 
+## vim: set ts=4 sw=4 syn=automake :

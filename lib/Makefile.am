@@ -12,6 +12,13 @@ libcurlutils_a_SOURCES = curl_utils.c curl_utils.h
 libcurlutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(CURL_CFLAGS)
 endif
 
+noinst_LIBRARIES += libdhcputils.a
+
+libdhcputils_a_SOURCES = dhcp_utils.c dhcp_utils.h \
+						 mp_net.c mp_net.h
+libdhcputils_a_CPPFLAGS = $(AM_CPPFLAGS)
+
+
 if HAVE_EXPAT
 noinst_LIBRARIES += libexpatutils.a librhcsutils.a
 
@@ -49,7 +56,7 @@ libsnmputils_a_SOURCES = snmp_utils.c snmp_utils.h
 libsnmputils_a_CPPFLAGS = $(AM_CPPFLAGS) $(NETSNMP_CFLAGS)
 endif
 
-if HAVE_XMLRPC	
+if HAVE_XMLRPC
 noinst_LIBRARIES += libxmlrpcutils.a
 
 libxmlrpcutils_a_SOURCES = xmlrpc_utils.c xmlrpc_utils.h
@@ -70,3 +77,4 @@ libmonitoringplug_a_SOURCES = mp_common.c mp_common.h \
 							  mp_eopt.c mp_eopt.h \
 							  mp_net.c mp_net.h
 
+## vim: set ts=4 sw=4 syn=automake :

@@ -24,3 +24,4 @@ check_monitoringplug_LDFLAGS = $(AM_LDFLAGS) $(CHECK_LIBS)
 endif
 
 EXTRA_DIST = eopt.ini
+## vim: set ts=4 sw=4 syn=automake :

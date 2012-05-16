@@ -32,4 +32,9 @@ struct addrinfo *mp_getaddrinfo(const char *hostname, int port, int family, int 
 int mp_connect(const char *hostname, int port, int family, int type);
 void mp_disconnect(int sd);
 
+/**
+ * Calculate ip checksum
+ */
+unsigned short int mp_ip_csum(unsigned short int *addr, int len);
+
 #endif /* MP_NET_H_ */

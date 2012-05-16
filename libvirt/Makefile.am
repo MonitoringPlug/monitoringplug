@@ -18,3 +18,4 @@ check_libvirt_domain_LDFLAGS = $(AM_LDFLAGS) $(EXPAT_LDFLAGS)
 check_libvirt_domain_LDADD = $(LDADD) $(EXPAT_LIBS)
 
 endif
+## vim: set ts=4 sw=4 syn=automake :

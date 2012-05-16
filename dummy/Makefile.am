@@ -10,3 +10,4 @@ LDADD = ../lib/libmonitoringplug.a
 
 bin_PROGRAMS = check_dummy check_timeout
 
+## vim: set ts=4 sw=4 syn=automake :

@@ -10,3 +10,4 @@ LDADD = ../lib/*.a
 
 bin_PROGRAMS = check_nfs check_rpc_ping
 
+## vim: set ts=4 sw=4 syn=automake :

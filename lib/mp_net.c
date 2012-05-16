@@ -120,4 +120,17 @@ void mp_disconnect(int sd) {
     close(sd);
 }
 
+unsigned short int mp_ip_csum(unsigned short int *addr, int len) {
+    int sum = 0;
+    unsigned short int *w = addr;
+
+    for (;len > 0; len -= sizeof (unsigned short int)) {
+        sum += *w++;
+    }
+
+    sum = (sum >> 16) + (sum & 0xFFFF);
+    sum += (sum >> 16);
+    return ~sum;
+}
+
 /* vim: set ts=4 sw=4 et syn=c : */

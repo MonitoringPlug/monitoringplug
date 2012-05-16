@@ -6,3 +6,4 @@ SUBDIRS = lib base cups curl dns dummy gnutls libvirt mysql rhcs rpc selinux \
 	  smb snmp xmlrpc \
 	  contrib doc policy tests
 
+## vim: set ts=4 sw=4 syn=automake :

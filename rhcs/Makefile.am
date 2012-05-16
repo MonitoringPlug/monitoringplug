@@ -25,3 +25,4 @@ check_rhcsnmp_LDADD = $(LDADD) ../lib/libsnmputils.a
 endif
 
 endif
+## vim: set ts=4 sw=4 syn=automake :
