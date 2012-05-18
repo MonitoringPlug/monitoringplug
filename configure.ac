@@ -53,10 +53,7 @@ AC_LIB_CUPS([1.4.0],[], [AC_MSG_WARN([Skipping cups])])
 AX_LIB_MYSQL()
 LIBCURL_CHECK_CONFIG([yes],[7.7.2], [], [AC_MSG_WARN([Skipping curl])])
 # xmlrpc-c
-AC_ARG_WITH([xmlrpc], AS_HELP_STRING([--without-xmlrpc], [Build without xmlrpc]))
-AS_IF([test "x$with_xmlrpc" != "xno"], [
-       PKG_CHECK_MODULES([XMLRPC], [xmlrpc xmlrpc_client xmlrpc_util],[],[AC_MSG_WARN([Skipping xmlrpc-c])])
-       ],[AC_MSG_WARN([Skipping xmlrpc-c])])
+AX_LIB_XMLRPC()
 # selinux
 AC_ARG_WITH([selinux], AS_HELP_STRING([--without-selinux], [Build without selinux]))
 AS_IF([test "x$with_selinux" != "xno"], [
