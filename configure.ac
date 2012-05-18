@@ -49,7 +49,7 @@ AS_IF([test "x$with_check" != "xno"], [
 # Expat
 AX_LIB_EXPAT()
 AX_LIB_LDNS()
-AC_LIB_CUPS([1.4.0],[], [AC_MSG_WARN([Skipping cups])])
+AX_LIB_CUPS([1.4.0])
 AX_LIB_MYSQL()
 LIBCURL_CHECK_CONFIG([yes],[7.7.2], [], [AC_MSG_WARN([Skipping curl])])
 # xmlrpc-c
