@@ -81,18 +81,7 @@ AS_IF([test "x$with_libvirt" != "xno"], [
 PKG_CHECK_MODULES([SMBCLIENT],[smbclient], [],[AC_MSG_WARN([Skipping libsmbclient])])
 
 # SNMP Option
-AC_ARG_WITH([netsnmp],
-    [AS_HELP_STRING([--with-netsnmp], [support SNMP @<:@default=check@:>@])],
-    [], [with_netsnmp=check])
-
-if test "$with_netsnmp" != "no"; then
-	AC_CHECK_LIB(netsnmp, netsnmp_get_version,[
-	     NETSNMP_LIBS="-lnetsnmp"
-	     AC_DEFINE(HAVE_NET_SNMP, 1, Net-SNMP Version) 
-		 HAVE_NET_SNMP=yes
-		 AC_SUBST(NETSNMP_LIBS) ],
-		AC_MSG_RESULT(Cannot find Net-SNMP libraries.))
-fi
+AX_LIB_NETSNMP()
 
 # IPv6 Option
 AC_ARG_WITH([ipv6],
