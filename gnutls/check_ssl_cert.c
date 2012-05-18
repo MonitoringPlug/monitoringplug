@@ -228,7 +228,7 @@ int process_arguments (int argc, char **argv) {
     setCritTime(&expire_thresholds, "10d:");
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"H:P:46w:c:C:", longopts, &option);
+        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"H:P:46w:c:C:t:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -251,6 +251,10 @@ int process_arguments (int argc, char **argv) {
             /* CAs opt */
             case 'C':
                 mp_array_push(&ca_file, optarg, &ca_files);
+                break;
+            /* Timeout opt */
+            case 't':
+                getopt_timeout(optarg);
                 break;
         }
     }
