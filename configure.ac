@@ -48,7 +48,7 @@ AS_IF([test "x$with_check" != "xno"], [
        ],[AC_MSG_WARN([Skipping check])])
 # Expat
 AX_LIB_EXPAT()
-AC_LIB_LDNS([],[], [AC_MSG_WARN([Skipping ldns])])
+AX_LIB_LDNS()
 AC_LIB_CUPS([1.4.0],[], [AC_MSG_WARN([Skipping cups])])
 AX_LIB_MYSQL()
 LIBCURL_CHECK_CONFIG([yes],[7.7.2], [], [AC_MSG_WARN([Skipping curl])])
