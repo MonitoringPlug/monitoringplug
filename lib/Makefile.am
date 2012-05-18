@@ -9,15 +9,16 @@ if HAVE_CURL
 noinst_LIBRARIES += libcurlutils.a
 
 libcurlutils_a_SOURCES = curl_utils.c curl_utils.h
-libcurlutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(CURL_CFLAGS)
+libcurlutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(LIBCURL_CPPFLAGS)
 endif
 
+if OS_LINUX
 noinst_LIBRARIES += libdhcputils.a
 
 libdhcputils_a_SOURCES = dhcp_utils.c dhcp_utils.h \
 						 mp_net.c mp_net.h
 libdhcputils_a_CPPFLAGS = $(AM_CPPFLAGS)
-
+endif
 
 if HAVE_EXPAT
 noinst_LIBRARIES += libexpatutils.a librhcsutils.a

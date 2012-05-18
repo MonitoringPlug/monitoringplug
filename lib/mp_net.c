@@ -33,30 +33,15 @@
 #include <netdb.h>
 
 
-char *mp_ip2str(const struct sockaddr *sa) {
-    char *ip;
-#ifdef USE_IPV6
-    ip = mp_malloc(INET6_ADDRSTRLEN+1);
-#else
-    ip = mp_malloc(INET_ADDRSTRLEN+1);
-#endif
+char *mp_ip2str(const struct sockaddr *sa, socklen_t len) {
+    int error;
+    char hostname[NI_MAXHOST] = "";
 
-    switch(sa->sa_family) {
-        case AF_INET:
-            inet_ntop(AF_INET, &(((struct sockaddr_in *)(void *)sa)->sin_addr),
-                    ip, INET_ADDRSTRLEN);
-            break;
-#ifdef USE_IPV6
-        case AF_INET6:
-            inet_ntop(AF_INET6, &(((struct sockaddr_in6 *)(void *)sa)->sin6_addr),
-                    ip, INET6_ADDRSTRLEN);
-            break;
-#endif
-        default:
-            strcpy(ip, "Unknown AF");
-            return ip;
-    } // switch(sa->sa_family)
-    return ip;
+    error = getnameinfo(sa, len, hostname, NI_MAXHOST, NULL, 0, NI_NUMERICHOST);
+
+    if (error)
+        return strdup(gai_strerror(error));
+    return strdup(hostname);
 }
 
 struct addrinfo *mp_getaddrinfo(const char *hostname, int port, int family, int type) {
@@ -94,7 +79,7 @@ int mp_connect(const char *hostname, int port, int family, int type) {
 
     for(rp = result; rp != NULL; rp = rp->ai_next) {
         if (mp_verbose >= 1) {
-            printf("Connect to %s\n", mp_ip2str(rp->ai_addr));
+            printf("Connect to %s\n", mp_ip2str(rp->ai_addr, rp->ai_addrlen));
         }
         sd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
 

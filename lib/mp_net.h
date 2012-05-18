@@ -27,7 +27,7 @@
 #include <sys/socket.h>
 #include <netdb.h>
 
-char *mp_ip2str(const struct sockaddr *sa);
+char *mp_ip2str(const struct sockaddr *sa, socklen_t len);
 struct addrinfo *mp_getaddrinfo(const char *hostname, int port, int family, int type);
 int mp_connect(const char *hostname, int port, int family, int type);
 void mp_disconnect(int sd);
