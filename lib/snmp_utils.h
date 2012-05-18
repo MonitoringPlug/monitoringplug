@@ -25,6 +25,7 @@
 #define _SNMP_UTILS_H_
 
 #include "config.h"
+#include <getopt.h>
 #include <net-snmp/net-snmp-config.h>
 #include <net-snmp/net-snmp-includes.h>
 
