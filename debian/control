@@ -20,7 +20,7 @@ Homepage: http://svn.durchmesser.ch/trac/monitoringplug/
 
 Package: monitoringplug
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${misc:Depends}
 Description: Plugin Collection for Nagios/Icinga
  Collection of monitoring plugins for Nagios and similar monitoring systems.
  All plugins are written in C and use common libraries.
@@ -171,6 +171,7 @@ Description: Collection of SELinux monitoring plugins for Nagios.
 
 Package: monitoringplug-smb
 Architecture: any
+Depends: monitoringplug, libsmbclient, ${shlibs:Depends}, ${misc:Depends}
 Description: Collection of SNMP monitoring plugins for Nagios.
  Collection of SNMP monitoring plugins for Nagios. It contains the following
  plugins:

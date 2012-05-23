@@ -83,7 +83,7 @@ AC_DEFUN([AX_LIB_LDNS],
         CPPFLAGS="$CPPFLAGS -I$ldns_include_dir"
 
         saved_LDFLAGS="$LDFLAGS"
-        LIBS="$LDFLAGS $ldns_lib_flags"
+        LDFLAGS="$LDFLAGS $ldns_lib_flags"
 
         dnl
         dnl Check ldns headers
@@ -183,7 +183,7 @@ domain = NULL;
 		CPPFLAGS="$CPPFLAGS -I$ldns_include_dir"
 
 		saved_LDFLAGS="$LDFLAGS"
-		LIBS="$LDFLAGS $ldns_lib_flags"
+		LDFLAGS="$LDFLAGS $ldns_lib_flags"
 
                 AC_LANG_PUSH([C])
                 AC_RUN_IFELSE([

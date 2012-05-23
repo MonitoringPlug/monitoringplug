@@ -1,7 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 
 AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/lib
-LDADD = ../lib/*.a
+LDADD = ../lib/*.a $(CHECK_LIBS)
 
 if HAVE_CHECK
 

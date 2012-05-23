@@ -1,3 +1,4 @@
+/usr/lib/nagios/plugins/check_dhcp
 /usr/lib/nagios/plugins/check_file
 /usr/lib/nagios/plugins/check_bonding
 /usr/lib/nagios/plugins/check_mem
