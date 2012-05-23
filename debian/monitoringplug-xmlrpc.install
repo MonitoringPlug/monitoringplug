@@ -1,0 +1,3 @@
+/usr/lib/nagios/plugins/check_koji_builder
+/usr/lib/nagios/plugins/check_koji_hub
+/usr/lib/nagios/plugins/check_rhn_entitlements

@@ -1,0 +1,212 @@
+Source: monitoringplug
+Section: net
+Priority: extra
+Maintainer: Marius Rieder <marius.rieder@durchmesser.ch>
+Build-Depends: debhelper (>= 7.0.50~),
+               autoconf, libtool,
+               pkg-config,
+               libcurl4-gnutls-dev,
+               libxmlrpc-c3-dev,
+               libgnutls-dev,
+               libvirt-dev,
+               libcups2-dev,
+               libsnmp-dev,
+               libjson0-dev,
+               libselinux1-dev,
+               libsmbclient-dev,
+               libexpat1-dev
+Standards-Version: 3.9.1
+Homepage: http://svn.durchmesser.ch/trac/monitoringplug/
+
+Package: monitoringplug
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Plugin Collection for Nagios/Icinga
+ Collection of monitoring plugins for Nagios and similar monitoring systems.
+ All plugins are written in C and use common libraries.
+
+Package: monitoringplug-base
+Architecture: any
+Depends: monitoringplug, ${shlibs:Depends}, ${misc:Depends}
+Description: Collection of basic monitoring plugins for Nagios.
+ Collection of basic monitoring plugins for Nagios. It contains the following
+ plugins:
+ .
+  check_file, check_bonding, check_mem, check_multipath, check_nrped,
+  check_sockets, check_dummy_mp, check_timeout
+ .
+ This package provides a basic set of plugins with minimal external
+ dependencies. It is not likely to be useful by itself unless you are
+ using a remote "satellite" system (using nagios-nrpe-server, check_by_ssh or
+ nsca, for example).
+
+Package: monitoringplug-cups
+Architecture: any
+Depends: monitoringplug, libcups2, ${shlibs:Depends}, ${misc:Depends}
+Description: Collection of CUPS monitoring plugins for Nagios.
+ Collection of CUPS monitoring plugins for Nagios. It contains the following
+ plugins:
+ .
+  check_cups_jobs
+ .
+ This package provides a basic set of plugins with libcups as
+ dependency. It is not likely to be useful by itself unless you are
+ using a remote "satellite" system (using nagios-nrpe-server, check_by_ssh or
+ nsca, for example).
+
+Package: monitoringplug-curl
+Architecture: any
+Depends: monitoringplug, libcurl4, libjson0, ${shlibs:Depends}, ${misc:Depends}
+Description: Collection of libcurl monitoring plugins for Nagios.
+ Collection of basic monitoring plugins for Nagios. It contains the following
+ plugins:
+ .
+  check_apache_status, check_aspsms_credits, check_buildbot_slave, check_tftp,
+  check_webdav
+ .
+ This package provides a basic set of plugins with libcurl as
+ dependency. It is not likely to be useful by itself unless you are
+ using a remote "satellite" system (using nagios-nrpe-server, check_by_ssh or
+ nsca, for example).
+
+Package: monitoringplug-dns
+Architecture: any
+Depends: monitoringplug, libldns1, ${shlibs:Depends}, ${misc:Depends}
+Description: Collection of DNS monitoring plugins for Nagios.
+ Collection of DNS monitoring plugins for Nagios. It contains the following
+ plugins:
+ .
+  check_dnssec_expiration, check_dnssec_trace, check_dnssec_trust_anchor,
+  check_dns_sync
+ .
+ This package provides a basic set of plugins with ldns as
+ dependency. It is not likely to be useful by itself unless you are
+ using a remote "satellite" system (using nagios-nrpe-server, check_by_ssh or
+ nsca, for example).
+
+Package: monitoringplug-gnutls
+Architecture: any
+Depends: monitoringplug, libgnutls26, ${shlibs:Depends}, ${misc:Depends}
+Description: Collection of GnuTLS monitoring plugins for Nagios.
+ Collection of GnuTLS monitoring plugins for Nagios. It contains the following
+ plugins:
+ .
+  check_ssl_cert
+ .
+ This package provides a basic set of plugins with GnuTLS as
+ dependency. It is not likely to be useful by itself unless you are
+ using a remote "satellite" system (using nagios-nrpe-server, check_by_ssh or
+ nsca, for example).
+
+Package: monitoringplug-libvirt
+Architecture: any
+Depends: monitoringplug, libvirt0, ${shlibs:Depends}, ${misc:Depends}
+Description: Collection of libvirt monitoring plugins for Nagios.
+ Collection of libvirt monitoring plugins for Nagios. It contains the following
+ plugins:
+ .
+  check_libvirtd, check_libvirt_domain
+ .
+ This package provides a basic set of plugins with libvirt as
+ dependency. It is not likely to be useful by itself unless you are
+ using a remote "satellite" system (using nagios-nrpe-server, check_by_ssh or
+ nsca, for example).
+
+Package: monitoringplug-mysql
+Architecture: any
+Depends: monitoringplug, libmysqlclient16, ${shlibs:Depends}, ${misc:Depends}
+Description: Collection of MySQL monitoring plugins for Nagios.
+ Collection of MySQL monitoring plugins for Nagios. It contains the following
+ plugins:
+ .
+  check_mysql, check_mysql_rows
+ .
+ This package provides a basic set of plugins with libmysqlclient as
+ dependency. It is not likely to be useful by itself unless you are
+ using a remote "satellite" system (using nagios-nrpe-server, check_by_ssh or
+ nsca, for example).
+
+
+Package: monitoringplug-rhcs
+Architecture: any
+Depends: monitoringplug, libsnmp15, libexpat1, ${shlibs:Depends}, ${misc:Depends}
+Description: Collection of RHCS monitoring plugins for Nagios.
+ Collection of RHCS monitoring plugins for Nagios. It contains the following
+ plugins:
+ .
+  check_clustat, check_rhcsnmp
+ .
+ This package provides a basic set of plugins with eXpat and net-snmp as
+ dependencies. It is not likely to be useful by itself unless you are
+ using a remote "satellite" system (using nagios-nrpe-server, check_by_ssh or
+ nsca, for example).
+
+Package: monitoringplug-rpc
+Architecture: any
+Depends: monitoringplug, ${shlibs:Depends}, ${misc:Depends}
+Description: Collection of RPC monitoring plugins for Nagios.
+ Collection of RPC monitoring plugins for Nagios. It contains the following
+ plugins:
+ .
+  check_nfs, check_rpc_ping
+ .
+ This package provides a basic set of plugins with rpcsvc as
+ dependency. It is not likely to be useful by itself unless you are
+ using a remote "satellite" system (using nagios-nrpe-server, check_by_ssh or
+ nsca, for example).
+
+Package: monitoringplug-selinux
+Architecture: any
+Depends: monitoringplug, libselinux1, ${shlibs:Depends}, ${misc:Depends}
+Description: Collection of SELinux monitoring plugins for Nagios.
+ Collection of SELinux monitoring plugins for Nagios. It contains the following
+ plugins:
+ .
+  check_enforce, check_sebool
+ .
+ This package provides a basic set of plugins with libselinux as
+ dependency. It is not likely to be useful by itself unless you are
+ using a remote "satellite" system (using nagios-nrpe-server, check_by_ssh or
+ nsca, for example).
+
+Package: monitoringplug-smb
+Architecture: any
+Description: Collection of SNMP monitoring plugins for Nagios.
+ Collection of SNMP monitoring plugins for Nagios. It contains the following
+ plugins:
+ .
+  check_smb_share
+ .
+ This package provides a basic set of plugins with libsmbclient as
+ dependency. It is not likely to be useful by itself unless you are
+ using a remote "satellite" system (using nagios-nrpe-server, check_by_ssh or
+ nsca, for example).
+
+Package: monitoringplug-snmp
+Architecture: any
+Depends: monitoringplug, libsnmp15, ${shlibs:Depends}, ${misc:Depends}
+Description: Collection of SNMP monitoring plugins for Nagios.
+ Collection of SNMP monitoring plugins for Nagios. It contains the following
+ plugins:
+ .
+  check_akcp, check_apc_pdu, check_arc_raid, check_interface, check_qnap_disks,
+  check_qnap_vols
+ .
+ This package provides a basic set of plugins with net-snmp as
+ dependency. It is not likely to be useful by itself unless you are
+ using a remote "satellite" system (using nagios-nrpe-server, check_by_ssh or
+ nsca, for example).
+
+Package: monitoringplug-xmlrpc
+Architecture: any
+Depends: monitoringplug, libxmlrpc-c3, ${shlibs:Depends}, ${misc:Depends}
+Description: Collection of xmlrpc monitoring plugins for Nagios.
+ Collection of xmlrpc monitoring plugins for Nagios. It contains the following
+ plugins:
+ .
+  check_koji_builder, check_koji_hub, check_rhn_entitlements
+ .
+ This package provides a basic set of plugins with xmlrpc-c as
+ dependency. It is not likely to be useful by itself unless you are
+ using a remote "satellite" system (using nagios-nrpe-server, check_by_ssh or
+ nsca, for example).

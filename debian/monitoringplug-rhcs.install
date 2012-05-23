@@ -1,0 +1,2 @@
+/usr/lib/nagios/plugins/check_clustat
+/usr/lib/nagios/plugins/check_rhcsnmp

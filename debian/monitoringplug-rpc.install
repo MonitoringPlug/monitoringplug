@@ -1,0 +1,2 @@
+/usr/lib/nagios/plugins/check_nfs
+/usr/lib/nagios/plugins/check_rpc_ping

@@ -1,0 +1,7 @@
+/usr/lib/nagios/plugins/check_file
+/usr/lib/nagios/plugins/check_bonding
+/usr/lib/nagios/plugins/check_mem
+/usr/lib/nagios/plugins/check_multipath
+/usr/lib/nagios/plugins/check_nrped
+/usr/lib/nagios/plugins/check_sockets
+/usr/lib/nagios/plugins/check_timeout

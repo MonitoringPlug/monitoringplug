@@ -1,0 +1,5 @@
+/usr/lib/nagios/plugins/check_apache_status
+/usr/lib/nagios/plugins/check_aspsms_credits
+/usr/lib/nagios/plugins/check_buildbot_slave
+/usr/lib/nagios/plugins/check_tftp
+/usr/lib/nagios/plugins/check_webdav

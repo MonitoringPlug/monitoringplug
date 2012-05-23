@@ -114,7 +114,7 @@ AC_DEFINE_UNQUOTED([BIN_FALSE], ["$ac_cv_path_BIN_FALSE"],
 
 # Conditionals
 AM_CONDITIONAL([HAVE_LDNS], [test "x$LDNS_CFLAGS" != x])
-AM_CONDITIONAL([HAVE_CUPS], [test "x$CUPS_CFLAGS" != x])
+AM_CONDITIONAL([HAVE_CUPS], [test "x$CUPS_LDFLAGS" != x])
 AM_CONDITIONAL([HAVE_CURL], [test "x$LIBCURL" != x])
 AM_CONDITIONAL([HAVE_CURL_TFTP], [test "x$libcurl_protocol_TFTP" != x])
 AM_CONDITIONAL([HAVE_EXPAT], [test "x$EXPAT_CFLAGS" != x])

@@ -1,0 +1,6 @@
+/usr/lib/nagios/plugins/check_akcp
+/usr/lib/nagios/plugins/check_apc_pdu
+/usr/lib/nagios/plugins/check_arc_raid
+/usr/lib/nagios/plugins/check_interface
+/usr/lib/nagios/plugins/check_qnap_disks
+/usr/lib/nagios/plugins/check_qnap_vols

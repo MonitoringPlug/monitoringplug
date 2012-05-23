@@ -1,0 +1,2 @@
+/usr/lib/nagios/plugins/check_enforce
+/usr/lib/nagios/plugins/check_sebool
