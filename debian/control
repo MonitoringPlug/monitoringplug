@@ -14,7 +14,9 @@ Build-Depends: debhelper (>= 7.0.50~),
                libjson0-dev,
                libselinux1-dev,
                libsmbclient-dev,
-               libexpat1-dev
+               libexpat1-dev,
+               libldns-dev,
+               libmysqlclient-dev
 Standards-Version: 3.9.1
 Homepage: http://svn.durchmesser.ch/trac/monitoringplug/
 
