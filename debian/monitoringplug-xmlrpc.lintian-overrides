@@ -1,0 +1,3 @@
+monitoringplug-xmlrpc: binary-or-shlib-defines-rpath ./usr/lib/nagios/plugins/check_koji_builder /usr/lib
+monitoringplug-xmlrpc: binary-or-shlib-defines-rpath ./usr/lib/nagios/plugins/check_koji_hub /usr/lib
+monitoringplug-xmlrpc: binary-or-shlib-defines-rpath ./usr/lib/nagios/plugins/check_rhn_entitlements /usr/lib
