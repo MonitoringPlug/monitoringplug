@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+
+  <!ENTITY mpcheckname   "check_dhcp">
+
+]>
+
+<refentry>
+  <refentryinfo>
+    <title>Monitoringplug  Manual</title>
+    <productname>&mpcheckname;</productname>
+    <authorgroup>
+      <author>
+       <firstname>Marius</firstname>
+        <surname>Rieder</surname>
+        <address>
+          <email>marius.rieder@durchmesser.ch</email>
+        </address>
+       <contrib>For monitoringplug</contrib>
+      </author>
+    </authorgroup>
+    <copyright>
+      <year>2012</year>
+      <holder>Marius Rieder</holder>
+    </copyright>
+    <legalnotice>
+      <para>This manual page was written for Monitoringplug
+        (and may be used by others).</para>
+      <para>Permission is granted to copy, distribute and/or modify this
+        document under the terms of the GNU General Public License,
+        Version 2 or (at your option) any later version published by
+        the Free Software Foundation.</para>
+    </legalnotice>
+  </refentryinfo>
+  <refmeta>
+    <refentrytitle>CHECK_DHCP</refentrytitle>
+    <manvolnum>1</manvolnum>
+  </refmeta>
+  <refnamediv>
+    <refname>&mpcheckname;</refname>
+    <refpurpose>Check DHCP server.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <cmdsynopsis>
+      <command>&mpcheckname;</command>
+      <arg choice="opt">
+        <option>-i <replaceable>DEV</replaceable></option>
+      </arg>
+      <arg choice="opt">
+        <option>-H <replaceable>HOSTNAME</replaceable></option>
+      </arg>
+      <arg choice="opt">
+        <option>--mac=<replaceable>MAC</replaceable></option>
+      </arg>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+  <refsect1 id="description">
+   <title>DESCRIPTION</title>
+   <para>Check a DHCP server for desired answer.</para>
+    <variablelist>
+      <varlistentry>
+        <term><option>Mode 1</option></term>
+        <listitem>
+          <para>Run without hostname to ask broadcast and accept first
+            answer.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>Mode 2</option></term>
+        <listitem>
+          <para>Run with hostname to ask broadcast and accept only
+            answers from given host.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>Mode 3</option></term>
+        <listitem>
+          <para>Run with hostname and unicast flag. Act as
+            forwarder/redirector and ask the server directly in the name
+            of a client.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+  <refsect1 id="options">
+    <title>OPTIONS</title>
+    <para>The Monitoringplug default options</para>
+    <xi:include href="mp_opts.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <para>Check specific options</para>
+    <variablelist>
+      <xi:include href="mp_opts_host.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+      <varlistentry>
+        <term><option>-i</option></term>
+        <term><option>--interface=<replaceable>DEV</replaceable></option></term>
+        <listitem>
+          <para>Network interface to use. (Default: eth0)</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-m</option></term>
+        <term><option>--mac=<replaceable>MAC</replaceable></option></term>
+        <listitem>
+          <para>MAC Address to use. (Default: from interface)</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-u</option></term>
+        <term><option>--unicast</option></term>
+        <listitem>
+          <para>Run in unicast mode.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-b</option></term>
+        <term><option>--broadcast</option></term>
+        <listitem>
+          <para>Run in broadcast mode.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+  <refsect1 id="see_also">
+    <title>SEE ALSO</title>
+    <para><citerefentry>
+        <refentrytitle>monitoringplug-eopt</refentrytitle>
+        <manvolnum>5</manvolnum>
+      </citerefentry></para>
+  </refsect1>
+</refentry>
+<!-- vim: set ts=2 sw=2 expandtab ai syn=docbk : -->

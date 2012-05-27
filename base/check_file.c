@@ -346,12 +346,12 @@ void print_help (void) {
     printf("      Return critical if the file don't belong to the user.\n");
     printf(" -g, --group=gname|gid\n");
     printf("      Return critical if the file don't belong to the group.\n");
-    printf(" -a, -access=accessstring\n");
+    printf(" -a, --access=accessstring\n");
     printf("      Return critical if the file permission don't match the accessstring.\n");
 
     printf("\nAccess String Example:\n");
     printf(" u+r  => Check if file owner can read the file.\n");
-    printf(" g=rx => Check if group can read, execute and not write.\n");
+    printf(" g=rx => Check if group can read, execute but write.\n");
     printf(" o-rw => Check if others can't read nor write.\n");
 
 }

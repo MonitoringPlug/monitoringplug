@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+]>
+
+<variablelist>
+  <varlistentry>
+    <term><option>-h</option></term>
+    <term><option>--help</option></term>
+    <listitem>
+      <para>Print detailed help screen.</para>
+    </listitem>
+  </varlistentry> 
+  <varlistentry>
+    <term><option>-V</option></term>
+    <term><option>--version</option></term>
+    <listitem>
+      <para>Print version information.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><option>-v</option></term>
+    <term><option>--verbose</option></term>
+    <listitem>
+      <para>Show details for command-line debugging.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><option>-t</option></term>
+    <term><option>--timeout=<replaceable>INTEGER</replaceable></option></term>
+    <listitem>
+      <para>Seconds before the check return with a timeout alert.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><option>--eopt=<group choice="opt"><parameter>section</parameter></group><group choice="opt">@<parameter>file</parameter></group></option></term>
+    <listitem>
+      <para>Seconds before the check return with a timeout alert.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><option>--perfdata</option></term>
+    <listitem>
+      <para>Print performance data (if available).</para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+<!-- vim: set ts=2 sw=2 expandtab ai syn=docbk : -->

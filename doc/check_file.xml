@@ -1,0 +1,157 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+
+  <!ENTITY mpcheckname   "check_file">
+
+]>
+
+<refentry>
+  <refentryinfo>
+    <title>Monitoringplug  Manual</title>
+    <productname>&mpcheckname;</productname>
+    <authorgroup>
+      <author>
+       <firstname>Marius</firstname>
+        <surname>Rieder</surname>
+        <address>
+          <email>marius.rieder@durchmesser.ch</email>
+        </address>
+       <contrib>For monitoringplug</contrib>
+      </author>
+    </authorgroup>
+    <copyright>
+      <year>2012</year>
+      <holder>Marius Rieder</holder>
+    </copyright>
+    <legalnotice>
+      <para>This manual page was written for Monitoringplug
+        (and may be used by others).</para>
+      <para>Permission is granted to copy, distribute and/or modify this
+        document under the terms of the GNU General Public License,
+        Version 2 or (at your option) any later version published by
+        the Free Software Foundation.</para>
+    </legalnotice>
+  </refentryinfo>
+  <refmeta>
+    <refentrytitle>CHECK_FILE</refentrytitle>
+    <manvolnum>1</manvolnum>
+  </refmeta>
+  <refnamediv>
+    <refname>&mpcheckname;</refname>
+    <refpurpose>Check properties of a file.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <cmdsynopsis>
+      <command>&mpcheckname;</command>
+      <arg choice="plain">
+        <option>--file=<replaceable>FILE</replaceable></option>
+      </arg>
+      <arg choice="opt">
+        <option>--warning=<replaceable>warning age</replaceable></option>
+      </arg>
+      <arg choice="opt">
+        <option>--critical=<replaceable>critical age</replaceable></option>
+      </arg>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+  <refsect1 id="description">
+   <title>DESCRIPTION</title>
+    <para>Check age, size, owner, group and permission property of a
+       file.</para>
+  </refsect1>
+  <refsect1 id="options">
+    <title>OPTIONS</title>
+    <para>The Monitoringplug default options</para>
+    <xi:include href="mp_opts.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <para>Check specific options</para>
+    <variablelist>
+    <varlistentry>
+      <term><option>-f</option></term>
+      <term><option>--file=<replaceable>FILE</replaceable></option></term>
+      <listitem>
+        <para>The File to test the properties of.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><option>-w</option></term>
+      <term><option>--warning=<replaceable>TIME</replaceable></option></term>
+      <listitem>
+        <para>Return warning if the file age exceed this range.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><option>-c</option></term>
+      <term><option>--critical=<replaceable>TIME</replaceable></option></term>
+      <listitem>
+        <para>Return critical if the file age exceed this range.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><option>-W <replaceable>SIZE</replaceable></option></term>
+      <listitem>
+        <para>Return warning if the file size exceed this range.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><option>-C <replaceable>SIZE</replaceable></option></term>
+      <listitem>
+        <para>Return critical if the file size exceed this range.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><option>-o</option></term>
+      <term><option>--owner=<group choice="req"><arg choice="plain"><replaceable>UNAME</replaceable></arg><arg choice="plain"><replaceable>UID</replaceable></arg></group></option></term>
+      <listitem>
+        <para>Return critical if the file don't belong to the user.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><option>-g</option></term>
+      <term><option>--group=<group choice="req"><arg choice="plain"><replaceable>GNAME</replaceable></arg><arg choice="plain"><replaceable>GID</replaceable></arg></group></option></term>
+      <listitem>
+        <para>Return critical if the file don't belong to the group.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><option>-a</option></term>
+      <term><option>--access=<replaceable>ACCESSSTRING</replaceable></option></term>
+      <listitem>
+        <para>Return critical if the file permission don't match the accessstring.</para>
+      </listitem>
+    </varlistentry>
+    </variablelist>
+  </refsect1>
+  <refsect1 id="accessstring">
+    <title>ACCESSSTRING</title>
+    <para>Examples:</para>
+    <variablelist>
+      <varlistentry>
+        <term><option>u+r</option></term>
+        <listitem>
+          <para>Check if file owner can read the file.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>g=rx</option></term>
+        <listitem>
+          <para>Check if group can read, execute but write.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>o-rw</option></term>
+        <listitem>
+          <para>Check if others can't read nor write.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+  <refsect1 id="see_also">
+    <title>SEE ALSO</title>
+    <para><citerefentry>
+        <refentrytitle>monitoringplug-eopt</refentrytitle>
+        <manvolnum>5</manvolnum>
+      </citerefentry></para>
+  </refsect1>
+</refentry>
+<!-- vim: set ts=2 sw=2 expandtab ai syn=docbk : -->

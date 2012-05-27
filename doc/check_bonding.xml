@@ -2,12 +2,14 @@
 <!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
 
+  <!ENTITY mpcheckname   "check_bonding">
+
 ]>
 
 <refentry>
   <refentryinfo>
     <title>Monitoringplug  Manual</title>
-    <productname>monitoringplug-eopt</productname>
+    <productname>&mpcheckname;</productname>
     <authorgroup>
       <author>
        <firstname>Marius</firstname>
@@ -32,42 +34,48 @@
     </legalnotice>
   </refentryinfo>
   <refmeta>
-    <refentrytitle>MONITORINGPLUG-EOPT</refentrytitle>
-    <manvolnum>5</manvolnum>
+    <refentrytitle>CHECK_BONDING</refentrytitle>
+    <manvolnum>1</manvolnum>
   </refmeta>
   <refnamediv>
-    <refname>monitoringplug-eopt</refname>
-    <refpurpose>Read additional options from file</refpurpose>
+    <refname>&mpcheckname;</refname>
+    <refpurpose>Check bonding status.</refpurpose>
   </refnamediv>
   <refsynopsisdiv>
     <cmdsynopsis>
-      <command>check_command</command>
-      <arg choice="plain"><option>--eopt=<group choice="opt"><parameter>section</parameter></group><group choice="opt"><parameter>@file</parameter></group></option></arg>
+      <command>&mpcheckname;</command>
+      <arg choice="opt">
+        <option>--bond <replaceable>BOND</replaceable></option>
+      </arg>
     </cmdsynopsis>
   </refsynopsisdiv>
   <refsect1 id="description">
-    <title>DESCRIPTION</title>
-    <para>To prevent giving passwords by commandline, all monitoringplug
-      checks can read additional commandline args from a file.</para>
-    <para>With --eopt you enable and controll this feature. By default
-      the file /etc/nagios/monitoringplug.ini is parsed and the section
-      with the same name as the check is used.</para>
-    <para>By passing a argument to the --eopt option the file and section
-      wname can be controlled.</para>
-    <para>All keys in the matching section are prefixed with '--' or just '-'
-      for single characters. Together with there values, if not empty,
-      they are injectet into the argument string in place of the --eopt.</para>
+   <title>DESCRIPTION</title>
+   <para>Check the state of a Linux Bonding Device or all.</para>
+   <para>This check the files in <filename>/proc/net/bonding/</filename>
+     eigther all or the one representing the given bond.</para>
   </refsect1>
-  <refsect1 id="files">
-    <title>FILES</title>
+  <refsect1 id="options">
+    <title>OPTIONS</title>
+    <para>The Monitoringplug default options</para>
+    <xi:include href="mp_opts.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <para>Check specific options</para>
     <variablelist>
       <varlistentry>
-        <term><filename>/etc/nagios/monitoringplug.ini</filename></term>
+        <term><option>-b</option></term>
+        <term><option>--bond=<replaceable>BOND</replaceable></option></term>
         <listitem>
-          <para>The default file for eopt.</para>
+          <para>Check bond named BOND.</para>
         </listitem>
       </varlistentry>
     </variablelist>
+  </refsect1>
+  <refsect1 id="see_also">
+    <title>SEE ALSO</title>
+    <para><citerefentry>
+        <refentrytitle>monitoringplug-eopt</refentrytitle>
+        <manvolnum>5</manvolnum>
+      </citerefentry></para>
   </refsect1>
 </refentry>
 <!-- vim: set ts=2 sw=2 expandtab ai syn=docbk : -->

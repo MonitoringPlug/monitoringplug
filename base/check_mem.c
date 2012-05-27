@@ -28,7 +28,7 @@ const char *progdesc  = "Check memory usaged.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2010";
 const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
-const char *progusage = "--tcp <PORT> [-w <warning count>] [-c <critical count>]";
+const char *progusage = "[-w <warning usage>] [-c <critical usage>]";
 
 /* MP Includes */
 #include "mp_common.h"
@@ -204,15 +204,8 @@ void print_help (void) {
     print_usage();
 
     print_help_default();
-    print_help_46();
-    printf(" -t, --tcp=PORT\n");
-    printf("      Count TCP sockets on port PORT. Port 0 for all sockets.\n");
-    printf(" -u, --udp=PORT\n");
-    printf("      Count UDP sockets on port PORT. Port 0 for all sockets.\n");
-    printf(" -r, --raw=PORT\n");
-    printf("      Count RAW sockets on port PORT. Port 0 for all sockets.\n");
-    print_help_warn("socket count", "1000");
-    print_help_crit("socket count", "1024");
+    print_help_warn("Memory Usage", "90%");
+    print_help_crit("Memory Usage", "95%");
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */

@@ -377,9 +377,9 @@ void print_help (void) {
     printf(" Mode 1:\n");
     printf("  Run without hostname to ask broadcast and accept first answer.\n\n");
     printf(" Mode 2:\n");
-    printf("  Run without hostname to ask broadcast and accept only answers from given host.\n\n");
+    printf("  Run with hostname to ask broadcast and accept only answers from given host.\n\n");
     printf(" Mode 3:\n");
-    printf("  Run without hostname and unicast flag. Act as forwarder/redirector and ask\n");
+    printf("  Run with hostname and unicast flag. Act as forwarder/redirector and ask\n");
     printf("  the server directly in the name of a client.");
 
     printf("\n\n");
@@ -388,7 +388,7 @@ void print_help (void) {
 
     print_help_default();
     print_help_host();
-    printf(" -i, --interface\n");
+    printf(" -i, --interface=DEV\n");
     printf("      Network interface to use. (Default: eth0)\n");
     printf(" -m, --mac=MAC\n");
     printf("      MAC Address to use. (Default: from interface)\n");
