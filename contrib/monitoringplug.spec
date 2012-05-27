@@ -296,6 +296,10 @@ fi
 %{_libdir}/nagios/plugins/check_sockets
 %{_libdir}/nagios/plugins/check_dummy_mp
 %{_libdir}/nagios/plugins/check_timeout
+%{_mandir}/man1/check_file.1.gz
+%{_mandir}/man1/check_bonding.1.gz
+%{_mandir}/man1/check_dhcp.1.gz
+%{_mandir}/man1/check_mem.1.gz
 
 %if 0%{?rhel} != 5
 %files cups
