@@ -283,11 +283,13 @@ fi
 %defattr(-,root,root,-)
 %doc %{_defaultdocdir}/%{name}
 %{_datadir}/selinux/packages/
+%{_mandir}/man5/monitoringplug-eopt.5.gz
 
 %files base
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_file
 %{_libdir}/nagios/plugins/check_bonding
+%{_libdir}/nagios/plugins/check_dhcp
 %{_libdir}/nagios/plugins/check_mem
 %attr(4111, root, root) %{_libdir}/nagios/plugins/check_multipath
 %{_libdir}/nagios/plugins/check_nrped
