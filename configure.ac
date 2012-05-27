@@ -111,6 +111,7 @@ fi
 AC_PATH_PROGS(BIN_FALSE, false)
 AC_DEFINE_UNQUOTED([BIN_FALSE], ["$ac_cv_path_BIN_FALSE"],
             [false path.])
+AC_PATH_PROG([XSLTPROC], [xsltproc])
 
 # Conditionals
 AM_CONDITIONAL([HAVE_LDNS], [test "x$LDNS_CFLAGS" != x])
@@ -127,6 +128,7 @@ AM_CONDITIONAL([HAVE_JSON], [test "x$JSON_LIBS" != x])
 AM_CONDITIONAL([HAVE_LIBVIRT], [test "x$LIBVIRT_LIBS" != x])
 AM_CONDITIONAL([HAVE_SMBCLIENT], [test "x$SMBCLIENT_LIBS" != x])
 AM_CONDITIONAL([HAVE_MYSQL], [test "x$MYSQL_CFLAGS" != x])
+AM_CONDITIONAL([HAVE_XSLTPROC], [test "x$XSLTPROC" != x])
 
 # GCC Opts
 #AX_CFLAGS_WARN_ALL()

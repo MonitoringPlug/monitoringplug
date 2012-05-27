@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+
+]>
+
+<refentry>
+  <refentryinfo>
+    <title>Monitoringplug  Manual</title>
+    <productname>monitoringplug-eopt</productname>
+    <authorgroup>
+      <author>
+       <firstname>Marius</firstname>
+        <surname>Rieder</surname>
+        <address>
+          <email>marius.rieder@durchmesser.ch</email>
+        </address>
+       <contrib>For monitoringplug</contrib>
+      </author>
+    </authorgroup>
+    <copyright>
+      <year>2012</year>
+      <holder>Marius Rieder</holder>
+    </copyright>
+    <legalnotice>
+      <para>This manual page was written for Monitoringplug
+        (and may be used by others).</para>
+      <para>Permission is granted to copy, distribute and/or modify this
+        document under the terms of the GNU General Public License,
+        Version 2 or (at your option) any later version published by
+        the Free Software Foundation.</para>
+    </legalnotice>
+  </refentryinfo>
+  <refmeta>
+    <refentrytitle>MONITORINGPLUG-EOPT</refentrytitle>
+    <manvolnum>5</manvolnum>
+  </refmeta>
+  <refnamediv>
+    <refname>monitoringplug-eopt</refname>
+    <refpurpose>Read additional options from file</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <cmdsynopsis>
+      <command>check_command</command>
+      <arg choice="plain"><option>--eopt=<group choice="opt"><parameter>section</parameter></group><group choice="opt"><parameter>@file</parameter></group></option></arg>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+  <refsect1 id="description">
+    <title>DESCRIPTION</title>
+    <para>To prevent giving passwords by commandline, all monitoringplug
+      checks can read additional commandline args from a file.</para>
+    <para>With --eopt you enable and controll this feature. By default
+      the file /etc/nagios/monitoringplug.ini is parsed and the section
+      with the same name as the check is used.</para>
+    <para>By passing a argument to the --eopt option the file and section
+      wname can be controlled.</para>
+    <para>All keys in the matching section are prefixed with '--' or just '-'
+      for single characters. Together with there values, if not empty,
+      they are injectet into the argument string in place of the --eopt.</para>
+  </refsect1>
+  <refsect1 id="files">
+    <title>FILES</title>
+    <variablelist>
+      <varlistentry>
+        <term><filename>/etc/nagios/monitoringplug.ini</filename></term>
+        <listitem>
+          <para>The default file for eopt.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+</refentry>
+
