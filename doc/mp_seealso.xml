@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+]>
+
+<refsect1 id="see_also">
+  <title>SEE ALSO</title>
+  <para>
+    <citerefentry>
+      <refentrytitle>monitoringplug-eopt</refentrytitle>
+      <manvolnum>5</manvolnum>
+    </citerefentry>,<citerefentry>
+      <refentrytitle>monitoringplug-range</refentrytitle>
+      <manvolnum>5</manvolnum> 
+    </citerefentry>
+  </para>
+</refsect1>

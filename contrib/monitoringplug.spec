@@ -283,7 +283,7 @@ fi
 %defattr(-,root,root,-)
 %doc %{_defaultdocdir}/%{name}
 %{_datadir}/selinux/packages/
-%{_mandir}/man5/monitoringplug-eopt.5.gz
+%{_mandir}/man5/monitoringplug-*
 
 %files base
 %defattr(-,root,root,-)
@@ -300,11 +300,15 @@ fi
 %{_mandir}/man1/check_bonding.1.gz
 %{_mandir}/man1/check_dhcp.1.gz
 %{_mandir}/man1/check_mem.1.gz
+%{_mandir}/man1/check_multipath.1.gz
+%{_mandir}/man1/check_nrped.1.gz
+%{_mandir}/man1/check_sockets.1.gz
 
 %if 0%{?rhel} != 5
 %files cups
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_cups_*
+%{_mandir}/man1/check_cups_*
 %endif
 
 %files curl
@@ -313,10 +317,15 @@ fi
 %{_libdir}/nagios/plugins/check_aspsms_credits
 %{_libdir}/nagios/plugins/check_tftp
 %{_libdir}/nagios/plugins/check_webdav
+%{_mandir}/man1/check_apache_status.1.gz
+%{_mandir}/man1/check_aspsms_credits.1.gz
+%{_mandir}/man1/check_tftp.1.gz
+%{_mandir}/man1/check_webdav.1.gz
 
 %files curl-json
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_buildbot_slave
+%{_mandir}/man1/check_buildbot_slave.1.gz
 
 %files dns
 %defattr(-,root,root,-)

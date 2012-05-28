@@ -56,12 +56,6 @@
     <para>The Monitoringplug default options</para>
     <xi:include href="mp_opts.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
   </refsect1>
-  <refsect1 id="see_also">
-    <title>SEE ALSO</title>
-    <para><citerefentry>
-        <refentrytitle>monitoringplug-eopt</refentrytitle>
-        <manvolnum>5</manvolnum>
-      </citerefentry></para>
-  </refsect1>
+  <xi:include href="mp_seealso.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
 </refentry>
 <!-- vim: set ts=2 sw=2 expandtab ai syn=docbk : -->

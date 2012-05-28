@@ -2,7 +2,7 @@
 <!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
 
-  <!ENTITY mpcheckname   "check_cups_jobs">
+  <!ENTITY mpcheckname   "check_webdav">
 
 ]>
 
@@ -34,25 +34,24 @@
     </legalnotice>
   </refentryinfo>
   <refmeta>
-    <refentrytitle>CHECK_CUPS_JOBS</refentrytitle>
+    <refentrytitle>CHECK_WEBDAV</refentrytitle>
     <manvolnum>1</manvolnum>
   </refmeta>
   <refnamediv>
     <refname>&mpcheckname;</refname>
-    <refpurpose>Check CUPS job count and age.</refpurpose>
+    <refpurpose>Check a WebDAV share.</refpurpose>
   </refnamediv>
   <refsynopsisdiv>
     <cmdsynopsis>
       <command>&mpcheckname;</command>
-      <arg choice="opt">
-        <option>--hostname <replaceable>HOSTNAME</replaceable></option>
+      <arg choice="plain">
+        <option>--url <replaceable>URL</replaceable></option>
       </arg>
     </cmdsynopsis>
   </refsynopsisdiv>
   <refsect1 id="description">
    <title>DESCRIPTION</title>
-   <para>Check the number of current print jobs and there age.</para>
-   <para>Jobs are counted per printer or summerized over all printers.</para>
+   <para>Check a WebDAV share by checking the OPTIONS response.</para>
   </refsect1>
   <refsect1 id="options">
     <title>OPTIONS</title>
@@ -60,49 +59,48 @@
     <xi:include href="mp_opts.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
     <para>Check specific options</para>
     <variablelist>
-      <xi:include href="mp_opts_host.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
       <varlistentry>
-        <term><option>-P</option></term>
-        <term><option>--printer=<replaceable>PRINTER</replaceable></option></term>
+        <term><option>-u</option></term>
+        <term><option>--url=<replaceable>URL</replaceable></option></term>
         <listitem>
-          <para>Check only device named PRINTER.</para>
-        </listitem>
-      </varlistentry>
-      <varlistentry>
-        <term><option>-s</option></term>
-        <term><option>--summarize</option></term>
-        <listitem>
-          <para>Summerize job count over all printers.</para>
-        </listitem>
-      </varlistentry>
-      <varlistentry>
-        <term><option>-w</option></term>
-        <term><option>--warning=<replaceable>COUNT</replaceable></option></term>
-        <listitem>
-          <para>Return warning if job count exceeds limit.</para>
-        </listitem>
-      </varlistentry>
-      <varlistentry>
-        <term><option>-c</option></term>
-        <term><option>--critical=<replaceable>COUNT</replaceable></option></term>
-        <listitem>
-          <para>Return critical if job count exceeds limit.</para>
-        </listitem>
-      </varlistentry>
-      <varlistentry>
-        <term><option>-W</option></term>
-        <term><option>--timewarning=<replaceable>AGE</replaceable></option></term>
-        <listitem>
-          <para>Return warning if job processing time exceeds limit.
-            (Default to 5m</para>
+          <para>URL of the WebDAV share.</para>
         </listitem>
       </varlistentry>
       <varlistentry>
         <term><option>-C</option></term>
-        <term><option>--timecritical=<replaceable>AGE</replaceable></option></term>
+        <term><option>--content-type=<replaceable>TYPE</replaceable></option></term>
         <listitem>
-          <para>Return critical if job processing time exceeds limit.
-            (Default to 10m)</para>
+          <para>Content-Type WebDAV share should report.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-a</option></term>
+        <term><option>--allow=<replaceable>METHODE</replaceable><group choice="opt">,<replaceable>METHODE</replaceable></group>
+        </option></term>
+        <listitem>
+          <para>Method or methods which should be allowed.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>--ls</option></term>
+        <listitem>
+          <para>List the directory and check the response.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-w</option></term>
+        <term><option>--warning=<replaceable>DURATION</replaceable></option></term>
+        <listitem>
+          <para>Return warning if request exceeds time limit.
+            (Default to 5s)</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-c</option></term>
+        <term><option>--critical=<replaceable>DURATION</replaceable></option></term>
+        <listitem>
+          <para>Return critical if request exceeds time limit.
+            (Default to 9s)</para>
         </listitem>
       </varlistentry>
     </variablelist>

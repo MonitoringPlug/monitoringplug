@@ -1,1 +1,2 @@
-/usr/lib/nagios/plugins/check_cups_jobs
+/usr/lib/nagios/plugins/check_cups_*
+/usr/share/man/man1/check_cups_*

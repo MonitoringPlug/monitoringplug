@@ -1,0 +1,103 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+
+]>
+
+<refentry>
+  <refentryinfo>
+    <title>Monitoringplug  Manual</title>
+    <productname>monitoringplug-reange</productname>
+    <authorgroup>
+      <author>
+       <firstname>Marius</firstname>
+        <surname>Rieder</surname>
+        <address>
+          <email>marius.rieder@durchmesser.ch</email>
+        </address>
+       <contrib>For monitoringplug</contrib>
+      </author>
+    </authorgroup>
+    <copyright>
+      <year>2012</year>
+      <holder>Marius Rieder</holder>
+    </copyright>
+    <legalnotice>
+      <para>This manual page was written for Monitoringplug
+        (and may be used by others).</para>
+      <para>Permission is granted to copy, distribute and/or modify this
+        document under the terms of the GNU General Public License,
+        Version 2 or (at your option) any later version published by
+        the Free Software Foundation.</para>
+    </legalnotice>
+  </refentryinfo>
+  <refmeta>
+    <refentrytitle>MONITORINGPLUG-RANGE</refentrytitle>
+    <manvolnum>5</manvolnum>
+  </refmeta>
+  <refnamediv>
+    <refname>monitoringplug-range</refname>
+    <refpurpose>Range/Threshold definitions</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <cmdsynopsis>
+      <arg choice="plain">
+        <option>--warning=<group choice="opt">@</group><group choice="opt">
+            <group choice="req">
+              <arg choice="plain"><parameter>FROM</parameter></arg>
+              <arg choice="plain"><parameter>~</parameter></arg>
+            </group>:</group><group choice="opt"><parameter>TO</parameter></group>
+        </option>
+      </arg>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+  <refsect1 id="description">
+    <title>DESCRIPTION</title>
+    <para>A alert is rised if the reading is outside of the defined range.
+      This can be inverted by prepending the definition tith a '@'.</para>
+    <para><parameter>FROM</parameter> must be smaler or equal to
+      <parameter>TO</parameter>.</para>
+    <para>'<parameter>FROM</parameter>:' may be omitted from the definition if
+      <parameter>FROM</parameter> is 0.</para>
+    <para>'<parameter>TO</parameter>' may be omitted from the definition if
+      <parameter>TO</parameter> is infinity.</para>
+    <para>'~' specify negativ infinity.</para>
+  </refsect1>
+  <refsect1 id="example">
+    <title>EXAMPLE</title>
+    <para>Some examples to illustrate.</para>
+    <variablelist>
+      <varlistentry>
+        <term><option>21:42</option></term>
+        <listitem>
+          <para>Generates a warning if less than 21 or greater than 42.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>~:42</option></term>
+        <listitem>
+          <para>Generates a warning if greater than 42.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>21:</option></term>
+        <listitem>
+          <para>Generates a warning if less than 21.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>42</option></term>
+        <listitem>
+          <para>Generates a warning if less than 0 or greater than 42.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>@21:42</option></term>
+        <listitem>
+          <para>Generates a warning if between 21 and 42.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+</refentry>
+<!-- vim: set ts=2 sw=2 expandtab ai syn=docbk : -->

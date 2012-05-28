@@ -2,7 +2,7 @@
 <!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
 
-  <!ENTITY mpcheckname   "check_dhcp">
+  <!ENTITY mpcheckname   "check_buildbot_slave">
 
 ]>
 
@@ -34,54 +34,28 @@
     </legalnotice>
   </refentryinfo>
   <refmeta>
-    <refentrytitle>CHECK_DHCP</refentrytitle>
+    <refentrytitle>CHECK_BUILDBOT_SLAVE</refentrytitle>
     <manvolnum>1</manvolnum>
   </refmeta>
   <refnamediv>
     <refname>&mpcheckname;</refname>
-    <refpurpose>Check DHCP server.</refpurpose>
+    <refpurpose>Check BuildBot slave state by json.</refpurpose>
   </refnamediv>
   <refsynopsisdiv>
     <cmdsynopsis>
       <command>&mpcheckname;</command>
-      <arg choice="opt">
-        <option>-i <replaceable>DEV</replaceable></option>
-      </arg>
-      <arg choice="opt">
+      <arg choice="plain">
         <option>-H <replaceable>HOSTNAME</replaceable></option>
       </arg>
       <arg choice="opt">
-        <option>--mac=<replaceable>MAC</replaceable></option>
+        <option>-S <replaceable>SLAVENAME</replaceable></option>
       </arg>
     </cmdsynopsis>
   </refsynopsisdiv>
   <refsect1 id="description">
    <title>DESCRIPTION</title>
-   <para>Check a DHCP server for desired answer.</para>
-    <variablelist>
-      <varlistentry>
-        <term><option>Mode 1</option></term>
-        <listitem>
-          <para>Run without hostname to ask broadcast and accept first
-            answer.</para>
-        </listitem>
-      </varlistentry>
-      <varlistentry>
-        <term><option>Mode 2</option></term>
-        <listitem>
-          <para>Run with hostname to ask broadcast and accept only
-            answers from given host.</para>
-        </listitem>
-      </varlistentry>
-      <varlistentry>
-        <term><option>Mode 3</option></term>
-        <listitem>
-          <para>Run with hostname and unicast flag. Act as
-            forwarder/redirector and ask the server directly in the name
-            of a client.</para>
-        </listitem>
-      </varlistentry>
-    </variablelist>
+   <para>Check if a BuildBot build slave, or all slaves, are online with
+     the BuildBot json-API.</para>
   </refsect1>
   <refsect1 id="options">
     <title>OPTIONS</title>
@@ -90,32 +64,12 @@
     <para>Check specific options</para>
     <variablelist>
       <xi:include href="mp_opts_host.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+      <xi:include href="mp_opts_port.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
       <varlistentry>
-        <term><option>-i</option></term>
-        <term><option>--interface=<replaceable>DEV</replaceable></option></term>
+        <term><option>-S</option></term>
+        <term><option>--slave=<replaceable>SLAVE</replaceable></option></term>
         <listitem>
-          <para>Network interface to use. (Default: eth0)</para>
-        </listitem>
-      </varlistentry>
-      <varlistentry>
-        <term><option>-m</option></term>
-        <term><option>--mac=<replaceable>MAC</replaceable></option></term>
-        <listitem>
-          <para>MAC Address to use. (Default: from interface)</para>
-        </listitem>
-      </varlistentry>
-      <varlistentry>
-        <term><option>-u</option></term>
-        <term><option>--unicast</option></term>
-        <listitem>
-          <para>Run in unicast mode.</para>
-        </listitem>
-      </varlistentry>
-      <varlistentry>
-        <term><option>-b</option></term>
-        <term><option>--broadcast</option></term>
-        <listitem>
-          <para>Run in broadcast mode.</para>
+          <para>Check state of defines SLAVE(s).</para>
         </listitem>
       </varlistentry>
     </variablelist>

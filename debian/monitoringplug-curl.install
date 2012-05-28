@@ -3,3 +3,8 @@
 /usr/lib/nagios/plugins/check_buildbot_slave
 /usr/lib/nagios/plugins/check_tftp
 /usr/lib/nagios/plugins/check_webdav
+/usr/share/man/man1/check_apache_status.1
+/usr/share/man/man1/check_aspsms_credits.1
+/usr/share/man/man1/check_buildbot_slave.1
+/usr/share/man/man1/check_tftp.1
+/usr/share/man/man1/check_webdav.1
