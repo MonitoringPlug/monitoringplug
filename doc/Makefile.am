@@ -4,10 +4,12 @@ docdir = @docdir@
 
 doc_DATA = README-EOPT
 
-man_MANS = check_file.1 monitoringplug-eopt.5
+man_MANS = check_file.1 check_nrped.1 monitoringplug-eopt.5
 if OS_LINUX
-man_MANS += check_bonding.1 check_dhcp.1 check_mem.1
-#check_multipath check_sockets
+man_MANS += check_bonding.1 check_dhcp.1 check_mem.1 check_multipath.1 check_sockets.1
+endif
+if HAVE_CUPS
+man_MANS += check_cups_jobs.1
 endif
 
 EXTRA_DIST = $(doc_DATA)

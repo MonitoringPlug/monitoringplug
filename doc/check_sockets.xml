@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+
+  <!ENTITY mpcheckname   "check_sockets">
+
+]>
+
+<refentry>
+  <refentryinfo>
+    <title>Monitoringplug  Manual</title>
+    <productname>&mpcheckname;</productname>
+    <authorgroup>
+      <author>
+       <firstname>Marius</firstname>
+        <surname>Rieder</surname>
+        <address>
+          <email>marius.rieder@durchmesser.ch</email>
+        </address>
+       <contrib>For monitoringplug</contrib>
+      </author>
+    </authorgroup>
+    <copyright>
+      <year>2012</year>
+      <holder>Marius Rieder</holder>
+    </copyright>
+    <legalnotice>
+      <para>This manual page was written for Monitoringplug
+        (and may be used by others).</para>
+      <para>Permission is granted to copy, distribute and/or modify this
+        document under the terms of the GNU General Public License,
+        Version 2 or (at your option) any later version published by
+        the Free Software Foundation.</para>
+    </legalnotice>
+  </refentryinfo>
+  <refmeta>
+    <refentrytitle>CHECK_SOCKETS</refentrytitle>
+    <manvolnum>1</manvolnum>
+  </refmeta>
+  <refnamediv>
+    <refname>&mpcheckname;</refname>
+    <refpurpose>Check the number of open Sockets.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <cmdsynopsis>
+      <command>&mpcheckname;</command>
+      <arg choice="opt">
+        <option>--tcp <replaceable>PORT</replaceable></option>
+      </arg>
+      <arg choice="opt">
+        <option>--warning <replaceable>warning count</replaceable></option>
+      </arg>
+      <arg choice="opt">
+        <option>--critical <replaceable>critical count</replaceable></option>
+      </arg>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+  <refsect1 id="description">
+   <title>DESCRIPTION</title>
+   <para>Check the number of open Sockets under Linux.</para>
+   <para>The following protocoll are supported from this check:
+     tcp, tcp6, udp, udp6, raw, raw6</para>
+   <para>This check parse the files in <filename>/proc/net/</filename>
+     to get the number of open ports.</para>
+  </refsect1>
+  <refsect1 id="options">
+    <title>OPTIONS</title>
+    <para>The Monitoringplug default options</para>
+    <xi:include href="mp_opts.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <para>Check specific options</para>
+    <variablelist>
+      <varlistentry>
+        <term><option>-4</option></term>
+        <term><option>--ipv4</option></term>
+        <listitem>
+          <para>Check IPv4 sockets.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-6</option></term>
+        <term><option>--ipv6</option></term>
+        <listitem>
+          <para>Check IPv6 sockets.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-t</option></term>
+        <term><option>--tcp=<replaceable>PORT</replaceable></option></term>
+        <listitem>
+          <para>Check count of tcp/tcp6 sockets on PORT or all if PORT is 0.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-u</option></term>
+        <term><option>--udp=<replaceable>PORT</replaceable></option></term>
+        <listitem>
+          <para>Check count of udp/udp6 sockets on PORT or all if PORT is 0.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-r</option></term>
+        <term><option>--raw=<replaceable>PORT</replaceable></option></term>
+        <listitem>
+          <para>Check count of raw/raw6 sockets on PORT or all if PORT is 0.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-w</option></term>
+        <term><option>--warning=<replaceable>COUNT</replaceable></option></term>
+        <listitem>
+          <para>Return warning if socket count exceeds limit.
+            (Default to 1000)</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-c</option></term>
+        <term><option>--critical=<replaceable>COUNT</replaceable></option></term>
+        <listitem>
+          <para>Return critical if socket count exceeds limit.
+            (Default to 1024)</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+  <refsect1 id="see_also">
+    <title>SEE ALSO</title>
+    <para><citerefentry>
+        <refentrytitle>monitoringplug-eopt</refentrytitle>
+        <manvolnum>5</manvolnum>
+      </citerefentry></para>
+  </refsect1>
+</refentry>
+<!-- vim: set ts=2 sw=2 expandtab ai syn=docbk : -->

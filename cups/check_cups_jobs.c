@@ -248,7 +248,7 @@ void print_help (void) {
     printf(" -P, --printer=PRINTER\n");
     printf("      Check device named PRINTER.\n");
     printf(" -s, --summarize\n");
-    printf("      Summerize job count over all printers\n");
+    printf("      Summerize job count over all printers.\n");
     print_help_warn("job count", "none");
     print_help_crit("job count", "none");
     printf(" -W, --timewarning=time[d|h|m|s]\n");

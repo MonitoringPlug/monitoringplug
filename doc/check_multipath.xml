@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+
+  <!ENTITY mpcheckname   "check_multipath">
+
+]>
+
+<refentry>
+  <refentryinfo>
+    <title>Monitoringplug  Manual</title>
+    <productname>&mpcheckname;</productname>
+    <authorgroup>
+      <author>
+       <firstname>Marius</firstname>
+        <surname>Rieder</surname>
+        <address>
+          <email>marius.rieder@durchmesser.ch</email>
+        </address>
+       <contrib>For monitoringplug</contrib>
+      </author>
+    </authorgroup>
+    <copyright>
+      <year>2012</year>
+      <holder>Marius Rieder</holder>
+    </copyright>
+    <legalnotice>
+      <para>This manual page was written for Monitoringplug
+        (and may be used by others).</para>
+      <para>Permission is granted to copy, distribute and/or modify this
+        document under the terms of the GNU General Public License,
+        Version 2 or (at your option) any later version published by
+        the Free Software Foundation.</para>
+    </legalnotice>
+  </refentryinfo>
+  <refmeta>
+    <refentrytitle>CHECK_MULTIPATH</refentrytitle>
+    <manvolnum>1</manvolnum>
+  </refmeta>
+  <refnamediv>
+    <refname>&mpcheckname;</refname>
+    <refpurpose>Check multipath status.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <cmdsynopsis>
+      <command>&mpcheckname;</command>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+  <refsect1 id="description">
+    <title>DESCRIPTION</title>
+    <para>Check the state of the nultipathd by parsinf the output ofi:
+      <programlisting>multipath -l</programlisting></para>
+  </refsect1>
+  <refsect1 id="options">
+    <title>OPTIONS</title>
+    <para>The Monitoringplug default options</para>
+    <xi:include href="mp_opts.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+  </refsect1>
+  <refsect1 id="see_also">
+    <title>SEE ALSO</title>
+    <para><citerefentry>
+        <refentrytitle>monitoringplug-eopt</refentrytitle>
+        <manvolnum>5</manvolnum>
+      </citerefentry></para>
+  </refsect1>
+</refentry>
+<!-- vim: set ts=2 sw=2 expandtab ai syn=docbk : -->
