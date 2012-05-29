@@ -82,7 +82,7 @@ int mp_connect(const char *hostname, int port, int family, int type) {
         if (mp_verbose >= 1) {
             name = mp_ip2str(rp->ai_addr, rp->ai_addrlen);
             printf("Connect to %s\n", name);
-            free(name):
+            free(name);
         }
         sd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
 
