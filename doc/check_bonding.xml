@@ -6,7 +6,7 @@
 
 ]>
 
-<refentry>
+<refentry xmlns:xi="http://www.w3.org/2001/XInclude">
   <refentryinfo>
     <title>Monitoringplug  Manual</title>
     <productname>&mpcheckname;</productname>
@@ -58,7 +58,7 @@
   <refsect1 id="options">
     <title>OPTIONS</title>
     <para>The Monitoringplug default options</para>
-    <xi:include href="mp_opts.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <xi:include href="mp_opts.xml"/>
     <para>Check specific options</para>
     <variablelist>
       <varlistentry>
@@ -70,6 +70,6 @@
       </varlistentry>
     </variablelist>
   </refsect1>
-  <xi:include href="mp_seealso.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+  <xi:include href="mp_seealso.xml"/>
 </refentry>
 <!-- vim: set ts=2 sw=2 expandtab ai syn=docbk : -->

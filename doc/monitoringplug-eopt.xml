@@ -4,7 +4,7 @@
 
 ]>
 
-<refentry>
+<refentry xmlns:xi="http://www.w3.org/2001/XInclude">
   <refentryinfo>
     <title>Monitoringplug  Manual</title>
     <productname>monitoringplug-eopt</productname>
