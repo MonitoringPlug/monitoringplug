@@ -159,7 +159,7 @@ int main (int argc, char **argv) {
     while ((pkt = mp_dhcp_recv(sock, xid))) {
         ansers++;
 
-        if (hostname) {
+        if (hostname && hostent) {
             opt = mp_dhcp_pkt_getopt(pkt, DHCPOPT_ServerId);
             if (opt) {
                 if (memcmp(hostent->h_addr, &(opt->data.inaddr), 4) != 0)
@@ -237,7 +237,6 @@ int dhcp_setup() {
     /* dhcpd  sockaddr */
     dhcpd.sin_family = AF_INET;
     if (unicast) {
-        hostent = gethostbyname(hostname);
         if ((hostent = gethostbyname(hostname)) == NULL) {
             perror("gethostbyname");
             return -1;

@@ -73,13 +73,16 @@ struct addrinfo *mp_getaddrinfo(const char *hostname, int port, int family, int 
 
 int mp_connect(const char *hostname, int port, int family, int type) {
     int sd;
+    char *name;
     struct addrinfo *result, *rp;
 
     result = mp_getaddrinfo(hostname, port, family, type);
 
     for(rp = result; rp != NULL; rp = rp->ai_next) {
         if (mp_verbose >= 1) {
-            printf("Connect to %s\n", mp_ip2str(rp->ai_addr, rp->ai_addrlen));
+            name = mp_ip2str(rp->ai_addr, rp->ai_addrlen);
+            printf("Connect to %s\n", name);
+            free(name):
         }
         sd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
 

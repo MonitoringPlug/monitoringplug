@@ -2,3 +2,4 @@
 /usr/lib/nagios/plugins/check_dnssec_trace
 /usr/lib/nagios/plugins/check_dnssec_trust_anchor
 /usr/lib/nagios/plugins/check_dns_sync
+/usr/share/man/man1/check_dns*.1
