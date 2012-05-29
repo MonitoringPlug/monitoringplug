@@ -285,6 +285,7 @@ int process_arguments (int argc, char **argv) {
     static struct option long_opts[] = {
         MP_LONGOPTS_DEFAULT,
         MP_LONGOPTS_HOST,
+        LDNS_LONGOPTS,
         {"domain", required_argument, 0, 'D'},
         {"trace-from", required_argument, 0, 'T'},
         {"trusted-keys", required_argument, 0, 'k'},
@@ -298,9 +299,11 @@ int process_arguments (int argc, char **argv) {
     }
 
     while (1) {
-        c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"t:H:D:T:k:", long_opts, &option);
+        c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"t:H:D:T:k:"LDNS_OPTSTR, long_opts, &option);
         if (c == -1 || c == EOF)
             break;
+
+        getopt_ldns(c);
 
         switch (c) {
             /* Default opts */
@@ -352,14 +355,13 @@ void print_help (void) {
 
     print_help_default();
     print_help_host();
+    print_help_ldns();
     printf(" -D, --domain=DOMAIN\n");
     printf("      The name of the domain to check.\n");
     printf(" -T, --trace-from=DOMAIN\n");
     printf("      The name of the domain to trace from. (default: .)\n");
     printf(" -k, --trusted-keys=FILE\n");
     printf("      File to read trust-anchors from.\n");
-    print_help_warn_time("2 days");
-    print_help_crit_time("1 day");
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */

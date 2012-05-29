@@ -4,18 +4,24 @@ docdir = @docdir@
 
 doc_DATA = README-EOPT
 
+EXTRA_DIST = $(doc_DATA) 
+
 man_MANS = monitoringplug-eopt.5 monitoringplug-range.5
 
 # base
 man_MANS += check_file.1 check_nrped.1
 if OS_LINUX
-man_MANS += check_bonding.1 check_dhcp.1 check_mem.1 check_multipath.1 check_sockets.1
-endif #OS_LINUX
+man_MANS += check_bonding.1 check_dhcp.1 check_mem.1 check_multipath.1 \
+			check_sockets.1
+endif
+EXTRA_DIST += check_file.1 check_nrped.1 check_bonding.1 check_dhcp.1 \
+			  check_mem.1 check_multipath.1 check_sockets.1
 
 # cups
 if HAVE_CUPS
 man_MANS += check_cups_jobs.1
 endif #HAVE_CUPS
+EXTRA_DIST += check_cups_jobs.1
 
 # curl
 if HAVE_CURL
@@ -23,16 +29,22 @@ man_MANS += check_apache_status.1 check_aspsms_credits.1 check_webdav.1
 if HAVE_JSON
 man_MANS += check_buildbot_slave.1
 endif #HAVE_JSON
-endif #HAVE_CURL
 if HAVE_CURL_TFTP
 man_MANS += check_tftp.1
 endif #HAVE_CURL_TFTP
+endif #HAVE_CURL
+EXTRA_DIST += check_apache_status.1 check_aspsms_credits.1 check_webdav.1 \
+			  check_buildbot_slave.1 check_tftp.1
 
-EXTRA_DIST = $(doc_DATA)
+#dns
+if HAVE_LDNS
+man_MANS += check_dns_sync.1 check_dnssec_expiration.1 check_dnssec_trace.1 \
+			check_dnssec_trust_anchor.1
+endif
+EXTRA_DIST += check_dns_sync.1 check_dnssec_expiration.1 check_dnssec_trace.1 \
+			  check_dnssec_trust_anchor.1
 
 if HAVE_XSLTPROC
-
-EXTRA_DIST += $(man_MANS)
 
 CLEANFILES = $(man_MANS)
 
@@ -43,8 +55,8 @@ DB2MAN = --xinclude -nonet http://docbook.sourceforge.net/release/xsl/current/ma
 .xml.5:
 	$(XSLTPROC) $(DB2MAN) $<
 
+.xml.html:
+	$(XSLTPROC) $(DB2HTML) $< > $@
 endif
-
-BUILT_EXTRA_DIST = $(man_MANS)
 
 ## vim: set ts=4 sw=4 syn=automake :

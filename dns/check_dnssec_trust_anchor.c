@@ -125,6 +125,7 @@ int process_arguments (int argc, char **argv) {
     static struct option long_opts[] = {
         MP_LONGOPTS_DEFAULT,
         MP_LONGOPTS_HOST,
+        LDNS_LONGOPTS,
         {"domain", required_argument, 0, 'D'},
         {"trusted-keys", required_argument, 0, 'k'},
         MP_LONGOPTS_TIMEOUT,
@@ -137,9 +138,11 @@ int process_arguments (int argc, char **argv) {
     }
 
     while (1) {
-        c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"t:H:k:w:c:", long_opts, &option);
+        c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"t:H:k:w:c:"LDNS_OPTSTR, long_opts, &option);
         if (c == -1 || c == EOF)
             break;
+
+        getopt_ldns(c);
 
         switch (c) {
             /* Default opts */
@@ -179,6 +182,7 @@ void print_help(void) {
 
     print_help_default();
     print_help_host();
+    print_help_ldns();
     printf(" -k, --trusted-keys=FILE\n");
     printf("      File to read trust-anchors from.\n");
 }
