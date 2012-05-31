@@ -143,7 +143,7 @@ void getopt_virt(int c) {
 
 void print_help_virt(void) {
     printf("\
- -C, --connect=LIBVIRTD-URL\n\
+ -C, --connect=LIBVIRTD-URI\n\
       Connect to the specified URI.\n\
  -u, --username=USERNAME\n\
       Username to connect as.\n\

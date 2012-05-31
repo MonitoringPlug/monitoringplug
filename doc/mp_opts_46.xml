@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+]>
+
+<variablelist>
+  <varlistentry>
+    <term><option>-4</option></term>
+    <term><option>--ipv4</option></term>
+    <listitem>
+      <para>Use IPv4 to check.</para>
+    </listitem>
+  </varlistentry> 
+  <varlistentry>
+    <term><option>-6</option></term>
+    <term><option>--ipv6</option></term>
+    <listitem>
+      <para>Use IPv6 to check.</para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+<!-- vim: set ts=2 sw=2 expandtab ai syn=docbk : -->

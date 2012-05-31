@@ -260,6 +260,8 @@ void print_help (void) {
     print_usage();
     print_help_default();
     print_help_virt();
+    printf(" -D, --domain=DOMAIN\n");
+    printf("      Domain to check.\n");
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */

@@ -1,2 +1,4 @@
-addFilter("monitoringplug.src .: strange-permission .* 0600L")
+addFilter("monitoringplug.src: .: strange-permission .* 0600L")
 addFilter("monitoringplug-.* (setuid-binary|non-standard-executable-perm) /usr/lib(64)?/nagios/plugins/check_.* (root )?04")
+addFilter("monitoringplug-.* explicit-lib-dependency .*")
+addFilter("monitoringplug.* no-binary")

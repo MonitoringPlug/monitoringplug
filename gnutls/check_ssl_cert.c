@@ -28,7 +28,7 @@ const char *progdesc  = "Check X509 Certification expiration over ssl.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2011";
 const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
-const char *progusage = "[--help] [--timeout TIMEOUT]";
+const char *progusage = "--host <HOSTNAME> --port <PORT>";
 
 /* MP Includes */
 #include "mp_common.h"

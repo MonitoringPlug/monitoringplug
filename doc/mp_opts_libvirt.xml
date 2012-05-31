@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+]>
+
+<variablelist>
+  <varlistentry>
+    <term><option>-C</option></term>
+    <term><option>--connect=<replaceable>LIBVIRT-URI</replaceable></option></term>
+    <listitem>
+      <para>Connect to the specified URI.</para>
+    </listitem>
+  </varlistentry> 
+  <varlistentry>
+    <term><option>-u</option></term>
+    <term><option>--username=<replaceable>USERNAME</replaceable></option></term>
+    <listitem>
+      <para>Username to connect as.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><option>-p</option></term>
+    <term><option>--password=<replaceable>PASSWORD</replaceable></option></term>
+    <listitem>
+      <para>Password used for authentication.</para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+<!-- vim: set ts=2 sw=2 expandtab ai syn=docbk : -->

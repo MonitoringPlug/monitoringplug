@@ -76,27 +76,27 @@ Requires:       gnutls
 Requires:       monitoringplug
 
 %package libvirt
-Summary:        Collection of libvirt monitoring plugins for Nagios and similar monitoring   systems
+Summary:        Collection of libvirt monitoring plugins for Nagios
 Group:          Applications/System
 Requires:       libvirt-client
 Requires:       monitoringplug
 %endif
 
 %package mysql
-Summary:        Collection of MySQL plugins for Nagios
+Summary:        Collection of MySQL monitoring plugins for Nagios
 Group:          Applications/System
 Requires:       mysql-libs
 Requires:       monitoringplug
 
 %package rhcs
-Summary:        Collection of RedHat Cluster Suitmonitoring plugins for Nagios
+Summary:        Collection of RedHat Cluster Suit monitoring plugins for Nagios
 Group:          Applications/System
 Requires:       net-snmp-libs
 Requires:       expat
 Requires:       monitoringplug
 
 %package rpc
-Summary:        Collection of SUN RPC plugins for Nagios
+Summary:        Collection of SUN RPC monitoring plugins for Nagios
 Group:          Applications/System
 Requires:       monitoringplug
 
@@ -343,10 +343,12 @@ fi
 %files gnutls
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_ssl_cert
+%{_mandir}/man1/check_ssl_cert
 
 %files libvirt
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_libvirt*
+%{_mandir}/man1/check_libvirt*
 %endif
 
 %files mysql

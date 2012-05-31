@@ -40,9 +40,21 @@ EXTRA_DIST += check_apache_status.1 check_aspsms_credits.1 check_webdav.1 \
 if HAVE_LDNS
 man_MANS += check_dns_sync.1 check_dnssec_expiration.1 check_dnssec_trace.1 \
 			check_dnssec_trust_anchor.1
-endif
+endif #HAVE_LDNS
 EXTRA_DIST += check_dns_sync.1 check_dnssec_expiration.1 check_dnssec_trace.1 \
 			  check_dnssec_trust_anchor.1
+
+#gnutls
+if HAVE_GNUTLS
+man_MANS += check_ssl_cert.1
+endif #HAVE_GNUTLS
+EXTRA_DIST += check_ssl_cert.1
+
+#libvirt
+if HAVE_LIBVIRT
+man_MANS += check_libvirtd.1 check_libvirt_domain.1
+endif #HAVE_LIBVIRT
+EXTRA_DIST += check_libvirtd.1 check_libvirt_domain.1
 
 if HAVE_XSLTPROC
 
