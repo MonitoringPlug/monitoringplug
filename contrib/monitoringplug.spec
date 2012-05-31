@@ -1,7 +1,7 @@
 Name:           monitoringplug
 Version:        0.9
 Release:        1%{?dist}
-Summary:        Collection of monitoring plugins for Nagios and similar monitoring systems
+Summary:        Collection of monitoring plugins for Nagios
 
 Group:          Applications/System
 License:        GPLv2+
@@ -30,19 +30,19 @@ BuildRequires:  libsmbclient-devel
 %endif
 
 %package base
-Summary:        Collection of basic monitoring plugins for Nagios and similar monitoring systems
+Summary:        Collection of basic monitoring plugins for Nagios
 Group:          Applications/System
 Requires:       monitoringplug
 
 %if 0%{?rhel} != 5
 %package cups
-Summary:        Collection of cups monitoring plugins for Nagios and similar monitoring systems
+Summary:        Collection of cups monitoring plugins for Nagios
 Group:          Applications/System
 Requires:       cups
 %endif
 
 %package curl
-Summary:        Collection of curl-based monitoring plugins for Nagios and similar monitoring systems
+Summary:        Collection of curl-based monitoring plugins for Nagios
 Group:          Applications/System
 %if 0%{?rhel} <= 5
 Requires:       curl
@@ -52,7 +52,7 @@ Requires:       libcurl
 Requires:       monitoringplug
 
 %package curl-json
-Summary:        Collection of curl ans json based monitoring plugins for Nagios and similar monitoring systems
+Summary:        Collection of curl ans json based monitoring plugins for Nagios
 Group:          Applications/System
 %if 0%{?rhel} <= 5
 Requires:       curl
@@ -63,14 +63,14 @@ Requires:       json-c
 Requires:       monitoringplug
 
 %package dns
-Summary:        Collection of dns monitoring plugins for Nagios and similar monitoring systems
+Summary:        Collection of dns monitoring plugins for Nagios
 Group:          Applications/System
 Requires:       ldns
 Requires:       monitoringplug
 
 %if 0%{?rhel} != 5
 %package gnutls
-Summary:        Collection of dns monitoring plugins for Nagios and similar monitoring systems
+Summary:        Collection of dns monitoring plugins for Nagios
 Group:          Applications/System
 Requires:       gnutls
 Requires:       monitoringplug
@@ -83,45 +83,45 @@ Requires:       monitoringplug
 %endif
 
 %package mysql
-Summary:        Collection of MySQL plugins for Nagios and similar monitoring systems
+Summary:        Collection of MySQL plugins for Nagios
 Group:          Applications/System
 Requires:       mysql-libs
 Requires:       monitoringplug
 
 %package rhcs
-Summary:        Collection of RedHat Cluster Suitmonitoring plugins for Nagios and similar monitoring systems
+Summary:        Collection of RedHat Cluster Suitmonitoring plugins for Nagios
 Group:          Applications/System
 Requires:       net-snmp-libs
 Requires:       expat
 Requires:       monitoringplug
 
 %package rpc
-Summary:        Collection of SUN RPC plugins for Nagios and similar monitoring systems
+Summary:        Collection of SUN RPC plugins for Nagios
 Group:          Applications/System
 Requires:       monitoringplug
 
 %package selinux
-Summary:        Collection of selinux monitoring plugins for Nagios and similar monitoring systems
+Summary:        Collection of selinux monitoring plugins for Nagios
 Group:          Applications/System
 Requires:       libselinux
 Requires:       monitoringplug
 
 %if 0%{?rhel} != 5
 %package smb
-Summary:        Collection of smb-based monitoring plugins for Nagios and similar monitoring systems
+Summary:        Collection of smb-based monitoring plugins for Nagios
 Group:          Applications/System
 Requires:       libsmbclient
 Requires:       monitoringplug
 %endif
 
 %package snmp
-Summary:        Collection of snmp-based monitoring plugins for Nagios and similar monitoring systems
+Summary:        Collection of snmp-based monitoring plugins for Nagios
 Group:          Applications/System
 Requires:       net-snmp-libs
 Requires:       monitoringplug
 
 %package xmlrpc
-Summary:        Collection of xmlrpc monitoring plugins for Nagios and similar monitoring systems
+Summary:        Collection of xmlrpc monitoring plugins for Nagios
 Group:          Applications/System
 Requires:       xmlrpc-c-client
 Requires:       monitoringplug
@@ -233,8 +233,10 @@ fi
 %post base
 /sbin/fixfiles -F -R monitoringplug-base restore ||:
 
+%if 0%{?rhel} != 5
 %post cups
 /sbin/fixfiles -F -R monitoringplug-cups restore ||:
+%endif
 
 %post curl
 /sbin/fixfiles -F -R monitoringplug-curl restore ||:
@@ -245,11 +247,13 @@ fi
 %post dns
 /sbin/fixfiles -F -R monitoringplug-dns restore ||:
 
+%if 0%{?rhel} != 5
 %post gnutls
 /sbin/fixfiles -F -R monitoringplug-gnutls restore ||:
 
 %post libvirt
 /sbin/fixfiles -F -R monitoringplug-libvirt restore ||:
+%endif
 
 %post mysql
 /sbin/fixfiles -F -R monitoringplug-mysql restore ||:
@@ -263,8 +267,10 @@ fi
 %post selinux
 /sbin/fixfiles -F -R monitoringplug-selinux restore ||:
 
+%if 0%{?rhel} != 5
 %post smb
 /sbin/fixfiles -F -R monitoringplug-smb restore ||:
+%endif
 
 %post snmp
 /sbin/fixfiles -F -R monitoringplug-snmp restore ||:
