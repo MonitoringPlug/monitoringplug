@@ -4,9 +4,9 @@ docdir = @docdir@
 
 doc_DATA = README-EOPT
 
-EXTRA_DIST = $(doc_DATA) 
-
 man_MANS = monitoringplug-eopt.5 monitoringplug-range.5
+
+EXTRA_DIST = $(doc_DATA) $(man_MANS)
 
 # base
 man_MANS += check_file.1 check_nrped.1
