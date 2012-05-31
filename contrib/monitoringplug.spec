@@ -4,7 +4,7 @@ Release:        1%{?dist}
 Summary:        Collection of monitoring plugins for Nagios and similar monitoring systems.
 
 Group:          Applications/System
-License:        GPL
+License:        GPLv2+
 URL:            http://svn.durchmesser.ch/trac/monitoringplug
 Source0:        %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
