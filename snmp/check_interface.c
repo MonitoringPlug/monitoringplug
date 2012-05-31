@@ -54,7 +54,7 @@ int main (int argc, char **argv) {
     /* Local Vars */
     int         ifOperStatus = 0;
     char        *ifDescr = NULL;
-    long int    ifSpeed;
+    long int    ifSpeed = 0;
     long int    ifInOctets = 0;
     long int    ifInErrors = 0;
     long int    ifOutOctets = 0;

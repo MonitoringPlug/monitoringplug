@@ -16,13 +16,12 @@ BuildRequires:  libselinux-devel
 BuildRequires:  mysql-devel
 BuildRequires:  net-snmp-devel
 BuildRequires:  xmlrpc-c-devel
+BuildRequires:  selinux-policy-devel
 
 %if 0%{?rhel} == 5
 BuildRequires:  curl-devel
-BuildRequires:  selinux-policy-devel
 %else
 BuildRequires:  libcurl-devel
-BuildRequires:  selinux-policy
 # Thing RHEL5 is to old fore
 BuildRequires:  cups-devel
 BuildRequires:  gnutls-devel
@@ -331,6 +330,8 @@ fi
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_dns_*
 %{_libdir}/nagios/plugins/check_dnssec_*
+%{_mandir}/man1/check_dns_*
+%{_mandir}/man1/check_dnssec_*
 
 %if 0%{?rhel} != 5
 %files gnutls

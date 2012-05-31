@@ -161,7 +161,7 @@ int main (int argc, char **argv) {
 
         if (hostname && hostent) {
             opt = mp_dhcp_pkt_getopt(pkt, DHCPOPT_ServerId);
-            if (opt) {
+            if (opt && hostent) {
                 if (memcmp(hostent->h_addr, &(opt->data.inaddr), 4) != 0)
                     continue;
             } else {

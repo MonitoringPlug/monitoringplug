@@ -73,7 +73,8 @@ int main (int argc, char **argv) {
     // Parse clustat
     if (nonroot == 0) {
         uid = getuid();
-        setuid(0);
+        if (setuid(0) != 0)
+            unknown("setuid faild");
         fp = mp_popen((char *[]) {"/sbin/multipath","-l", NULL});
         if (uid != 0)
             setuid(uid);

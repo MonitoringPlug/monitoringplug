@@ -151,14 +151,12 @@ AX_CFLAGS_GCC_OPTION(-Winline)
 CPPFLAGS="-I\$(top_srcdir) -I\$(top_srcdir)/lib";
 LDFLAGS="$LDFLAGS -L\$(top_srcdir)/lib";
 
-MPLIB_LIBS="-monitoringplug"
 SNMPUTIL_LIBS="-lsnmputils"
 RHCSUTIL_LIBS="-lrhcsutils"
 LDNSUTIL_LIBS="-lldnsutils"
 LIBVIRTUTIL_LIBS="-lvirturils"
 XMLRPCUTIL_LIBS="-lxmlrpcutils"
 
-AC_SUBST(MPLIB_LIBS)
 AC_SUBST(SNMPUTIL_LIBS)
 AC_SUBST(RHCSUTIL_LIBS)
 AC_SUBST(LDNSUTIL_LIBS)

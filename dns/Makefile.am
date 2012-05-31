@@ -3,7 +3,7 @@
 bindir = ${libdir}/nagios/plugins
 
 AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/lib $(LDNS_CFLAGS)
-AM_LDFLAGS = $(MPLIB_LIBS) $(LDNS_LIBS)
+AM_LDFLAGS = $(LDNS_LIBS)
 AM_DEFAULT_SOURCE_EXT = .c
 
 LDADD = ../lib/libmonitoringplug.a ../lib/libldnsutils.a
