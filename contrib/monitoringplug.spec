@@ -343,7 +343,7 @@ fi
 %files gnutls
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_ssl_cert
-%{_mandir}/man1/check_ssl_cert
+%{_mandir}/man1/check_ssl_cert.1.gz
 
 %files libvirt
 %defattr(-,root,root,-)
