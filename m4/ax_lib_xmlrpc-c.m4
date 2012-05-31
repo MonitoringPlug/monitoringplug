@@ -78,8 +78,8 @@ AC_DEFUN([AX_LIB_XMLRPC],
         fi
 
         if test "$XMLRPC_CONFIG" != "no"; then
-            XMLRPC_CFLAGS="`$XMLRPC_CONFIG client --cflags`"
-            XMLRPC_LDFLAGS="`$XMLRPC_CONFIG client --libs`"
+            XMLRPC_CFLAGS="`$XMLRPC_CONFIG --cflags` `$XMLRPC_CONFIG client --cflags`"
+            XMLRPC_LDFLAGS="`$XMLRPC_CONFIG --libs` `$XMLRPC_CONFIG client --libs`"
 
             XMLRPC_VERSION=`$XMLRPC_CONFIG client --version`
 
