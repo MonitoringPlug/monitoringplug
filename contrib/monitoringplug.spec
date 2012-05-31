@@ -1,16 +1,16 @@
 Name:           monitoringplug
 Version:        0.9
 Release:        1%{?dist}
-Summary:        Collection of monitoring plugins for Nagios and similar monitoring systems.
+Summary:        Collection of monitoring plugins for Nagios and similar monitoring systems
 
 Group:          Applications/System
 License:        GPLv2+
 URL:            http://svn.durchmesser.ch/trac/monitoringplug
-Source0:        %{name}-%{version}.tar.gz
+Source0:        http://svn.durchmesser.ch/download/%{name}/%{name}-%{version}/%{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  expat-devel
-BuildRequires:	json-c-devel
+BuildRequires:  json-c-devel
 BuildRequires:  ldns-devel
 BuildRequires:  libselinux-devel
 BuildRequires:  mysql-devel
@@ -30,19 +30,19 @@ BuildRequires:  libsmbclient-devel
 %endif
 
 %package base
-Summary:        Collection of basic monitoring plugins for Nagios and similar monitoring systems.
+Summary:        Collection of basic monitoring plugins for Nagios and similar monitoring systems
 Group:          Applications/System
-Requires:	monitoringplug
+Requires:       monitoringplug
 
 %if 0%{?rhel} != 5
 %package cups
-Summary:        Collection of cups monitoring plugins for Nagios and similar monitoring systems.
+Summary:        Collection of cups monitoring plugins for Nagios and similar monitoring systems
 Group:          Applications/System
-Requires:	cups
+Requires:       cups
 %endif
 
 %package curl
-Summary:        Collection of curl-based monitoring plugins for Nagios and similar monitoring systems.
+Summary:        Collection of curl-based monitoring plugins for Nagios and similar monitoring systems
 Group:          Applications/System
 %if 0%{?rhel} <= 5
 Requires:       curl
@@ -52,76 +52,76 @@ Requires:       libcurl
 Requires:       monitoringplug
 
 %package curl-json
-Summary:        Collection of curl ans json based monitoring plugins for Nagios and similar       monitoring systems.
+Summary:        Collection of curl ans json based monitoring plugins for Nagios and similar monitoring systems
 Group:          Applications/System
 %if 0%{?rhel} <= 5
 Requires:       curl
 %else
 Requires:       libcurl
 %endif
-Requires:	json-c
+Requires:       json-c
 Requires:       monitoringplug
 
 %package dns
-Summary:        Collection of dns monitoring plugins for Nagios and similar monitoring systems.
+Summary:        Collection of dns monitoring plugins for Nagios and similar monitoring systems
 Group:          Applications/System
-Requires:	ldns
+Requires:       ldns
 Requires:       monitoringplug
 
 %if 0%{?rhel} != 5
 %package gnutls
-Summary:        Collection of dns monitoring plugins for Nagios and similar monitoring systems.
+Summary:        Collection of dns monitoring plugins for Nagios and similar monitoring systems
 Group:          Applications/System
-Requires:	gnutls
+Requires:       gnutls
 Requires:       monitoringplug
 
 %package libvirt
-Summary:        Collection of libvirt monitoring plugins for Nagios and similar monitoring   systems.
+Summary:        Collection of libvirt monitoring plugins for Nagios and similar monitoring   systems
 Group:          Applications/System
 Requires:       libvirt-client
 Requires:       monitoringplug
 %endif
 
 %package mysql
-Summary:        Collection of MySQL plugins for Nagios and similar monitoring systems.
+Summary:        Collection of MySQL plugins for Nagios and similar monitoring systems
 Group:          Applications/System
 Requires:       mysql-libs
 Requires:       monitoringplug
 
 %package rhcs
-Summary:        Collection of RedHat Cluster Suitmonitoring plugins for Nagios and similar monitoring systems.
+Summary:        Collection of RedHat Cluster Suitmonitoring plugins for Nagios and similar monitoring systems
 Group:          Applications/System
-Requires:	net-snmp-libs
-Requires:	expat
+Requires:       net-snmp-libs
+Requires:       expat
 Requires:       monitoringplug
 
 %package rpc
-Summary:        Collection of SUN RPC plugins for Nagios and similar monitoring systems.
+Summary:        Collection of SUN RPC plugins for Nagios and similar monitoring systems
 Group:          Applications/System
 Requires:       monitoringplug
 
 %package selinux
-Summary:        Collection of selinux monitoring plugins for Nagios and similar monitoring systems.
+Summary:        Collection of selinux monitoring plugins for Nagios and similar monitoring systems
 Group:          Applications/System
-Requires:	libselinux
+Requires:       libselinux
 Requires:       monitoringplug
 
 %if 0%{?rhel} != 5
 %package smb
-Summary:        Collection of smb-based monitoring plugins for Nagios and similar monitoring systems.
+Summary:        Collection of smb-based monitoring plugins for Nagios and similar monitoring systems
 Group:          Applications/System
 Requires:       libsmbclient
 Requires:       monitoringplug
 %endif
 
 %package snmp
-Summary:        Collection of snmp-based monitoring plugins for Nagios and similar monitoring systems.
+Summary:        Collection of snmp-based monitoring plugins for Nagios and similar monitoring systems
 Group:          Applications/System
-Requires:	net-snmp-libs
+Requires:       net-snmp-libs
 Requires:       monitoringplug
 
 %package xmlrpc
-Summary:        Collection of xmlrpc monitoring plugins for Nagios and similar monitoring systems.
+Summary:        Collection of xmlrpc monitoring plugins for Nagios and similar monitoring systems
 Group:          Applications/System
 Requires:       xmlrpc-c-client
 Requires:       monitoringplug
