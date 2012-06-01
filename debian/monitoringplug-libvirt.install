@@ -1,2 +1,2 @@
-/usr/lib/nagios/plugins/check_libvirtd
-/usr/lib/nagios/plugins/check_libvirt_domain
+/usr/lib/nagios/plugins/check_libvirt*
+/usr/share/man/man1/check_libvirt*

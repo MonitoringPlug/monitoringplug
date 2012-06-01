@@ -1,1 +1,2 @@
 /usr/lib/nagios/plugins/check_ssl_cert
+/usr/share/man/man1/check_libvirtd.1
