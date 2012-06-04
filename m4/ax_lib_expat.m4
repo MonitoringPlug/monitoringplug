@@ -135,7 +135,7 @@ AC_DEFUN([AX_LIB_EXPAT],
         dnl
         AC_MSG_CHECKING([for Expat XML Parser headers in $expat_include_dir])
 
-        AC_LANG_PUSH([C++])
+        AC_LANG_PUSH([C])
         AC_COMPILE_IFELSE([
             AC_LANG_PROGRAM(
                 [[
@@ -153,7 +153,7 @@ AC_DEFUN([AX_LIB_EXPAT],
             AC_MSG_RESULT([not found])
             ]
         )
-        AC_LANG_POP([C++])
+        AC_LANG_POP([C])
 
         dnl
         dnl Check Expat libraries
@@ -162,7 +162,7 @@ AC_DEFUN([AX_LIB_EXPAT],
 
             AC_MSG_CHECKING([for Expat XML Parser libraries])
 
-            AC_LANG_PUSH([C++])
+            AC_LANG_PUSH([C])
             AC_LINK_IFELSE([
                 AC_LANG_PROGRAM(
                     [[
@@ -184,7 +184,7 @@ p = NULL;
                 AC_MSG_RESULT([not found])
                 ]
             )
-            AC_LANG_POP([C++])
+            AC_LANG_POP([C])
         fi
 
         CPPFLAGS="$saved_CPPFLAGS"
