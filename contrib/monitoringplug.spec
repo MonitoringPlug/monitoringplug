@@ -354,6 +354,7 @@ fi
 %files mysql
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_mysql*
+%{_mandir}/man1/check_mysql*
 
 %files rhcs
 %defattr(-,root,root,-)

@@ -92,7 +92,7 @@ void print_help_mysql(void) {
     printf("      The MySQL user name to use when connecting to the server.\n");
     printf(" -p, --password=PASSWORD\n");
     printf("      The password to use when connecting to the server.\n");
-    printf(" -D, --database\n");
+    printf(" -D, --database=DATABASE\n");
     printf("      The database to use.\n");
     printf(" -P, --port=PORT\n");
     printf("      The TCP/IP port number to use for the connection.\n");

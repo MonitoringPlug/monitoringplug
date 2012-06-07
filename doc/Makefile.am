@@ -56,7 +56,12 @@ man_MANS += check_libvirtd.1 check_libvirt_domain.1
 endif #HAVE_LIBVIRT
 EXTRA_DIST += check_libvirtd.1 check_libvirt_domain.1
 
-if HAVE_XSLTPROC
+#mysql
+if HAVE_MYSQL
+man_MANS += check_mysql.1 check_mysql_rows.1
+endif #HAVE_MYSQL
+EXTRA_DIST += check_mysql.1 check_mysql_rows.1
+
 
 CLEANFILES = $(man_MANS)
 
