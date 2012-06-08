@@ -62,6 +62,7 @@ man_MANS += check_mysql.1 check_mysql_rows.1
 endif #HAVE_MYSQL
 EXTRA_DIST += check_mysql.1 check_mysql_rows.1
 
+if HAVE_XSLTPROC
 
 CLEANFILES = $(man_MANS)
 
