@@ -1,2 +1,4 @@
 /usr/lib/nagios/plugins/check_clustat
 /usr/lib/nagios/plugins/check_rhcsnmp
+/usr/share/man/man1/check_clustat*
+/usr/share/man/man1/check_rhcsnmp*

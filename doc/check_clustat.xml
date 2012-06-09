@@ -2,7 +2,7 @@
 <!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
 
-  <!ENTITY mpcheckname   "check_mysql">
+  <!ENTITY mpcheckname   "check_clustat">
 
 ]>
 
@@ -34,40 +34,32 @@
     </legalnotice>
   </refentryinfo>
   <refmeta>
-    <refentrytitle>CHECK_MYSQL</refentrytitle>
+    <refentrytitle>CHECK_CLUSTAT</refentrytitle>
     <manvolnum>1</manvolnum>
   </refmeta>
   <refnamediv>
     <refname>&mpcheckname;</refname>
-    <refpurpose>Check MySQL Server connectivity ans status.</refpurpose>
+    <refpurpose>Check RedHat Cluster status with clustat.</refpurpose>
   </refnamediv>
   <refsynopsisdiv>
     <cmdsynopsis>
       <command>&mpcheckname;</command>
-      <arg choice="plain">
-        <option>--hostname <replaceable>HOSTNAME</replaceable></option>
+      <arg choice="opt">
+        <option>--perfdata</option>
       </arg>
     </cmdsynopsis>
   </refsynopsisdiv>
   <refsect1 id="description">
    <title>DESCRIPTION</title>
-   <para>Check a MySQL Server for connectivity and status variables.</para>
+   <para>Check the status of a RedHat Cluster Suite Cluster by parsing the 
+     output of clustat and <filename>/etc/cluster/cluster.conf</filename>.</para>
+   <para>Status and location of each service is checked and compared with
+     the values from cluster.conf.</para>
   </refsect1>
   <refsect1 id="options">
     <title>OPTIONS</title>
     <para>The Monitoringplug default options</para>
     <xi:include href="mp_opts.xml"/>
-    <para>The MySQL options</para>
-    <xi:include href="mp_opts_mysql.xml"/>
-    <para>Check specific options</para>
-    <variablelist>
-      <varlistentry>
-        <term><option>--variable=<replaceable>VARIABLE</replaceable><group choice="opt">:<replaceable>UNIT</replaceable></group></option></term>
-        <listitem>
-          <para>Variable, and unit, to report to perfdata.</para>
-        </listitem>
-      </varlistentry>
-    </variablelist>
   </refsect1>
   <xi:include href="mp_seealso.xml"/>
 </refentry>

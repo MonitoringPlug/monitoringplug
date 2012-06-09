@@ -360,6 +360,8 @@ fi
 %defattr(-,root,root,-)
 %attr(4111, root, root) %{_libdir}/nagios/plugins/check_clustat
 %{_libdir}/nagios/plugins/check_rhcsnmp
+%{_mandir}/man1/check_clustat
+%{_mandir}/man1/check_rhcsnmp
 
 %files rpc
 %defattr(-,root,root,-)
