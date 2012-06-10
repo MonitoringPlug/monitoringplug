@@ -1,0 +1,114 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+
+  <!ENTITY mpcheckname   "check_rpc_ping">
+
+]>
+
+<refentry xmlns:xi="http://www.w3.org/2001/XInclude">
+  <refentryinfo>
+    <title>Monitoringplug  Manual</title>
+    <productname>&mpcheckname;</productname>
+    <authorgroup>
+      <author>
+       <firstname>Marius</firstname>
+        <surname>Rieder</surname>
+        <address>
+          <email>marius.rieder@durchmesser.ch</email>
+        </address>
+       <contrib>For monitoringplug</contrib>
+      </author>
+    </authorgroup>
+    <copyright>
+      <year>2012</year>
+      <holder>Marius Rieder</holder>
+    </copyright>
+    <legalnotice>
+      <para>This manual page was written for Monitoringplug
+        (and may be used by others).</para>
+      <para>Permission is granted to copy, distribute and/or modify this
+        document under the terms of the GNU General Public License,
+        Version 2 or (at your option) any later version published by
+        the Free Software Foundation.</para>
+    </legalnotice>
+  </refentryinfo>
+  <refmeta>
+    <refentrytitle>CHECK_RPC_PING</refentrytitle>
+    <manvolnum>1</manvolnum>
+  </refmeta>
+  <refnamediv>
+    <refname>&mpcheckname;</refname>
+    <refpurpose>Check if a RPC program is responding.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <cmdsynopsis>
+      <command>&mpcheckname;</command>
+      <arg choice="plain">
+        <option>--hostname <replaceable>HOSTNAME</replaceable></option>
+      </arg>
+      <arg choice="plain">
+        <option>--rpcprogramm <replaceable>PROGRAMM</replaceable></option>
+      </arg>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+  <refsect1 id="description">
+    <title>DESCRIPTION</title>
+    <para>Check whether the named RPC programm is responding to ping calls.</para>
+  </refsect1>
+  <refsect1 id="options">
+    <title>OPTIONS</title>
+    <para>The Monitoringplug default options</para>
+    <xi:include href="mp_opts.xml"/>
+    <para>Check specific options</para>
+    <variablelist>
+      <xi:include href="mp_opts_host.xml"/>
+      <varlistentry>
+        <term><option>-P</option></term>
+        <term><option>--rpcprogramm=<replaceable>PROGRAMM</replaceable></option></term>
+        <listitem>
+          <para>RPC programm to ping.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-T</option></term>
+        <term><option>--transport=<replaceable>TRANSPORT</replaceable><group choice="opt">,<replaceable>TRANSPORT</replaceable></group></option></term>
+        <listitem>
+          <para>Transport to check.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-r</option></term>
+        <term><option>--rpcversion=<replaceable>VERSION</replaceable><group choice="opt">,<replaceable>VERSION</replaceable></group></option></term>
+        <listitem>
+          <para>RPC Version to use for this check.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+         <term><option>-e</option></term>
+         <term><option>--export=<replaceable>PATH</replaceable></option></term>
+         <listitem>
+           <para>Check whether the server exports path.</para>
+         </listitem>
+       </varlistentry>
+      <varlistentry>
+        <term><option>-w</option></term>
+        <term><option>--warning=<replaceable>DURATION</replaceable></option></term>
+        <listitem>
+          <para>Return warning if check exceeds time limit.
+            (Default to 0.5s)</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-c</option></term>
+        <term><option>--critical=<replaceable>DURATION</replaceable></option></term>
+        <listitem>
+          <para>Return critical if check exceeds time limit.
+            (Default to 1s)</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+  <xi:include href="mp_seealso.xml"/>
+</refentry>
+<!-- vim: set ts=2 sw=2 expandtab ai syn=docbk : -->

@@ -2,12 +2,16 @@
 
 bindir = ${libdir}/nagios/plugins
 
-AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/lib
-AM_LDFLAGS = -lrpcsvc
+AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/lib $(RPC_CFLAGS)
+AM_LDFLAGS = $(RPC_LDFLAGS)
 AM_DEFAULT_SOURCE_EXT = .c
 
-LDADD = ../lib/*.a
+LDADD = ../lib/libmonitoringplug.a ../lib/librpcutils.a
 
-bin_PROGRAMS = check_nfs check_rpc_ping
+bin_PROGRAMS = 
+
+if HAVE_RPC
+bin_PROGRAMS += check_nfs check_rpc_ping
+endif
 
 ## vim: set ts=4 sw=4 syn=automake :

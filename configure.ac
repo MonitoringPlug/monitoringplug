@@ -78,7 +78,8 @@ AS_IF([test "x$with_libvirt" != "xno"], [
        ],[AC_MSG_WARN([Skipping libvirt])])
 # smbclient
 PKG_CHECK_MODULES([SMBCLIENT],[smbclient], [],[AC_MSG_WARN([Skipping libsmbclient])])
-
+# RPC
+AX_LIB_RPC()
 # SNMP Option
 AX_LIB_NETSNMP()
 
@@ -123,6 +124,7 @@ AM_CONDITIONAL([HAVE_CUPS], [test "x$CUPS_LDFLAGS" != x])
 AM_CONDITIONAL([HAVE_CURL], [test "x$LIBCURL" != x])
 AM_CONDITIONAL([HAVE_CURL_TFTP], [test "x$libcurl_protocol_TFTP" != x])
 AM_CONDITIONAL([HAVE_EXPAT], [test "x$EXPAT_CFLAGS" != x])
+AM_CONDITIONAL([HAVE_RPC], [test "x$RPC_CFLAGS" != x])
 AM_CONDITIONAL([HAVE_NET_SNMP], [test "x$NETSNMP_CFLAGS" != x])
 AM_CONDITIONAL([HAVE_XMLRPC], [test "x$XMLRPC_CFLAGS" != x])
 AM_CONDITIONAL([HAVE_SELINUX], [test "x$SELINUX_LIBS" != x])

@@ -342,8 +342,8 @@ void print_help (void) {
     printf("      Transports to check.\n");
     printf(" -r, --rpcversion=version[,version]\n");
     printf("      Versions to check.\n");
-    printf(" -e, --export=parh\n");
-    printf("      Check it server exports path.\n");
+    printf(" -e, --export=path\n");
+    printf("      Check whether the server exports path.\n");
     print_help_warn_time("0.5s");
     print_help_crit_time("1s");
 }

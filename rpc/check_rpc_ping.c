@@ -24,11 +24,11 @@
  */
 
 const char *progname  = "check_rpc_ping";
-const char *progdesc  = "Check if named RPC program is responding.";
+const char *progdesc  = "Check if named RPC programm is responding.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2011";
 const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
-const char *progusage = "--rpcprogramm <PROGRAMM> [--help] [--timeout TIMEOUT]";
+const char *progusage = "--host <HOST> --rpcprogramm <PROGRAMM>";
 
 /* MP Includes */
 #include "mp_common.h"

@@ -71,6 +71,11 @@ endif #HAVE_NET_SNMP
 endif #HAVE_EXPAT
 EXTRA_DIST += check_clustat.1 check_rhcsnmp.1
 
+#rpc
+if HAVE_RPC
+man_MANS += check_nfs.1 check_rpc_ping.1
+endif
+EXTRA_DIST += check_nfs.1 check_rpc_ping.1
 
 if HAVE_XSLTPROC
 

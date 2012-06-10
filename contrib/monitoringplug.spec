@@ -360,13 +360,15 @@ fi
 %defattr(-,root,root,-)
 %attr(4111, root, root) %{_libdir}/nagios/plugins/check_clustat
 %{_libdir}/nagios/plugins/check_rhcsnmp
-%{_mandir}/man1/check_clustat
-%{_mandir}/man1/check_rhcsnmp
+%{_mandir}/man1/check_clustat.1.gz
+%{_mandir}/man1/check_rhcsnmp.1.gz
 
 %files rpc
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_nfs
 %{_libdir}/nagios/plugins/check_rpc_ping
+%{_mandir}/man1/check_nfs.1.gz
+%{_mandir}/man1/check_rpc_ping.1.gz
 
 %files selinux
 %defattr(-,root,root,-)

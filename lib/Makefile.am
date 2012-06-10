@@ -64,10 +64,12 @@ libxmlrpcutils_a_SOURCES = xmlrpc_utils.c xmlrpc_utils.h
 libxmlrpcutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(XMLRPC_CFLAGS)
 endif
 
+if HAVE_RPC
 noinst_LIBRARIES += librpcutils.a
 
 librpcutils_a_SOURCES = rpc_utils.c rpc_utils.h
 librpcutils_a_CPPFLAGS = $(AM_CPPFLAGS)
+endif
 
 libmonitoringplug_a_SOURCES = mp_common.c mp_common.h \
 							  mp_utils.c mp_utils.h \
