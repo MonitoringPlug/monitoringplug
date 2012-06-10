@@ -1,2 +1,4 @@
 /usr/lib/nagios/plugins/check_enforce
 /usr/lib/nagios/plugins/check_sebool
+/usr/share/man/man1/check_enforce*
+/usr/share/man/man1/check_sebool*

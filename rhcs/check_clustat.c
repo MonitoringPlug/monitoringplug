@@ -87,7 +87,8 @@ int main (int argc, char **argv) {
     // Parse clustat
     if (nonroot == 0) {
         uid = getuid();
-        setuid(0);
+        if (setuid(0) != 0)
+            unknown("setuid faild");
         fp = mp_popen((char *[]) {"/usr/sbin/clustat","-x", NULL});
     } else {
         fp = fopen("clustat.xml","r");

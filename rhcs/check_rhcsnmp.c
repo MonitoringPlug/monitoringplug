@@ -98,7 +98,8 @@ int main (int argc, char **argv) {
 
     /* Perfdata */
     if (mp_showperfdata)
-        mp_perfdata_int3("votes", clustervotes, "", 1, clusterquorum, 1, clusterquorum-1, 1, 0, 1, clusternodes);
+        mp_perfdata_int3("votes", clustervotes, "", 1, clusterquorum, 1,
+                         clusterquorum-1, 1, 0, 1, clusternodes);
 
     /* Output and return */
     if (clusterstatus < 2)

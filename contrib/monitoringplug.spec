@@ -374,6 +374,8 @@ fi
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_enforce
 %{_libdir}/nagios/plugins/check_sebool
+%{_mandir}/man1/check_enforce.1.gz
+%{_mandir}/man1/check_sebool.1.gz
 
 %if 0%{?rhel} != 5
 %files smb

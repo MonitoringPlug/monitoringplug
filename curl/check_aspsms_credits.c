@@ -65,7 +65,7 @@ int main (int argc, char **argv) {
     char        *c;
     int         errorCode = 0;
     float       credits = 0;
-    char        *errorDescription = "Illegal response from server.";
+    char        *errorDescription;
 
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
@@ -152,14 +152,16 @@ int main (int argc, char **argv) {
 
     if (mp_verbose > 0) {
         printf("errorCode %d\n", errorCode);
-        printf("errorDescription %s\n", errorDescription);
+        if errorDescription:
+            printf("errorDescription %s\n", errorDescription);
         printf("credits %f\n", credits);
     }
 
     /* XML Error Code */
     if (errorCode != 1)
         unknown(errorDescription);
-    free(errorDescription);
+    if (errorDescription)
+        free(errorDescription);
 
     switch(get_status((int)credits, credit_thresholds)) {
         case STATE_OK:

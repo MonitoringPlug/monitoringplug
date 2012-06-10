@@ -74,8 +74,14 @@ EXTRA_DIST += check_clustat.1 check_rhcsnmp.1
 #rpc
 if HAVE_RPC
 man_MANS += check_nfs.1 check_rpc_ping.1
-endif
+endif #HAVE_RPC
 EXTRA_DIST += check_nfs.1 check_rpc_ping.1
+
+#selinux
+if HAVE_SELINUX
+man_MANS += check_enforce.1 check_sebool.1
+endif #HAVE_SELINUX
+EXTRA_DIST += check_enforce.1 check_sebool.1
 
 if HAVE_XSLTPROC
 
