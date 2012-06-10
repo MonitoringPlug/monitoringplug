@@ -80,7 +80,7 @@ AC_DEFUN([AX_LIB_CUPS],
 
         if test "$CUPS_CONFIG" != "no"; then
             CUPS_CFLAGS="`$CUPS_CONFIG --cflags`"
-            CUPS_LDFLAGS="`$CUPS_CONFIG --libs`"
+            CUPS_LDFLAGS="`$CUPS_CONFIG --ldflags` `$CUPS_CONFIG --libs`"
 
             CUPS_VERSION=`$CUPS_CONFIG --version`
 

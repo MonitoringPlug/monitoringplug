@@ -48,7 +48,7 @@ struct rpcent *rpc_getrpcent(const char *prog) {
     struct rpcent *ent, *ret;
 
     if (isalpha(*prog)) {
-        ent = getrpcbyname(prog);
+        ent = getrpcbyname((char *)prog);
     } else {
         ent = getrpcbynumber(atoi(prog));
     }
@@ -67,7 +67,7 @@ unsigned long rpc_getprognum(const char *prog) {
     struct rpcent *rpc;
 
     if (isalpha(*prog)) {
-        rpc = getrpcbyname(prog);
+        rpc = getrpcbyname((char *)prog);
         if (rpc == NULL) {
             return 0;
         }
