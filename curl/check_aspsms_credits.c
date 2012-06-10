@@ -152,7 +152,7 @@ int main (int argc, char **argv) {
 
     if (mp_verbose > 0) {
         printf("errorCode %d\n", errorCode);
-        if errorDescription:
+        if (errorDescription)
             printf("errorDescription %s\n", errorDescription);
         printf("credits %f\n", credits);
     }
