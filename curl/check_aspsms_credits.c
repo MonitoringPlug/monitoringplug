@@ -65,7 +65,7 @@ int main (int argc, char **argv) {
     char        *c;
     int         errorCode = 0;
     float       credits = 0;
-    char        *errorDescription;
+    char        *errorDescription = NULL;
 
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
