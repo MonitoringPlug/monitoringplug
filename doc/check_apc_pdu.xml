@@ -2,7 +2,7 @@
 <!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
 
-  <!ENTITY mpcheckname   "check_rhcsnmp">
+  <!ENTITY mpcheckname   "check_apc_pdu">
 
 ]>
 
@@ -34,12 +34,12 @@
     </legalnotice>
   </refentryinfo>
   <refmeta>
-    <refentrytitle>CHECK_RHCSNMP</refentrytitle>
+    <refentrytitle>CHECK_APC_PDU</refentrytitle>
     <manvolnum>1</manvolnum>
   </refmeta>
   <refnamediv>
     <refname>&mpcheckname;</refname>
-    <refpurpose>Check RedHat Cluster status by snmp.</refpurpose>
+    <refpurpose>Check akcp sensor by snmp.</refpurpose>
   </refnamediv>
   <refsynopsisdiv>
     <cmdsynopsis>
@@ -47,17 +47,41 @@
       <arg choice="plain">
         <option>--hostname <replaceable>HOSTNAME</replaceable></option>
       </arg>
+      <arg choice="opt">
+        <option>--on <replaceable>PORTS</replaceable></option>
+      </arg>
+      <arg choice="opt">
+        <option>--off <replaceable>PORTS</replaceable></option>
+      </arg>
     </cmdsynopsis>
   </refsynopsisdiv>
   <refsect1 id="description">
    <title>DESCRIPTION</title>
-   <para>Check the status of a RedHat Cluster Suite Cluster by query the
-     cluster-snmp agent.</para>
+   <para>Check the state of individual power outlets of a APC PDU.</para>
+   <para>If no On/Off-Ports are defines all ports are asumed as should be On.</para>
+   <para>On/Off-Ports can be named or nubered. ex: --on '1,Outlet 3,4'</para>
   </refsect1>
   <refsect1 id="options">
     <title>OPTIONS</title>
     <para>The Monitoringplug default options</para>
     <xi:include href="mp_opts.xml"/>
+    <para>Check specific options</para>
+    <variablelist>
+      <varlistentry>
+        <term><option>-o</option></term>
+        <term><option>--on=<replaceable>PORTS</replaceable></option></term>
+        <listitem>
+          <para>Ports which should be On.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-O</option></term>
+        <term><option>--off=<replaceable>PORTS</replaceable></option></term>
+        <listitem>
+          <para>Ports which should be Off.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
     <para>The SNMP options</para>
     <xi:include href="mp_opts_snmp.xml"/>
   </refsect1>

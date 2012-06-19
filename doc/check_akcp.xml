@@ -2,7 +2,7 @@
 <!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
 
-  <!ENTITY mpcheckname   "check_rhcsnmp">
+  <!ENTITY mpcheckname   "check_akcp">
 
 ]>
 
@@ -34,12 +34,12 @@
     </legalnotice>
   </refentryinfo>
   <refmeta>
-    <refentrytitle>CHECK_RHCSNMP</refentrytitle>
+    <refentrytitle>CHECK_AKCP</refentrytitle>
     <manvolnum>1</manvolnum>
   </refmeta>
   <refnamediv>
     <refname>&mpcheckname;</refname>
-    <refpurpose>Check RedHat Cluster status by snmp.</refpurpose>
+    <refpurpose>Check akcp sensor by snmp.</refpurpose>
   </refnamediv>
   <refsynopsisdiv>
     <cmdsynopsis>
@@ -47,17 +47,30 @@
       <arg choice="plain">
         <option>--hostname <replaceable>HOSTNAME</replaceable></option>
       </arg>
+      <arg choice="opt">
+        <option>--sensor <replaceable>SENSOR</replaceable></option>
+      </arg>
     </cmdsynopsis>
   </refsynopsisdiv>
   <refsect1 id="description">
    <title>DESCRIPTION</title>
-   <para>Check the status of a RedHat Cluster Suite Cluster by query the
-     cluster-snmp agent.</para>
+   <para>Check all or the given sensor of a AKCP device by snmp.
+     Warning and critical thresholds a setup in the AKCP interface.</para>
   </refsect1>
   <refsect1 id="options">
     <title>OPTIONS</title>
     <para>The Monitoringplug default options</para>
     <xi:include href="mp_opts.xml"/>
+    <para>Check specific options</para>
+    <variablelist>
+      <varlistentry>
+        <term><option>-s</option></term>
+        <term><option>--sensor=<replaceable>SENSOR</replaceable></option></term>
+        <listitem>
+          <para>Index of the sensor to check.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
     <para>The SNMP options</para>
     <xi:include href="mp_opts_snmp.xml"/>
   </refsect1>

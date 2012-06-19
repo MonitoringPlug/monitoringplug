@@ -1,1 +1,2 @@
-/usr/lib/nagios/plugins/check_smb_share
+/usr/lib/nagios/plugins/check_smb_*
+/usr/share/man/man1/check_smb_*

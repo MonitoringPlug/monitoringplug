@@ -381,6 +381,7 @@ fi
 %files smb
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_smb_*
+%{_mandir}/man1/check_smb_*
 %endif
 
 %files snmp
@@ -391,6 +392,12 @@ fi
 %{_libdir}/nagios/plugins/check_interface
 %{_libdir}/nagios/plugins/check_qnap_disks
 %{_libdir}/nagios/plugins/check_qnap_vols
+%{_mandir}/man1/check_akcp.1.gz
+%{_mandir}/man1/check_arc_raid.1.gz
+%{_mandir}/man1/check_apc_pdu.1.gz
+%{_mandir}/man1/check_interface.1.gz
+%{_mandir}/man1/check_qnap_disks.1.gz
+%{_mandir}/man1/check_qnap_vols.1.gz
 
 %files xmlrpc
 %defattr(-,root,root,-)

@@ -83,6 +83,18 @@ man_MANS += check_enforce.1 check_sebool.1
 endif #HAVE_SELINUX
 EXTRA_DIST += check_enforce.1 check_sebool.1
 
+#smb
+if HAVE_SMBCLIENT
+man_MANS += check_smb_share.1
+endif
+EXTRA_DIST += check_smb_share.1
+
+#snmp
+if HAVE_NET_SNMP
+man_MANS += check_akcp.1 check_arc_raid.1 check_apc_pdu.1 check_interface.1 check_qnap_disks.1 check_qnap_vols.1
+endif
+EXTRA_DIST += check_akcp.1 check_arc_raid.1 check_apc_pdu.1 check_interface.1 check_qnap_disks.1 check_qnap_vols.1
+
 if HAVE_XSLTPROC
 
 CLEANFILES = $(man_MANS)

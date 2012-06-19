@@ -259,10 +259,10 @@ void print_help (void) {
     printf("      Test given smb url.\n");
     printf(" -U, --username=USERNAME\n");
     printf("      Authenticate as USERNAME. (Requires password.)\n");
-    printf(" -D, --password=PASSWORD\n");
+    printf(" -P, --password=PASSWORD\n");
     printf("      Authenticate with PASSWORD.\n");
     printf(" -W, --workgroup=WORKGROUP\n");
-    printf("      Authenticate to WORKGROUP\n");
+    printf("      Authenticate to WORKGROUP.\n");
     print_help_warn_time("1s");
     print_help_crit_time("2s");
 }

@@ -28,7 +28,7 @@ const char *progdesc  = "Check tyhe outlet status of a APC PDU.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2010";
 const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
-const char *progusage = "-H <HOST> [-on <PORTS>] [-off <PORTS>]";
+const char *progusage = "-H <HOST> [--on <PORTS>] [--off <PORTS>]";
 
 /* MP Includes */
 #include "mp_common.h"

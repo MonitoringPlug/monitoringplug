@@ -244,12 +244,8 @@ void print_help (void) {
 
     print_help_default();
 
-    printf(" -I, --interface=[INDEX]\n");
-    printf("      Index of Interface to check.\n");
-    printf(" -d, --down\n");
-    printf("      Check for interface being down.\n");
-    printf(" -sm --should=[STATE]\n");
-    printf("      Check for interface being in STATE.\n");
+    printf(" -s, --sensor=[INDEX]\n");
+    printf("      Index of the sensor to check.\n");
 
     print_help_snmp();
 }

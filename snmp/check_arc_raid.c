@@ -28,7 +28,7 @@ const char *progdesc  = "Check the raids of a Areca RAID Controller by snmp.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2011";
 const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
-const char *progusage = "[--help] [--timeout TIMEOUT]";
+const char *progusage = "--hostname <HOSTNAME>";
 
 /* MP Includes */
 #include "mp_common.h"

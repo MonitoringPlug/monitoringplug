@@ -2,7 +2,7 @@
 <!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
 
-  <!ENTITY mpcheckname   "check_rhcsnmp">
+  <!ENTITY mpcheckname   "check_qnap_disks">
 
 ]>
 
@@ -34,12 +34,12 @@
     </legalnotice>
   </refentryinfo>
   <refmeta>
-    <refentrytitle>CHECK_RHCSNMP</refentrytitle>
+    <refentrytitle>CHECK_QNAP_DISKS</refentrytitle>
     <manvolnum>1</manvolnum>
   </refmeta>
   <refnamediv>
     <refname>&mpcheckname;</refname>
-    <refpurpose>Check RedHat Cluster status by snmp.</refpurpose>
+    <refpurpose>Check the disks of a QNAP NAS by snmp.</refpurpose>
   </refnamediv>
   <refsynopsisdiv>
     <cmdsynopsis>
@@ -50,9 +50,8 @@
     </cmdsynopsis>
   </refsynopsisdiv>
   <refsect1 id="description">
-   <title>DESCRIPTION</title>
-   <para>Check the status of a RedHat Cluster Suite Cluster by query the
-     cluster-snmp agent.</para>
+    <title>DESCRIPTION</title>
+    <para>Check the disks of a QNAP NAS by snmp.</para>
   </refsect1>
   <refsect1 id="options">
     <title>OPTIONS</title>
