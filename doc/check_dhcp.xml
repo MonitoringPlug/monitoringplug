@@ -56,8 +56,8 @@
     </cmdsynopsis>
   </refsynopsisdiv>
   <refsect1 id="description">
-   <title>DESCRIPTION</title>
-   <para>Check a DHCP server for desired answer.</para>
+    <title>DESCRIPTION</title>
+    <para>Check a DHCP server for desired answer.</para>
     <variablelist>
       <varlistentry>
         <term><option>Mode 1</option></term>

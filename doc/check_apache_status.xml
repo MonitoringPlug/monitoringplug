@@ -50,8 +50,8 @@
     </cmdsynopsis>
   </refsynopsisdiv>
   <refsect1 id="description">
-   <title>DESCRIPTION</title>
-   <para>Check Apache HTTPD by requesting mod_status output and
+    <title>DESCRIPTION</title>
+    <para>Check Apache HTTPD by requesting mod_status output and
      output perfdata if requested.</para>
   </refsect1>
   <refsect1 id="options">

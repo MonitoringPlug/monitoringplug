@@ -50,8 +50,8 @@
     </cmdsynopsis>
   </refsynopsisdiv>
   <refsect1 id="description">
-   <title>DESCRIPTION</title>
-   <para>Check the status of a RedHat Cluster Suite Cluster by query the
+    <title>DESCRIPTION</title>
+    <para>Check the status of a RedHat Cluster Suite Cluster by query the
      cluster-snmp agent.</para>
   </refsect1>
   <refsect1 id="options">

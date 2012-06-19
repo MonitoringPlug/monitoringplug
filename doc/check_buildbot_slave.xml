@@ -53,8 +53,8 @@
     </cmdsynopsis>
   </refsynopsisdiv>
   <refsect1 id="description">
-   <title>DESCRIPTION</title>
-   <para>Check if a BuildBot build slave, or all slaves, are online with
+    <title>DESCRIPTION</title>
+    <para>Check if a BuildBot build slave, or all slaves, are online with
      the BuildBot json-API.</para>
   </refsect1>
   <refsect1 id="options">

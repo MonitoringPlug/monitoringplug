@@ -50,9 +50,9 @@
     </cmdsynopsis>
   </refsynopsisdiv>
   <refsect1 id="description">
-   <title>DESCRIPTION</title>
-   <para>Check the number of current print jobs and there age.</para>
-   <para>Jobs are counted per printer or summerized over all printers.</para>
+    <title>DESCRIPTION</title>
+    <para>Check the number of current print jobs and there age.</para>
+    <para>Jobs are counted per printer or summerized over all printers.</para>
   </refsect1>
   <refsect1 id="options">
     <title>OPTIONS</title>

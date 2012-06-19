@@ -56,11 +56,11 @@
     </cmdsynopsis>
   </refsynopsisdiv>
   <refsect1 id="description">
-   <title>DESCRIPTION</title>
-   <para>Check the number of open Sockets under Linux.</para>
-   <para>The following protocoll are supported from this check:
+    <title>DESCRIPTION</title>
+    <para>Check the number of open Sockets under Linux.</para>
+    <para>The following protocoll are supported from this check:
      tcp, tcp6, udp, udp6, raw, raw6</para>
-   <para>This check parse the files in <filename>/proc/net/</filename>
+    <para>This check parse the files in <filename>/proc/net/</filename>
      to get the number of open ports.</para>
   </refsect1>
   <refsect1 id="options">

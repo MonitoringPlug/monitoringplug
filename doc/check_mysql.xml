@@ -50,8 +50,8 @@
     </cmdsynopsis>
   </refsynopsisdiv>
   <refsect1 id="description">
-   <title>DESCRIPTION</title>
-   <para>Check a MySQL Server for connectivity and status variables.</para>
+    <title>DESCRIPTION</title>
+    <para>Check a MySQL Server for connectivity and status variables.</para>
   </refsect1>
   <refsect1 id="options">
     <title>OPTIONS</title>

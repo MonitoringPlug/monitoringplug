@@ -53,8 +53,8 @@
     </cmdsynopsis>
   </refsynopsisdiv>
   <refsect1 id="description">
-   <title>DESCRIPTION</title>
-   <para>Check a NFS Server if he exports the named path. In absence of a
+    <title>DESCRIPTION</title>
+    <para>Check a NFS Server if he exports the named path. In absence of a
      export path to test it checks that at least one export is present. </para>
   </refsect1>
   <refsect1 id="options">

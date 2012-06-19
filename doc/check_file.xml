@@ -56,7 +56,7 @@
     </cmdsynopsis>
   </refsynopsisdiv>
   <refsect1 id="description">
-   <title>DESCRIPTION</title>
+    <title>DESCRIPTION</title>
     <para>Check age, size, owner, group and permission property of a
        file.</para>
   </refsect1>

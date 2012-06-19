@@ -56,10 +56,10 @@
     </cmdsynopsis>
   </refsynopsisdiv>
   <refsect1 id="description">
-   <title>DESCRIPTION</title>
-   <para>Check the state of individual power outlets of a APC PDU.</para>
-   <para>If no On/Off-Ports are defines all ports are asumed as should be On.</para>
-   <para>On/Off-Ports can be named or nubered. ex: --on '1,Outlet 3,4'</para>
+    <title>DESCRIPTION</title>
+    <para>Check the state of individual power outlets of a APC PDU.</para>
+    <para>If no On/Off-Ports are defines all ports are asumed as should be On.</para>
+    <para>On/Off-Ports can be named or nubered. ex: --on '1,Outlet 3,4'</para>
   </refsect1>
   <refsect1 id="options">
     <title>OPTIONS</title>

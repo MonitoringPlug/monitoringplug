@@ -50,9 +50,9 @@
     </cmdsynopsis>
   </refsynopsisdiv>
   <refsect1 id="description">
-   <title>DESCRIPTION</title>
-   <para>Check the run inside of the nrped.</para>
-   <para>Can touch a file to leave an evidence on the remote system.</para>
+    <title>DESCRIPTION</title>
+    <para>Check the run inside of the nrped.</para>
+    <para>Can touch a file to leave an evidence on the remote system.</para>
   </refsect1>
   <refsect1 id="options">
     <title>OPTIONS</title>

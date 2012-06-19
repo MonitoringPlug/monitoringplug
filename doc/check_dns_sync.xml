@@ -53,9 +53,9 @@
     </cmdsynopsis>
   </refsynopsisdiv>
   <refsect1 id="description">
-   <title>DESCRIPTION</title>
-   <para>Check if the zone serial are in sync</para>
-   <para>The specified, or all, nameservers are compared against the
+    <title>DESCRIPTION</title>
+    <para>Check if the zone serial are in sync</para>
+    <para>The specified, or all, nameservers are compared against the
      master.</para>
   </refsect1>
   <refsect1 id="options">

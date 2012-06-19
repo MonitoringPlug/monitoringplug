@@ -53,8 +53,8 @@
     </cmdsynopsis>
   </refsynopsisdiv>
   <refsect1 id="description">
-   <title>DESCRIPTION</title>
-   <para>Check available credits of a ASPSMS account with the XML API.</para>
+    <title>DESCRIPTION</title>
+    <para>Check available credits of a ASPSMS account with the XML API.</para>
    <warning>
    	<para>Userkey and Password are sent unencryptet.</para>
    </warning>

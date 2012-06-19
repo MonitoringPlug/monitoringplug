@@ -50,9 +50,9 @@
     </cmdsynopsis>
   </refsynopsisdiv>
   <refsect1 id="description">
-   <title>DESCRIPTION</title>
-   <para>Check the state of a Linux Bonding Device or all.</para>
-   <para>This check the files in <filename>/proc/net/bonding/</filename>
+    <title>DESCRIPTION</title>
+    <para>Check the state of a Linux Bonding Device or all.</para>
+    <para>This check the files in <filename>/proc/net/bonding/</filename>
      eigther all or the one representing the given bond.</para>
   </refsect1>
   <refsect1 id="options">

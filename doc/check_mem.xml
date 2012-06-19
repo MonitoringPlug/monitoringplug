@@ -53,10 +53,10 @@
     </cmdsynopsis>
   </refsynopsisdiv>
   <refsect1 id="description">
-   <title>DESCRIPTION</title>
-   <para>Check the Linux Memory usage.</para>
-   <para>This check can output perfdata for graphing.</para>
-   <para>Memory usage is parsed out of <filename>/proc/meminfo</filename>.
+    <title>DESCRIPTION</title>
+    <para>Check the Linux Memory usage.</para>
+    <para>This check can output perfdata for graphing.</para>
+    <para>Memory usage is parsed out of <filename>/proc/meminfo</filename>.
    </para>
   </refsect1>
   <refsect1 id="options">

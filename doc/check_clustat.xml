@@ -50,10 +50,10 @@
     </cmdsynopsis>
   </refsynopsisdiv>
   <refsect1 id="description">
-   <title>DESCRIPTION</title>
-   <para>Check the status of a RedHat Cluster Suite Cluster by parsing the 
+    <title>DESCRIPTION</title>
+    <para>Check the status of a RedHat Cluster Suite Cluster by parsing the 
      output of clustat and <filename>/etc/cluster/cluster.conf</filename>.</para>
-   <para>Status and location of each service is checked and compared with
+    <para>Status and location of each service is checked and compared with
      the values from cluster.conf.</para>
   </refsect1>
   <refsect1 id="options">

@@ -53,10 +53,10 @@
     </cmdsynopsis>
   </refsynopsisdiv>
   <refsect1 id="description">
-   <title>DESCRIPTION</title>
-   <para>Check the expiration date of a x509 Certificat.</para>
-   <para>The certificat is received by opening a SSL connection.</para>
-   <para>Optionaly the certification chain can be verified against diffrent 
+    <title>DESCRIPTION</title>
+    <para>Check the expiration date of a x509 Certificat.</para>
+    <para>The certificat is received by opening a SSL connection.</para>
+    <para>Optionaly the certification chain can be verified against diffrent 
      keyrings.</para>
   </refsect1>
   <refsect1 id="options">

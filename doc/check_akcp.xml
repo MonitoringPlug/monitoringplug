@@ -53,8 +53,8 @@
     </cmdsynopsis>
   </refsynopsisdiv>
   <refsect1 id="description">
-   <title>DESCRIPTION</title>
-   <para>Check all or the given sensor of a AKCP device by snmp.
+    <title>DESCRIPTION</title>
+    <para>Check all or the given sensor of a AKCP device by snmp.
      Warning and critical thresholds a setup in the AKCP interface.</para>
   </refsect1>
   <refsect1 id="options">
