@@ -24,7 +24,7 @@
  */
 
 const char *progname  = "check_dhcp";
-const char *progdesc  = "Check dhcp server";
+const char *progdesc  = "Check dhcp server.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2012";
 const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";

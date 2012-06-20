@@ -24,7 +24,7 @@
  */
 
 const char *progname  = "check_akcp";
-const char *progdesc  = "Check akcp sensor by snmp";
+const char *progdesc  = "Check akcp sensor by snmp.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2011";
 const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";

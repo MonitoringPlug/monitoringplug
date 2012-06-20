@@ -24,7 +24,7 @@
  */
 
 const char *progname  = "check_multipath";
-const char *progdesc  = "Check multipath status";
+const char *progdesc  = "Check multipath status.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2012";
 const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";

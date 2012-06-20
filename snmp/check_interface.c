@@ -24,7 +24,7 @@
  */
 
 const char *progname  = "check_interface";
-const char *progdesc  = "Check interface status by SNMP IF-MIB";
+const char *progdesc  = "Check interface status by SNMP IF-MIB.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2010";
 const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
