@@ -28,7 +28,7 @@ const char *progdesc  = "Check if a koji builder is online.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2011";
 const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
-const char *progusage = "--url URL --host NAME";
+const char *progusage = "--url URL --hostname NAME";
 
 /* MP Includes */
 #include "mp_common.h"
@@ -108,7 +108,7 @@ int process_arguments (int argc, char **argv) {
 
     static struct option longopts[] = {
         MP_LONGOPTS_DEFAULT,
-	MP_LONGOPTS_HOST,
+        MP_LONGOPTS_HOST,
         MP_LONGOPTS_TIMEOUT,
         MP_LONGOPTS_EOPT,
         {"url", required_argument, NULL, (int)'U'},

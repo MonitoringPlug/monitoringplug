@@ -95,6 +95,12 @@ man_MANS += check_akcp.1 check_arc_raid.1 check_apc_pdu.1 check_interface.1 chec
 endif
 EXTRA_DIST += check_akcp.1 check_arc_raid.1 check_apc_pdu.1 check_interface.1 check_qnap_disks.1 check_qnap_vols.1
 
+#xmprpc
+if HAVE_XMLRPC
+man_MANS += check_rhn_entitlements.1 check_koji_hub.1 check_koji_builder.1
+endif
+EXTRA_DIST += check_rhn_entitlements.1 check_koji_hub.1 check_koji_builder.1
+
 if HAVE_XSLTPROC
 
 CLEANFILES = $(man_MANS)

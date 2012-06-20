@@ -352,13 +352,17 @@ void print_help (void) {
     printf(" -U, --url=URL\n");
     printf("      URL of the RHN XML-RPC api.\n");
     printf(" -u, --user=USER\n");
-    printf("      USER to log in.\n");
+    printf("      Authenticate as USERNAME. (Requires password.)\n");
     printf(" -p, --pass=PASS\n");
-    printf("      PASS to log in.\n");
+    printf("      Authenticate with PASSWORD.\n");
     printf(" -C, --channel=CHANNEL\n");
     printf("      CHANNEL entitlement to check.\n");
     printf(" -S, --system=SYSTEM\n");
     printf("      SYSTEM  entitlement to check.\n");
+    printf(" -w, --warning=FREE\n");
+    printf("      Return warning if less the FREE entitlement are available. Default to 5\n");
+    printf(" -c, --critical=FREE\n");
+    printf("      Return critical if less the FREE entitlement are available. Default to 10\n");
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */

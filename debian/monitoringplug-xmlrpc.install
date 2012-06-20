@@ -1,3 +1,5 @@
-/usr/lib/nagios/plugins/check_koji_builder
-/usr/lib/nagios/plugins/check_koji_hub
+/usr/lib/nagios/plugins/check_koji_*
 /usr/lib/nagios/plugins/check_rhn_entitlements
+/usr/share/man/man1/check_koji_*
+/usr/share/man/man1/check_rhn_entitlements*
+

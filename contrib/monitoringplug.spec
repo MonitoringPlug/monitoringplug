@@ -402,8 +402,9 @@ fi
 %files xmlrpc
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_rhn_entitlements
-%{_libdir}/nagios/plugins/check_koji_builder
-%{_libdir}/nagios/plugins/check_koji_hub
+%{_libdir}/nagios/plugins/check_koji_*
+%{_mandir}/man1/check_rhn_entitlements.1.gz
+%{_mandir}/man1/check_koji_*
 
 %changelog
 * Fri May 11 2012 Marius Rieder <marius.rieder@durchmesser.ch> - 0.9-1
