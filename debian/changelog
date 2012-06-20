@@ -1,5 +1,5 @@
-monitoringplug (0.9) UNRELEASED; urgency=low
+monitoringplug (0.10) UNRELEASED; urgency=low
 
-  * Initial Release.
+  * Initial DEB Release.
 
  -- Marius Rieder <marius.rieder@durchmesser.ch>  Tue, 22 May 2012 20:06:46 +0200

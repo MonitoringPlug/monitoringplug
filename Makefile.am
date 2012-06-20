@@ -6,10 +6,7 @@ SUBDIRS = lib base cups curl dns dummy gnutls libvirt mysql rhcs rpc selinux \
 	  smb snmp xmlrpc \
 	  contrib doc policy tests
 
-EXTRA_DIST = $(top_builddir)/debian/control \
-			 $(top_builddir)/debian/compat $(top_builddir)/debian/changelog \
-			 $(top_builddir)/debian/rules $(top_builddir)/debian/README \
-			 $(top_builddir)/debian/copyright $(top_builddir)/debian/$(PACKAGE)*.install
+EXTRA_DIST = $(top_builddir)/debian 
 
 MP_DIST_CLEANFILES =
 MP_DIST_CLEANDIRS =
