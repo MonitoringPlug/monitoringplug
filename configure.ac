@@ -43,7 +43,15 @@ AC_C_CONST
 AC_TYPE_INTPTR_T
 
 # Checks for libraries.
-# Ckeck
+# Don't depend on pkg-config
+m4_ifdef([PKG_CHECK_MODULES], [], [
+	  m4_errprint([warning: pkg-config checks are not available])
+	  m4_defun([PKG_CHECK_MODULES], [
+		    AC_MSG_WARN([pkg-config not available, cannot check for $2])
+		    $4
+		    ])
+	  ])
+# Check
 AC_ARG_WITH([check], AS_HELP_STRING([--without-check], [Build without the check library]))
 AS_IF([test "x$with_check" != "xno"], [
        PKG_CHECK_MODULES([CHECK], [check >= 0.9.4],[],[AC_MSG_WARN([Skipping check])])
@@ -82,6 +90,8 @@ PKG_CHECK_MODULES([SMBCLIENT],[smbclient], [],[AC_MSG_WARN([Skipping libsmbclien
 AX_LIB_RPC()
 # SNMP Option
 AX_LIB_NETSNMP()
+# OpenIPMI
+PKG_CHECK_MODULES([IPMI],[OpenIPMI OpenIPMIposix], [],[AC_MSG_WARN([Skipping OpenIPMI])])
 
 # IPv6 Option
 AC_ARG_WITH([ipv6],
@@ -137,6 +147,7 @@ AM_CONDITIONAL([HAVE_MYSQL], [test "x$MYSQL_CFLAGS" != x])
 AM_CONDITIONAL([HAVE_XSLTPROC], [test "x$XSLTPROC" != x])
 AM_CONDITIONAL([HAVE_DEBUILD], [test "x$DEBUILD" != x])
 AM_CONDITIONAL([HAVE_RPMBUILD], [test "x$RPMBUILD" != x])
+AM_CONDITIONAL([HAVE_IPMI], [test "x$IPMI_LIBS" != x])
 
 # GCC Opts
 #AX_CFLAGS_WARN_ALL()
@@ -188,6 +199,7 @@ AC_CONFIG_FILES([Makefile
                  dns/Makefile
                  dummy/Makefile
                  gnutls/Makefile
+		 ipmi/Makefile
 		 libvirt/Makefile
 		 mysql/Makefile
                  rhcs/Makefile

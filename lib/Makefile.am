@@ -71,6 +71,13 @@ librpcutils_a_SOURCES = rpc_utils.c rpc_utils.h
 librpcutils_a_CPPFLAGS = $(AM_CPPFLAGS)
 endif
 
+if HAVE_IPMI
+noinst_LIBRARIES += libipmiutils.a
+
+libipmiutils_a_SOURCES = ipmi_utils.c ipmi_utils.h
+libipmiutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(IPMI_CFLAGS)
+endif
+
 libmonitoringplug_a_SOURCES = mp_common.c mp_common.h \
 							  mp_utils.c mp_utils.h \
 							  mp_args.c mp_args.h \
