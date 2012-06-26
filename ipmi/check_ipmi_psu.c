@@ -24,7 +24,7 @@
  */
 
 const char *progname  = "check_ipmi_psu";
-const char *progdesc  = "Check PSU by IPMI sensor.";
+const char *progdesc  = "Check one or all PSU by IPMI sensor.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2012";
 const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
@@ -41,10 +41,15 @@ const char *progusage = "";
 #include <unistd.h>
 #include <string.h>
 
+/* Global Vars */
+char *psu  = NULL;
+
 int main (int argc, char **argv) {
     /* Local Vars */
     int state = STATE_OK;
     int i=0;
+    int added=0;
+    int entity=0;
     struct mp_ipmi_sensor_list *s = NULL;
     char *psu_critical = NULL;
     char *redundancy = NULL;
@@ -66,6 +71,16 @@ int main (int argc, char **argv) {
     buf = mp_malloc(32);
 
     for (s=mp_ipmi_sensors; s; s=s->next) {
+        entity = ipmi_sensor_get_entity_id(s->sensor);
+        if (entity != IPMI_ENTITY_ID_POWER_SUPPLY &&
+                entity != IPMI_ENTITY_ID_POWER_MANAGEMENT_BOARD) {
+            continue;
+        }
+        added = 0;
+
+        // Skip other PSUs
+        if(psu && strncmp(psu, s->name, strlen(psu)) != 0)
+            continue;
 
         if (ipmi_sensor_get_sensor_type(s->sensor) == IPMI_SENSOR_TYPE_POWER_SUPPLY) {
             if (mp_verbose > 0) {
@@ -75,13 +90,23 @@ int main (int argc, char **argv) {
                         printf(" %d: %s\n", i, ipmi_sensor_reading_name_string(s->sensor, i));
                 }
             }
+            // Check Missing PSU
             if (!ipmi_is_state_set(s->states, 0)) {
                 state = STATE_CRITICAL;
                 mp_strcat_comma(&psu_critical, s->name);
-                for (i=1; i< 16; i++)
-                    if (ipmi_is_state_set(s->states, i))
-                        mp_strcat_space(&psu_critical,
-                                (char *)ipmi_sensor_reading_name_string(s->sensor, i));
+                mp_strcat_space(&psu_critical, "not present");
+                added = 1;
+            }
+            // Check mallfunctions
+            for (i=1; i<16; i++) {
+                if (ipmi_is_state_set(s->states, i)) {
+                    state = STATE_CRITICAL;
+                    if (added == 0)
+                        mp_strcat_comma(&psu_critical, s->name);
+                    mp_strcat_space(&psu_critical,
+                            (char *)ipmi_sensor_reading_name_string(s->sensor, i));
+                    added = 1;
+                }
             }
         }
         if (ipmi_sensor_get_sensor_type(s->sensor) == IPMI_SENSOR_TYPE_POWER_UNIT &&
@@ -90,23 +115,40 @@ int main (int argc, char **argv) {
                 redundancy = (char *)ipmi_sensor_reading_name_string(s->sensor, i);
             } else {
                 state = STATE_CRITICAL;
-                for (i=1; i< 16; i++) {
+                for (i=1; i<16; i++) {
                     if (ipmi_is_state_set(s->states, i)) {
                         redundancy = (char *)ipmi_sensor_reading_name_string(s->sensor, i);
                         break;
                     }
                 }
+                if(!redundancy)
+                    redundancy = "non-redundant";
             }
 
             if (mp_verbose > 0) {
                 printf("%s:\n", s->name);
-                for (i=0; i< 16; i++) {
+                for (i=0; i<16; i++) {
                     if (ipmi_is_state_set(s->states, i)) 
                         printf(" %d: %s\n", i, ipmi_sensor_reading_name_string(s->sensor, i));
                 }
             }
         }
 
+        // Add perfdata if needed
+        if (!mp_showperfdata)
+            continue;
+
+        if (ipmi_sensor_get_base_unit(s->sensor) == IPMI_UNIT_TYPE_WATTS) {
+            mp_perfdata_float(s->name, s->value,
+                    ipmi_sensor_get_base_unit_string(s->sensor),
+                    s->sensorThresholds);
+        }
+
+        if (ipmi_sensor_get_sensor_type(s->sensor) == IPMI_SENSOR_TYPE_TEMPERATURE) {
+            mp_perfdata_float(s->name, s->value,
+                    ipmi_sensor_get_base_unit_string(s->sensor),
+                    s->sensorThresholds);
+        }
     }
 
     free(buf);
@@ -135,11 +177,12 @@ int process_arguments (int argc, char **argv) {
     static struct option longopts[] = {
             MP_LONGOPTS_DEFAULT,
             MP_LONGOPTS_TIMEOUT,
+            {"psu", required_argument, NULL, (int)'P'},
             MP_LONGOPTS_END
     };
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"t:S:", longopts, &option);
+        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"t:P:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -148,6 +191,8 @@ int process_arguments (int argc, char **argv) {
             /* Default opts */
             MP_GETOPTS_DEFAULT
             /* Plugin opt */
+            case 'P':
+                psu = optarg;
             /* Timeout opt */
             case 't':
                 getopt_timeout(optarg);
@@ -172,6 +217,9 @@ void print_help (void) {
     print_usage();
 
     print_help_default();
+
+    printf(" -P, --psu=[PSUNAME]\n");
+    printf("      Name of a PSU to check.\n");
 
 }
 

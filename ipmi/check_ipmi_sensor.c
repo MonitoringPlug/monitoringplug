@@ -70,7 +70,7 @@ int main (int argc, char **argv) {
     mp_ipmi_init();
 
     char *buf;
-    buf = mp_malloc(32);
+    buf = mp_malloc(63);
 
     for (i=0; i<sensors; i++) {
         for (s=mp_ipmi_sensors; s; s=s->next) {
@@ -87,8 +87,9 @@ int main (int argc, char **argv) {
             if (lstate > state)
                 state = lstate;
 
-            mp_snprintf(buf, 31, "%s %.2f%s", s->name, s->value,
-                    ipmi_sensor_get_base_unit_string(s->sensor));
+            mp_snprintf(buf, 63, "%s %.2f%s", s->name, s->value,
+                    ipmi_sensor_get_base_unit(s->sensor) ? 
+                    ipmi_sensor_get_base_unit_string(s->sensor) : "");
             if (lstate == STATE_OK)
                 mp_strcat_comma(&sensor_ok, buf);
             else if (lstate == STATE_WARNING)
@@ -119,8 +120,9 @@ int main (int argc, char **argv) {
             if (lstate > state)
                 state = lstate;
 
-            mp_snprintf(buf, 31, "%s %.2f%s", s->name, s->value,
-                    ipmi_sensor_get_base_unit_string(s->sensor));
+            mp_snprintf(buf, 63, "%s %.2f%s", s->name, s->value,
+                    ipmi_sensor_get_base_unit(s->sensor) ?
+                    ipmi_sensor_get_base_unit_string(s->sensor) : "");
             if (lstate == STATE_OK)
                 mp_strcat_comma(&sensor_ok, buf);
             else if (lstate == STATE_WARNING)

@@ -221,6 +221,7 @@ static void mp_ipmi_sensor_change(enum ipmi_update_e op, ipmi_entity_t *ent,
 
     len = ipmi_sensor_get_id_length(sensor);
     name = mp_malloc(len+1);
+    memset(name, 0, len+1);
     ipmi_sensor_get_id(sensor, name, len);
 
     if (mp_verbose > 3)
@@ -235,7 +236,7 @@ static void mp_ipmi_sensor_change(enum ipmi_update_e op, ipmi_entity_t *ent,
     }
 
     s = mp_malloc(sizeof(struct mp_ipmi_sensor_list));
-    memset (s, 0, sizeof(struct mp_ipmi_sensor_list));
+    memset(s, 0, sizeof(struct mp_ipmi_sensor_list));
     s->name = name;
     s->sensor = sensor;
     s->next = mp_ipmi_sensors;
