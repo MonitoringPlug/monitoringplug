@@ -1,6 +1,6 @@
 Name:           monitoringplug
-Version:        0.10
-Release:        1%{?dist}
+Version:        0.11
+Release:        a1%{?dist}
 Summary:        Collection of monitoring plugins for Nagios
 
 Group:          Applications/System
@@ -434,10 +434,13 @@ fi
 %{_mandir}/man1/check_koji_*
 
 %changelog
+* Thu Jun 26 2012 Marius Rieder <marius.rieder@durchmesser.ch> - 0.11-1
+- Added IPMI checks with OpenIPMI
+
 * Thu Jun 21 2012 Marius Rieder <marius.rieder@durchmesser.ch> - 0.10-1
 - new check_dhcp
 - added Fedora 17 support
--updated autoconf/automake
+- updated autoconf/automake
 
 * Fri May 11 2012 Marius Rieder <marius.rieder@durchmesser.ch> - 0.9-1
 - version bump

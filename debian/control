@@ -16,7 +16,8 @@ Build-Depends: debhelper (>= 7.0.50~),
                libsmbclient-dev,
                libexpat1-dev,
                libldns-dev,
-               libmysqlclient-dev
+               libmysqlclient-dev,
+	       libopenipmi-dev
 Standards-Version: 3.9.1
 Homepage: http://svn.durchmesser.ch/trac/monitoringplug/
 
@@ -38,9 +39,7 @@ Description: Collection of basic monitoring plugins for Nagios.
   check_sockets, check_dummy_mp, check_timeout
  .
  This package provides a basic set of plugins with minimal external
- dependencies. It is not likely to be useful by itself unless you are
- using a remote "satellite" system (using nagios-nrpe-server, check_by_ssh or
- nsca, for example).
+ dependencies.
 
 Package: monitoringplug-cups
 Architecture: any
@@ -52,9 +51,7 @@ Description: Collection of CUPS monitoring plugins for Nagios.
   check_cups_jobs
  .
  This package provides a basic set of plugins with libcups as
- dependency. It is not likely to be useful by itself unless you are
- using a remote "satellite" system (using nagios-nrpe-server, check_by_ssh or
- nsca, for example).
+ dependency.
 
 Package: monitoringplug-curl
 Architecture: any
@@ -67,9 +64,7 @@ Description: Collection of libcurl monitoring plugins for Nagios.
   check_webdav
  .
  This package provides a basic set of plugins with libcurl as
- dependency. It is not likely to be useful by itself unless you are
- using a remote "satellite" system (using nagios-nrpe-server, check_by_ssh or
- nsca, for example).
+ dependency.
 
 Package: monitoringplug-dns
 Architecture: any
@@ -82,9 +77,7 @@ Description: Collection of DNS monitoring plugins for Nagios.
   check_dns_sync
  .
  This package provides a basic set of plugins with ldns as
- dependency. It is not likely to be useful by itself unless you are
- using a remote "satellite" system (using nagios-nrpe-server, check_by_ssh or
- nsca, for example).
+ dependency.
 
 Package: monitoringplug-gnutls
 Architecture: any
@@ -96,9 +89,19 @@ Description: Collection of GnuTLS monitoring plugins for Nagios.
   check_ssl_cert
  .
  This package provides a basic set of plugins with GnuTLS as
- dependency. It is not likely to be useful by itself unless you are
- using a remote "satellite" system (using nagios-nrpe-server, check_by_ssh or
- nsca, for example).
+ dependency.
+
+Package: monitoringplug-ipmi
+Architecture: any
+Depends: monitoringplug, libopenipmi0, ${shlibs:Depends}, ${misc:Depends}
+Description: Collection of IPMI monitoring plugins for Nagios.
+ Collection of IPMI monitoring plugins for Nagios using OpenIPMI library.
+ It contains the following plugins:
+ .
+  check_ipmi_mem, check_ipmi_psu, check_ipmi_sensor
+ .
+ This package provides a basic set of plugins with OpenIPMI as
+ dependency.
 
 Package: monitoringplug-libvirt
 Architecture: any
@@ -110,9 +113,7 @@ Description: Collection of libvirt monitoring plugins for Nagios.
   check_libvirtd, check_libvirt_domain
  .
  This package provides a basic set of plugins with libvirt as
- dependency. It is not likely to be useful by itself unless you are
- using a remote "satellite" system (using nagios-nrpe-server, check_by_ssh or
- nsca, for example).
+ dependency.
 
 Package: monitoringplug-mysql
 Architecture: any
@@ -124,10 +125,7 @@ Description: Collection of MySQL monitoring plugins for Nagios.
   check_mysql, check_mysql_rows
  .
  This package provides a basic set of plugins with libmysqlclient as
- dependency. It is not likely to be useful by itself unless you are
- using a remote "satellite" system (using nagios-nrpe-server, check_by_ssh or
- nsca, for example).
-
+ dependency.
 
 Package: monitoringplug-rhcs
 Architecture: any
@@ -139,9 +137,7 @@ Description: Collection of RHCS monitoring plugins for Nagios.
   check_clustat, check_rhcsnmp
  .
  This package provides a basic set of plugins with eXpat and net-snmp as
- dependencies. It is not likely to be useful by itself unless you are
- using a remote "satellite" system (using nagios-nrpe-server, check_by_ssh or
- nsca, for example).
+ dependencies.
 
 Package: monitoringplug-rpc
 Architecture: any
@@ -153,9 +149,7 @@ Description: Collection of RPC monitoring plugins for Nagios.
   check_nfs, check_rpc_ping
  .
  This package provides a basic set of plugins with rpcsvc as
- dependency. It is not likely to be useful by itself unless you are
- using a remote "satellite" system (using nagios-nrpe-server, check_by_ssh or
- nsca, for example).
+ dependency.
 
 Package: monitoringplug-selinux
 Architecture: any
@@ -167,9 +161,7 @@ Description: Collection of SELinux monitoring plugins for Nagios.
   check_enforce, check_sebool
  .
  This package provides a basic set of plugins with libselinux as
- dependency. It is not likely to be useful by itself unless you are
- using a remote "satellite" system (using nagios-nrpe-server, check_by_ssh or
- nsca, for example).
+ dependency.
 
 Package: monitoringplug-smb
 Architecture: any
@@ -181,9 +173,7 @@ Description: Collection of SNMP monitoring plugins for Nagios.
   check_smb_share
  .
  This package provides a basic set of plugins with libsmbclient as
- dependency. It is not likely to be useful by itself unless you are
- using a remote "satellite" system (using nagios-nrpe-server, check_by_ssh or
- nsca, for example).
+ dependency.
 
 Package: monitoringplug-snmp
 Architecture: any
@@ -196,9 +186,7 @@ Description: Collection of SNMP monitoring plugins for Nagios.
   check_qnap_vols
  .
  This package provides a basic set of plugins with net-snmp as
- dependency. It is not likely to be useful by itself unless you are
- using a remote "satellite" system (using nagios-nrpe-server, check_by_ssh or
- nsca, for example).
+ dependency.
 
 Package: monitoringplug-xmlrpc
 Architecture: any
@@ -210,6 +198,4 @@ Description: Collection of xmlrpc monitoring plugins for Nagios.
   check_koji_builder, check_koji_hub, check_rhn_entitlements
  .
  This package provides a basic set of plugins with xmlrpc-c as
- dependency. It is not likely to be useful by itself unless you are
- using a remote "satellite" system (using nagios-nrpe-server, check_by_ssh or
- nsca, for example).
+ dependency.
