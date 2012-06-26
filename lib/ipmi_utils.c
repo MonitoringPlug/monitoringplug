@@ -34,24 +34,27 @@ static void mp_ipmi_log(os_handler_t *hnd, const char *format,
         enum ipmi_log_type_e log_type, va_list ap);
 void mp_ipmi_setup_done(ipmi_domain_t *domain, int err, unsigned int conn_num,
         unsigned int port_num, int still_connected, void *user_data);
-void mp_ipmi_domain_up(ipmi_domain_t *domain, void *cb_data);
+void mp_ipmi_domain_up(ipmi_domain_t *domain, void *user_data);
 static void mp_ipmi_entity_change(enum ipmi_update_e op,
-        ipmi_domain_t* domain, ipmi_entity_t *entity, void *cb_data);
+        ipmi_domain_t* domain, ipmi_entity_t *entity, void *user_data);
 static void mp_ipmi_sensor_change(enum ipmi_update_e op, ipmi_entity_t *ent,
-        ipmi_sensor_t *sensor, void *cb_data);
-static void sensor_read_handler (ipmi_sensor_t *sensor, int err,
+        ipmi_sensor_t *sensor, void *user_data);
+static void mp_ipmi_sensor_read_handler (ipmi_sensor_t *sensor, int err,
         enum ipmi_value_present_e value_present,
         unsigned int __attribute__((unused)) raw_value,
         double value, ipmi_states_t __attribute__((unused)) *states,
         void *user_data);
-static void sensor_thresholds_handler(ipmi_sensor_t *sensor, int err,
-        ipmi_thresholds_t *th, void *cb_data);
+static void mp_ipmi_sensor_thresholds_handler(ipmi_sensor_t *sensor, int err,
+        ipmi_thresholds_t *th, void *user_data);
+static void mp_ipmi_sensor_states_handler(ipmi_sensor_t *sensor, int err,
+        ipmi_states_t *states, void *user_data);
 
 /**
  * Global Varables
  */
 int mp_ipmi_init_done = 0;
 int mp_ipmi_entity = IPMI_ENTITY_ID_UNSPECIFIED;
+int mp_ipmi_readingtype = 0;
 int mp_ipmi_open = IPMI_OPEN_OPTION_SDRS;
 struct mp_ipmi_sensor_list *mp_ipmi_sensors = NULL;
 
@@ -163,21 +166,34 @@ void mp_ipmi_setup_done(ipmi_domain_t *domain, int err, unsigned int conn_num,
         unknown("ipmi_domain_add_entity_update_handler return error: %", rv);
 }
 
-void mp_ipmi_domain_up(ipmi_domain_t *domain, void *cb_data) {
+void mp_ipmi_domain_up(ipmi_domain_t *domain, void *user_data) {
+    struct mp_ipmi_sensor_list *s, *n;
+
     if (mp_verbose > 1)
         printf("OpenIPMI Domain Up.\n");
-     mp_ipmi_init_done = 1;
      mp_ipmi_dom = domain;
+
+     // Clean empty sensors
+     for (s=mp_ipmi_sensors; s; s=s->next) {
+         while (s->next && !s->next->name) {
+             n = s->next->next;
+             free_threshold(s->next->sensorThresholds);
+             free(s->next);
+             s->next = n;
+         }
+     }
+
+     mp_ipmi_init_done = 1;
 }
 
 static void mp_ipmi_entity_change(enum ipmi_update_e op, ipmi_domain_t *domain,
-        ipmi_entity_t *entity, void *cb_data) {
+        ipmi_entity_t *entity, void *user_data) {
     int id, rv;
 
     id = ipmi_entity_get_entity_id(entity);
 
-    if (mp_verbose > 1)
-        printf("OpenIPMI Entity Change: %s\n", ipmi_get_entity_id_string(id));
+    if (mp_verbose > 3)
+        printf("[Entity Change: %s]\n", ipmi_get_entity_id_string(id));
 
     if (mp_ipmi_entity != IPMI_ENTITY_ID_UNSPECIFIED && mp_ipmi_entity != id)
         return;
@@ -190,28 +206,48 @@ static void mp_ipmi_entity_change(enum ipmi_update_e op, ipmi_domain_t *domain,
 }
 
 static void mp_ipmi_sensor_change(enum ipmi_update_e op, ipmi_entity_t *ent,
-        ipmi_sensor_t *sensor, void *cb_data) {
+        ipmi_sensor_t *sensor, void *user_data) {
     char *name;
     int len;
+    int type;
     struct mp_ipmi_sensor_list *s;
-    ipmi_sensor_id_t sid;
 
     len = ipmi_sensor_get_id_length(sensor);
     name = mp_malloc(len+1);
     ipmi_sensor_get_id(sensor, name, len);
 
+    if (mp_verbose > 3)
+        printf("[Sensor Change %s '%s' '%s:%s']\n", ipmi_update_e_string(op),
+                ipmi_sensor_get_event_reading_type_string(sensor),
+                ipmi_get_entity_id_string(ipmi_entity_get_entity_id(ent)),
+                name);
+
+    if (op != IPMI_ADDED || ipmi_sensor_get_is_readable(sensor) == 0) {
+        free(name);
+        return;
+    }
+
     s = mp_malloc(sizeof(struct mp_ipmi_sensor_list));
     memset (s, 0, sizeof(struct mp_ipmi_sensor_list));
     s->name = name;
+    s->sensor = sensor;
     s->next = mp_ipmi_sensors;
     mp_ipmi_sensors = s;
 
-    sid = ipmi_sensor_convert_to_id(sensor);
-    ipmi_sensor_id_get_reading(sid, sensor_read_handler, s);
-    ipmi_sensor_id_get_thresholds(sid,sensor_thresholds_handler, s);
+    type = ipmi_sensor_get_event_reading_type(sensor);
+
+    if (mp_ipmi_readingtype && type != mp_ipmi_readingtype)
+        return;
+
+    if (type == IPMI_EVENT_READING_TYPE_THRESHOLD) {
+        ipmi_sensor_get_reading(sensor, mp_ipmi_sensor_read_handler, s);
+        ipmi_sensor_get_thresholds(sensor, mp_ipmi_sensor_thresholds_handler, s);
+    } else {
+        ipmi_sensor_get_states(sensor, mp_ipmi_sensor_states_handler, s);
+    }
 }
 
-static void sensor_read_handler (ipmi_sensor_t *sensor, int err,
+static void mp_ipmi_sensor_read_handler (ipmi_sensor_t *sensor, int err,
         enum ipmi_value_present_e value_present,
         unsigned int __attribute__((unused)) raw_value,
         double value, ipmi_states_t __attribute__((unused)) *states,
@@ -219,16 +255,38 @@ static void sensor_read_handler (ipmi_sensor_t *sensor, int err,
     struct mp_ipmi_sensor_list *s;
     s = (struct mp_ipmi_sensor_list *) user_data;
 
+    if (mp_verbose > 3) {
+        if (value_present == IPMI_NO_VALUES_PRESENT)
+            printf("[Sensor Read None %s]\n", s->name);
+        else if (value_present == IPMI_RAW_VALUE_PRESENT)
+            printf("[Sensor Read Raw %s %d]\n", s->name, raw_value);
+        else if (value_present == IPMI_BOTH_VALUES_PRESENT)
+            printf("[Sensor Read %s %f]\n", s->name, value);
+    }
+
+    if (value_present == IPMI_NO_VALUES_PRESENT) {
+        free(s->name);
+        s->name = NULL;
+        return;
+    }
+
     s->value = value;
 }
 
-static void sensor_thresholds_handler(ipmi_sensor_t *sensor, int err,
+static void mp_ipmi_sensor_thresholds_handler(ipmi_sensor_t *sensor, int err,
         ipmi_thresholds_t *th, void *user_data) {
     struct mp_ipmi_sensor_list *s;
     double val;
     int rv;
 
     s = (struct mp_ipmi_sensor_list *) user_data;
+
+    if (mp_verbose > 3)
+        printf("[Sensor Thresholds %s]\n", s->name);
+
+    if (err != 0)
+        return;
+
     setWarn(&s->sensorThresholds, "~:", -1);
     setCrit(&s->sensorThresholds, "~:", -1);
 
@@ -258,6 +316,26 @@ static void sensor_thresholds_handler(ipmi_sensor_t *sensor, int err,
 
     if (mp_verbose > 3)
         print_thresholds(s->name, s->sensorThresholds);
+}
+
+static void mp_ipmi_sensor_states_handler(ipmi_sensor_t *sensor, int err,
+        ipmi_states_t *states, void *user_data) {
+    struct mp_ipmi_sensor_list *s;
+
+    s = (struct mp_ipmi_sensor_list *) user_data;
+
+    if (mp_verbose > 3) {
+        printf("[Sensor States %s]\n", s->name);
+        int i;
+        for (i=0; i< 16; i++)
+            if (ipmi_is_state_set(states, i))
+                printf(" %s\n", ipmi_sensor_reading_name_string(sensor, i));
+    }
+
+    if (err != 0)
+        return;
+
+    s->states = states;
 }
 
 

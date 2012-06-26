@@ -67,7 +67,11 @@ int main (int argc, char **argv) {
     /* Start plugin timeout */
     alarm(mp_timeout);
 
+    mp_ipmi_readingtype = IPMI_EVENT_READING_TYPE_THRESHOLD;
     mp_ipmi_init();
+
+    char *buf;
+    buf = mp_malloc(32);
 
     for (i=0; i<sensors; i++) {
         for (s=mp_ipmi_sensors; s; s=s->next) {
@@ -76,15 +80,22 @@ int main (int argc, char **argv) {
             if (mp_verbose > 0)
                 printf("%s: %f\n", s->name, s->value);
 
+            mp_perfdata_float(s->name, s->value,
+                    ipmi_sensor_get_base_unit_string(s->sensor),
+                    s->sensorThresholds);
+
             lstate = get_status(s->value, s->sensorThresholds);
             if (lstate > state)
                 state = lstate;
+
+            mp_snprintf(buf, 31, "%s %.2f%s", s->name, s->value,
+                    ipmi_sensor_get_base_unit_string(s->sensor));
             if (lstate == STATE_OK)
-                mp_strcat_comma(&sensor_ok, s->name);
+                mp_strcat_comma(&sensor_ok, buf);
             else if (lstate == STATE_WARNING)
-                mp_strcat_comma(&sensor_warning, s->name);
+                mp_strcat_comma(&sensor_warning, buf);
             else
-                mp_strcat_comma(&sensor_critical, s->name);
+                mp_strcat_comma(&sensor_critical, buf);
             break;
         }
         if (!s) {
@@ -92,6 +103,35 @@ int main (int argc, char **argv) {
             mp_strcat_comma(&sensor_critical, sensor[i]);
         }
     }
+
+    if (sensors == 0) {
+        for (s=mp_ipmi_sensors; s; s=s->next) {
+            if (ipmi_sensor_get_event_reading_type(s->sensor) != IPMI_EVENT_READING_TYPE_THRESHOLD)
+                continue;
+
+            if (mp_verbose > 0)
+                printf("%s: %f\n", s->name, s->value);
+
+            mp_perfdata_float(s->name, s->value,
+                    ipmi_sensor_get_base_unit_string(s->sensor),
+                    s->sensorThresholds);
+
+            lstate = get_status(s->value, s->sensorThresholds);
+            if (lstate > state)
+                state = lstate;
+
+            mp_snprintf(buf, 31, "%s %.2f%s", s->name, s->value,
+                    ipmi_sensor_get_base_unit_string(s->sensor));
+            if (lstate == STATE_OK)
+                mp_strcat_comma(&sensor_ok, buf);
+            else if (lstate == STATE_WARNING)
+                mp_strcat_comma(&sensor_warning, buf);
+            else
+                mp_strcat_comma(&sensor_critical, buf);
+        }
+    }
+
+    free(buf);
 
     mp_ipmi_deinit();
 
@@ -113,12 +153,6 @@ int process_arguments (int argc, char **argv) {
             MP_LONGOPTS_TIMEOUT,
             MP_LONGOPTS_END
     };
-
-//    if (argc < 3) {
-//       print_help();
-//       exit(STATE_OK);
-//    }
-
 
     while (1) {
         c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"t:S:", longopts, &option);

@@ -31,15 +31,18 @@
 #include <OpenIPMI/ipmi_posix.h>
 
 extern int mp_ipmi_entity;
+extern int mp_ipmi_readingtype;
 extern int mp_ipmi_open;
 
 struct mp_ipmi_sensor_list {
-    /** Sensors Entety */
-    int entID;
+    /** Sendor */
+    ipmi_sensor_t *sensor;
     /** Senor Name */
     char *name;
     /** Sensor value */
     double value;
+    /** Sensor states */
+    ipmi_states_t *states;
     /** Sendor thresholds */
     thresholds *sensorThresholds;
     /** Next Sensor */
@@ -65,11 +68,6 @@ void mp_ipmi_init(void);
  * Cleanup the OpenIPMI library.
  */
 void mp_ipmi_deinit();
-
-/**
- * Read the SDR.
- */
-struct mp_ipmi_sensor_list *mp_ipmi_sensor(int entityId, int sensorType, char *sensorName);
 
 /**
  * Print the OpenIPMI library revision.
