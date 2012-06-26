@@ -26,6 +26,8 @@
 
 #include <string.h>
 #include <OpenIPMI/ipmi_smi.h>
+#include <OpenIPMI/ipmi_lan.h>
+#include <OpenIPMI/ipmi_auth.h>
 
 /**
  * Privat function
@@ -52,11 +54,16 @@ static void mp_ipmi_sensor_states_handler(ipmi_sensor_t *sensor, int err,
 /**
  * Global Varables
  */
+extern char* hostname;
+extern char* port;
 int mp_ipmi_init_done = 0;
 int mp_ipmi_entity = IPMI_ENTITY_ID_UNSPECIFIED;
 int mp_ipmi_readingtype = 0;
 int mp_ipmi_open = IPMI_OPEN_OPTION_SDRS;
 struct mp_ipmi_sensor_list *mp_ipmi_sensors = NULL;
+char *mp_ipmi_username;
+char *mp_ipmi_password;
+int mp_ipmi_smi=-1;
 
 void mp_ipmi_init(void) {
     int rv;
@@ -77,7 +84,15 @@ void mp_ipmi_init(void) {
 
     if (mp_verbose > 1)
         printf("Connect OpenIPMI.\n");
-    rv = ipmi_smi_setup_con(0, mp_ipmi_hnd, NULL, &mp_ipmi_con);
+    if (hostname) {
+        rv = ipmi_ip_setup_con(&hostname, &port, 1,
+                IPMI_AUTHTYPE_DEFAULT, IPMI_PRIVILEGE_ADMIN,
+                mp_ipmi_username, strlen(mp_ipmi_username),
+                mp_ipmi_password, strlen(mp_ipmi_password),
+                mp_ipmi_hnd, NULL, &mp_ipmi_con);
+    } else {
+        rv = ipmi_smi_setup_con(0, mp_ipmi_hnd, NULL, &mp_ipmi_con);
+    }
 
     if (rv)
         unknown("Can't setup OpenIPMI connection: %s", strerror(rv));
@@ -112,10 +127,36 @@ void mp_ipmi_deinit(void) {
     mp_ipmi_hnd->free_os_handler(mp_ipmi_hnd);
 }
 
+void getopt_ipmi(int c) {
+    switch ( c ) {
+        case 'u':
+            mp_ipmi_username = optarg;
+            break;
+        case 'p':
+            mp_ipmi_password = optarg;
+            break;
+        case MP_LONGOPT_PRIV0:
+            mp_ipmi_smi = (int) strtol(optarg, NULL, 10);
+            break;
+    }
+}
+
+void print_help_ipmi(void) {
+    print_help_host();
+    print_help_port("Default to 623");
+    printf(" -u, --username=USERNAME\n");
+    printf("      User name for IPMI lan connect.\n");
+    printf(" -p, --password=PASSWORD\n");
+    printf("      Authentication password.\n");
+    printf("     --smi=INDEX\n");
+    printf("      SMI to connect to. (Default to 0)\n");
+}
+
 void print_revision_ipmi(void) {
     printf(" OpenIPMI v%s\n", ipmi_openipmi_version());
 }
 
+// Private Functions
 static void mp_ipmi_log(os_handler_t *hnd, const char *format,
                 enum ipmi_log_type_e log_type, va_list ap) {
     int nl = 1;
@@ -345,7 +386,5 @@ static void mp_ipmi_sensor_states_handler(ipmi_sensor_t *sensor, int err,
 
     s->states = states;
 }
-
-
 
 /* vim: set ts=4 sw=4 et syn=c : */

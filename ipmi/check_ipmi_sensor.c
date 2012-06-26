@@ -42,8 +42,10 @@ const char *progusage = "[-S <SENSOR[,SENSOR]>]";
 #include <string.h>
 
 /* Global Vars */
-char **sensor  = NULL;
-int sensors = 0;
+const char  *hostname = NULL;
+const char  *port = "623";
+char        **sensor  = NULL;
+int         sensors = 0;
 
 int main (int argc, char **argv) {
     /* Local Vars */
@@ -150,20 +152,33 @@ int process_arguments (int argc, char **argv) {
 
     static struct option longopts[] = {
             MP_LONGOPTS_DEFAULT,
+            MP_LONGOPTS_HOST,
+            MP_LONGOPTS_PORT,
+            IPMI_LONGOPTS,
             {"sensor", required_argument, NULL, (int)'S'},
             MP_LONGOPTS_TIMEOUT,
             MP_LONGOPTS_END
     };
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"t:S:", longopts, &option);
+        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"t:S:H:P:"IPMI_OPTSTR, longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
 
+        getopt_ipmi(c);
+
         switch (c) {
             /* Default opts */
             MP_GETOPTS_DEFAULT
+            /* Hostname opt */
+            case 'H': 
+                getopt_host(optarg, &hostname);
+                break;
+            /* Port opt */
+            case 'P': 
+                port = optarg;
+                break;
             /* Plugin opt */
             case 'S':
                 mp_array_push(&sensor, optarg, &sensors);
@@ -174,6 +189,12 @@ int process_arguments (int argc, char **argv) {
                 break;
         }
     }
+
+    /* Check */
+    if (hostname && mp_ipmi_smi != -1)
+        usage("hostname and smi can not be used together.");
+    if (mp_ipmi_smi == -1)
+        mp_ipmi_smi = 0;
 
     return(OK);
 }
@@ -192,6 +213,8 @@ void print_help (void) {
     print_usage();
 
     print_help_default();
+
+    print_help_ipmi();
 
     printf(" -S, --sensor=[SENSOR]\n");
     printf("      Name of a Sensor to check, can be repeated.\n");

@@ -33,6 +33,14 @@
 extern int mp_ipmi_entity;
 extern int mp_ipmi_readingtype;
 extern int mp_ipmi_open;
+extern char *mp_ipmi_username;
+extern char *mp_ipmi_password;
+extern int mp_ipmi_smi;
+
+#define IPMI_OPTSTR "u:p:"
+#define IPMI_LONGOPTS {"username", required_argument, NULL, (int)'u'}, \
+                      {"password", required_argument, NULL, (int)'p'}, \
+                      {"smi", required_argument, NULL, (int)MP_LONGOPT_PRIV0}
 
 struct mp_ipmi_sensor_list {
     /** Sendor */
@@ -68,6 +76,17 @@ void mp_ipmi_init(void);
  * Cleanup the OpenIPMI library.
  */
 void mp_ipmi_deinit();
+
+/**
+ * Handle IPMI related command line options.
+ * \param[in] c Command line option to handle.
+ */
+void getopt_ipmi(int c);
+
+/**
+ * Print the help for the IPMI related command line options.
+ */
+void print_help_ipmi(void);
 
 /**
  * Print the OpenIPMI library revision.

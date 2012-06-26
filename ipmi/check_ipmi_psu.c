@@ -42,6 +42,8 @@ const char *progusage = "";
 #include <string.h>
 
 /* Global Vars */
+const char  *hostname = NULL;
+const char  *port = "623";
 char *psu  = NULL;
 
 int main (int argc, char **argv) {
@@ -176,29 +178,49 @@ int process_arguments (int argc, char **argv) {
 
     static struct option longopts[] = {
             MP_LONGOPTS_DEFAULT,
+            MP_LONGOPTS_HOST,
+            MP_LONGOPTS_PORT,
+            IPMI_LONGOPTS,
+            {"psu", required_argument, NULL, (int)MP_LONGOPT_PRIV1}, 
             MP_LONGOPTS_TIMEOUT,
-            {"psu", required_argument, NULL, (int)'P'},
             MP_LONGOPTS_END
     };
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"t:P:", longopts, &option);
+        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"t:H:P:"IPMI_OPTSTR, longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
 
+        getopt_ipmi(c);
+
         switch (c) {
             /* Default opts */
             MP_GETOPTS_DEFAULT
-            /* Plugin opt */
+            /* Hostname opt */
+            case 'H':
+                getopt_host(optarg, &hostname);
+                break;
+            /* Port opt */
             case 'P':
+                port = optarg;
+                break;
+            /* Plugin opt */
+            case MP_LONGOPT_PRIV1:
                 psu = optarg;
+                break;
             /* Timeout opt */
             case 't':
                 getopt_timeout(optarg);
                 break;
         }
     }
+
+    /* Check */
+    if (hostname && mp_ipmi_smi != -1)
+        usage("hostname and smi can not be used together.");
+    if (mp_ipmi_smi == -1)
+        mp_ipmi_smi = 0;
 
     return(OK);
 }
@@ -218,7 +240,9 @@ void print_help (void) {
 
     print_help_default();
 
-    printf(" -P, --psu=[PSUNAME]\n");
+    print_help_ipmi();
+
+    printf("     --psu=[PSUNAME]\n");
     printf("      Name of a PSU to check.\n");
 
 }
