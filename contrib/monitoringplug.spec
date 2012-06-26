@@ -17,6 +17,7 @@ BuildRequires:  mysql-devel
 BuildRequires:  net-snmp-devel
 BuildRequires:  xmlrpc-c-devel
 BuildRequires:  selinux-policy-devel
+BuildRequires:	OpenIPMI-devel
 
 %if 0%{?rhel} == 5
 BuildRequires:  curl-devel
@@ -74,7 +75,15 @@ Summary:        Collection of dns monitoring plugins for Nagios
 Group:          Applications/System
 Requires:       gnutls
 Requires:       monitoringplug
+%endif
 
+%package ipmi
+Summary:        Collection of IPMI monitoring plugins for Nagios
+Group:          Applications/System
+Requires:       OpenIPMI-libs
+Requires:       monitoringplug
+
+%if 0%{?rhel} != 5
 %package libvirt
 Summary:        Collection of libvirt monitoring plugins for Nagios
 Group:          Applications/System
@@ -156,7 +165,13 @@ This package contains the dns plugins which use the ldns library.
 %description gnutls
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the plugins which use the gnutls library.
+%endif
 
+%description ipmi
+Collection of monitoring plugins for Nagios and similar monitoring systems.
+This package contains the plugins which use the OpenIPMI library.
+
+%if 0%{?rhel} != 5
 %description libvirt
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the libvirt based plugins.
@@ -250,7 +265,12 @@ fi
 %if 0%{?rhel} != 5
 %post gnutls
 /sbin/fixfiles -F -R monitoringplug-gnutls restore ||:
+%endif
 
+%post ipmi
+/sbin/fixfiles -F -R monitoringplug-ipmi restore ||:
+
+%if 0%{?rhel} != 5
 %post libvirt
 /sbin/fixfiles -F -R monitoringplug-libvirt restore ||:
 %endif
@@ -344,7 +364,14 @@ fi
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_ssl_cert
 %{_mandir}/man1/check_ssl_cert.1.gz
+%endif
 
+%files ipmi
+%defattr(4111,root,root,-)
+%{_libdir}/nagios/plugins/check_ipmi_*
+#%{_mandir}/man1/check_ipmi_*
+
+%if 0%{?rhel} != 5
 %files libvirt
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_libvirt*

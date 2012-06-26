@@ -67,6 +67,9 @@ void mp_ipmi_init(void) {
     if (!mp_ipmi_hnd)
         unknown("Can't allocate OpenIPMI OS Handler.");
 
+    /* Override the default log handler. */
+    mp_ipmi_hnd->set_log_handler(mp_ipmi_hnd, mp_ipmi_log);
+
     /* Initialize the OpenIPMI library. */
     if (mp_verbose > 1)
         printf("Init OpenIPMI OS Handler.\n");
@@ -193,7 +196,11 @@ static void mp_ipmi_entity_change(enum ipmi_update_e op, ipmi_domain_t *domain,
     id = ipmi_entity_get_entity_id(entity);
 
     if (mp_verbose > 3)
-        printf("[Entity Change: %s]\n", ipmi_get_entity_id_string(id));
+        printf("[Entity Change: %s %s]\n", ipmi_update_e_string(op),
+                ipmi_get_entity_id_string(id));
+
+    if (op != IPMI_ADDED)
+        return;
 
     if (mp_ipmi_entity != IPMI_ENTITY_ID_UNSPECIFIED && mp_ipmi_entity != id)
         return;

@@ -24,11 +24,11 @@
  */
 
 const char *progname  = "check_ipmi_sensor";
-const char *progdesc  = "Check IPMI sensor.";
+const char *progdesc  = "Check the give or all IPMI Sensors.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2012";
 const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
-const char *progusage = "-S <Sensor>";
+const char *progusage = "[-S <SENSOR[,SENSOR]>]";
 
 /* MP Includes */
 #include "mp_common.h"
@@ -40,7 +40,6 @@ const char *progusage = "-S <Sensor>";
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-/* Library Includes */
 
 /* Global Vars */
 char **sensor  = NULL;
@@ -192,8 +191,8 @@ void print_help (void) {
 
     print_help_default();
 
-    printf(" -s, --sensor=[INDEX]\n");
-    printf("      Index of the sensor to check.\n");
+    printf(" -S, --sensor=[SENSOR]\n");
+    printf("      Name of a Sensor to check, can be repeated.\n");
 
 }
 

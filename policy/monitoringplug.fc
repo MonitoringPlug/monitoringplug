@@ -17,6 +17,8 @@
 /usr/lib(64)?/nagios/plugins/check_dns(sec)?_.*         --      system_u:object_r:nagios_services_plugin_exec_t:s0
 # GNUTLS
 /usr/lib(64)?/nagios/plugins/check_ssl_cert             --      system_u:object_r:nagios_unconfined_plugin_exec_t:s0
+# IPMI
+/usr/lib(64)?/nagios/plugins/check_ipmi_.*              --      system_u:object_r:nagios_unconfined_plugin_exec_t:s0
 # LIBVIRT
 /usr/lib(64)?/nagios/plugins/check_libvirt.*            --      system_u:object_r:nagios_services_plugin_exec_t:s0
 # MySQL
