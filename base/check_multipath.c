@@ -2,7 +2,7 @@
  * Monitoring Plugin - check_multipath.c
  **
  *
- * check_multipath - Check multipath status
+ * check_multipath - Check multipath status.
  *
  * Copyright (C) 2012 Marius Rieder <marius.rieder@durchmesser.ch>
  *

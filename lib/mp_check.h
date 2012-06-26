@@ -62,3 +62,5 @@ int is_url_scheme(const char *url, const char *schema);
 
 #endif /* _MP_CHECK_H_ */
 
+
+/* vim: set ts=4 sw=4 et syn=c : */

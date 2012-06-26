@@ -125,3 +125,5 @@ void mp_perfdata_float3(const char *label, float value, const char *unit,
       int have_min, float min, int have_max, float max);
 
 #endif /* _MP_PERFDATA_H_ */
+
+/* vim: set ts=4 sw=4 et syn=c : */

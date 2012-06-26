@@ -38,3 +38,5 @@ void mp_disconnect(int sd);
 unsigned short int mp_ip_csum(unsigned short int *addr, int len);
 
 #endif /* MP_NET_H_ */
+
+/* vim: set ts=4 sw=4 et syn=c : */

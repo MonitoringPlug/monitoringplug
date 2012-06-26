@@ -78,3 +78,5 @@ double mp_time_delta(struct timeval tv);
 char *mp_human_size(float size);
 
 #endif /* MP_UTILS_H_ */
+
+/* vim: set ts=4 sw=4 et syn=c : */

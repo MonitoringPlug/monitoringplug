@@ -362,3 +362,5 @@ void getopt_46(int c, int *family);
 #define MP_LONGOPTS_END     {0, 0, NULL, 0}
 
 #endif /* _MP_ARGS_H_ */
+
+/* vim: set ts=4 sw=4 et syn=c : */

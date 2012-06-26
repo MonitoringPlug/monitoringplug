@@ -2,7 +2,7 @@
  * Monitoring Plugin - check_akcp.c
  **
  *
- * check_akcp - Check akcp sensor by snmp
+ * check_akcp - Check akcp sensor by snmp.
  *
  * Copyright (C) 2012 Marius Rieder <marius.rieder@durchmesser.ch>
  *

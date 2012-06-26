@@ -2,7 +2,7 @@
  * Monitoring Plugin - check_ipmi_mem.c
  **
  *
- * check_ipmi_sensor - Check Memory status by IPMI.
+ * check_ipmi_mem - Check Memory status by IPMI.
  *
  * Copyright (C) 2012 Marius Rieder <marius.rieder@durchmesser.ch>
  *

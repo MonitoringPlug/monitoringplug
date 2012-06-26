@@ -59,3 +59,5 @@ void print_help_virt(void);
 void print_revision_virt(void);
 
 #endif /* VIRT_UTILS_H_ */
+
+/* vim: set ts=4 sw=4 et syn=c : */

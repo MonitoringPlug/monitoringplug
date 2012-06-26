@@ -36,3 +36,5 @@ xmlrpc_env mp_xmlrpc_init(void);
 void unknown_if_xmlrpc_fault(xmlrpc_env *env);
 
 #endif /* XMLRPC_UTILS_H_ */
+
+/* vim: set ts=4 sw=4 et syn=c : */

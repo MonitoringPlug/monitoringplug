@@ -35,3 +35,5 @@ void print_help_eopt(void);
 #define MP_LONGOPTS_EOPT {"eopt", optional_argument, NULL, (int)MP_LONGOPT_EOPT}
 
 #endif /* MP_EOPT_H_ */
+
+/* vim: set ts=4 sw=4 et syn=c : */

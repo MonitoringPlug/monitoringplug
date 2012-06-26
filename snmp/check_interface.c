@@ -2,7 +2,7 @@
  * Monitoring Plugin - check_interface.c
  **
  *
- * check_interface - Check interface status by SNMP IF-MIB
+ * check_interface - Check interface status by SNMP IF-MIB.
  *
  * Copyright (C) 2012 Marius Rieder <marius.rieder@durchmesser.ch>
  *

@@ -109,3 +109,5 @@ void rhcs_conf_stopElement(void *conf, const char *name);
 
 
 #endif /* RHCS_UTILS_H_ */
+
+/* vim: set ts=4 sw=4 et syn=c : */

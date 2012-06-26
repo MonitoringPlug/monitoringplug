@@ -126,3 +126,5 @@ void print_help_snmp(void);
 void print_revision_snmp(void);
 
 #endif /* _SNMP_UTILS_H_ */
+
+/* vim: set ts=4 sw=4 et syn=c : */

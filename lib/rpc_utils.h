@@ -37,3 +37,5 @@ bool_t mp_xdr_exports(XDR *xdrs, exports *export);
 
 
 #endif /* RPC_UTILS_H_ */
+
+/* vim: set ts=4 sw=4 et syn=c : */

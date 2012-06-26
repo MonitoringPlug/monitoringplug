@@ -2,7 +2,7 @@
  * Monitoring Plugin - check_dhcp.c
  **
  *
- * check_dhcp - Check dhcp server
+ * check_dhcp - Check dhcp server.
  *
  * Copyright (C) 2012 Marius Rieder <marius.rieder@durchmesser.ch>
  *

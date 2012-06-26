@@ -2,7 +2,7 @@
  * Monitoring Plugin - check_ipmi_psu.c
  **
  *
- * check_ipmi_sensor - Check PSU by IPMI sensor.
+ * check_ipmi_psu - Check one or all PSU by IPMI sensor.
  *
  * Copyright (C) 2012 Marius Rieder <marius.rieder@durchmesser.ch>
  *

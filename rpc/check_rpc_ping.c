@@ -2,7 +2,7 @@
  * Monitoring Plugin - check_rpc_ping.c
  **
  *
- * check_rpc_ping - Check if named RPC program is responding.
+ * check_rpc_ping - Check if named RPC programm is responding.
  *
  * Copyright (C) 2012 Marius Rieder <marius.rieder@durchmesser.ch>
  *

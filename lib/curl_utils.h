@@ -74,3 +74,5 @@ size_t mp_curl_send_data(void *ptr, size_t size, size_t nmemb, void *userdata);
 void print_revision_curl(void);
 
 #endif /* _CURL_UTILS_H_ */
+
+/* vim: set ts=4 sw=4 et syn=c : */

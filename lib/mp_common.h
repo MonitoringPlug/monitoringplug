@@ -140,3 +140,5 @@ void timeout_alarm_handler(int signo);
 void mp_noneroot_die(void);
 
 #endif /* _MP_COMMON_H_ */
+
+/* vim: set ts=4 sw=4 et syn=c : */

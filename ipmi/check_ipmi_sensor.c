@@ -2,7 +2,7 @@
  * Monitoring Plugin - check_ipmi_sensor.c
  **
  *
- * check_ipmi_sensor - Check IPMI sensor.
+ * check_ipmi_sensor - Check the give or all IPMI Sensors.
  *
  * Copyright (C) 2012 Marius Rieder <marius.rieder@durchmesser.ch>
  *

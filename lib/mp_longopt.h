@@ -37,3 +37,5 @@
 #define MP_LONGOPT_PRIV7        0x0097
 
 #endif /* MP_LONGOPT_H_ */
+
+/* vim: set ts=4 sw=4 et syn=c : */
