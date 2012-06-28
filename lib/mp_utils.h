@@ -38,6 +38,11 @@ int mp_sprintf(char *s, const char *format, ...);
 int mp_snprintf(char *s, size_t n, const char *format, ...);
 
 /**
+ * Call asprintf, call critical if faild.
+ */
+int mp_asprintf(char **retp, const char *format, ...);
+
+/**
  * Call malloc, call critical if faild.
  */
 void *mp_malloc(size_t size);
@@ -51,6 +56,11 @@ void *mp_calloc(size_t nmemb, size_t size);
  * Call realloc, call critical if faild.
  */
 void *mp_realloc(void *ptr, size_t size);
+
+/**
+ * concat strings.
+ */
+void mp_strcat(char **target, char *source);
 
 /**
  * concat strings with a separating space.

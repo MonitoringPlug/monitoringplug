@@ -196,6 +196,13 @@ int get_status(double value, thresholds *my_thresholds);
 void print_thresholds(const char *threshold_name, thresholds *my_threshold);
 
 /**
+ * Return a range string,
+ * \param[in] my_range Range return string for.
+ * \return string representing range.
+ */
+char *str_range(range *my_range);
+
+/**
  * Prints the help message for the defaults options.
  */
 void print_help_default(void);

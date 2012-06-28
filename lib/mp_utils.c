@@ -53,6 +53,28 @@ int mp_snprintf(char *s, size_t n, const char *format, ...) {
     return len;
 }
 
+int mp_asprintf(char **retp, const char *format, ...) {
+    int len=0;
+    va_list ap;
+    char *buf;
+
+    // Estimate len
+    va_start(ap, format);
+    len = vsnprintf(NULL, 0, format, ap);
+    va_end(ap);
+
+    // Get buffer
+    buf = mp_malloc(len + 1);
+
+    // sprintf
+    va_start(ap, format);
+    vsnprintf(buf, len+1, format, ap);
+    va_end(ap);
+
+    *retp = buf;
+    return len;
+}
+
 void *mp_malloc(size_t size) {
     void *p;
     p = malloc(size);
@@ -77,6 +99,17 @@ void *mp_realloc(void *ptr, size_t size) {
         critical("Out of memory!");
     }
     return p;
+}
+
+void mp_strcat(char **target, char *source) {
+    if(source == NULL) {
+        return;
+    } else if(*target == NULL) {
+        *target = strdup(source);
+    } else {
+        *target = mp_realloc(*target, strlen(*target) + strlen(source) + 1);
+        strcat(*target, source);
+    }
 }
 
 void mp_strcat_space(char **target, char *source) {

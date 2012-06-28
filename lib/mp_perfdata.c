@@ -22,6 +22,7 @@
  */
 
 #include "mp_perfdata.h"
+#include "mp_args.h"
 #include "mp_utils.h"
 
 #include <stdio.h>
@@ -30,177 +31,175 @@
 #include <string.h>
 #include <math.h>
 
-#define T_WARN (threshold->warning ? (threshold->warning->end ? threshold->warning->end : threshold->warning->start) : 0)
-#define T_CRIT (threshold->critical ? (threshold->critical->end ? threshold->critical->end : threshold->critical->start) : 0)
-
 unsigned int mp_showperfdata = 0;
 char *mp_perfdata=NULL;
 
 void mp_perfdata_int(const char *label, long int value, const char *unit,
-      thresholds *threshold) {
-   if (threshold)
-      mp_perfdata_int3(label, value, unit,
-	    (threshold->warning != NULL), (long int)T_WARN,
-	    (threshold->critical != NULL), (long int)T_CRIT,
-	    0, 0, 0, 0);
-   else
-      mp_perfdata_int3(label, value, unit,
-	    0, 0, 0, 0,
-	    0, 0, 0, 0);
+        thresholds *threshold) {
+    mp_perfdata_int2(label, value, unit, threshold, 0, 0, 0, 0);
 }
 
 void mp_perfdata_int2(const char *label, long int value, const char *unit,
-      thresholds *threshold, int have_min, long int min,
-      int have_max, long int max) {
-   if (threshold)
-      mp_perfdata_int3(label, value, unit,
-	    (threshold->warning != NULL), (long int)T_WARN,
-	    (threshold->critical != NULL), (long int)T_CRIT,
-	    have_min, min, have_max, max);
-   else
-      mp_perfdata_int3(label, value, unit,
-	    0, 0, 0, 0,
-	    have_min, min, have_max, max);
+        thresholds *threshold, int have_min, long int min,
+        int have_max, long int max) {
+    char *buf;
+
+    if (!mp_showperfdata)
+        return;
+
+    if (strpbrk (label, "'= +")) {
+        mp_asprintf(&buf, "'%s'=%ld%s;", label, value, unit);
+    } else {
+        mp_asprintf(&buf, "%s=%ld%s;", label, value, unit);
+    }
+    mp_strcat_space(&mp_perfdata, buf);
+    free(buf);
+
+    if (threshold->warning) {
+        buf = str_range(threshold->warning);
+        mp_strcat(&mp_perfdata, buf);
+        free(buf);
+    }
+    mp_strcat(&mp_perfdata, ";");
+
+    if (threshold->critical) {
+        buf = str_range(threshold->critical);
+        mp_strcat(&mp_perfdata, buf);
+        free(buf);
+    }
+    mp_strcat(&mp_perfdata, ";");
+
+    if(have_min) {
+        mp_asprintf(&buf, "%ld;", min);
+        mp_strcat(&mp_perfdata, buf);
+        free(buf);
+    }
+    mp_strcat(&mp_perfdata, ";");
+
+    if(have_max) {
+        mp_asprintf(&buf, "%ld;", max);
+        mp_strcat(&mp_perfdata, buf);
+        free(buf);
+    }
+
+    for( buf = mp_perfdata + strlen(mp_perfdata) - 1; *(buf-1) == ';'; buf--) {
+        *buf = '\0';
+    }
 }
 
 void mp_perfdata_int3(const char *label, long int value, const char *unit,
       int have_warn, long int warn, int have_crit, long int crit,
       int have_min, long int min, int have_max, long int max) {
-   char *perfString;
-   char *valString;
-   char *end;
+    thresholds *threshold = NULL;
 
-   if (!mp_showperfdata)
-      return;
+    if (have_warn || have_crit) {
+        threshold = mp_malloc(sizeof(thresholds));
+        memset(threshold, 0, sizeof(thresholds));
+        if (have_warn) {
+            threshold->warning = mp_malloc(sizeof(range));
+            memset(threshold->warning, 0, sizeof(range));
+            threshold->warning->start_infinity = 1;
+            threshold->warning->end = (double) warn;
+        }
+        if (have_crit) {
+            threshold->critical = mp_malloc(sizeof(range));
+            memset(threshold->critical, 0, sizeof(range));
+            threshold->critical->start_infinity = 1;
+            threshold->critical->end = (double) crit;
+        }
+    }
 
-   perfString = mp_malloc(128);
-   valString = mp_malloc(16);
+    mp_perfdata_int2(label, value, unit, threshold,
+            have_min, min, have_max, max);
 
-   if (strpbrk (label, "'= ")) {
-      snprintf(perfString, 64, "'%s'=%ld%s;", label, value, unit);
-   } else {
-      snprintf(perfString, 64, "%s=%ld%s;", label, value, unit);
-   }
-
-   if (have_warn) {
-      snprintf(valString, 16, "%ld;", warn);
-      strcat(perfString,valString);
-   } else {
-      strcat(perfString, ";");
-   }
-
-   if (have_crit) {
-      snprintf(valString, 16, "%ld;", crit);
-      strcat(perfString,valString);
-   } else {
-      strcat(perfString, ";");
-   }
-
-   if(have_min) {
-      snprintf(valString, 16, "%ld;", min);
-      strcat(perfString,valString);
-   } else {
-      strcat(perfString, ";");
-   }
-
-   if(have_max) {
-      snprintf(valString, 16, "%ld;", max);
-      strcat(perfString,valString);
-   }
-
-   for( end = perfString + strlen(perfString) - 1; *(end-1) == ';'; end--) {
-      *end = '\0';
-   }
-   mp_strcat_space(&mp_perfdata, perfString);
-   free(perfString);
+    free_threshold(threshold);
 }
 
 void mp_perfdata_float(const char *label, float value, const char *unit,
-      thresholds *threshold) {
-   if (threshold) {
-      mp_perfdata_float3(label, value, unit,
-            (threshold->warning != NULL), (float)T_WARN,
-            (threshold->critical != NULL), (float)T_CRIT,
-            0, 0, 0, 0);
-   } else {
-      mp_perfdata_float3(label, value, unit,
-            0, 0, 0, 0,
-            0, 0, 0, 0);
-   }
+        thresholds *threshold) {
+    mp_perfdata_float2(label, value, unit, threshold, 0, 0, 0, 0);
 }
 
 void mp_perfdata_float2(const char *label, float value, const char *unit,
-      thresholds *threshold, int have_min, float min,
-      int have_max, float max) {
-   if (threshold)
-      mp_perfdata_float3(label, value, unit,
-            (threshold->warning != NULL), (float)T_WARN,
-            (threshold->critical != NULL), (float)T_CRIT,
-            have_min, min, have_max, max);
-   else
-      mp_perfdata_float3(label, value, unit,
-            0, 0, 0, 0,
-            have_min, min, have_max, max);
+        thresholds *threshold, int have_min, float min,
+        int have_max, float max) {
+    char *buf;
+    int precision = 3;
+
+    if (!mp_showperfdata)
+        return;
+
+    if (value >= 9999)
+        precision = 0;
+    else if (value == 0)
+        precision = 0;
+
+    if (strpbrk (label, "'= +")) {
+        mp_asprintf(&buf, "'%s'=%.*f%s;", label, precision, value, unit);
+    } else {
+        mp_asprintf(&buf, "%s=%.*f%s;", label, precision, value, unit);
+    }
+    mp_strcat_space(&mp_perfdata, buf);
+    free(buf);
+
+    if (threshold->warning) {
+        buf = str_range(threshold->warning);
+        mp_strcat(&mp_perfdata, buf);
+        free(buf);
+    }
+    mp_strcat(&mp_perfdata, ";");
+
+    if (threshold->critical) {
+        buf = str_range(threshold->critical);
+        mp_strcat(&mp_perfdata, buf);
+        free(buf);
+    }
+    mp_strcat(&mp_perfdata, ";");
+
+    if(have_min) {
+        mp_asprintf(&buf, "%.*f;", precision, min);
+        mp_strcat(&mp_perfdata, buf);
+        free(buf);
+    }
+    mp_strcat(&mp_perfdata, ";");
+
+    if(have_max) {
+        mp_asprintf(&buf, "%.*f;", precision, max);
+        mp_strcat(&mp_perfdata, buf);
+        free(buf);
+    }
+
+    for( buf = mp_perfdata + strlen(mp_perfdata) - 1; *(buf-1) == ';'; buf--) {
+        *buf = '\0';
+    }
 }
 
 void mp_perfdata_float3(const char *label, float value, const char *unit,
       int have_warn, float warn, int have_crit, float crit,
       int have_min, float min, int have_max, float max) {
-   char *perfString;
-   char *valString;
-   char *end;
-   int precision = 3;
+    thresholds *threshold = NULL;
 
-   if (!mp_showperfdata)
-      return;
+    if (have_warn || have_crit) {
+        threshold = mp_malloc(sizeof(thresholds));
+        memset(threshold, 0, sizeof(thresholds));
+        if (have_warn) {
+            threshold->warning = mp_malloc(sizeof(range));
+            memset(threshold->warning, 0, sizeof(range));
+            threshold->warning->start_infinity = 1;
+            threshold->warning->end = (double) warn;
+        }
+        if (have_crit) {
+            threshold->critical = mp_malloc(sizeof(range));
+            memset(threshold->critical, 0, sizeof(range));
+            threshold->critical->start_infinity = 1;
+            threshold->critical->end = (double) crit;
+        }
+    }
 
-   if (value >= 9999)
-       precision = 0;
-   else if (value == 0)
-       precision = 0;
+    mp_perfdata_int2(label, value, unit, threshold,
+            have_min, min, have_max, max);
 
-   perfString = mp_malloc(128);
-   valString = mp_malloc(16);
-
-   if (strpbrk (label, "'= ")) {
-      snprintf(perfString, 64, "'%s'=%.*f%s;", label, precision, value, unit);
-   } else {
-      snprintf(perfString, 64, "%s=%.*f%s;", label, precision, value, unit);
-   }
-
-   if (have_warn) {
-      snprintf(valString, 16, "%.*f;", precision, warn);
-      strcat(perfString, valString);
-   } else {
-      strcat(perfString, ";");
-   }
-
-   if (have_crit) {
-      snprintf(valString, 16, "%.*f;", precision, crit);
-      strcat(perfString, valString);
-   } else {
-      strcat(perfString, ";");
-   }
-
-   if(have_min) {
-      snprintf(valString, 16, "%.*f;", precision, min);
-      strcat(perfString, valString);
-   } else {
-      strcat(perfString, ";");
-   }
-
-   if(have_max) {
-      snprintf(valString, 16, "%.*f;", precision, max);
-      strcat(perfString, valString);
-   }
-
-   for( end = perfString + strlen(perfString) - 1; *(end-1) == ';'; end--) {
-      *end = '\0';
-   }
-
-   mp_strcat_space(&mp_perfdata, perfString);
-   free(perfString);
-   free(valString);
+    free_threshold(threshold);
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */

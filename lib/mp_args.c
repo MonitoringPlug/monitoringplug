@@ -243,16 +243,44 @@ void print_thresholds(const char *threshold_name, thresholds *my_threshold) {
 	} else {
 		if (my_threshold->warning) {
 			printf("Warning: start=%g end=%g; ", my_threshold->warning->start, my_threshold->warning->end);
+            printf("(%d:%d) ", my_threshold->warning->start_infinity, my_threshold->warning->end_infinity);
 		} else {
 			printf("Warning not set; ");
 		}
 		if (my_threshold->critical) {
 			printf("Critical: start=%g end=%g", my_threshold->critical->start, my_threshold->critical->end);
+            printf("(%d:%d) ", my_threshold->critical->start_infinity, my_threshold->critical->end_infinity);
 		} else {
 			printf("Critical not set");
 		}
 	}
 	printf("\n");
+}
+
+char *str_range(range *my_range) {
+    char *rstr;
+    int precision = 3;
+
+    if (!my_range)
+        return strdup("");
+
+    if (my_range->start_infinity == 1) {
+        if (my_range->end_infinity == 1) {
+            rstr = strdup("~:");
+        } else {
+            mp_asprintf(&rstr, "~:%.*f", precision, my_range->end);
+        }
+    } else if (my_range->start == 0) {
+        mp_asprintf(&rstr, "%.*f", precision, my_range->end);
+    } else {
+        if (my_range->end_infinity == 1) {
+            mp_asprintf(&rstr, "%.*f:", precision, my_range->start);
+        } else {
+            mp_asprintf(&rstr, "%.*f:%.*f", precision, my_range->start,
+                    precision, my_range->end);
+        }
+    }
+    return rstr;
 }
 
 void print_help_default(void) {

@@ -130,7 +130,7 @@ START_TEST (test_range_frominf) {
     for (i = -10; i < 20; i++) {
         fail_unless (check_range(i, my_range) == (i>10),
 	       "Range check for %g in '~:10' faild.", i);
-    }		
+    }
 }
 END_TEST
 
