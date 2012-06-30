@@ -11,7 +11,8 @@ LDADD = ../lib/libmonitoringplug.a ../lib/libipmiutils.a
 bin_PROGRAMS = 
 
 if HAVE_IPMI
-bin_PROGRAMS += check_ipmi_mem check_ipmi_psu check_ipmi_sensor
+bin_PROGRAMS += check_ipmi_fan check_ipmi_mem check_ipmi_psu check_ipmi_sensor
+
 endif
 
 ## vim: set ts=4 sw=4 syn=automake :

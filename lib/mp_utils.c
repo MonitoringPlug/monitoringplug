@@ -136,6 +136,19 @@ void mp_strcat_comma(char **target, char *source) {
     }
 }
 
+int mp_strcmp(const char *s1, const char *s2) {
+    char *p;
+    if (*s1 == '!') {
+        p = (char *)s1;
+        p++;
+        if (strcmp(p, s2) == 0)
+            return 1;
+        return 0;
+    } else {
+        return strcmp(s1, s2);
+    }
+}
+
 void mp_array_push(char ***array, char *obj, int *num) {
     while(obj != NULL) {
         *array = realloc(*array, sizeof(char*)*((*num)+1));

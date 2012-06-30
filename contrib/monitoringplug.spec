@@ -369,7 +369,7 @@ fi
 %files ipmi
 %defattr(4111,root,root,-)
 %{_libdir}/nagios/plugins/check_ipmi_*
-#%{_mandir}/man1/check_ipmi_*
+%{_mandir}/man1/check_ipmi_*
 
 %if 0%{?rhel} != 5
 %files libvirt

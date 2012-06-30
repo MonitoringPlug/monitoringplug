@@ -1,8 +1,8 @@
 /***
- * Monitoring Plugin - check_ipmi_sensor.c
+ * Monitoring Plugin - check_ipmi_fan.c
  **
  *
- * check_ipmi_sensor - Check the give or all IPMI Sensors.
+ * check_ipmi_fab - Check the give or all FANs by IPMI.
  *
  * Copyright (C) 2012 Marius Rieder <marius.rieder@durchmesser.ch>
  *
@@ -23,12 +23,12 @@
  * $Id$
  */
 
-const char *progname  = "check_ipmi_sensor";
-const char *progdesc  = "Check the give or all IPMI Sensors.";
+const char *progname  = "check_ipmi_fan";
+const char *progdesc  = "Check the give or all FANs IPMI.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2012";
 const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
-const char *progusage = "[-S <SENSOR[,SENSOR]>]";
+const char *progusage = "[--fan <FAN[,FAN]>]";
 
 /* MP Includes */
 #include "mp_common.h"
@@ -42,8 +42,8 @@ const char *progusage = "[-S <SENSOR[,SENSOR]>]";
 #include <string.h>
 
 /* Global Vars */
-char        **sensor  = NULL;
-int         sensors = 0;
+char        **fan  = NULL;
+int         fans = 0;
 
 int main (int argc, char **argv) {
     /* Local Vars */
@@ -67,14 +67,15 @@ int main (int argc, char **argv) {
     alarm(mp_timeout);
 
     mp_ipmi_readingtype = IPMI_EVENT_READING_TYPE_THRESHOLD;
+    mp_ipmi_entity = IPMI_ENTITY_ID_FAN_COOLING;
     mp_ipmi_init();
 
     char *buf;
     buf = mp_malloc(63);
 
-    for (i=0; i<sensors; i++) {
+    for (i=0; i<fans; i++) {
         for (s=mp_ipmi_sensors; s; s=s->next) {
-            if (strcmp(sensor[i], s->name) != 0)
+            if (strcmp(fan[i], s->name) != 0)
                 continue;
             if (mp_verbose > 0)
                 printf("%s: %f\n", s->name, s->value);
@@ -88,7 +89,7 @@ int main (int argc, char **argv) {
                 state = lstate;
 
             mp_snprintf(buf, 63, "%s %.2f%s", s->name, s->value,
-                    ipmi_sensor_get_base_unit(s->sensor) ? 
+                    ipmi_sensor_get_base_unit(s->sensor) ?
                     ipmi_sensor_get_base_unit_string(s->sensor) : "");
             if (lstate == STATE_OK)
                 mp_strcat_comma(&out_ok, buf);
@@ -100,11 +101,11 @@ int main (int argc, char **argv) {
         }
         if (!s) {
             state = STATE_CRITICAL;
-            mp_strcat_comma(&out_critical, sensor[i]);
+            mp_strcat_comma(&out_critical, fan[i]);
         }
     }
 
-    if (sensors == 0) {
+    if (fans == 0) {
         for (s=mp_ipmi_sensors; s; s=s->next) {
             if (ipmi_sensor_get_event_reading_type(s->sensor) != IPMI_EVENT_READING_TYPE_THRESHOLD)
                 continue;
@@ -138,10 +139,10 @@ int main (int argc, char **argv) {
 
     /* Output and return */
     if (state == STATE_OK)
-        ok("IPMI Sensors: %s", out_ok);
+        ok("IPMI Fan: %s", out_ok);
     else if (state == STATE_WARNING)
-        warning("IPMI Sensors: %s", out_warning);
-    critical("IPMI Sensors: %s", out_critical);
+        warning("IPMI Fan: %s", out_warning);
+    critical("IPMI Fan: %s", out_critical);
 }
 
 int process_arguments (int argc, char **argv) {
@@ -151,13 +152,13 @@ int process_arguments (int argc, char **argv) {
     static struct option longopts[] = {
             MP_LONGOPTS_DEFAULT,
             IPMI_LONGOPTS,
-            {"sensor", required_argument, NULL, (int)'S'},
+            {"fan", required_argument, NULL, (int)'F'},
             MP_LONGOPTS_TIMEOUT,
             MP_LONGOPTS_END
     };
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"t:S:"IPMI_OPTSTR, longopts, &option);
+        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"t:F:"IPMI_OPTSTR, longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -168,8 +169,8 @@ int process_arguments (int argc, char **argv) {
             /* Default opts */
             MP_GETOPTS_DEFAULT
             /* Plugin opt */
-            case 'S':
-                mp_array_push(&sensor, optarg, &sensors);
+            case 'F':
+                mp_array_push(&fan, optarg, &fans);
                 break;
             /* Timeout opt */
             case 't':
@@ -198,8 +199,8 @@ void print_help (void) {
 
     print_help_ipmi();
 
-    printf(" -S, --sensor=[SENSOR]\n");
-    printf("      Name of a Sensor to check, can be repeated.\n");
+    printf(" -F, --fan=[FAN]\n");
+    printf("      Name of a Fan to check, can be repeated.\n");
 
 }
 

@@ -50,6 +50,12 @@ man_MANS += check_ssl_cert.1
 endif #HAVE_GNUTLS
 EXTRA_DIST += check_ssl_cert.1
 
+#ipmi
+if HAVE_IPMI
+man_MANS += check_ipmi_fan.1 check_ipmi_mem.1 check_ipmi_psu.1 check_ipmi_sensor.1
+endif #HAVE_IPMI
+EXTRA_DIST += check_ipmi_fan.1 check_ipmi_mem.1 check_ipmi_psu.1 check_ipmi_sensor.1
+
 #libvirt
 if HAVE_LIBVIRT
 man_MANS += check_libvirtd.1 check_libvirt_domain.1

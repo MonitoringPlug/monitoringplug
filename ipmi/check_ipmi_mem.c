@@ -42,8 +42,6 @@ const char *progusage = "--dim <DIMM>";
 #include <string.h>
 
 /* Global Vars */
-const char  *hostname = NULL;
-const char  *port = "623";
 char        **dimm  = NULL;
 int         dimms = 0;
 
@@ -173,8 +171,6 @@ int process_arguments (int argc, char **argv) {
 
     static struct option longopts[] = {
             MP_LONGOPTS_DEFAULT,
-            MP_LONGOPTS_HOST,
-            MP_LONGOPTS_PORT,
             IPMI_LONGOPTS,
             {"dimm", required_argument, NULL, (int)'D'},
             MP_LONGOPTS_TIMEOUT,
@@ -182,7 +178,7 @@ int process_arguments (int argc, char **argv) {
     };
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"t:D:H:P:"IPMI_OPTSTR, longopts, &option);
+        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"t:D:"IPMI_OPTSTR, longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -192,14 +188,6 @@ int process_arguments (int argc, char **argv) {
         switch (c) {
             /* Default opts */
             MP_GETOPTS_DEFAULT
-            /* Hostname opt */
-            case 'H':
-                getopt_host(optarg, &hostname);
-                break;
-            /* Port opt */
-            case 'P':
-                port = optarg;
-                break;
             /* Plugin opt */
             case 'D':
                 mp_array_push(&dimm, optarg, &dimms);
@@ -210,12 +198,6 @@ int process_arguments (int argc, char **argv) {
                 break;
         }
     }
-
-    /* Check */
-    if (hostname && mp_ipmi_smi != -1)
-        usage("hostname and smi can not be used together.");
-    if (mp_ipmi_smi == -1)
-        mp_ipmi_smi = 0;
 
     return(OK);
 }

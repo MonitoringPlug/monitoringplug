@@ -54,15 +54,15 @@ static void mp_ipmi_sensor_states_handler(ipmi_sensor_t *sensor, int err,
 /**
  * Global Varables
  */
-extern char* hostname;
-extern char* port;
 int mp_ipmi_init_done = 0;
 int mp_ipmi_entity = IPMI_ENTITY_ID_UNSPECIFIED;
 int mp_ipmi_readingtype = 0;
 int mp_ipmi_open = IPMI_OPEN_OPTION_SDRS;
 struct mp_ipmi_sensor_list *mp_ipmi_sensors = NULL;
-char *mp_ipmi_username;
-char *mp_ipmi_password;
+const char *mp_ipmi_hostname = NULL;
+const char *mp_ipmi_port = "623";
+const char *mp_ipmi_username = NULL;
+const char *mp_ipmi_password = NULL;
 int mp_ipmi_smi=-1;
 
 void mp_ipmi_init(void) {
@@ -84,11 +84,12 @@ void mp_ipmi_init(void) {
 
     if (mp_verbose > 1)
         printf("Connect OpenIPMI.\n");
-    if (hostname) {
-        rv = ipmi_ip_setup_con(&hostname, &port, 1,
+    if (mp_ipmi_hostname) {
+        rv = ipmi_ip_setup_con((char * const*)&mp_ipmi_hostname,
+                (char * const*)&mp_ipmi_port, 1,
                 IPMI_AUTHTYPE_DEFAULT, IPMI_PRIVILEGE_ADMIN,
-                mp_ipmi_username, strlen(mp_ipmi_username),
-                mp_ipmi_password, strlen(mp_ipmi_password),
+                (void *)mp_ipmi_username, strlen(mp_ipmi_username),
+                (void *)mp_ipmi_password, strlen(mp_ipmi_password),
                 mp_ipmi_hnd, NULL, &mp_ipmi_con);
     } else {
         rv = ipmi_smi_setup_con(0, mp_ipmi_hnd, NULL, &mp_ipmi_con);
@@ -129,13 +130,30 @@ void mp_ipmi_deinit(void) {
 
 void getopt_ipmi(int c) {
     switch ( c ) {
+         /* Hostname opt */
+        case 'H':
+            if (mp_ipmi_smi != -1)
+                usage("--hostname and --smi are exclusive options.");
+            getopt_host_ip(optarg, &mp_ipmi_hostname);
+            break;
+        /* Port opt */
+        case 'P':
+            getopt_port(optarg, NULL);
+            mp_ipmi_port = optarg;
+            break;
         case 'u':
+            if (strlen(optarg) > 16)
+                usage("IPMI max username leng is 16.");
             mp_ipmi_username = optarg;
             break;
         case 'p':
+            if (strlen(optarg) > 16)
+                usage("IPMI max username leng is 16.");
             mp_ipmi_password = optarg;
             break;
         case MP_LONGOPT_PRIV0:
+            if (mp_ipmi_hostname)
+                usage("--hostname and --smi are exclusive options.");
             mp_ipmi_smi = (int) strtol(optarg, NULL, 10);
             break;
     }

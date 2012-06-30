@@ -33,12 +33,16 @@
 extern int mp_ipmi_entity;
 extern int mp_ipmi_readingtype;
 extern int mp_ipmi_open;
-extern char *mp_ipmi_username;
-extern char *mp_ipmi_password;
+extern const char *mp_ipmi_hostname;
+extern const char *mp_ipmi_port;
+extern const char *mp_ipmi_username;
+extern const char *mp_ipmi_password;
 extern int mp_ipmi_smi;
 
-#define IPMI_OPTSTR "u:p:"
-#define IPMI_LONGOPTS {"username", required_argument, NULL, (int)'u'}, \
+#define IPMI_OPTSTR "H:P:u:p:"
+#define IPMI_LONGOPTS MP_LONGOPTS_HOST, \
+                      MP_LONGOPTS_PORT, \
+                      {"username", required_argument, NULL, (int)'u'}, \
                       {"password", required_argument, NULL, (int)'p'}, \
                       {"smi", required_argument, NULL, (int)MP_LONGOPT_PRIV0}
 

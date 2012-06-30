@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+
+  <!ENTITY mpcheckname   "check_ipmi_psu">
+
+]>
+
+<refentry xmlns:xi="http://www.w3.org/2001/XInclude">
+  <refentryinfo>
+    <title>Monitoringplug  Manual</title>
+    <productname>&mpcheckname;</productname>
+    <authorgroup>
+      <author>
+       <firstname>Marius</firstname>
+        <surname>Rieder</surname>
+        <address>
+          <email>marius.rieder@durchmesser.ch</email>
+        </address>
+       <contrib>For monitoringplug</contrib>
+      </author>
+    </authorgroup>
+    <copyright>
+      <year>2012</year>
+      <holder>Marius Rieder</holder>
+    </copyright>
+    <legalnotice>
+      <para>This manual page was written for Monitoringplug
+        (and may be used by others).</para>
+      <para>Permission is granted to copy, distribute and/or modify this
+        document under the terms of the GNU General Public License,
+        Version 2 or (at your option) any later version published by
+        the Free Software Foundation.</para>
+    </legalnotice>
+  </refentryinfo>
+  <refmeta>
+    <refentrytitle>CHECK_IPMI_PSU</refentrytitle>
+    <manvolnum>1</manvolnum>
+  </refmeta>
+  <refnamediv>
+    <refname>&mpcheckname;</refname>
+    <refpurpose>Check the give or all PSU by Sensors</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <cmdsynopsis>
+      <command>&mpcheckname;</command>
+      <arg choice="opt">
+        <option>--psu <replaceable>PSU</replaceable></option>
+      </arg>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+  <refsect1 id="description">
+    <title>DESCRIPTION</title>
+    <para>Check the give or all PSU by IPMI.</para>
+  </refsect1>
+  <refsect1 id="options">
+    <title>OPTIONS</title>
+    <para>The Monitoringplug default options</para>
+    <xi:include href="mp_opts.xml"/>
+    <para>IPMI specific options</para>
+    <xi:include href="mp_opts_ipmi.xml"/>
+    <para>Check specific options</para>
+    <variablelist>
+      <varlistentry>
+        <term><option>--psu=<replaceable>PSU</replaceable></option></term>
+        <listitem>
+          <para>Name of the PSU to check.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+  <xi:include href="mp_seealso.xml"/>
+</refentry>
+<!-- vim: set ts=2 sw=2 expandtab ai syn=docbk : -->

@@ -73,6 +73,11 @@ void mp_strcat_space(char **target, char *source);
 void mp_strcat_comma(char **target, char *source);
 
 /**
+ * Compare two strings.
+ */
+int mp_strcmp(const char *s1, const char *s2);
+
+/**
  * push a string or some comma separated strings to a array.
  */
 void mp_array_push(char ***array, char *obj, int *num);
