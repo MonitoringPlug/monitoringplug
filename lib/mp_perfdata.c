@@ -55,14 +55,14 @@ void mp_perfdata_int2(const char *label, long int value, const char *unit,
     mp_strcat_space(&mp_perfdata, buf);
     free(buf);
 
-    if (threshold->warning) {
+    if (threshold && threshold->warning) {
         buf = str_range(threshold->warning);
         mp_strcat(&mp_perfdata, buf);
         free(buf);
     }
     mp_strcat(&mp_perfdata, ";");
 
-    if (threshold->critical) {
+    if (threshold && threshold->critical) {
         buf = str_range(threshold->critical);
         mp_strcat(&mp_perfdata, buf);
         free(buf);
@@ -142,14 +142,14 @@ void mp_perfdata_float2(const char *label, float value, const char *unit,
     mp_strcat_space(&mp_perfdata, buf);
     free(buf);
 
-    if (threshold->warning) {
+    if (threshold && threshold->warning) {
         buf = str_range(threshold->warning);
         mp_strcat(&mp_perfdata, buf);
         free(buf);
     }
     mp_strcat(&mp_perfdata, ";");
 
-    if (threshold->critical) {
+    if (threshold && threshold->critical) {
         buf = str_range(threshold->critical);
         mp_strcat(&mp_perfdata, buf);
         free(buf);
