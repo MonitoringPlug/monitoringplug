@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+]>
+
+<variablelist xmlns:xi="http://www.w3.org/2001/XInclude">
+  <xi:include href="mp_opts_host.xml"/>
+  <xi:include href="mp_opts_port.xml"/>
+  <varlistentry>
+    <term><option>-u</option></term>
+    <term><option>--username=<replaceable>USERNAME</replaceable></option></term>
+    <listitem>
+      <para>IPMI Username to authenticate lan connection as. (Max 16 characters.)</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><option>-p</option></term>
+    <term><option>--password=<replaceable>PASSWORD</replaceable></option></term>
+    <listitem>
+      <para>IPMI Password tho authenticate lan connection with. (Max 16 characters.)</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><option>--SMI=<replaceable>INDEX</replaceable></option></term>
+    <listitem>
+      <para>Index of the SMI Device to connect to.</para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+<!-- vim: set ts=2 sw=2 expandtab ai syn=docbk : -->
