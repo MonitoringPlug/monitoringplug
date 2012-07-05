@@ -27,13 +27,46 @@
 #include <sys/socket.h>
 #include <netdb.h>
 
+/**
+ * Get a string representation of a sockaddr/IP
+ * \para[in] sa Sockaddr to convert.
+ * \para[in] len Sockaddr length.
+ * \return Return the string representing the sockaddr.
+ */
 char *mp_ip2str(const struct sockaddr *sa, socklen_t len);
+
+/**
+ * Get a addrinfo struct matching the input.
+ * Wrapper around getaddrinfo.
+ * \para[in] hostname Hostname to get addr info for.
+ * \para[in] port Port to get addr info for.
+ * \para[in] family Connection protocol to get addr info for.
+ * \para[in] type Connection type to get addr info for.
+ * \return Return the matching addrinfo struct.
+ */
 struct addrinfo *mp_getaddrinfo(const char *hostname, int port, int family, int type);
+
+/**
+ * Open a network socket.
+ * \para[in] hostname Hostname to connect to.
+ * \para[in] port Port to connect to.
+ * \para[in] family Connection protocol family.
+ * \para[in] type Connection type.
+ * \return Return the connected socket.
+ */
 int mp_connect(const char *hostname, int port, int family, int type);
+
+/**
+ * Close a open network socket.
+ * \para[in] sd Socket to shutdown and close.
+ */
 void mp_disconnect(int sd);
 
 /**
  * Calculate ip checksum
+ * \para[in] addr Pointer to the IP header.
+ * \para[in] len Number of bytes to process.
+ * \return Return the checksum as short int.
  */
 unsigned short int mp_ip_csum(unsigned short int *addr, int len);
 

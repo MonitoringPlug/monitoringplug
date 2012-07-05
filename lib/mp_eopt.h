@@ -24,6 +24,13 @@
 #ifndef MP_EOPT_H_
 #define MP_EOPT_H_
 
+/**
+ * Inject extended options from a ini file.
+ * \para[in|out] argc Number of arguments in argv.
+ * \para[in] orig_argv Original args array.
+ * \para[in] optarg Arguments to eopt parameter.
+ * \return Return the a new extendet argv array.
+ */
 char **mp_eopt(int *argc, char **orig_argv, char *optarg);
 
 /**

@@ -30,9 +30,16 @@
 
 #include <xmlrpc.h>
 
-
+/**
+ * Init the XML-RPC environment.
+ * \return Return a pointer to the xmlrpc_env of NULL.
+ */
 xmlrpc_env mp_xmlrpc_init(void);
 
+/**
+ * Wrapper around unknown to print fault from env.
+ * \param[in] env xmlrpc_env to handle fault from.
+ */
 void unknown_if_xmlrpc_fault(xmlrpc_env *env);
 
 #endif /* XMLRPC_UTILS_H_ */

@@ -30,26 +30,38 @@
 #include <OpenIPMI/ipmiif.h>
 #include <OpenIPMI/ipmi_posix.h>
 
+/* The global ipmi vars. */
+/** Entity type to load sdr for. */
 extern int mp_ipmi_entity;
+/** Reading type to load sdr for. */
 extern int mp_ipmi_readingtype;
+/** Section to open. */
 extern int mp_ipmi_open;
+/** Hostname for ipmi lan connection. */
 extern const char *mp_ipmi_hostname;
+/** Port for ipmi lan connection. */
 extern const char *mp_ipmi_port;
+/** Username for ipmi lan connection. */
 extern const char *mp_ipmi_username;
+/** Password for ipmi lan connection. */
 extern const char *mp_ipmi_password;
+/** SMI number for local connection. */
 extern int mp_ipmi_smi;
 
+/** LibVirt specific short option string. */
 #define IPMI_OPTSTR "H:P:u:p:"
+/** LibVirt specific longopt struct. */
 #define IPMI_LONGOPTS MP_LONGOPTS_HOST, \
                       MP_LONGOPTS_PORT, \
                       {"username", required_argument, NULL, (int)'u'}, \
                       {"password", required_argument, NULL, (int)'p'}, \
                       {"smi", required_argument, NULL, (int)MP_LONGOPT_PRIV0}
 
+/** IPMI Sensor linked list struct */
 struct mp_ipmi_sensor_list {
-    /** Sendor */
+    /** Sensor */
     ipmi_sensor_t *sensor;
-    /** Senor Name */
+    /** Sensor Name */
     char *name;
     /** Sensor value */
     double value;
@@ -61,14 +73,15 @@ struct mp_ipmi_sensor_list {
     struct mp_ipmi_sensor_list *next;
 };
 
+/** Global list of IPMI Sensors. */
 extern struct mp_ipmi_sensor_list *mp_ipmi_sensors;
 
-/**
- * Global Vars
- */
-
+/* Global Vars */
+/** OpenIPMI os handler. */
 os_handler_t    *mp_ipmi_hnd;
+/** OpenIPMI connection. */
 ipmi_con_t      *mp_ipmi_con;
+/** OpenIPMI domain. */
 ipmi_domain_t   *mp_ipmi_dom;
 
 /**

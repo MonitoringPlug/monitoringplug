@@ -30,9 +30,9 @@
 
 #include "mp_args.h"
 
+/* The global perfdata vars. */
 /** The global perfdata variable. */
 extern unsigned int mp_showperfdata;
-
 /** The global perf data string. */
 extern char *mp_perfdata;
 

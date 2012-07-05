@@ -26,20 +26,39 @@
 
 #include <libvirt/libvirt.h>
 
-/** The global libvirt vars. */
+/* The global libvirt vars. */
+/** Holds the username for the libvirt connection. */
 extern char *mp_virt_username;
+/** Holds the password for the libvirt connection. */
 extern char *mp_virt_password;
+/** Holds the uri for the libvirt connection. */
 extern char *mp_virt_uri;
 
+/** LibVirt specific short option string. */
 #define VIRT_OPTSTR "C:u:p:"
+/** LibVirt specific longopt struct. */
 #define VIRT_LONGOPTS {"connect", required_argument, NULL, (int)'C'}, \
                       {"username", required_argument, NULL, (int)'u'}, \
                       {"password", required_argument, NULL, (int)'p'}
 
+/**
+ * Open a LibVirt connection.
+ * \return New created LibVirt connection.
+ */
 virConnectPtr virt_connect();
 
+/**
+ * Show errors from a LibVirt connection.
+ * \param[in] conn LibVirt connection to show errors from.
+ */
 void virt_showError(virConnectPtr conn);
 
+/**
+ * Callback to hanlde libvirt authentication requests.
+ * \param[out] cred Array of LibVirt credential questions.
+ * \param[in] ncred Number of Credentials asked.
+ * \param[in] cbdata User defined callback data.
+ */
 int virt_authCallback(virConnectCredentialPtr cred, unsigned int ncred, void *cbdata);
 
 /**

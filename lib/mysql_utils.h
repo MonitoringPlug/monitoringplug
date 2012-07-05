@@ -27,27 +27,38 @@
 #include "config.h"
 #include <mysql.h>
 
+/* The global mysql vars. */
+/** Holds the MySQL hostname. */
 extern char *mp_mysql_host;
+/** Holds the MySQL username. */
 extern char *mp_mysql_user;
+/** Holds the MySQL password. */
 extern char *mp_mysql_pass;
+/** Holds the MySQL DB/Schema name. */
 extern char *mp_mysql_db;
+/** Holds the MySQL network port. */
 extern int mp_mysql_port;
+/** Holds the MySQL socket name. */
 extern char *mp_mysql_socket;
 
+/** MySQL specific short option string. */
 #define MYSQL_OPTSTR "u:p:D:P:S:"
+/** MySQL specific longopt struct. */
 #define MYSQL_LONGOPTS {"user", required_argument, NULL, (int)'u'}, \
-                      {"password", required_argument, NULL, (int)'p'}, \
-                      {"database", required_argument, NULL, (int)'D'}, \
-                      {"port", required_argument, NULL, (int)'P'}, \
-                      {"socket", required_argument, NULL, (int)'S'}
+                       {"password", required_argument, NULL, (int)'p'}, \
+                       {"database", required_argument, NULL, (int)'D'}, \
+                       {"port", required_argument, NULL, (int)'P'}, \
+                       {"socket", required_argument, NULL, (int)'S'}
 
 /**
  * Init the MySQL connection and return the db handler.
+ * \return Return a MYSQL connection handler.
  */
 MYSQL *mp_mysql_init(void);
 
 /**
  * Cleanup the mysql library.
+ * \para[in] conn MYSQL connection handler to close.
  */
 void mp_mysql_deinit(MYSQL *conn);
 

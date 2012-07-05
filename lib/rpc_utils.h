@@ -29,12 +29,45 @@
 
 #define RPC_BUF_LEN 128
 
+/**
+ * Shutdown RPC connection in case of a timeout.
+ * \param[in] signo Interupt number.
+ */
 void rpc_timeout_alarm_handler(int signo);
-struct rpcent *rpc_getrpcent(const char *prog);
-unsigned long rpc_getprognum(const char *prog);
-int rpc_ping(char *hostname, struct rpcent *programm, unsigned long version, char *proto, struct timeval to);
-bool_t mp_xdr_exports(XDR *xdrs, exports *export);
 
+/**
+ * Get a rpcent by name or number.
+ * \param[in] prog Program name or number.
+ * \return Return a copy of the rpcent matching prog.
+ */
+struct rpcent *rpc_getrpcent(const char *prog);
+
+/**
+ * Get the RPC prognum by name or number.
+ * \param[in] prog Program name or number.
+ * \return Return prognum matching prog.
+ */
+unsigned long rpc_getprognum(const char *prog);
+
+/**
+ * Ping a RPC-Program
+ * \param[in] hostname Host tpo ping.
+ * \param[in] programm rpcent of programm to ping.
+ * \param[in] version Protocol version number to ping.
+ * \param[in] proto Name of the transport protocol.
+ * \param[in] to Time to wait for a ansver.
+ * \return Return the clnt_call return value.
+ */
+int rpc_ping(char *hostname, struct rpcent *programm, unsigned long version,
+        char *proto, struct timeval to);
+
+/**
+ * Decode exports XDSs
+ * \param[in] xdrs Data to decode.
+ * \param[out] export Linked list of exports.
+ * \return Return 0 on success, 1 otherwise.
+ */
+bool_t mp_xdr_exports(XDR *xdrs, exports *export);
 
 #endif /* RPC_UTILS_H_ */
 

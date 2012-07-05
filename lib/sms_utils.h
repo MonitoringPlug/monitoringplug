@@ -24,10 +24,13 @@
 #ifndef _SMS_UTILS_H_
 #define _SMS_UTILS_H_
 
-#define SMS_OPTSTR "P:"
-#define SMS_LONGOPTS {"pin", required_argument, NULL, (int)'P'}
+/* The global sms vars. */
+extern char *mp_sms_pin; /**< Hold the PIN to unlock the SIM. */
 
-extern char *mp_sms_pin;
+/** SMS specific short option string */
+#define SMS_OPTSTR "P:"
+/** SMS specific longopt struct */
+#define SMS_LONGOPTS {"pin", required_argument, NULL, (int)'P'}
 
 /**
  * Run all AT command and collect it's output.

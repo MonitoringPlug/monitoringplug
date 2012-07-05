@@ -27,9 +27,13 @@
 #include <ldns/ldns.h>
 #include "config.h"
 
+/* The global libvirt vars. */
+/** Should TCP be used by default. */
 extern int mp_ldns_usevc;
 
+/** LibVirt specific short option string. */
 #define LDNS_OPTSTR "X"
+/** LibVirt specific longopt struct. */
 #define LDNS_LONGOPTS {"tcp", no_argument, NULL, (int)'X'}
 
 /**
@@ -47,10 +51,22 @@ ldns_resolver* createResolver(const char *dnsserver);
 void resolverEnableDnssec(ldns_resolver *res);
 
 /**
- * ldns_resolver_query wrapper for debug
+ * ldns_resolver_query wrapper for debug.
+ * \para[in] r Resolver to query.
+ * \para[in] name Name to ask for.
+ * \para[in] t Type to ask for.
+ * \para[in] c Class to ask for.
+ * \para[in] flags Query flags.
+ * \return Return the ldns_pkt received.
  */
-ldns_pkt *mp_ldns_resolver_query(const ldns_resolver *r, const ldns_rdf *name, ldns_rr_type t, ldns_rr_class c, uint16_t flags);
+ldns_pkt *mp_ldns_resolver_query(const ldns_resolver *r, const ldns_rdf *name,
+        ldns_rr_type t, ldns_rr_class c, uint16_t flags);
 
+/**
+ * Get A and AAAA records for a hostname
+ * \para[in] res Resolver to use for the query.
+ * \para[in] hostrdf RDF of the hostname to resolv.
+ */
 ldns_rr_list* getaddr_rdf(ldns_resolver *res, ldns_rdf *hostrdf);
 
 /**

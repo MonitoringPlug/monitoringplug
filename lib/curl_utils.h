@@ -27,44 +27,69 @@
 #include "config.h"
 #include <curl/curl.h>
 
+/** Data struct. */
 struct mp_curl_data {
-   char *data;
-   size_t start;
-   size_t size;
+   char *data;          /**< Actual data. */
+   size_t start;        /**< Read/write offset. */
+   size_t size;         /**< Size of data. */
 };
 
+/** HTTP header struct */
 struct mp_curl_header {
-   char *key;
-   char **value;
+   char *key;           /**< Header name. */
+   char **value;        /**< Header value(s). */
 };
 
 /**
  * Init libcurl
+ * \return Return a pointer to the CURL env.
  */
 CURL *mp_curl_init(void);
 
 /**
- * Perform curl request
+ * Perform curl request.
+ * \para[in] curl Perform setup curl request.
  */
 long mp_curl_perform(CURL *curl);
 
 /**
- * Blackhole data
+ * libCurl receive blackhole data callback.
+ * \para[in] content Receive data buffer.
+ * \para[in] size Data unit size.
+ * \para[in] nmemb Number of data units ready.
+ * \para[in|out] userdata Callback user data pointer.
+ * \return Return nmemb times size.
  */
-size_t mp_curl_recv_blackhole(void *contents, size_t size, size_t nmemb, void *userdata);
+size_t mp_curl_recv_blackhole(void *contents, size_t size,
+        size_t nmemb, void *userdata);
 
 /**
- * Receive body data
+ * libCurl receive body data callback.
+ * \para[in] content Receive data buffer.
+ * \para[in] size Data unit size.
+ * \para[in] nmemb Number of data units ready.
+ * \para[in|out] userdata Callback user data pointer.
+ * \return Return number of bytes consumed.
  */
 size_t mp_curl_recv_data(void *contents, size_t size, size_t nmemb, void *userdata);
 
 /**
- * Receive header data
+ * libCurl receive header data callback.
+ * \para[in] content Receive data buffer.
+ * \para[in] size Data unit size.
+ * \para[in] nmemb Number of data units ready.
+ * \para[in|out] userdata Callback user data pointer.
+ * \return Return number of bytes consumed.
  */
 size_t mp_curl_recv_header(void *contents, size_t size, size_t nmemb, void *userdata);
 
 /**
- * Send body data
+ * libCurl send body data callback.
+ * \para[in] content Send data buffer.
+ * \para[in] size Data unit size.
+ * \para[in] nmemb Number of data units available.
+ * \para[in|out] userdata Callback user data pointer.
+ * \return Return number of bytes providen.
  */
 size_t mp_curl_send_data(void *ptr, size_t size, size_t nmemb, void *userdata);
 

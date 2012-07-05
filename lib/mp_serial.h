@@ -26,23 +26,29 @@
 
 #include <termios.h>
 
-extern char *mp_serial_device;
-extern int   mp_serial_speed;
+/* The global serial vars. */
+extern char *mp_serial_device;  /**< Hold the Serial device name. */
+extern int   mp_serial_speed;   /**< Hold the Serial device speed. */
 
+/** Serial specific short option string. */
 #define MP_SERIAL_OPTSTR "S:s:"
+/** Serial specific longopt struct. */
 #define MP_SERIAL_LONGOPTS {"serial", required_argument, NULL, (int)'S'}, \
                       {"speed", required_argument, NULL, (int)'s'}
 
 /**
- * Speed infos
+ * Serial Speed infos
  */
 typedef struct {
-    char *name;
-    int flag;
+    char *name; /**< Human speed representation */
+    int flag;   /**< Termios representation. */
 } speed_map;
 
 /**
- * Open Serial port.
+ * Open serial port.
+ * \param[in] device Filename of the device.
+ * \param[in] speed Termios speed flag.
+ * \return File descriptor.
  */
 int mp_serial_open(const char *device, int speed);
 
@@ -52,6 +58,8 @@ char *mp_serial_reply(int fd, char *command);
 
 /**
  * Close serial port
+ * \param[in] fd File descriptor of the serial port to close.
+ * \return Return 0 on success and -1 on error.
  */
 int mp_serial_close(int fd);
 
@@ -62,7 +70,7 @@ int mp_serial_close(int fd);
 void getopt_serial(int c);
 
 /**
- * Print the help for the SNMP related command line options.
+ * Print the help for the Serial related command line options.
  */
 void print_help_serial(void);
 

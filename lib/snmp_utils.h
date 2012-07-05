@@ -29,19 +29,33 @@
 #include <net-snmp/net-snmp-config.h>
 #include <net-snmp/net-snmp-includes.h>
 
+/* The global snmp vars. */
+/** Holds the community for the snmp connection. */
 extern char *mp_snmp_community;
+/** Holds the snmp version for the connection. */
 extern int mp_snmp_version;
+/** Holds the security level for the snmp connection. */
 extern int mp_snmp_seclevel;
+/** Holds the security name for the snmp connection. */
 extern char *mp_snmp_secname;
+/** Holds the context for the snmp connection. */
 extern char *mp_snmp_context;
+/** Holds the authentication password for the snmp connection. */
 extern char *mp_snmp_authpass;
+/** Holds the authentication protocol for the snmp connection. */
 extern oid *mp_snmp_authproto;
+/** Holds the privacy password for the snmp connection. */
 extern char *mp_snmp_privpass;
+/** Holds the query timeout. */
 extern int mp_snmp_timeout;
+/** Holds the query retransmit count. */
 extern int mp_snmp_retries;
+/** Maps ifOperStatus to text. */
 extern char *ifOperStatusText[];
 
+/** SNMP specific short option string. */
 #define SNMP_OPTSTR "C:S:L:U:K:A:a:X:T:R:"
+/** SNMP specific longopt struct. */
 #define SNMP_LONGOPTS {"community", required_argument, NULL, (int)'C'}, \
                       {"snmp", required_argument, NULL, (int)'S'}, \
                       {"secname", required_argument, NULL, (int)'U'}, \
@@ -52,7 +66,9 @@ extern char *ifOperStatusText[];
                       {"snmptimeout", required_argument, NULL, (int)'T'}, \
                       {"snmpretries", required_argument, NULL, (int)'R'}
 
-
+/**
+ * SNMP Query struct
+ */
 struct mp_snmp_query_cmd {
     /** OID name to query */
     oid oid[MAX_OID_LEN];
@@ -64,6 +80,9 @@ struct mp_snmp_query_cmd {
     void **target;
 };
 
+/**
+ * SNMP Table Query struct
+ */
 struct mp_snmp_table {
     /** Table row count */
     int row;

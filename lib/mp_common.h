@@ -67,7 +67,6 @@ enum {
 #   define TRUE (1)
 #endif
 
-
 /**
  * Nagios Plugin return value enum.
  * Provide nice names for the nagios plugin return codes.
