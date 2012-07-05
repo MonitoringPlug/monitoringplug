@@ -78,6 +78,11 @@ libipmiutils_a_SOURCES = ipmi_utils.c ipmi_utils.h
 libipmiutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(IPMI_CFLAGS)
 endif
 
+noinst_LIBRARIES += libsmsutils.a
+
+libsmsutils_a_SOURCES = sms_utils.c sms_utils.h
+libsmsutils_a_CPPFLAGS = $(AM_CPPFLAGS)
+
 libmonitoringplug_a_SOURCES = mp_common.c mp_common.h \
 							  mp_utils.c mp_utils.h \
 							  mp_args.c mp_args.h \
@@ -86,5 +91,8 @@ libmonitoringplug_a_SOURCES = mp_common.c mp_common.h \
 							  mp_popen.c mp_popen.h \
 							  mp_eopt.c mp_eopt.h \
 							  mp_net.c mp_net.h
+if HAVE_TERMIOS
+libmonitoringplug_a_SOURCES += mp_serial.c mp_serial.h
+endif
 
 ## vim: set ts=4 sw=4 syn=automake :

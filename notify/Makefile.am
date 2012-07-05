@@ -8,18 +8,12 @@ AM_DEFAULT_SOURCE_EXT = .c
 
 LDADD = ../lib/libmonitoringplug.a
 
-bin_PROGRAMS = check_file check_nrped
-
-if OS_LINUX
-bin_PROGRAMS += check_bonding check_dhcp check_mem check_multipath check_sockets
-
-check_dhcp_LDADD = $(LDADD) ../lib/libdhcputils.a
-endif
+bin_PROGRAMS = 
 
 if HAVE_TERMIOS
-bin_PROGRAMS += check_gsm_signal
+bin_PROGRAMS += notify_sms
 
-check_gsm_signal_LDADD = $(LDADD) ../lib/libsmsutils.a
+notify_sms_LDADD = ../lib/libsmsutils.a $(LDADD)
 endif
 
 ## vim: set ts=4 sw=4 syn=automake :

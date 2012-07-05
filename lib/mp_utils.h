@@ -83,6 +83,11 @@ int mp_strcmp(const char *s1, const char *s2);
 void mp_array_push(char ***array, char *obj, int *num);
 
 /**
+ * Free a array and its strings.
+ */
+void mp_array_free(char ***array, int *num);
+
+/**
  * Return time in secound since tv.
  */
 double mp_time_delta(struct timeval tv);

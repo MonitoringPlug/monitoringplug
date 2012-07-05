@@ -157,6 +157,16 @@ void mp_array_push(char ***array, char *obj, int *num) {
     }
 }
 
+void mp_array_free(char ***array, int *num) {
+    int i;
+    for (i=0; i < *num; i++) {
+        if ((*array)[i])
+            free((*array)[i]);
+    }
+    (*array) = NULL;
+    (*num) = 0;
+}
+
 double mp_time_delta(struct timeval time_start) {
    struct timeval time_end;
 
