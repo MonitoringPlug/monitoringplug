@@ -54,6 +54,10 @@ char *mp_sms_pin = NULL;
 
 int mobile_at_command(int fd, const char *cmd, const char *opt,
         char ***answer, int *answers) {
+    return mobile_at_command_input(fd, cmd, opt, NULL, answer, answers);
+}
+int mobile_at_command_input(int fd, const char *cmd, const char *opt,
+        const char *input, char ***answer, int *answers) {
     char *buf;
     char *ptr;
     char *line;
@@ -75,10 +79,17 @@ int mobile_at_command(int fd, const char *cmd, const char *opt,
     if (mp_verbose > 3)
         printf(" >> %s\n", buf);
 
+    if (input) {
+        len = write(fd, input, strlen(input));
+        if (mp_verbose > 3)
+            printf(" >> %s\n", input);
+        len = write(fd, "\r\x1A", 2);
+    }
+
     // Read answers
     len = 0;
     ptr = buf;
-    tv.tv_sec = 5;
+    tv.tv_sec = 10;
     tv.tv_usec = 0;
     if (answers)
         *answers = 0;
@@ -244,13 +255,13 @@ char *sms_encode_pdu(const char *smsc, const char *number, const char *text) {
     memset(pdu, 0, len+1);
 
     if (smsc) {
-        mp_asprintf(&pdu, "%02X%s2500%02X%s0000%s",
+        mp_asprintf(&pdu, "%02X%s0500%02X%s0000%s",
                 strlen(encSmsc)/2, encSmsc,
                 strlen(encNumber)-2, encNumber,
                 encText);
         free(encSmsc);
     } else {
-        mp_asprintf(&pdu, "002500%02X%s0000%s",
+        mp_asprintf(&pdu, "000500%02X%s0000%s",
                 strlen(encNumber)-2, encNumber,
                 encText);
     }

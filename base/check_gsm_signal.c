@@ -53,7 +53,6 @@ int main (int argc, char **argv) {
     int i;
     int fd;
     int sq;
-    char *reply;
     char *cmd;
     char *operator = NULL;
     char *network = NULL;
@@ -179,7 +178,7 @@ int main (int argc, char **argv) {
         sq = (int)strtol(answer[0], NULL, 10);
         if (sq < 0 || sq > 31) {
             mp_serial_close(fd);
-            unknown("Illegal signal quality reading '%s0", reply+6);
+            unknown("Illegal signal quality reading '%s0", answer[0]);
         }
         sq = sq*2 - 113;
         mp_perfdata_int("signal", sq, "dBm", dbm_thresholds);

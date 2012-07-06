@@ -51,10 +51,12 @@ char *msg = NULL;
 
 int main (int argc, char **argv) {
     /* Local Vars */
+    int i;
     int fd;
     char *cmd;
-    char *reply;
     char *pdu;
+    char **answer = NULL;
+    int answers;
 
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
@@ -69,28 +71,10 @@ int main (int argc, char **argv) {
 
     fd = mp_serial_open(mp_serial_device, mp_serial_speed);
 
-    mobile_at_command(fd, "", NULL, NULL, NULL);
-
-    char **an = NULL;
-    int ans = 0;
-
-    mobile_at_command(fd, "+COPN", NULL, &an, NULL);
-
-    int i;
-    for(i=0; i<ans; i++) {
-        printf(" * %s\n", an[i]);
-    }
-
-    mp_serial_close(fd);
-    ok("END");
-
     // Wait until. modem is ready
     for(i = 0; i < 5; i++) {
-        reply = mp_serial_reply(fd, "AT");
-
-        if (strcmp(reply, "OK") == 0) {
+        if (mobile_at_command(fd, "", NULL, NULL, NULL) == 0)
             break;
-        }
         sleep(1);
     }
     if (i == 5) {
@@ -99,66 +83,51 @@ int main (int argc, char **argv) {
     }
 
     // Check for pin
-    reply = mp_serial_reply(fd, "AT+CPIN?");
-    if (strcmp(reply, "+CPIN: SIM PIN") == 0) {
+    mobile_at_command(fd, "+CPIN", "?", &answer, &answers);
+    if (strcmp(answer[0], "SIM PIN") == 0) {
         if (mp_sms_pin) {
-            mp_asprintf(&cmd, "AT+CPIN=\"%s\"", mp_sms_pin);
-            reply = mp_serial_reply(fd, cmd);
-            free(reply);
+            mp_array_free(&answer, &answers);
+            mp_asprintf(&cmd,"=\"%s\"", mp_sms_pin);
+            mobile_at_command(fd, "+CPIN", cmd, &answer, &answers);
             free(cmd);
             // Recheck pin
-            reply = mp_serial_reply(fd, "AT+CPIN?");
-            if (strcmp(reply, "+CPIN: READY") != 0) {
+            mobile_at_command(fd, "+CPIN", "?", &answer, &answers);
+            if (strcmp(answer[0], "READY") != 0) {
                 mp_serial_close(fd);
+                mp_array_free(&answer, &answers);
                 critical("SIM unlock faild. Wrong PIN.");
             }
         } else {
             mp_serial_close(fd);
+            mp_array_free(&answer, &answers);
             critical("SIM ask for PIN.");
         }
-    } else if (strcmp(reply, "+CPIN: SIM PUK") == 0) {
+    } else if (strcmp(answer[0], "READY") != 0) {
         mp_serial_close(fd);
-        critical("SIM ask for PUK.");
+        mp_array_free(&answer, &answers);
+        critical("SIM ask for %s.", answer[0]);
     }
-    sleep(1);
-    printf("--------------\n");
-    while(mp_serial_readline(fd, reply, 63) > 0) {
-    }
-    printf("--------------\n");
+    mp_array_free(&answer, &answers);
 
-    reply = mp_serial_reply(fd, "AT+CMGF=0");
-/*
+    // Set SMS mode to PDU
+    if(mobile_at_command(fd, "+CMGF", "=0", NULL, NULL) != 0) {
+        mp_serial_close(fd);
+        critical("Can not setup SMS Mode.");
+    }
+
+    // Prepare SMS
     pdu = sms_encode_pdu(NULL, number, msg);
-    printf("PDU: %s\n", pdu);
+    mp_asprintf(&cmd, "=%02d", strlen(pdu)/2);
+    if (mp_verbose > 0)
+        printf("PDU: %s\n", pdu);
 
-    mp_asprintf(&cmd, "AT+CMGS=%d", strlen(pdu)/2);
-    mp_serial_write(fd, cmd);
-
-    char *ptr;
-    ptr = reply;
-
-    read(fd, ptr, 2);
-    printf(":%s\n", reply);
-
-    write(fd, pdu, strlen(pdu));
-    ptr = reply;
-
-    read(fd, ptr, strlen(pdu));
-
-    printf(":%s\n", reply);
-
-    cmd[0] = '\x1A';
-    cmd[1] = '\0';
-    write(fd, cmd, 2);
-
-    for (i=0; i<10; i++) {
-        mp_serial_readline(fd, reply, 63);
-        printf(":%s\n", reply);
-    }
-*/
+    i = mobile_at_command_input(fd, "+CMGS", cmd, pdu, NULL, NULL);
     mp_serial_close(fd);
 
-    ok("END");
+    if (i == 0)
+        ok("SMS Sent.");
+    else
+        critical("Sending failed!");
 }
 
 int process_arguments (int argc, char **argv) {

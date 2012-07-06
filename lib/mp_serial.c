@@ -92,7 +92,7 @@ int mp_serial_write(int fd, const char *buf) {
 int mp_serial_readline(int fd, char *buf, int count) {
     fd_set fds;
     int ret;
-    char *ptr;
+    char *ptr = NULL;
     int num = 0;
 
     FD_ZERO(&fds);
@@ -126,7 +126,6 @@ int mp_serial_readline(int fd, char *buf, int count) {
 }
 
 char *mp_serial_reply(int fd, char *command) {
-    int i = 0;
     char *buf;
 
     buf = mp_malloc(64);

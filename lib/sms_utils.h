@@ -45,6 +45,9 @@ extern char *mp_sms_pin; /**< Hold the PIN to unlock the SIM. */
 int mobile_at_command(int fd, const char *cmd, const char *opt,
         char ***answer, int *answers);
 
+int mobile_at_command_input(int fd, const char *cmd, const char *opt,
+                const char *input, char ***answer, int *answers);
+
 /**
  * Encode a phone number according to TS GSM 04.11
  * \param[in] number The number to encode.
