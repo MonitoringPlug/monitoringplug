@@ -85,8 +85,11 @@ int main (int argc, char **argv) {
     }
 
     // Check for pin
-    mobile_at_command(fd, "+CPIN", "?", &answer, &answers);
-    if (strcmp(answer[0], "SIM PIN") == 0) {
+    if (mobile_at_command(fd, "+CPIN", "?", &answer, &answers) != 0) {
+        mp_serial_close(fd);
+        critical("Checking pin faild.");
+    }
+    if (answers == 1 && strcmp(answer[0], "SIM PIN") == 0) {
         if (mp_sms_pin) {
             mp_array_free(&answer, &answers);
             mp_asprintf(&cmd,"=\"%s\"", mp_sms_pin);
@@ -104,7 +107,7 @@ int main (int argc, char **argv) {
             mp_array_free(&answer, &answers);
             critical("SIM ask for PIN.");
         }
-    } else if (strcmp(answer[0], "READY") != 0) {
+    } else if (answers == 1 && strcmp(answer[0], "READY") != 0) {
         mp_serial_close(fd);
         mp_array_free(&answer, &answers);
         critical("SIM ask for %s.", answer[0]);

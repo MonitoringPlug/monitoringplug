@@ -89,7 +89,7 @@ int mobile_at_command_input(int fd, const char *cmd, const char *opt,
     // Read answers
     len = 0;
     ptr = buf;
-    tv.tv_sec = 10;
+    tv.tv_sec = 5;
     tv.tv_usec = 0;
     if (answers)
         *answers = 0;
@@ -120,7 +120,9 @@ int mobile_at_command_input(int fd, const char *cmd, const char *opt,
             // Status codes
             if (strcmp(line, "OK") == 0)
                 return 0;
-            if (strcmp(line, "ERROR") == 1)
+            if (strcmp(line, "ERROR") == 0)
+                return 1;
+            if (strncmp(line, "+CME ERROR: ", 12) == 0)
                 return 1;
             // Answer
             if (strncmp(line, cmd, strlen(cmd)) == 0) {
