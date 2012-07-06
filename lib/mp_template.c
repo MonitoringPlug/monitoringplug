@@ -1,106 +1,162 @@
+/***
+ * Monitoring Plugin - mp_template.h
+ **
+ *
+ * Copyright (C) 2012 Marius Rieder <marius.rieder@durchmesser.ch>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * $Id$
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-
 #include "mp_template.h"
+#include "mp_common.h"
+#include "mp_utils.h"
+
+/* Global Vars */
+int mp_template_output_disable = 0;
+char *mp_template_output = NULL;
+int mp_template_output_len = 0;
+int mp_template_output_pos = 0;
+struct mp_template_conditional_list *mp_template_conditionals = NULL;
 
 const int memblock = 64;
 
-char *out;
-int outLen;
-int outPos;
-int conditionalDeep = 0;
-int conditionalHide = 0;
-
-void mp_template_if(int expr) {
-
-   ++conditionalDeep;
-
-   if (conditionalHide && conditionalDeep >= conditionalHide)
-         return;
-
-   if (expr == 0)
-      conditionalHide = conditionalDeep;
-}
-
-void mp_template_else(void) {
-   if (conditionalHide && conditionalDeep != conditionalHide)
-      return;
-
-   if (conditionalHide)
-      conditionalHide = 0;
-   else
-      conditionalHide = conditionalDeep;
-}
-
-void mp_template_endif(void) {
-
-   --conditionalDeep;
-
-   if (conditionalHide && conditionalDeep >= conditionalHide)
-            return;
-
-   conditionalHide = 0;
-}
-
-void mp_template_append(const char *s) {
-   int len;
-
-   if (conditionalHide && conditionalDeep >= conditionalHide)
-      return;
-   if (!s)
-      return;
-
-   len = strlen(s);
-
-   // Resize out buffer
-   if (outLen < (outPos + len + 1)) {
-      while (outLen < (outPos + len + 1))
-     outLen += memblock;
-      outLen += memblock;
-      out = realloc(out, outLen);
-   }
-
-   strncpy(out+outPos, s, len+1);
-   outPos += len;
-}
-
 char *mp_template(FILE *template) {
-   yyin = template;
+    // Init out buffer
+    mp_template_output = malloc(memblock);
+    memset(mp_template_output, 0, memblock);
+    mp_template_output_len = memblock;
+    mp_template_output_pos = 0;
 
-   // Init out buffer
-   out = malloc(memblock);
-   memset(out, 0, memblock);
-   outLen = memblock;
-   outPos = 0;
+    mp_template_parse_file(template);
 
-   do {
-      yyparse();
-   } while (!feof(yyin));
-   yylex_destroy();
-
-   return out;
+    return mp_template_output;
 }
 
 char *mp_template_str(const char *in) {
-   // Init out buffer
-   out = malloc(memblock);
-   memset(out, 0, memblock);
-   outLen = memblock;
-   outPos = 0;
+    // Init out buffer
+    mp_template_output = malloc(memblock);
+    memset(mp_template_output, 0, memblock);
+    mp_template_output_len = memblock;
+    mp_template_output_pos = 0;
 
-   yy_scan_string (in);
-   yyparse();
-   /* to avoid leakage */
-   yylex_destroy();
+    mp_template_parse_string(in);
 
-   return out;
+    return mp_template_output;
 }
 
-void yyerror(char *s) {
-   extern char *yytext;
-            printf("Error: %s at symbol '%s' on line %d\n", s, yytext, yylineno);
-	                exit(1);
+void mp_template_append(const char *s) {
+    int len;
+
+    if (!s || mp_template_output_disable)
+        return;
+
+    len = strlen(s);
+
+    // Resize out buffer
+    if (mp_template_output_len < (mp_template_output_pos + len + 1)) {
+        while (mp_template_output_len < (mp_template_output_pos + len + 1))
+            mp_template_output_len += memblock;
+        mp_template_output_len += memblock;
+        mp_template_output = realloc(mp_template_output, mp_template_output_len);
+    }
+
+    strncpy(mp_template_output+mp_template_output_pos, s, len+1);
+    mp_template_output_pos += len;
 }
 
+void mp_template_if(int expr) {
+    struct mp_template_conditional_list *cond = NULL;
+
+    if (mp_template_output_disable) {
+        mp_template_conditionals->deep += 1;
+        return;
+    }
+
+    cond = mp_malloc(sizeof(struct mp_template_conditional_list));
+    memset(cond, 0, sizeof(struct mp_template_conditional_list));
+
+    cond->type = COND_INT;
+    cond->deep = 0;
+    cond->value.ival = expr;
+    cond->upper = mp_template_conditionals;
+
+    mp_template_conditionals = cond;
+
+    mp_template_output_disable = expr ? 0 : 1;
+}
+
+void mp_template_else(void) {
+    if (mp_template_conditionals->deep > 0)
+        return;
+
+    mp_template_output_disable = mp_template_conditionals->value.ival ? 1 : 0;
+}
+
+void mp_template_switch_int(int i) {
+    struct mp_template_conditional_list *cond = NULL;
+
+    if (mp_template_output_disable) {
+        mp_template_conditionals->deep += 1;
+        return;
+    }
+
+    cond = mp_malloc(sizeof(struct mp_template_conditional_list));
+    memset(cond, 0, sizeof(struct mp_template_conditional_list));
+
+    cond->type = COND_INT;
+    cond->deep = 0;
+    cond->value.ival = i;
+    cond->upper = mp_template_conditionals;
+
+    mp_template_conditionals = cond;
+
+    mp_template_output_disable = 1;
+
+}
+void mp_template_case_int(int i){
+    if (mp_template_conditionals->deep > 0)
+        return;
+
+    mp_template_output_disable = mp_template_conditionals->value.ival == i ? 0 : 1;
+}
+
+void mp_template_end() {
+    struct mp_template_conditional_list *cond = NULL;
+
+    if (mp_template_conditionals->deep > 0) {
+        mp_template_conditionals->deep -= 1;
+        return;
+    }
+
+    cond = mp_template_conditionals;
+    mp_template_conditionals = cond->upper;
+
+    free(cond);
+
+    mp_template_output_disable = 0;
+}
+
+
+void mp_template_error(char *s) {
+    unknown("Error: %s at symbol '%s' on line %d\n", s, yytext, yylineno);
+}
+
+/* vim: set ts=4 sw=4 et syn=c : */

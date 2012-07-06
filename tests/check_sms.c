@@ -88,7 +88,7 @@ START_TEST (test_sms_encode_pdu) {
 
     pdu = sms_encode_pdu(NULL, "+491721234567", "Testtext:€");
 
-    fail_unless (strcmp(pdu, "0025000C9194711232547600000BD4F29C4E2FE3E9BA4D19") == 0,
+    fail_unless (strcmp(pdu, "0005000C9194711232547600000BD4F29C4E2FE3E9BA4D19") == 0,
             "sms_encode_pdufailed=> '%s'", pdu);
 }
 END_TEST
@@ -98,7 +98,7 @@ START_TEST (test_sms_encode_pdu_smsc) {
 
     pdu = sms_encode_pdu("+491722270333", "+491721234567", "Testtext:€");
 
-    fail_unless (strcmp(pdu, "079194712272303325000C9194711232547600000BD4F29C4E2FE3E9BA4D19") == 0,
+    fail_unless (strcmp(pdu, "079194712272303305000C9194711232547600000BD4F29C4E2FE3E9BA4D19") == 0,
             "sms_encode_pdufailed=> '%s'", pdu);
 }
 END_TEST

@@ -26,6 +26,9 @@
 #include "mp_template_yacc.h"
 %}
 
+%option nounput
+%option noinput
+
 %x TT
 %x COMMENT
 
@@ -55,6 +58,8 @@ IDENT       [a-zA-Z_][a-zA-Z0-9_]*
 <TT>"IF"            { return IF; }
 <TT>"UNLESS"        { return UNLESS; }
 <TT>"ELSE"          { return ELSE; }
+<TT>"SWITCH"        { return SWITCH; }
+<TT>"CASE"          { return CASE; }
 <TT>"END"           { return END; }
 <TT>"=="            { return OP_EQ; }
 <TT>">="            { return OP_GE; }
@@ -79,6 +84,21 @@ IDENT       [a-zA-Z_][a-zA-Z0-9_]*
 
 int yywrap(void) {
     return 1;
+}
+
+void mp_template_parse_file(FILE *in) {
+    yyin = in;
+
+    do {
+        yyparse();
+    } while (!feof(yyin));
+    yylex_destroy();
+}
+
+void mp_template_parse_string(const char *in) {
+    yy_scan_string(in);
+    yyparse();
+    yylex_destroy();
 }
 
 /* vim: set ts=4 sw=4 et syn=lex : */

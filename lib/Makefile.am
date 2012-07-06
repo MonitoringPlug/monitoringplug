@@ -96,6 +96,7 @@ libmonitoringplug_a_SOURCES += mp_serial.c mp_serial.h
 endif
 
 AM_YFLAGS = -d
+AM_LFLAGS = --header-file
 noinst_LIBRARIES  += libmonitoringplugtemplate.a
 libmonitoringplugtemplate_a_SOURCES = mp_template_yacc.y \
 									  mp_template_lex.l \

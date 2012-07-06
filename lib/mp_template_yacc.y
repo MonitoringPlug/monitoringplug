@@ -33,7 +33,7 @@
 // Directives
 %token GET SET
 
-%token IF UNLESS ELSE END
+%token IF UNLESS ELSE SWITCH CASE END
 %token OP_EQ OP_GE OP_LE
 %token EOL
 
@@ -78,54 +78,60 @@ block: TEXT		{ mp_template_append($1); }
 
 statement: conditionals
          | get
-         | set
          ;
 
 conditionals: conditionals_start blocks conditionals_else blocks conditionals_end
-	    | conditionals_start blocks conditionals_end
-	    ;
+            | conditionals_start blocks conditionals_end
+            | switch_start switch_cases switch_end
+            ;
 conditionals_start: IF bexpr { mp_template_if($2); }
                   | UNLESS bexpr { mp_template_if(!$2); }
 		  ;
 conditionals_else: ELSE		{ mp_template_else(); }
 		 ;
-conditionals_end: END		{ mp_template_endif(); }
+conditionals_end: END		{ mp_template_end(); }
 		;
+switch_start: SWITCH iexpr  { mp_template_switch_int($2); }
+switch_cases: switch_cases switch_case blocks
+            | switch_case blocks
+            | /* empty */
+            ;
+switch_case: CASE iexpr     { mp_template_case_int($2); }
+           ;
+switch_end: END             { mp_template_end(); }
+          ;
 
 get: GET sexpr              { mp_template_append($2); }
    | sexpr                  { mp_template_append($1); }
 
-set: SET LABEL '=' sexpr     { }
-   ;
-
-bexpr: fexpr OP_EQ fexpr	{ $$ = ($1 == $3); }
-     | fexpr OP_GE fexpr	{ $$ = ($1 >= $3); }
-     | fexpr OP_LE fexpr	{ $$ = ($1 <= $3); }
-     | fexpr '>' fexpr		{ $$ = ($1 > $3); }
-     | fexpr '<' fexpr		{ $$ = ($1 < $3); }
-     | '!' bexpr			{ $$ = $2 ? 0 : 1; }
-     | '(' bexpr ')'		{ $$ = $2; }
-     | sexpr OP_EQ sexpr	{ $$ = (strcmp($1, $3) == 0); }
-     | sexpr			    { $$ = $1 ? strlen($1) > 0 : 0; }
-     | iexpr                { $$ = $1 != 0; }
-     | fexpr                { $$ = $1 != 0; }
+bexpr: fexpr OP_EQ fexpr	        { $$ = ($1 == $3); }
+     | fexpr OP_GE fexpr	        { $$ = ($1 >= $3); }
+     | fexpr OP_LE fexpr	        { $$ = ($1 <= $3); }
+     | fexpr '>' fexpr		        { $$ = ($1 > $3); }
+     | fexpr '<' fexpr		        { $$ = ($1 < $3); }
+     | '!' bexpr			        { $$ = $2 ? 0 : 1; }
+     | '(' bexpr ')'		        { $$ = $2; }
+     | sexpr OP_EQ sexpr	        { $$ = (strcmp($1, $3) == 0); }
+     | sexpr			            { $$ = $1 ? strlen($1) > 0 : 0; }
+     | iexpr                        { $$ = $1 != 0; }
+     | fexpr                        { $$ = $1 != 0; }
      ;
 
-iexpr: iexpr '+' iexpr  { $$ = $1 + $3; }
-     | iexpr '-' iexpr  { $$ = $1 - $3; }
-     | iexpr '/' iexpr  { $$ = $1 / $3; }
-     | iexpr '*' iexpr  { $$ = $1 * $3; }
-     | '(' iexpr ')'    { $$ = $2; }
-     | INT
+iexpr: iexpr '+' iexpr              { $$ = $1 + $3; }
+     | iexpr '-' iexpr              { $$ = $1 - $3; }
+     | iexpr '/' iexpr              { $$ = $1 / $3; }
+     | iexpr '*' iexpr              { $$ = $1 * $3; }
+     | '(' iexpr ')'                { $$ = $2; }
+     | INT                          { $$ = $1; }
      ;
 
-fexpr: fexpr '+' fexpr  { $$ = $1 + $3; }
-     | fexpr '-' fexpr  { $$ = $1 - $3; }
-     | fexpr '/' fexpr  { $$ = $1 / $3; }
-     | fexpr '*' fexpr  { $$ = $1 * $3; }
-     | '(' fexpr ')'    { $$ = $2; }
-     | FLOAT            { $$ = $1; }
-     | INT              { $$ = (float)$1; }
+fexpr: fexpr '+' fexpr              { $$ = $1 + $3; }
+     | fexpr '-' fexpr              { $$ = $1 - $3; }
+     | fexpr '/' fexpr              { $$ = $1 / $3; }
+     | fexpr '*' fexpr              { $$ = $1 * $3; }
+     | '(' fexpr ')'                { $$ = $2; }
+     | FLOAT                        { $$ = $1; }
+     | INT                          { $$ = (float)$1; }
      ;
 
 sexpr: STRING			{ }

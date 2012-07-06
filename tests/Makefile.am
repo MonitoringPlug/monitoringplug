@@ -29,5 +29,5 @@ check_template_LDADD = ../lib/libmonitoringplugtemplate.a $(LDADD)
 
 endif
 
-EXTRA_DIST = eopt.ini
+EXTRA_DIST = eopt.ini testdata
 ## vim: set ts=4 sw=4 syn=automake :
