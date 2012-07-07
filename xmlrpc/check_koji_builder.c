@@ -34,7 +34,6 @@ const char *progusage = "--url URL --hostname NAME";
 #include "mp_common.h"
 #include "xmlrpc_utils.h"
 /* Default Includes */
-#include <getopt.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -109,7 +108,6 @@ int process_arguments (int argc, char **argv) {
     static struct option longopts[] = {
         MP_LONGOPTS_DEFAULT,
         MP_LONGOPTS_HOST,
-        MP_LONGOPTS_TIMEOUT,
         MP_LONGOPTS_EOPT,
         {"url", required_argument, NULL, (int)'U'},
         MP_LONGOPTS_END
@@ -117,24 +115,19 @@ int process_arguments (int argc, char **argv) {
 
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"H:E::U:t:", longopts, &option);
+        c = mp_getopt(argc, argv, MP_OPTSTR_DEFAULT"H:U:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
 
         switch (c) {
             /* Default opts */
-            MP_GETOPTS_DEFAULT
             case 'H':
                getopt_host(optarg, &hostname);
                break;
             /* Local opts */
             case 'U':
                 getopt_url(optarg, &url);
-                break;
-            /* Timeout opt */
-            case 't':
-                getopt_timeout(optarg);
                 break;
         }
     }

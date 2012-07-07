@@ -24,14 +24,15 @@
  */
 
 const char *progname  = "notify_sms";
-const char *progdesc  = "Check if run inside of nrped.";
+const char *progdesc  = "Send a notification by SMS with a Modem.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2012";
 const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
-const char *progusage = "--number <NUMBER> --msg <MSG>";
+const char *progusage = "--number <NUMBER> --message <MSG>";
 
 /* MP Includes */
 #include "mp_common.h"
+#include "mp_notify.h"
 #include "mp_serial.h"
 #include "sms_utils.h"
 /* Default Includes */
@@ -135,31 +136,34 @@ int process_arguments (int argc, char **argv) {
     int option = 0;
 
     static struct option longopts[] = {
-        MP_LONGOPTS_DEFAULT,
+        MP_LONGOPTS_NOTIFY,
         MP_SERIAL_LONGOPTS,
-        {"msg", required_argument, NULL, (int)'m'},
         {"number", required_argument, NULL, (int)'n'},
         MP_LONGOPTS_END
     };
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"t:m:n:"MP_SERIAL_OPTSTR, longopts, &option);
+        c = mp_getopt(argc, argv, MP_OPTSTR_NOTIFY"n:"MP_SERIAL_OPTSTR, longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
 
+        getopt_notify(c);
         getopt_serial(c);
         switch (c) {
-            MP_GETOPTS_DEFAULT
             /* Plugin opts */
-            case 'm':
-                msg = optarg;
-                break;
             case 'n':
                 number = optarg;
                 break;
         }
     }
+
+    /* Checks */
+    if (!number)
+        usage("Destination number is mandatory.");
+    if (!mp_notify_file && !mp_notify_msg)
+        usage("--file or --message is mandatory.");
+
     return(OK);
 }
 
@@ -169,14 +173,17 @@ void print_help (void) {
 
     printf("\n");
 
-    printf("Check description: %s", progdesc);
+    printf("Notify description: %s", progdesc);
 
     printf("\n\n");
 
     print_usage();
 
-    print_help_default();
+    print_help_notify();
     print_help_serial();
+    printf(" -n, --number=DESTINATION\n");
+    printf("      Number to send SMS to.\n");
+
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */

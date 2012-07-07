@@ -34,7 +34,6 @@ const char *progusage = "--hostname <BUILDBOTHOST> [--slave <SLAVENAME>]";
 #include "mp_common.h"
 #include "curl_utils.h"
 /* Default Includes */
-#include <getopt.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -198,7 +197,6 @@ int process_arguments (int argc, char **argv) {
         MP_LONGOPTS_HOST,
         MP_LONGOPTS_PORT,
         {"slave", required_argument, 0, 'S'},
-        MP_LONGOPTS_TIMEOUT,
         MP_LONGOPTS_END
     };
 
@@ -210,14 +208,13 @@ int process_arguments (int argc, char **argv) {
     /* Set default */
 
     while (1) {
-        c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"H:P:S:t:", longopts, &option);
+        c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"H:P:S:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
 
         switch (c) {
             /* Default opts */
-            MP_GETOPTS_DEFAULT
             case 'S':
                 mp_array_push(&slave, optarg, &slaves);
                 break;
@@ -227,10 +224,6 @@ int process_arguments (int argc, char **argv) {
                 break;
             case 'P':
                 getopt_port(optarg, &port);
-                break;
-            /* Timeout opt */
-            case 't':
-                getopt_timeout(optarg);
                 break;
         }
     }

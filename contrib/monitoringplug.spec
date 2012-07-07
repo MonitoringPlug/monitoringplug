@@ -135,6 +135,11 @@ Group:          Applications/System
 Requires:       xmlrpc-c-client
 Requires:       monitoringplug
 
+%package notify
+Summary:        Collection of notification commands for Nagios
+Group:          Applications/System
+Requires:       monitoringplug
+
 %description
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 
@@ -206,6 +211,10 @@ This package contains the snmp based plugins.
 %description xmlrpc
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the xmlrpc plugins.
+
+%description notify
+Collection of monitoring plugins for Nagios and similar monitoring systems.
+This package contains the notification commands.
 
 %prep
 %setup -q
@@ -298,6 +307,9 @@ fi
 %post xmlrpc
 /sbin/fixfiles -F -R monitoringplug-xmlrpc restore ||:
 
+%post notify
+/sbin/fixfiles -F -R monitoringplug-notify restore ||:
+
 %postun
 if [ "$1" -eq "0" ]; then
     /usr/sbin/semodule -r %{name} 2>/dev/null || :
@@ -315,6 +327,7 @@ fi
 %{_libdir}/nagios/plugins/check_file
 %{_libdir}/nagios/plugins/check_bonding
 %{_libdir}/nagios/plugins/check_dhcp
+%{_libdir}/nagios/plugins/check_gsm_signal
 %{_libdir}/nagios/plugins/check_mem
 %attr(4111, root, root) %{_libdir}/nagios/plugins/check_multipath
 %{_libdir}/nagios/plugins/check_nrped
@@ -433,9 +446,15 @@ fi
 %{_mandir}/man1/check_rhn_entitlements.1.gz
 %{_mandir}/man1/check_koji_*
 
+%files notify
+%defattr(-,root,root,-)
+%{_libdir}/nagios/plugins/notify_*
+
 %changelog
 * Thu Jun 26 2012 Marius Rieder <marius.rieder@durchmesser.ch> - 0.11-1
 - Added IPMI checks with OpenIPMI
+- Added GSM-Modem signal quality check.
+- Added SMS notification command.
 
 * Thu Jun 21 2012 Marius Rieder <marius.rieder@durchmesser.ch> - 0.10-1
 - new check_dhcp

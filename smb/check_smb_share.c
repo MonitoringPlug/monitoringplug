@@ -33,7 +33,6 @@ const char *progusage = "--url <URL> [--help] [--timeout TIMEOUT]";
 /* MP Includes */
 #include "mp_common.h"
 /* Default Includes */
-#include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -189,7 +188,6 @@ int process_arguments (int argc, char **argv) {
         {"username", required_argument, NULL, (int)'U'},
         {"password", required_argument, NULL, (int)'P'},
         {"workgroup", required_argument, NULL, (int)'W'},
-        MP_LONGOPTS_TIMEOUT,
         MP_LONGOPTS_END
     };
 
@@ -198,7 +196,7 @@ int process_arguments (int argc, char **argv) {
     setCritTime(&time_threshold, "2s");
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"u:U:P:W:w:c:H:t:", longopts, &option);
+        c = mp_getopt(argc, argv, MP_OPTSTR_DEFAULT"u:U:P:W:w:c:H:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -207,7 +205,6 @@ int process_arguments (int argc, char **argv) {
 
         switch (c) {
             /* Default opts */
-            MP_GETOPTS_DEFAULT
             /* Host opt */
             case 'u':
                 getopt_url(optarg, &url);
@@ -221,10 +218,6 @@ int process_arguments (int argc, char **argv) {
                 break;
             case 'W':
                 workgroup = optarg;
-                break;
-            /* Timeout opt */
-            case 't':
-                getopt_timeout(optarg);
                 break;
         }
     }

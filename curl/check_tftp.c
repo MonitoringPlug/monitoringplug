@@ -34,7 +34,6 @@ const char *progusage = "-H host -F file [-t timeout] [-w warn] [-c crit]";
 #include "mp_common.h"
 #include "curl_utils.h"
 /* Default Includes */
-#include <getopt.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -134,7 +133,6 @@ int process_arguments (int argc, char **argv) {
         MP_LONGOPTS_PORT,
         {"file", required_argument, 0, 'F'},
         MP_LONGOPTS_WC,
-        MP_LONGOPTS_TIMEOUT,
         MP_LONGOPTS_END
     };
 
@@ -148,7 +146,7 @@ int process_arguments (int argc, char **argv) {
     setCritTime(&fetch_thresholds, "9s");
 
     while (1) {
-        c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"H:P:F:w:c:t:", longopts, &option);
+        c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"H:P:F:w:c:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -157,7 +155,6 @@ int process_arguments (int argc, char **argv) {
 
         switch (c) {
             /* Default opts */
-            MP_GETOPTS_DEFAULT
             /* Hostname opt */
             case 'H':
                 getopt_host(optarg, &hostname);
@@ -168,10 +165,6 @@ int process_arguments (int argc, char **argv) {
                 break;
             case 'F':
                 filename = optarg;
-                break;
-            /* Timeout opt */
-            case 't':
-                getopt_timeout(optarg);
                 break;
         }
     }

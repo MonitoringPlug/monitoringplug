@@ -34,7 +34,6 @@ const char *progusage = "[--fan <FAN[,FAN]>]";
 #include "mp_common.h"
 #include "ipmi_utils.h"
 /* Default Includes */
-#include <getopt.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -153,12 +152,11 @@ int process_arguments (int argc, char **argv) {
             MP_LONGOPTS_DEFAULT,
             IPMI_LONGOPTS,
             {"fan", required_argument, NULL, (int)'F'},
-            MP_LONGOPTS_TIMEOUT,
             MP_LONGOPTS_END
     };
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"t:F:"IPMI_OPTSTR, longopts, &option);
+        c = mp_getopt(argc, argv, MP_OPTSTR_DEFAULT"F:"IPMI_OPTSTR, longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -167,14 +165,9 @@ int process_arguments (int argc, char **argv) {
 
         switch (c) {
             /* Default opts */
-            MP_GETOPTS_DEFAULT
             /* Plugin opt */
             case 'F':
                 mp_array_push(&fan, optarg, &fans);
-                break;
-            /* Timeout opt */
-            case 't':
-                getopt_timeout(optarg);
                 break;
         }
     }

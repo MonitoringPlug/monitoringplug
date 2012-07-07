@@ -35,7 +35,6 @@ const char *progusage = "--serial <DEV>";
 #include "mp_serial.h"
 #include "sms_utils.h"
 /* Default Includes */
-#include <getopt.h>
 #include <stdio.h>
 #include <signal.h>
 #include <unistd.h>
@@ -227,7 +226,7 @@ int process_arguments (int argc, char **argv) {
     setCrit(&dbm_thresholds, "-100:", 0);
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"t:P:w:c:"MP_SERIAL_OPTSTR, longopts, &option);
+        c = mp_getopt(argc, argv, MP_OPTSTR_DEFAULT"P:w:c:"MP_SERIAL_OPTSTR, longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -236,7 +235,6 @@ int process_arguments (int argc, char **argv) {
         getopt_wc(c, optarg, &dbm_thresholds);
 
         switch (c) {
-            MP_GETOPTS_DEFAULT
             /* Default opts */
             case 'P':
                 mp_sms_pin = optarg;

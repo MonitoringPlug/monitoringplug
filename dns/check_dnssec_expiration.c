@@ -34,7 +34,6 @@ const char *progusage = "[-H host] -D domain [-k file] [-t timeout] [-w warn] [-
 #include "mp_common.h"
 #include "ldns_utils.h"
 /* Default Includes */
-#include <getopt.h>
 #include <signal.h>
 #include <string.h>
 #include <unistd.h>
@@ -224,7 +223,6 @@ int process_arguments (int argc, char **argv) {
         {"domain", required_argument, 0, 'D'},
         {"trusted-keys", required_argument, 0, 'k'},
         MP_LONGOPTS_WC,
-        MP_LONGOPTS_TIMEOUT,
         MP_LONGOPTS_END
     };
 
@@ -238,7 +236,7 @@ int process_arguments (int argc, char **argv) {
     setCritTime(&exp_thresholds, "1d:");
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"H:D:k:w:c:t:"LDNS_OPTSTR, longopts, &option);
+        c = mp_getopt(argc, argv, MP_OPTSTR_DEFAULT"H:D:k:w:c:"LDNS_OPTSTR, longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -248,7 +246,6 @@ int process_arguments (int argc, char **argv) {
 
         switch (c) {
             /* Default opts */
-            MP_GETOPTS_DEFAULT
             /* Host opt */
             case 'H':
                 getopt_host_ip(optarg, &hostname);
@@ -262,10 +259,6 @@ int process_arguments (int argc, char **argv) {
                 trusted_keys = loadKeyfile(optarg);
                 if (trusted_keys == NULL)
                     usage("Parsing keyfiel faild.");
-                break;
-            /* Timeout opt */
-            case 't':
-                getopt_timeout(optarg);
                 break;
         }
     }

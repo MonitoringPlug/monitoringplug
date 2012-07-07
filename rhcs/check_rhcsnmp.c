@@ -35,7 +35,6 @@ const char *progusage = "-H <HOST>";
 #include "mp_common.h"
 #include "snmp_utils.h"
 /* Default Includes */
-#include <getopt.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -118,7 +117,6 @@ int process_arguments (int argc, char **argv) {
             MP_LONGOPTS_HOST,
             MP_LONGOPTS_PORT,
             SNMP_LONGOPTS,
-            MP_LONGOPTS_TIMEOUT,
             MP_LONGOPTS_END
     };
 
@@ -129,7 +127,7 @@ int process_arguments (int argc, char **argv) {
 
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"t:H:p:"SNMP_OPTSTR, longopts, &option);
+        c = mp_getopt(argc, argv, MP_OPTSTR_DEFAULT"H:p:"SNMP_OPTSTR, longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -138,7 +136,6 @@ int process_arguments (int argc, char **argv) {
 
         switch (c) {
             /* Default opts */
-            MP_GETOPTS_DEFAULT
             /* Hostname opt */
             case 'H':
                 getopt_host(optarg, &hostname);
@@ -146,10 +143,6 @@ int process_arguments (int argc, char **argv) {
             /* Port opt */
             case 'P':
                 getopt_port(optarg, &port);
-                break;
-            /* Timeout opt */
-            case 't':
-                getopt_timeout(optarg);
                 break;
         }
     }

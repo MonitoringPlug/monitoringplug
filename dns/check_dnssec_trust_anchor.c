@@ -34,7 +34,6 @@ const char *progusage = "[-H host] -k file [-t timeout]";
 #include "mp_common.h"
 #include "ldns_utils.h"
 /* Default Includes */
-#include <getopt.h>
 #include <signal.h>
 #include <string.h>
 #include <unistd.h>
@@ -128,7 +127,6 @@ int process_arguments (int argc, char **argv) {
         LDNS_LONGOPTS,
         {"domain", required_argument, 0, 'D'},
         {"trusted-keys", required_argument, 0, 'k'},
-        MP_LONGOPTS_TIMEOUT,
         MP_LONGOPTS_END
     };
 
@@ -138,7 +136,7 @@ int process_arguments (int argc, char **argv) {
     }
 
     while (1) {
-        c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"t:H:k:w:c:"LDNS_OPTSTR, long_opts, &option);
+        c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"H:k:w:c:"LDNS_OPTSTR, long_opts, &option);
         if (c == -1 || c == EOF)
             break;
 
@@ -146,7 +144,6 @@ int process_arguments (int argc, char **argv) {
 
         switch (c) {
             /* Default opts */
-            MP_GETOPTS_DEFAULT
             /* Host opt */
             case 'H':
                 getopt_host_ip(optarg, &hostname);
@@ -157,10 +154,6 @@ int process_arguments (int argc, char **argv) {
                 if(trusted_keys == NULL
                    || ldns_rr_list_rr_count(trusted_keys) == 0)
                     usage("Can't load trust anchors from file");
-                break;
-            /* Timeout opt */
-            case 't':
-                getopt_timeout(optarg);
                 break;
         }
     }

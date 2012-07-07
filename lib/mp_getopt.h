@@ -1,5 +1,5 @@
 /***
- * Monitoring Plugin - mp_longopt.h
+ * Monitoring Plugin - mp_getopt.h
  **
  *
  * Copyright (C) 2012 Marius Rieder <marius.rieder@durchmesser.ch>
@@ -21,12 +21,14 @@
  * $Id$
  */
 
-#ifndef MP_LONGOPT_H_
-#define MP_LONGOPT_H_
+#ifndef _MP_GETOPT_H_
+#define _MP_GETOPT_H_
 
-#define MP_LONGOPT_EOPT         0x0080
-#define MP_LONGOPT_PERFDATA     0x0081
+#include <getopt.h>
 
+/** Longopt only defines */
+#define MP_LONGOPT_EOPT         0x0080  //*< --eopt */
+#define MP_LONGOPT_PERFDATA     0x0081  //*< --perfdata */
 #define MP_LONGOPT_PRIV0        0x0090
 #define MP_LONGOPT_PRIV1        0x0091
 #define MP_LONGOPT_PRIV2        0x0092
@@ -36,6 +38,12 @@
 #define MP_LONGOPT_PRIV6        0x0096
 #define MP_LONGOPT_PRIV7        0x0097
 
-#endif /* MP_LONGOPT_H_ */
+/**
+ * Wrapper around getopt_long for check commands.
+ */
+int mp_getopt(int argc, char *argv[], const char *optstring,
+        const struct option *longopts, int *longindex);
+
+#endif /* _MP_GETOPT_H_ */
 
 /* vim: set ts=4 sw=4 et syn=c : */

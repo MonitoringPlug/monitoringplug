@@ -36,7 +36,6 @@ const char *progusage = "[-i <DEV>] [-H <HOSTNAME> [--unicast]] [--mac <MAC>]";
 #include "dhcp_utils.h"
 /* Default Includes */
 #include <errno.h>
-#include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -297,14 +296,13 @@ int process_arguments (int argc, char **argv) {
     };
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"H:i:m:ubr:T:t:", longopts, &option);
+        c = mp_getopt(argc, argv, MP_OPTSTR_DEFAULT"H:i:m:ubr:T:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
 
         switch(c) {
             /* Default opts */
-            MP_GETOPTS_DEFAULT
             /* Hostname opt */
             case 'H':
                 getopt_host(optarg, &hostname);
@@ -342,10 +340,6 @@ int process_arguments (int argc, char **argv) {
                 } else {
                     usage("Unknown type '%s'", optarg);
                 }
-                break;
-            /* Timeout opt */
-            case 't':
-                getopt_timeout(optarg);
                 break;
         }
 

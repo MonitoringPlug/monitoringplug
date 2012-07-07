@@ -33,7 +33,6 @@ const char *progusage = "-f <FILE> [-w <warning age>] [-c <critical age>]";
 /* MP Includes */
 #include "mp_common.h"
 /* Default Includes */
-#include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -280,7 +279,7 @@ int process_arguments (int argc, char **argv) {
     };
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"t:f:o:g:a:w:c:W:C:", longopts, &option);
+        c = mp_getopt(argc, argv, MP_OPTSTR_DEFAULT"f:o:g:a:w:c:W:C:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -289,7 +288,6 @@ int process_arguments (int argc, char **argv) {
 
         switch (c) {
             /* Default opts */
-            MP_GETOPTS_DEFAULT
             case 'f':
                 filename = optarg;
                 break;

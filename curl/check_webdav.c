@@ -37,7 +37,6 @@ const char *progusage = "--url <URL>";
 #include "expat_utils.h"
 #endif
 /* Default Includes */
-#include <getopt.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -402,7 +401,6 @@ int process_arguments (int argc, char **argv) {
         {"allow", required_argument, 0, (int)'a'},
         {"ls", no_argument, &do_list, 1},
         MP_LONGOPTS_WC,
-        MP_LONGOPTS_TIMEOUT,
         MP_LONGOPTS_END
     };
 
@@ -416,7 +414,7 @@ int process_arguments (int argc, char **argv) {
     setCritTime(&fetch_thresholds, "9s");
 
     while (1) {
-        c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"u:C:a:w:c:t:", longopts, &option);
+        c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"u:C:a:w:c:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -425,7 +423,6 @@ int process_arguments (int argc, char **argv) {
 
         switch (c) {
             /* Default opts */
-            MP_GETOPTS_DEFAULT
             case 'u':
                 getopt_url(optarg, &url);
                 break;
@@ -434,10 +431,6 @@ int process_arguments (int argc, char **argv) {
                 break;
             case 'a':
                 mp_array_push(&allowShould, optarg, &allowShoulds);
-                break;
-            /* Timeout opt */
-            case 't':
-                getopt_timeout(optarg);
                 break;
         }
     }

@@ -34,7 +34,6 @@ const char *progusage = "--userkey <userkey> --password <password>";
 #include "mp_common.h"
 #include "curl_utils.h"
 /* Default Includes */
-#include <getopt.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -187,7 +186,6 @@ int process_arguments (int argc, char **argv) {
         {"userkey", required_argument, 0, 'U'},
         {"password", required_argument, 0, 'P'},
         MP_LONGOPTS_WC,
-        MP_LONGOPTS_TIMEOUT,
         MP_LONGOPTS_END
     };
 
@@ -201,7 +199,7 @@ int process_arguments (int argc, char **argv) {
     setCritTime(&credit_thresholds, "50:");
 
     while (1) {
-        c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"U:P:w:c:t:", longopts, &option);
+        c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"U:P:w:c:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -210,16 +208,11 @@ int process_arguments (int argc, char **argv) {
 
         switch (c) {
             /* Default opts */
-            MP_GETOPTS_DEFAULT
             case 'U':
                 userkey = optarg;
                 break;
             case 'P':
                 password = optarg;
-                break;
-            /* Timeout opt */
-            case 't':
-                getopt_timeout(optarg);
                 break;
         }
     }

@@ -34,7 +34,6 @@ const char *progusage = "-H hostname [--help] [--timeout TIMEOUT]";
 #include "mp_common.h"
 #include "rpc_utils.h"
 /* Default Includes */
-#include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -268,7 +267,6 @@ int process_arguments (int argc, char **argv) {
         {"export", required_argument, 0, 'e'},
         {"rpcversion", required_argument, 0, 'r'},
         {"transport", required_argument, 0, 'T'},
-        MP_LONGOPTS_TIMEOUT,
         MP_LONGOPTS_END
     };
 
@@ -277,7 +275,7 @@ int process_arguments (int argc, char **argv) {
     setCritTime(&time_threshold, "1s");
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"H:w:c:e:r:T:t:", longopts, &option);
+        c = mp_getopt(argc, argv, MP_OPTSTR_DEFAULT"H:w:c:e:r:T:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -286,7 +284,6 @@ int process_arguments (int argc, char **argv) {
 
         switch (c) {
             /* Default opts */
-            MP_GETOPTS_DEFAULT
             /* Host opt */
             case 'H':
                 getopt_host(optarg, &hostname);
@@ -302,10 +299,6 @@ int process_arguments (int argc, char **argv) {
                 mp_array_push(&rpctransport, optarg, &rpctransports);
                 break;
             }
-            /* Timeout opt */
-            case 't':
-                getopt_timeout(optarg);
-                break;
         }
     }
 

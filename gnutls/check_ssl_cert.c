@@ -35,7 +35,6 @@ const char *progusage = "--host <HOSTNAME> --port <PORT>";
 #include "mp_utils.h"
 #include "mp_net.h"
 /* Default Includes */
-#include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -228,7 +227,7 @@ int process_arguments (int argc, char **argv) {
     setCritTime(&expire_thresholds, "10d:");
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"H:P:46w:c:C:t:", longopts, &option);
+        c = mp_getopt(argc, argv, MP_OPTSTR_DEFAULT"H:P:46w:c:C:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -238,7 +237,6 @@ int process_arguments (int argc, char **argv) {
 
         switch (c) {
             /* Default opts */
-            MP_GETOPTS_DEFAULT
             /* Plugin opts */
             /* Hostname opt */
             case 'H':
@@ -251,10 +249,6 @@ int process_arguments (int argc, char **argv) {
             /* CAs opt */
             case 'C':
                 mp_array_push(&ca_file, optarg, &ca_files);
-                break;
-            /* Timeout opt */
-            case 't':
-                getopt_timeout(optarg);
                 break;
         }
     }

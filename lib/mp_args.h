@@ -208,6 +208,11 @@ char *str_range(range *my_range);
 void print_help_default(void);
 
 /**
+ * Prints the notification help message for the defaults options.
+ */
+void print_help_notify(void);
+
+/**
  * Prints the help for the host option
  */
 void print_help_host(void);
@@ -246,12 +251,6 @@ void print_help_crit(const char *limit, const char *def);
  * Print the help for the IPv4/6 option.
  */
 void print_help_46(void);
-
-/**
- * Parse the option for timeout.
- * \param[in] optarg option argument
- */
-void getopt_timeout(const char *optarg);
 
 /**
  * Parse the option for host.
@@ -305,35 +304,25 @@ void getopt_wc_time(int c, const char *optarg, thresholds **threshold);
 void getopt_46(int c, int *family);
 
 /** optstring for help, version, verbose */
-#define MP_OPTSTR_DEFAULT   "hVv"
+#define MP_OPTSTR_DEFAULT   "hVvt:"
 /** longopts option for help, version, verbose */
 #define MP_LONGOPTS_DEFAULT {"help", no_argument, NULL, (int)'h'}, \
                             {"version", no_argument, NULL, (int)'V'}, \
                             {"verbose", no_argument, NULL, (int)'v'}, \
                             {"eopt", optional_argument, NULL, (int)MP_LONGOPT_EOPT}, \
-                            {"perfdata", no_argument, (int *)&mp_showperfdata, 1}
+                            {"perfdata", no_argument, (int *)&mp_showperfdata, 1}, \
+                            {"timeout", required_argument, NULL, (int)'t'}
 
-/** getopt for help, version, verbose */
-#define MP_GETOPTS_DEFAULT case 'h': \
-            print_help(); \
-            exit(0); \
-        case 'V': \
-            print_revision(); \
-            exit (0); \
-        case 'v': \
-            mp_verbose++; \
-            break; \
-        case MP_LONGOPT_EOPT: \
-            argv = mp_eopt(&argc, argv, optarg); \
-            break; \
-
-
-#define MP_LONGOPTS_PERF
-
-/** optstring for timeout */
-#define MP_OPTSTR_TIMEOUT   "t:"
-/** longopts option for timeout */
-#define MP_LONGOPTS_TIMEOUT {"timeout", required_argument, NULL, (int)'t'}
+/** optstring for default notification options */
+#define MP_OPTSTR_NOTIFY   MP_OPTSTR_DEFAULT"F:m:"
+/** longopts option for default notification options */
+#define MP_LONGOPTS_NOTIFY {"help", no_argument, NULL, (int)'h'}, \
+                           {"version", no_argument, NULL, (int)'V'}, \
+                           {"verbose", no_argument, NULL, (int)'v'}, \
+                           {"eopt", optional_argument, NULL, (int)MP_LONGOPT_EOPT}, \
+                           {"timeout", required_argument, NULL, (int)'t'}, \
+                           {"file", required_argument, NULL, (int)'F'}, \
+                           {"message", required_argument, NULL, (int)'m'}
 
 /** optstring for hostname */
 #define MP_OPTSTR_HOST      "H:"

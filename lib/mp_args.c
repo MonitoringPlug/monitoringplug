@@ -300,6 +300,25 @@ Options:\n\
       Print performance data (if available).\n");
 }
 
+void print_help_notify(void) {
+    printf("\n\
+Options:\n\
+ -h, --help\n\
+      Print detailed help screen.\n\
+ -V, --version\n\
+      Print version information.\n\
+ -v, --verbose\n\
+      Show details for command-line debugging.\n\
+ -t, --timeout=INTEGER\n\
+      Seconds before the check return with a timeout alert.\n\
+     --eopt=[section][@file]\n\
+      Read additional opts from section in ini-File.\n\
+ -F, --file=[filename]\n\
+      Read notification template from file.\n\
+ -m, --message=[Message Template]\n\
+      Use string as message template.\n");
+}
+
 void print_help_host(void) {
 	printf("\
  -H, --hostname=ADDRESS\n\
@@ -344,10 +363,6 @@ void print_help_46(void) {
  -6, --ipv6\n\
       Use IPv6 to check.\n");
 #endif
-}
-
-void getopt_timeout(const char *optarg) {
-    mp_timeout = atoi (optarg);
 }
 
 void getopt_host(const char *optarg, const char **hostname) {

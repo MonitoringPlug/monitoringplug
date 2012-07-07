@@ -29,11 +29,11 @@
 #endif
 
 #include "mp_args.h"
+#include "mp_getopt.h"
 #include "mp_check.h"
 #include "mp_perfdata.h"
 #include "mp_popen.h"
 #include "mp_utils.h"
-#include "mp_longopt.h"
 
 /** Pointer to the program name. Each plugin must define this. */
 extern const char *progname;
@@ -108,7 +108,7 @@ void usage(const char *fmt, ...) __attribute__((__noreturn__));
   * Print the program help.
   * Needs to be implemented by checks.
   */
-void print_help(void);
+extern void print_help(void);
 
 /**
   * Print the program usage.

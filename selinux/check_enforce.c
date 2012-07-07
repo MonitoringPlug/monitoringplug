@@ -34,7 +34,6 @@ const char *progusage = "[--enforcing|--permissive|--disabled]";
 #include "mp_common.h"
 /* Default Includes */
 #include <errno.h>
-#include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -125,14 +124,13 @@ int process_arguments (int argc, char **argv) {
     };
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"epdP:", longopts, &option);
+        c = mp_getopt(argc, argv, MP_OPTSTR_DEFAULT"epdP:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
 
         switch (c) {
             /* Default opts */
-            MP_GETOPTS_DEFAULT
             case 'e':
                 if (state_enforcing != -1)
                     usage("Only one state argument allowed.");

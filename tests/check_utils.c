@@ -30,7 +30,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <getopt.h>
 
 // mp_sprintf
 START_TEST (test_sprintf_ok) {

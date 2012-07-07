@@ -34,7 +34,6 @@ const char *progusage = "--database <DB> --table <TABLE>";
 #include "mp_common.h"
 #include "mysql_utils.h"
 /* Default Includes */
-#include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -124,7 +123,7 @@ int process_arguments (int argc, char **argv) {
     };
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"t:w:c:H:T:"MYSQL_OPTSTR, longopts, &option);
+        c = mp_getopt(argc, argv, MP_OPTSTR_DEFAULT"w:c:H:T:"MYSQL_OPTSTR, longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -134,13 +133,8 @@ int process_arguments (int argc, char **argv) {
 
         switch (c) {
             /* Default opts */
-            MP_GETOPTS_DEFAULT
             case 'T':
                 table = optarg;
-                break;
-            /* Timeout opt */
-            case 't':
-                getopt_timeout(optarg);
                 break;
         }
     }

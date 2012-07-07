@@ -34,7 +34,6 @@ const char *progusage = "--url URL --user USER --pass PASS [--channel CHANNEl] [
 #include "mp_common.h"
 #include "xmlrpc_utils.h"
 /* Default Includes */
-#include <getopt.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -272,7 +271,6 @@ int process_arguments (int argc, char **argv) {
 
     static struct option longopts[] = {
         MP_LONGOPTS_DEFAULT,
-        MP_LONGOPTS_TIMEOUT,
         MP_LONGOPTS_EOPT,
         {"url", required_argument, NULL, (int)'U'},
         {"user", required_argument, NULL, (int)'u'},
@@ -287,14 +285,13 @@ int process_arguments (int argc, char **argv) {
     setCrit(&free_thresholds, "5:",0);
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"E::t:U:u:p:C:S:w:c:", longopts, &option);
+        c = mp_getopt(argc, argv, MP_OPTSTR_DEFAULT"U:u:p:C:S:w:c:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
 
         switch (c) {
             /* Default opts */
-            MP_GETOPTS_DEFAULT
             /* Local opts */
             case 'U':
                 getopt_url(optarg, &url);
@@ -310,10 +307,6 @@ int process_arguments (int argc, char **argv) {
                 break;
             case 'S':
                 mp_array_push(&system_name, optarg, &systems);
-                break;
-            /* Timeout opt */
-            case 't':
-                getopt_timeout(optarg);
                 break;
         }
 

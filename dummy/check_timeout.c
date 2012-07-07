@@ -33,7 +33,6 @@ const char *progusage = "[-t <timeout>]";
 /* MP Includes */
 #include "mp_common.h"
 /* Default Includes */
-#include <getopt.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -68,23 +67,17 @@ int process_arguments (int argc, char **argv) {
 
     static struct option longopts[] = {
         MP_LONGOPTS_DEFAULT,
-        MP_LONGOPTS_TIMEOUT,
         MP_LONGOPTS_END
     };
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"t:", longopts, &option);
+        c = mp_getopt(argc, argv, MP_OPTSTR_DEFAULT"", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
 
         switch (c) {
             /* Default opts */
-            MP_GETOPTS_DEFAULT
-            /* Timeout opt */
-            case 't':
-                getopt_timeout(optarg);
-                break;
         }
 
     }

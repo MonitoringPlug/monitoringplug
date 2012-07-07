@@ -35,7 +35,6 @@ const char *progusage = "";
 #include "rhcs_utils.h"
 /* Default Includes */
 #include <errno.h>
-#include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -217,20 +216,15 @@ int process_arguments (int argc, char **argv) {
     };
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"nt:", longopts, &option);
+        c = mp_getopt(argc, argv, MP_OPTSTR_DEFAULT"n", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
 
         switch(c) {
             /* Default opts */
-            MP_GETOPTS_DEFAULT
             case 'n':
                 nonroot = 1;
-                break;
-            /* Timeout opt */
-            case 't':
-                getopt_timeout(optarg);
                 break;
         }
 

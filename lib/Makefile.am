@@ -2,8 +2,32 @@
 
 AM_CPPFLAGS = -I$(top_srcdir)
 
-noinst_LIBRARIES  = libmonitoringplug.a
-noinst_HEADERS = mp_longopt.h
+noinst_LIBRARIES  = libmonitoringplug.a \
+					libmonitoringplugnotify.a \
+					libmonitoringplugtemplate.a
+
+libmonitoringplug_a_SOURCES = mp_common.c mp_common.h \
+                              mp_utils.c mp_utils.h \
+                              mp_args.c mp_args.h \
+							  mp_getopt.c mp_getopt.h \
+                              mp_check.c mp_check.h \
+                              mp_perfdata.c mp_perfdata.h \
+                              mp_popen.c mp_popen.h \
+                              mp_eopt.c mp_eopt.h \
+                              mp_net.c mp_net.h
+if HAVE_TERMIOS
+libmonitoringplug_a_SOURCES += mp_serial.c mp_serial.h
+endif
+
+libmonitoringplugnotify_a_SOURCES = mp_notify.c mp_notify.h
+
+AM_YFLAGS = -d
+AM_LFLAGS = --header-file
+noinst_LIBRARIES  += libmonitoringplugtemplate.a
+libmonitoringplugtemplate_a_SOURCES = mp_template_yacc.y \
+									  mp_template_lex.l \
+									  mp_template.c \
+									  mp_template.h
 
 if HAVE_CURL
 noinst_LIBRARIES += libcurlutils.a
@@ -82,25 +106,5 @@ noinst_LIBRARIES += libsmsutils.a
 
 libsmsutils_a_SOURCES = sms_utils.c sms_utils.h
 libsmsutils_a_CPPFLAGS = $(AM_CPPFLAGS)
-
-libmonitoringplug_a_SOURCES = mp_common.c mp_common.h \
-							  mp_utils.c mp_utils.h \
-							  mp_args.c mp_args.h \
-							  mp_check.c mp_check.h \
-							  mp_perfdata.c mp_perfdata.h \
-							  mp_popen.c mp_popen.h \
-							  mp_eopt.c mp_eopt.h \
-							  mp_net.c mp_net.h
-if HAVE_TERMIOS
-libmonitoringplug_a_SOURCES += mp_serial.c mp_serial.h
-endif
-
-AM_YFLAGS = -d
-AM_LFLAGS = --header-file
-noinst_LIBRARIES  += libmonitoringplugtemplate.a
-libmonitoringplugtemplate_a_SOURCES = mp_template_yacc.y \
-									  mp_template_lex.l \
-									  mp_template.c \
-									  mp_template.h
 
 ## vim: set ts=4 sw=4 syn=automake :

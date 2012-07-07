@@ -34,7 +34,6 @@ const char *progusage = "-D <domain> [-H <host>]";
 #include "mp_common.h"
 #include "ldns_utils.h"
 /* Default Includes */
-#include <getopt.h>
 #include <string.h>
 #include <signal.h>
 #include <unistd.h>
@@ -360,7 +359,6 @@ int process_arguments (int argc, char **argv) {
         MP_LONGOPTS_DEFAULT,
         MP_LONGOPTS_HOST,
         {"domainname", required_argument, 0, 'D'},
-        MP_LONGOPTS_TIMEOUT,
         MP_LONGOPTS_END
     };
 
@@ -371,24 +369,19 @@ int process_arguments (int argc, char **argv) {
     }
 
     while (1) {
-        c = getopt_long (argc, argv, MP_OPTSTR_DEFAULT"H:D:t:", longopts, &option);
+        c = mp_getopt(argc, argv, MP_OPTSTR_DEFAULT"H:D:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
 
         switch (c) {
             /* Default opts */
-            MP_GETOPTS_DEFAULT
             /* Host opt */
             case 'H':
                 getopt_host_ip(optarg, &hostname);
                 break;
             case 'D':
                 domainname = optarg;
-                break;
-            /* Timeout opt */
-            case 't':
-                getopt_timeout(optarg);
                 break;
         }
     }

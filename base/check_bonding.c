@@ -33,7 +33,6 @@ const char *progusage = "[--bond=BOND]";
 /* MP Includes */
 #include "mp_common.h"
 /* Default Includes */
-#include <getopt.h>
 #include <stdio.h>
 #include <signal.h>
 #include <stdlib.h>
@@ -224,7 +223,6 @@ int process_arguments (int argc, char **argv) {
 
         switch (c) {
             /* Default opts */
-            MP_GETOPTS_DEFAULT
             case 'b':
                 mp_array_push(&bond, strdup(optarg), &bonds);
                 break;

@@ -33,7 +33,6 @@ const char *progusage = "--tcp <PORT> [-w <warning count>] [-c <critical count>]
 /* MP Includes */
 #include "mp_common.h"
 /* Default Includes */
-#include <getopt.h>
 #include <stdio.h>
 #include <signal.h>
 #include <stdlib.h>
@@ -294,9 +293,9 @@ int process_arguments (int argc, char **argv) {
 
     static struct option longopts[] = {
         MP_LONGOPTS_DEFAULT,
-        {"tcp", required_argument, NULL, (int)'t'},
-        {"udp", required_argument, NULL, (int)'u'},
-        {"raw", required_argument, NULL, (int)'r'},
+        {"tcp", required_argument, NULL, (int)'T'},
+        {"udp", required_argument, NULL, (int)'U'},
+        {"raw", required_argument, NULL, (int)'R'},
         MP_LONGOPTS_WC,
         MP_LONGOPTS_END,
     };
@@ -306,7 +305,7 @@ int process_arguments (int argc, char **argv) {
     setCritTime(&socket_thresholds, "1024");
 
     while (1) {
-        c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"t:u:r:c:w:46", longopts, &option);
+        c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"T:U:R:c:w:46", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -316,20 +315,19 @@ int process_arguments (int argc, char **argv) {
 
         switch (c) {
             /* Default opts */
-            MP_GETOPTS_DEFAULT
-            case 't':
+            case 'T':
                 if (optarg)
                     tcpport = strtol(optarg,NULL,10);
                 else
                     tcpport = 0;
                 break;
-            case 'u':
+            case 'U':
                 if (optarg)
                     udpport = strtol(optarg,NULL,10);
                 else
                     udpport = 0;
                 break;
-            case 'r':
+            case 'R':
                 if (optarg)
                     rawport = strtol(optarg,NULL,10);
                 else
@@ -359,11 +357,11 @@ void print_help (void) {
 
     print_help_default();
     print_help_46();
-    printf(" -t, --tcp=PORT\n");
+    printf(" -T, --tcp=PORT\n");
     printf("      Count TCP sockets on port PORT. Port 0 for all sockets.\n");
-    printf(" -u, --udp=PORT\n");
+    printf(" -U, --udp=PORT\n");
     printf("      Count UDP sockets on port PORT. Port 0 for all sockets.\n");
-    printf(" -r, --raw=PORT\n");
+    printf(" -R, --raw=PORT\n");
     printf("      Count RAW sockets on port PORT. Port 0 for all sockets.\n");
     print_help_warn("socket count", "1000");
     print_help_crit("socket count", "1024");
