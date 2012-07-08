@@ -1,0 +1,217 @@
+<?xml version="1.0"?>
+<cluster alias="mpcluster" config_version="110" name="mpcluster">
+	<fence_daemon clean_start="0" post_fail_delay="0" post_join_delay="3"/>
+	<clusternodes>
+		<clusternode name="node-mp1.mp.durchmesser.ch" nodeid="1" votes="1">
+			<fence>
+				<method name="1">
+					<device name="apc-mp1" option="off" port="8"/>
+					<device name="apc-mp2" option="off" port="8"/>
+					<device name="apc-mp1" option="on" port="8"/>
+					<device name="apc-mp2" option="on" port="8"/>
+				</method>
+			</fence>
+		</clusternode>
+		<clusternode name="node-mp2.mp.durchmesser.ch" nodeid="2" votes="1">
+			<fence>
+				<method name="1">
+					<device name="apc-mp1" option="off" port="7"/>
+					<device name="apc-mp2" option="off" port="7"/>
+					<device name="apc-mp1" option="on" port="7"/>
+					<device name="apc-mp2" option="on" port="7"/>
+				</method>
+			</fence>
+		</clusternode>
+		<clusternode name="node-mp3.mp.durchmesser.ch" nodeid="3" votes="1">
+			<fence>
+				<method name="1">
+					<device name="apc-mp1" option="off" port="6"/>
+					<device name="apc-mp2" option="off" port="6"/>
+					<device name="apc-mp1" option="on" port="6"/>
+					<device name="apc-mp2" option="on" port="6"/>
+				</method>
+			</fence>
+		</clusternode>
+	</clusternodes>
+	<cman/>
+	<fencedevices>
+		<fencedevice agent="fence_apc" ipaddr="192.168.23.23" login="apc" name="apc-mp1" passwd="queekoop"/>
+		<fencedevice agent="fence_apc" ipaddr="192.168.23.24" login="apc" name="apc-mp2" passwd="queekoop"/>
+	</fencedevices>
+	<rm>
+		<failoverdomains>
+			<failoverdomain name="failover-mp1" nofailback="0" ordered="1" restricted="0">
+				<failoverdomainnode name="node-mp1.mp.durchmesser.ch" priority="1"/>
+				<failoverdomainnode name="node-mp2.mp.durchmesser.ch" priority="2"/>
+				<failoverdomainnode name="node-mp3.mp.durchmesser.ch" priority="3"/>
+			</failoverdomain>
+			<failoverdomain name="failover-mp2" nofailback="0" ordered="1" restricted="0">
+				<failoverdomainnode name="node-mp1.mp.durchmesser.ch" priority="2"/>
+				<failoverdomainnode name="node-mp2.mp.durchmesser.ch" priority="1"/>
+				<failoverdomainnode name="node-mp3.mp.durchmesser.ch" priority="3"/>
+			</failoverdomain>
+			<failoverdomain name="failover-mp3" nofailback="0" ordered="1" restricted="0">
+				<failoverdomainnode name="node-mp1.mp.durchmesser.ch" priority="3"/>
+				<failoverdomainnode name="node-mp2.mp.durchmesser.ch" priority="2"/>
+				<failoverdomainnode name="node-mp3.mp.durchmesser.ch" priority="1"/>
+			</failoverdomain>
+		</failoverdomains>
+		<resources>
+			<script file="/mnt/bin/migrate_session.pl" name="migrate_session"/>
+		</resources>
+		<service autostart="1" domain="failover-mp2" exclusive="0" name="web-aebikaiv" recovery="relocate">
+			<ip address="192.168.42.16" monitor_link="1">
+				<apache config_file="etc/httpd.conf" name="httpd-aebikaiv" server_root="/mnt/web-aebikaiv/" shutdown_wait="10"/>
+			</ip>
+		</service>
+		<service autostart="1" domain="failover-mp2" exclusive="0" name="web-hiirieno" recovery="relocate">
+			<ip address="192.168.42.22" monitor_link="1">
+				<apache config_file="etc/httpd.conf" name="httpd-hiirieno" server_root="/mnt/web-hiirieno/" shutdown_wait="10"/>
+			</ip>
+		</service>
+		<service autostart="1" domain="failover-mp2" exclusive="0" name="web-ainguuju" recovery="relocate">
+			<ip address="192.168.42.23" monitor_link="1">
+				<apache config_file="etc/httpd.conf" name="httpd-ainguuju" server_root="/mnt/web-ainguuju/" shutdown_wait="10"/>
+			</ip>
+		</service>
+		<service autostart="1" domain="failover-mp2" exclusive="0" name="web-baeruanu" recovery="relocate">
+			<ip address="192.168.42.20" monitor_link="1">
+				<apache config_file="etc/httpd.conf" name="httpd-baeruanu" server_root="/mnt/web-baeruanu/" shutdown_wait="10"/>
+			</ip>
+		</service>
+		<service autostart="1" domain="failover-mp3" exclusive="0" max_restarts="5" name="web-eepiecoe" recovery="restart" restart_expire_time="60">
+			<ip address="192.168.42.61" monitor_link="1">
+				<apache config_file="etc/httpd.conf" name="httpd-eepiecoe" server_root="/mnt/web-eepiecoe" shutdown_wait="5"/>
+			</ip>
+		</service>
+		<service autostart="1" domain="failover-mp3" exclusive="0" max_restarts="5" name="web-oochoomu" recovery="restart" restart_expire_time="60">
+			<ip address="192.168.42.62" monitor_link="1">
+				<apache config_file="etc/httpd.conf" name="httpd-oochoomu" server_root="/mnt/web-oochoomu" shutdown_wait="10"/>
+			</ip>
+		</service>
+		<service autostart="1" domain="failover-mp1" exclusive="0" name="web-aotahpha" recovery="relocate">
+			<ip address="192.168.42.14" monitor_link="1">
+				<apache config_file="etc/httpd.conf" name="httpd-aotahpha" server_root="/mnt/web-aotahpha/" shutdown_wait="10"/>
+			</ip>
+		</service>
+		<service autostart="1" domain="failover-mp2" exclusive="0" name="web-jiehaiph" recovery="relocate">
+			<ip address="192.168.42.15" monitor_link="1">
+				<apache config_file="etc/httpd.conf" name="httpd-jiehaiph" server_root="/mnt/web-jiehaiph" shutdown_wait="10"/>
+			</ip>
+		</service>
+		<service autostart="1" domain="failover-mp2" exclusive="0" name="web-aeshaege" recovery="relocate">
+			<ip address="192.168.42.17" monitor_link="1">
+				<apache config_file="etc/httpd.conf" name="httpd-aeshaege" server_root="/mnt/web-aeshaege" shutdown_wait="10"/>
+			</ip>
+		</service>
+		<service autostart="1" domain="failover-mp2" exclusive="0" name="web-jeexohce" recovery="relocate">
+			<ip address="192.168.42.25" monitor_link="1">
+				<apache config_file="etc/httpd.conf" name="httpd-jeexohce" server_root="/mnt/web-jeexohce/" shutdown_wait="10"/>
+			</ip>
+		</service>
+		<service autostart="1" domain="failover-mp2" exclusive="0" name="web-meigheet" recovery="relocate">
+			<ip address="192.168.42.26" monitor_link="1">
+				<apache config_file="etc/httpd.conf" name="httpd-meigheet" server_root="/mnt/web-meigheet/" shutdown_wait="10"/>
+			</ip>
+		</service>
+		<service autostart="1" domain="failover-mp1" exclusive="0" name="web-oophiesh" recovery="relocate">
+			<ip address="192.168.42.27" monitor_link="1">
+				<script file="/mnt/web-oophiesh/etc/migrate_session.pl" name="migrate-oophiesh">
+					<apache config_file="etc/httpd.conf" name="httpd-oophiesh" server_root="/mnt/web-oophiesh/" shutdown_wait="5"/>
+				</script>
+			</ip>
+		</service>
+		<service autostart="1" domain="failover-mp2" exclusive="0" name="web-iethaeke" recovery="relocate">
+			<ip address="192.168.42.19" monitor_link="1">
+				<script file="/mnt/web-iethaeke/etc/migrate_session.pl" name="migrate-iethaeke">
+					<apache config_file="etc/httpd.conf" name="httpd-iethaeke" server_root="/mnt/web-iethaeke" shutdown_wait="10"/>
+				</script>
+			</ip>
+		</service>
+		<service autostart="1" domain="failover-mp1" exclusive="0" name="web-arbenz" recovery="relocate">
+			<ip address="192.168.42.28" monitor_link="1">
+				<script file="/mnt/web-arbenz/etc/migrate_session.pl" name="migrate-arbenz">
+					<apache config_file="etc/httpd.conf" name="httpd-arbenz" server_root="/mnt/web-arbenz/" shutdown_wait="10"/>
+				</script>
+			</ip>
+		</service>
+		<service autostart="1" domain="failover-mp1" exclusive="0" name="web-iezeecha" recovery="relocate">
+			<ip address="192.168.42.10" monitor_link="1">
+				<script file="/etc/init.d/vsftpd" name="vsftpd-iezeecha"/>
+				<script file="/mnt/web-iezeecha/etc/migrate_session.pl" name="migrate-iezeecha">
+					<apache config_file="etc/httpd.conf" name="httpd-iezeecha" server_root="/mnt/web-iezeecha/" shutdown_wait="10"/>
+				</script>
+			</ip>
+		</service>
+		<service autostart="1" domain="failover-mp1" exclusive="0" name="web-rooghaya" recovery="relocate">
+			<ip address="192.168.42.18" monitor_link="1">
+				<script file="/mnt/web-rooghaya/etc/migrate_session.pl" name="migrate-rooghaya">
+					<apache config_file="etc/httpd.conf" name="httpd-rooghaya" server_root="/mnt/web-rooghaya/" shutdown_wait="10"/>
+				</script>
+			</ip>
+		</service>
+		<service autostart="1" domain="failover-mp1" exclusive="0" name="web-teexoija" recovery="relocate">
+			<ip address="192.168.42.24" monitor_link="1">
+				<script file="mnt/web-teexoija/etc/migrate_session.pl" name="migrate-teexoija">
+					<apache config_file="etc/httpd.conf" name="httpd-teexoija" server_root="/mnt/web-teexoija/" shutdown_wait="10"/>
+				</script>
+			</ip>
+		</service>
+		<service autostart="1" domain="failover-mp1" exclusive="0" max_restarts="3" name="web-zahbophu" recovery="restart" restart_expire_time="0">
+			<ip address="192.168.42.13" monitor_link="1">
+				<script file="/mnt/web-zahbophu/etc/migrate_session.pl" name="migrate-zahbophu">
+					<apache config_file="etc/httpd.conf" name="httpd-zahbophu" server_root="/mnt/web-zahbophu" shutdown_wait="10"/>
+				</script>
+			</ip>
+		</service>
+		<service autostart="1" domain="failover-mp1" exclusive="0" max_restarts="2" name="web-aishitho" recovery="restart" restart_expire_time="0">
+			<ip address="192.168.42.12" monitor_link="1">
+				<script file="/mnt/web-aishitho/etc/migrate_session.pl" name="migrate-aishitho">
+					<apache config_file="etc/httpd.conf" name="httpd-aishitho" server_root="/mnt/web-aishitho" shutdown_wait="10"/>
+				</script>
+			</ip>
+		</service>
+		<service autostart="1" domain="failover-mp1" exclusive="0" name="web-iivohsei" recovery="relocate">
+			<ip address="192.168.42.21" monitor_link="1">
+				<script file="/mnt/web-iivohsei/etc/migrate_session.pl" name="migrate-iivohsei">
+					<apache config_file="etc/httpd.conf" name="httpd-iivohsei" server_root="/mnt/web-iivohsei/" shutdown_wait="10"/>
+				</script>
+			</ip>
+		</service>
+		<service autostart="1" domain="failover-mp2" exclusive="0" name="web-faijaiwo" recovery="relocate">
+			<ip address="192.168.42.30" monitor_link="1">
+				<script file="/mnt/web-faijaiwo/etc//migrate_session.pl" name="migrate-faijaiwo">
+					<apache config_file="etc/httpd.conf" name="httpd-faijaiwo" server_root="/mnt/web-faijaiwo/" shutdown_wait="10"/>
+				</script>
+			</ip>
+		</service>
+		<service autostart="1" domain="failover-mp2" exclusive="0" name="web-faisuvej">
+			<ip address="192.168.42.31" monitor_link="1">
+				<script file="/mnt/web-faisuvej/etc/migrate_session.pl" name="migrate-faisuvej">
+					<apache config_file="etc/httpd.conf" name="httpd-faisuvej" server_root="/mnt/web-faisuvej/" shutdown_wait="10"/>
+				</script>
+			</ip>
+		</service>
+		<service autostart="1" domain="failover-mp1" exclusive="0" name="web-eevohnob" recovery="relocate">
+			<ip address="192.168.42.32" monitor_link="1">
+				<script file="/mnt/web-eevohnob/etc/migrate_session.pl" name="migrate-eevohnob">
+					<apache config_file="etc/httpd.conf" name="httpd-eevohnob" server_root="/mnt/web-eevohnob/" shutdown_wait="10"/>
+				</script>
+			</ip>
+		</service>
+		<service autostart="1" domain="failover-mp1" exclusive="0" name="web-jahyohbi" recovery="relocate">
+			<ip address="192.168.42.33" monitor_link="1">
+				<script file="/mnt/web-jahyohbi/etc/migrate_session.pl" name="migrate-jahyohbi">
+					<apache config_file="etc/httpd.conf" name="httpd-jahyohbi" server_root="/mnt/web-jahyohbi" shutdown_wait="10"/>
+				</script>
+			</ip>
+		</service>
+		<service autostart="1" domain="failover-mp1" exclusive="0" name="web-ejeesesu" recovery="relocate">
+			<ip address="192.168.42.34" monitor_link="1">
+				<script file="/mnt/web-ejeesesu/etc/migrate_session.pl" name="migrate-ejeesesu">
+					<apache config_file="etc/httpd.conf" name="httpd-ejeesesu" server_root="/mnt/web-ejeesesu/" shutdown_wait="10"/>
+				</script>
+			</ip>
+		</service>
+	</rm>
+</cluster>

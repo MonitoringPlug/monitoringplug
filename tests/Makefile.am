@@ -2,11 +2,19 @@
 
 #AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/lib
 LDADD = ../lib/libmonitoringplug.a
+AM_LDFLAGS = $(CHECK_LIBS)
+AM_CFLAGS = $(AM_CPPFLAGS) $(CHECK_CFLAGS)
 
 if HAVE_CHECK
 
-TESTS = check_monitoringplug check_sms check_template
-check_PROGRAMS = check_monitoringplug check_sms check_template
+TESTS = check_monitoringplug \
+		check_sms \
+		check_template
+if HAVE_EXPAT
+TESTS += check_rhcs
+endif
+
+check_PROGRAMS = $(TESTS)
 
 check_monitoringplug_SOURCES = main.c main.h \
     check_check.c \
@@ -17,14 +25,14 @@ check_monitoringplug_SOURCES = main.c main.h \
     check_utils.c \
 	check_perfdata.c
 
-check_monitoringplug_CFLAGS = $(AM_CPPFLAGS) $(CHECK_CFLAGS)
+if HAVE_EXPAT
+check_rhcs_LDADD = ../lib/librhcsutils.a $(LDADD)
+check_rhcs_CPPFLAGS = $(AM_CPPFLAGS) $(EXPAT_CFLAGS)
+check_rhcs_LDFLAGS = $(AM_LDFLAGS) $(EXPAT_LDFLAGS)
+endif
 
-check_monitoringplug_LDFLAGS = $(AM_LDFLAGS) $(CHECK_LIBS)
-
-check_sms_LDFLAGS = $(AM_LDFLAGS) $(CHECK_LIBS)
 check_sms_LDADD = ../lib/libsmsutils.a $(LDADD)
 
-check_template_LDFLAGS = $(AM_LDFLAGS) $(CHECK_LIBS)
 check_template_LDADD = ../lib/libmonitoringplugtemplate.a $(LDADD)
 
 endif
