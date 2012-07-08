@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "mp_template.h"
 #include "mp_common.h"
@@ -154,6 +155,46 @@ void mp_template_end() {
     mp_template_output_disable = 0;
 }
 
+char *mp_template_urlencode(const char *in) {
+    char *ptr;
+    char *out;
+    char *optr;
+    size_t len = 0;
+
+    // Check input is set.
+    if (!in)
+        return (char*)in;
+
+    // Calcuclate the string size delta.
+    for (ptr = (char *)in; *ptr; ptr++) {
+        if (isalnum(*ptr) || *ptr == '-' || *ptr == '_' || *ptr == '.' || *ptr == '~')
+            continue;
+        len += 2;
+    }
+
+    // Check if there are any char to encode.
+    if (len == 0)
+        return (char *) in;
+
+    len += strlen(in);
+
+    out = mp_malloc(len+1);
+    memset(out , 0, len+1);
+
+    // Encode the string
+    optr = out;
+    for (ptr = (char *)in; *ptr; ptr++) {
+        if (isalnum(*ptr) || *ptr == '-' || *ptr == '_' || *ptr == '.' || *ptr == '~') {
+            *optr = *ptr;
+            optr += 1;
+            continue;
+        }
+        sprintf(optr, "%%%02X", (int)*ptr);
+        optr += 3;
+    }
+
+    return out;
+}
 
 void mp_template_error(char *s) {
     unknown("Error: %s at symbol '%s' on line %d\n", s, yytext, yylineno);

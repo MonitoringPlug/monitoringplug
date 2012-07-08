@@ -106,6 +106,15 @@ void mp_template_case_int(int i);
 void mp_template_end();
 
 /**
+ * URLEncode a string
+ * Replace all non alphanumeric characters exept -_.~ to %XX representation.
+ * \para[in] in String to URL Encode
+ * \return Return a URL encoded copy of the string or in if no urlencoding is
+ * needed.
+ */
+char *mp_template_urlencode(const char *in);
+
+/**
  * Output parser error messages
  * \para str Error message.
  */

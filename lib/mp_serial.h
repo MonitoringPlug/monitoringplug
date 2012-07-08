@@ -52,10 +52,6 @@ typedef struct {
  */
 int mp_serial_open(const char *device, int speed);
 
-int mp_serial_write(int fd, const char *buf);
-int mp_serial_readline(int fd, char *buf, int count);
-char *mp_serial_reply(int fd, char *command);
-
 /**
  * Close serial port
  * \param[in] fd File descriptor of the serial port to close.

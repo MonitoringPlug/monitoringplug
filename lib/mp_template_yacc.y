@@ -31,7 +31,7 @@
 %token TAG_START TAG_END
 
 // Directives
-%token GET SET
+%token GET SET URL
 
 %token IF UNLESS ELSE SWITCH CASE END
 %token OP_EQ OP_GE OP_LE
@@ -102,6 +102,7 @@ switch_end: END             { mp_template_end(); }
           ;
 
 get: GET sexpr              { mp_template_append($2); }
+   | URL sexpr              { mp_template_append(mp_template_urlencode($2)); }
    | sexpr                  { mp_template_append($1); }
 
 bexpr: fexpr OP_EQ fexpr	        { $$ = ($1 == $3); }

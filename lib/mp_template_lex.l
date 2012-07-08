@@ -55,6 +55,7 @@ IDENT       [a-zA-Z_][a-zA-Z0-9_]*
 
 <TT>"GET"           { return GET; }
 <TT>"SET"           { return SET; }
+<TT>"URL"           { return URL; }
 <TT>"IF"            { return IF; }
 <TT>"UNLESS"        { return UNLESS; }
 <TT>"ELSE"          { return ELSE; }
