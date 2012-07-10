@@ -47,6 +47,7 @@ int nonroot = 0;
 int main (int argc, char **argv) {
     /* Local Vars */
     FILE        *fp;
+    mp_subprocess_t *subp;
     char        line[128];
     int         failed = 0;
     int         lines = 0;
@@ -74,17 +75,21 @@ int main (int argc, char **argv) {
         uid = getuid();
         if (setuid(0) != 0)
             unknown("setuid faild");
-        fp = mp_popen((char *[]) {"/sbin/multipath","-l", NULL});
+        subp = mp_subprocess((char *[]) {"/sbin/multipath","-l", NULL});
+        fp = fdopen(subp->stdout, "r");
+        close(subp->stdin);
         if (uid != 0)
             setuid(uid);
     } else {
-        fp = mp_popen((char *[]) {"/usr/bin/sudo", "/sbin/multipath","-l", NULL});
+        subp = mp_subprocess((char *[]) {"/usr/bin/sudo", "/sbin/multipath","-l", NULL});
+        fp = fdopen(subp->stdout, "r");
+        close(subp->stdin);
     }
 
     if (fp == NULL)
        unknown("Can't exec multipath");
 
-    while ( fgets ( line, sizeof line, fp) != NULL ) {
+    while ( fgets(line, sizeof line, fp) != NULL ) {
         if (mp_verbose > 1) {
             printf(">> %s", line);
         }
@@ -96,7 +101,7 @@ int main (int argc, char **argv) {
 
     }
 
-    int r = mp_pclose(fp);
+    int r = mp_subprocess_close(subp);
     if (r != 0) {
         critical("Executing multipath faild! (%d)", r);
     }

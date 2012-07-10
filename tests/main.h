@@ -42,9 +42,6 @@ Suite *make_lib_args_suite(void);
 /* LIB CHECK Suite */
 Suite *make_lib_check_suite(void);
 
-/* LIB POPEN Suite */
-Suite *make_lib_popen_suite(void);
-
 /* LIB EOPT Suite */
 Suite *make_lib_eopt_suite(void);
 

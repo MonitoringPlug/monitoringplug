@@ -10,7 +10,7 @@ LDADD = ../lib/libmonitoringplugtemplate.a \
 		../lib/libmonitoringplugnotify.a \
 		../lib/libmonitoringplug.a
 
-bin_PROGRAMS = 
+bin_PROGRAMS = notify_mail notify_stdout
 
 if HAVE_TERMIOS
 bin_PROGRAMS += notify_sms

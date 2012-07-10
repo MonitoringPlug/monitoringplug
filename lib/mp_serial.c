@@ -24,6 +24,7 @@
 #include "mp_common.h"
 #include "mp_serial.h"
 
+#include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <termios.h>

@@ -48,6 +48,7 @@ int nonroot = 0;
 int main (int argc, char **argv) {
     /* Local Vars */
     FILE                    *fp;
+    mp_subprocess_t         *subp = NULL;
     char                    *missing = NULL;
     char                    *foreign = NULL;
     rhcs_clustat            *clustat;
@@ -88,7 +89,9 @@ int main (int argc, char **argv) {
         uid = getuid();
         if (setuid(0) != 0)
             unknown("setuid faild");
-        fp = mp_popen((char *[]) {"/usr/sbin/clustat","-x", NULL});
+        subp = mp_subprocess((char *[]) {"/usr/sbin/clustat","-x", NULL});
+        fp = fdopen(subp->stdout, "r");
+        close(subp->stdin);
     } else {
         fp = fopen("clustat.xml","r");
     }
@@ -97,7 +100,7 @@ int main (int argc, char **argv) {
     clustat = parse_rhcs_clustat(fp);
 
     if (nonroot == 0) {
-        if (mp_pclose(fp) != 0) { 
+        if (mp_subprocess_close(subp) != 0) { 
             critical("Clustat faild!");
         }
     } else {

@@ -25,6 +25,7 @@
 #include "mp_net.h"
 #include "dhcp_utils.h"
 
+#include <stdio.h>
 #include <string.h>
 #include <inttypes.h>
 #include <arpa/inet.h>

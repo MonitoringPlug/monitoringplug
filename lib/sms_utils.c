@@ -24,6 +24,7 @@
 #include "mp_common.h"
 #include "sms_utils.h"
 
+#include <stdio.h>
 #include <string.h>
 #include <wchar.h>
 #include <locale.h>

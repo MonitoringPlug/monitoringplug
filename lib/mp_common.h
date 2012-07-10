@@ -32,7 +32,7 @@
 #include "mp_getopt.h"
 #include "mp_check.h"
 #include "mp_perfdata.h"
-#include "mp_popen.h"
+#include "mp_subprocess.h"
 #include "mp_utils.h"
 
 /** Pointer to the program name. Each plugin must define this. */

@@ -24,6 +24,8 @@
 #include "mp_common.h"
 #include "expat_utils.h"
 
+#include <stdio.h>
+
 #include <expat.h>
 
 void print_revision_expat(void) {

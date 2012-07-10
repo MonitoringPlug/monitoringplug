@@ -43,7 +43,6 @@ int main (void) {
   sr = srunner_create( make_lib_common_suite() );
   srunner_add_suite(sr, make_lib_args_suite() );
   srunner_add_suite(sr, make_lib_check_suite() );
-  srunner_add_suite(sr, make_lib_popen_suite() );
   srunner_add_suite(sr, make_lib_eopt_suite() );
   srunner_add_suite(sr, make_lib_utils_suite() );
   srunner_add_suite(sr, make_lib_perfdata_suite() );

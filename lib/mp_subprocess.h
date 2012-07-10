@@ -24,7 +24,8 @@
 #ifndef _MP_SUBPROCESS_H_
 #define _MP_SUBPROCESS_H_
 
-#include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
 
 typedef struct {
     pid_t   pid;

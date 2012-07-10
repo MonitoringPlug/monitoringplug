@@ -25,6 +25,7 @@
 #include "mp_net.h"
 #include "mp_utils.h"
 
+#include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
