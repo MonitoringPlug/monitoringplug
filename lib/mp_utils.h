@@ -102,6 +102,11 @@ double mp_time_delta(struct timeval tv);
  */
 char *mp_human_size(float size);
 
+/**
+ * Chech if a string matches an other.
+ */
+int mp_strmatch(const char *string, const char *match);
+
 #endif /* MP_UTILS_H_ */
 
 /* vim: set ts=4 sw=4 et syn=c : */

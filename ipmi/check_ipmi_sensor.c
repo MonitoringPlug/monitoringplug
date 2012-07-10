@@ -41,8 +41,10 @@ const char *progusage = "[-S <SENSOR[,SENSOR]>]";
 #include <string.h>
 
 /* Global Vars */
-char        **sensor  = NULL;
-int         sensors = 0;
+char    **sensor  = NULL;
+int     sensors   = 0;
+char    **exclude = NULL;
+int     excludes  = 0;
 
 int main (int argc, char **argv) {
     /* Local Vars */
@@ -71,69 +73,53 @@ int main (int argc, char **argv) {
     char *buf;
     buf = mp_malloc(63);
 
-    for (i=0; i<sensors; i++) {
-        for (s=mp_ipmi_sensors; s; s=s->next) {
-            if (strcmp(sensor[i], s->name) != 0)
+    for (s=mp_ipmi_sensors; s; s=s->next) {
+        // Check if sensor is in sensor list
+        if (sensors) {
+            for (i=0; i < sensors; i++)
+                if (mp_strmatch(s->name, sensor[i]))
+                    break;
+            if (i >= sensors)
                 continue;
-            if (mp_verbose > 0)
-                printf("%s: %f\n", s->name, s->value);
-
-            mp_perfdata_float(s->name, s->value,
-                    ipmi_sensor_get_base_unit_string(s->sensor),
-                    s->sensorThresholds);
-
-            lstate = get_status(s->value, s->sensorThresholds);
-            if (lstate > state)
-                state = lstate;
-
-            mp_snprintf(buf, 63, "%s %.2f%s", s->name, s->value,
-                    ipmi_sensor_get_base_unit(s->sensor) ? 
-                    ipmi_sensor_get_base_unit_string(s->sensor) : "");
-            if (lstate == STATE_OK)
-                mp_strcat_comma(&out_ok, buf);
-            else if (lstate == STATE_WARNING)
-                mp_strcat_comma(&out_warning, buf);
-            else
-                mp_strcat_comma(&out_critical, buf);
-            break;
         }
-        if (!s) {
-            state = STATE_CRITICAL;
-            mp_strcat_comma(&out_critical, sensor[i]);
-        }
-    }
 
-    if (sensors == 0) {
-        for (s=mp_ipmi_sensors; s; s=s->next) {
-            if (ipmi_sensor_get_event_reading_type(s->sensor) != IPMI_EVENT_READING_TYPE_THRESHOLD)
+        // Check if sensor is in exclude list
+        if (excludes) {
+            for (i=0; i < excludes; i++)
+                if (mp_strmatch(s->name, exclude[i]))
+                    break;
+            if (i < excludes)
                 continue;
-
-            if (mp_verbose > 0)
-                printf("%s: %f\n", s->name, s->value);
-
-            mp_perfdata_float(s->name, s->value,
-                    ipmi_sensor_get_base_unit_string(s->sensor),
-                    s->sensorThresholds);
-
-            lstate = get_status(s->value, s->sensorThresholds);
-            if (lstate > state)
-                state = lstate;
-
-            mp_snprintf(buf, 63, "%s %.2f%s", s->name, s->value,
-                    ipmi_sensor_get_base_unit(s->sensor) ?
-                    ipmi_sensor_get_base_unit_string(s->sensor) : "");
-            if (lstate == STATE_OK)
-                mp_strcat_comma(&out_ok, buf);
-            else if (lstate == STATE_WARNING)
-                mp_strcat_comma(&out_warning, buf);
-            else
-                mp_strcat_comma(&out_critical, buf);
         }
+
+        if (mp_verbose > 0)
+            printf("%s: %f\n", s->name, s->value);
+
+        mp_perfdata_float(s->name, s->value,
+                ipmi_sensor_get_base_unit_string(s->sensor),
+                s->sensorThresholds);
+
+        lstate = get_status(s->value, s->sensorThresholds);
+        if (lstate > state)
+            state = lstate;
+
+        mp_snprintf(buf, 63, "%s %.2f%s", s->name, s->value,
+                ipmi_sensor_get_base_unit(s->sensor) ? 
+                ipmi_sensor_get_base_unit_string(s->sensor) : "");
+        if (lstate == STATE_OK)
+            mp_strcat_comma(&out_ok, buf);
+        else if (lstate == STATE_WARNING)
+            mp_strcat_comma(&out_warning, buf);
+        else
+            mp_strcat_comma(&out_critical, buf);
     }
 
     free(buf);
 
     mp_ipmi_deinit();
+
+    if (!out_ok && !out_warning && !out_critical)
+        critical("No (matching) Sensors found.");
 
     /* Output and return */
     if (state == STATE_OK)
@@ -151,11 +137,12 @@ int process_arguments (int argc, char **argv) {
             MP_LONGOPTS_DEFAULT,
             IPMI_LONGOPTS,
             {"sensor", required_argument, NULL, (int)'S'},
+            {"exclude", required_argument, NULL, (int)'E'},
             MP_LONGOPTS_END
     };
 
     while (1) {
-        c = mp_getopt(argc, argv, MP_OPTSTR_DEFAULT"S:"IPMI_OPTSTR, longopts, &option);
+        c = mp_getopt(argc, argv, MP_OPTSTR_DEFAULT"S:E:"IPMI_OPTSTR, longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -163,10 +150,12 @@ int process_arguments (int argc, char **argv) {
         getopt_ipmi(c);
 
         switch (c) {
-            /* Default opts */
             /* Plugin opt */
             case 'S':
                 mp_array_push(&sensor, optarg, &sensors);
+                break;
+            case 'E':
+                mp_array_push(&exclude, optarg, &excludes);
                 break;
         }
     }
@@ -193,6 +182,8 @@ void print_help (void) {
 
     printf(" -S, --sensor=[SENSOR]\n");
     printf("      Name of a Sensor to check, can be repeated.\n");
+    printf(" -E, --exclude=[SENSOR]\n");
+    printf("      Name of a Sensor to exclude, can be repeated.\n");
 
 }
 

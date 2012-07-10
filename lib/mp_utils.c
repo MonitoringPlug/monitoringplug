@@ -204,4 +204,13 @@ char *mp_human_size(float size) {
     return out;
 }
 
+int mp_strmatch(const char *string, const char *match) {
+    size_t len = strlen(match);
+    if (match[len-1] == '*') {
+        return (strncmp(string, match, len-1) == 0);
+    } else {
+        return (strcmp(string, match) == 0);
+    }
+}
+
 /* vim: set ts=4 sw=4 et syn=c : */
