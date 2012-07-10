@@ -157,6 +157,11 @@ int main (int argc, char **argv) {
         printf("Answer: '%s'\n", answer.data);
     }
 
+    if (code != 200) {
+        printf("XML-API request failed.\n");
+        return 1;
+    }
+
     /* Parse Answer */
     xmlp = answer.data;
 

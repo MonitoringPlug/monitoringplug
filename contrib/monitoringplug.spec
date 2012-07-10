@@ -337,7 +337,7 @@ fi
 %{_mandir}/man1/check_file.1.gz
 %{_mandir}/man1/check_bonding.1.gz
 %{_mandir}/man1/check_dhcp.1.gz
-%{_mandir}/man1//nagios/plugins/check_gsm_signal.1.gz
+%{_mandir}/man1/check_gsm_signal.1.gz
 %{_mandir}/man1/check_mem.1.gz
 %{_mandir}/man1/check_multipath.1.gz
 %{_mandir}/man1/check_nrped.1.gz
