@@ -64,11 +64,11 @@ int main (int argc, char **argv) {
 
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
-        critical("Setup SIGALRM trap faild!");
+        critical("Setup SIGALRM trap failed!");
 
     /* Process check arguments */
     if (process_arguments(argc, argv) != OK)
-        unknown("Parsing arguments faild!");
+        unknown("Parsing arguments failed!");
 
     /* Start plugin timeout */
     alarm(mp_timeout);
@@ -80,7 +80,7 @@ int main (int argc, char **argv) {
     /* Create a new resolver with hostname or server from /etc/resolv.conf */
     res = createResolver(hostname);
     if (!res)
-        unknown("Creating resolver faild.");
+        unknown("Creating resolver failed.");
     resolverEnableDnssec(res);
 
     /* Query for soa */
@@ -261,7 +261,7 @@ int process_arguments (int argc, char **argv) {
             case 'k':
                 trusted_keys = loadKeyfile(optarg);
                 if (trusted_keys == NULL)
-                    usage("Parsing keyfiel faild.");
+                    usage("Parsing keyfiel failed.");
                 break;
         }
     }

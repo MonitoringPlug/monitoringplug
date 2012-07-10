@@ -39,7 +39,7 @@ int mp_sprintf(char *s, const char *format, ...) {
     len = vsprintf(s, format, ap);
     va_end(ap);
     if (len < 0)
-        critical("sprintf faild!");
+        critical("sprintf failed!");
     return len;
 }
 
@@ -50,7 +50,7 @@ int mp_snprintf(char *s, size_t n, const char *format, ...) {
     len = vsnprintf(s, n, format, ap);
     va_end(ap);
     if (len < 0 || len >= n)
-        critical("snprintf faild!");
+        critical("snprintf failed!");
     return len;
 }
 

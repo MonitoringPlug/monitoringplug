@@ -48,7 +48,7 @@ const char *progusage = "-H hostname [--help] [--timeout TIMEOUT]";
 const char *hostname = NULL;
 const char *export = NULL;
 char *noconnection = NULL;
-char *callfaild = NULL;
+char *callfailed = NULL;
 char *noexport = NULL;
 char *nfs_warn = NULL;
 char *nfs_crit = NULL;
@@ -76,11 +76,11 @@ int main (int argc, char **argv) {
 
     /* Set signal handling and alarm */
     if (signal (SIGALRM, rpc_timeout_alarm_handler) == SIG_ERR)
-        critical("Setup SIGALRM trap faild!");
+        critical("Setup SIGALRM trap failed!");
 
     /* Process check arguments */
     if (process_arguments(argc, argv) != OK)
-        unknown("Parsing arguments faild!");
+        unknown("Parsing arguments failed!");
 
     /* Start plugin timeout */
     alarm(mp_timeout);
@@ -131,15 +131,15 @@ int main (int argc, char **argv) {
     free(rpctransport);
     free_threshold(time_threshold);
 
-    if (noconnection || callfaild || noexport || nfs_crit) {
+    if (noconnection || callfailed || noexport || nfs_crit) {
         char *out = NULL;
         if (noconnection) {
             out = strdup("Can't connect to:");
             mp_strcat_space(&out, noconnection);
         }
-        if (callfaild) {
-            mp_strcat_space(&out, "Call faild by:");
-            mp_strcat_space(&out, callfaild);
+        if (callfailed) {
+            mp_strcat_space(&out, "Call failed by:");
+            mp_strcat_space(&out, callfailed);
         }
         if (noexport) {
             mp_strcat_space(&out, "No export found by:");
@@ -179,7 +179,7 @@ int check_export(struct rpcent *program, unsigned long version, char *proto) {
     client = clnt_create((char *)hostname, program->r_number, 3, proto);
     if (client == NULL) {
         if (mp_verbose >= 1)
-            printf("   faild!\n");
+            printf("   failed!\n");
         mp_strcat_comma(&noconnection, buf);
         free(buf);
         return 1;
@@ -195,7 +195,7 @@ int check_export(struct rpcent *program, unsigned long version, char *proto) {
     if (ret != RPC_SUCCESS) {
         if (mp_verbose >= 1)
             printf("Get export tailed. %d: %s\n", ret, clnt_sperrno(ret));
-        mp_strcat_comma(&callfaild, buf);
+        mp_strcat_comma(&callfailed, buf);
         free(buf);
         clnt_destroy(client);
         return 1;

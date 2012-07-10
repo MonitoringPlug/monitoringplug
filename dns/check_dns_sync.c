@@ -63,11 +63,11 @@ int main (int argc, char **argv) {
 
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
-        critical("Setup SIGALRM trap faild!");
+        critical("Setup SIGALRM trap failed!");
 
     /* Process check arguments */
     if (process_arguments(argc, argv) != OK)
-        unknown("Parsing arguments faild!");
+        unknown("Parsing arguments failed!");
 
     /* Start plugin timeout */
     alarm(mp_timeout);
@@ -99,7 +99,7 @@ int main (int argc, char **argv) {
         if (!res) {
             ldns_rdf_deep_free(domain);
             ldns_rdf_deep_free(host);
-            unknown("Create resolver faild.");
+            unknown("Create resolver failed.");
         }
 
         //  Enable TCP if requested
@@ -191,7 +191,7 @@ int main (int argc, char **argv) {
         status = ldns_resolver_new_frm_file(&res, NULL);
         if (status != LDNS_STATUS_OK) {
             ldns_rdf_deep_free(domain);
-            unknown("Create resolver faild.");
+            unknown("Create resolver failed.");
         }
 
         //  Enable TCP if requested
@@ -237,7 +237,7 @@ int main (int argc, char **argv) {
         res = ldns_resolver_new();
         if (!res) {
             ldns_rdf_deep_free(domain);
-            unknown("Create resolver faild.");
+            unknown("Create resolver failed.");
         }
 
         //  Enable TCP if requested

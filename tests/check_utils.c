@@ -38,7 +38,7 @@ START_TEST (test_sprintf_ok) {
     mp_sprintf(dest, "%s", "test");
 
     fail_unless (strcmp(dest, "test") == 0,
-            "mp_sprintf faild: %s", dest);
+            "mp_sprintf failed: %s", dest);
 }
 END_TEST
 
@@ -60,7 +60,7 @@ START_TEST (test_snprintf_ok) {
     mp_snprintf(dest, 5, "%s", "test");
 
     fail_unless (strcmp(dest, "test") == 0,
-            "mp_snprintf faild: %s", dest);
+            "mp_snprintf failed: %s", dest);
 }
 END_TEST
 
@@ -80,7 +80,7 @@ START_TEST (test_asprintf_ok) {
     mp_asprintf(&dest, "%s", "test");
 
     fail_unless (strcmp(dest, "test") == 0,
-            "mp_asprintf faild: %s", dest);
+            "mp_asprintf failed: %s", dest);
 
     free(dest);
 }

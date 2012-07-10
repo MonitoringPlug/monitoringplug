@@ -83,11 +83,11 @@ int main (int argc, char **argv) {
 
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
-        critical("Setup SIGALRM trap faild!");
+        critical("Setup SIGALRM trap failed!");
 
     /* Process check arguments */
     if (process_arguments(argc, argv) != OK)
-        unknown("Parsing arguments faild!");
+        unknown("Parsing arguments failed!");
 
     // Need to be root
     mp_noneroot_die();
@@ -104,7 +104,7 @@ int main (int argc, char **argv) {
 
     sock = dhcp_setup();
     if (sock < 0)
-        warning("socket setup faild");
+        warning("socket setup failed");
 
     // Read MAC of interface if not specified
     ifr.ifr_addr.sa_family = AF_INET;
@@ -261,19 +261,19 @@ int dhcp_setup() {
         critical("Can't open udp/ip socket");
 
     if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (char *)&one, sizeof one) < 0)
-        critical("Set socket option faild");
+        critical("Set socket option failed");
 
     if (setsockopt(sock, SOL_SOCKET, SO_BROADCAST, (char *)&one, sizeof one) < 0)
-        critical("Set socket to broadcast mode faild");
+        critical("Set socket to broadcast mode failed");
 
     bzero(&ifr, sizeof(ifr));
     strncpy(ifr.ifr_name, interface, sizeof(ifr.ifr_name));
     if (setsockopt(sock, SOL_SOCKET, SO_BINDTODEVICE, (void *)&ifr, sizeof(ifr)) < 0)
-        critical("Bind socket to '%s' faild", interface);
+        critical("Bind socket to '%s' failed", interface);
 
     if (bind(sock, (struct sockaddr *)&dhcpc, sizeof(dhcpc)) < 0) {
         perror("bind");
-        critical("Socket bind faild.");
+        critical("Socket bind failed.");
     }
 
     return sock;

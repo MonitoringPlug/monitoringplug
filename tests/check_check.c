@@ -73,16 +73,16 @@ START_TEST (test_is_integer) {
 
     sprintf(teststring, "%'.0f", (double) INT_MAX + 1);
     fail_unless (is_integer(teststring) == 0,
-        "is_integer(%s) faild1", teststring);
+        "is_integer(%s) failed1", teststring);
     sprintf(teststring, "%'.0f", (double) INT_MAX);
     fail_unless (is_integer(teststring) == 1,
-        "is_integer(%s) faild2", teststring);
+        "is_integer(%s) failed2", teststring);
     sprintf(teststring, "%'.0f", (double) INT_MIN);
     fail_unless (is_integer(teststring) == 1,
-        "is_integer(%s) faild3", teststring);
+        "is_integer(%s) failed3", teststring);
     sprintf(teststring, "%'.0f", (double) INT_MIN - 1);
     fail_unless (is_integer(teststring) == 0,
-        "is_integer(%s) faild4", teststring);
+        "is_integer(%s) failed4", teststring);
 }
 END_TEST
 

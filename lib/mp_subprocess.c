@@ -54,7 +54,7 @@ mp_subprocess_t *mp_subprocess(char *command[]) {
     // Check for regular file mode.
     if (stat(command[0], &fileStat) < 0) {
         if (mp_verbose > 0)
-            fprintf(stderr, "stat '%s' faild:\n%s",
+            fprintf(stderr, "stat '%s' failed:\n%s",
                     command[0], strerror(errno));
         return NULL;
     }
@@ -67,7 +67,7 @@ mp_subprocess_t *mp_subprocess(char *command[]) {
     /* Create pipe */
     if (pipe(pfp) == -1) {
         if (mp_verbose > 0)
-            perror("Creating pipes faild.");
+            perror("Creating pipes failed.");
         return NULL;
     }
 

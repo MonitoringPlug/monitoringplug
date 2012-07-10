@@ -78,11 +78,11 @@ int main (int argc, char **argv) {
 
     /* Set signal handling and alarm */
     if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
-        critical("Setup SIGALRM trap faild!");
+        critical("Setup SIGALRM trap failed!");
 
     /* Process check arguments */
     if (process_arguments(argc, argv) != OK)
-        unknown("Parsing arguments faild!");
+        unknown("Parsing arguments failed!");
 
     /* Start plugin timeout */
     alarm(mp_timeout);
@@ -177,7 +177,7 @@ int main (int argc, char **argv) {
 
         ret = gnutls_certificate_verify_peers2(session, &cstatus);
         if ( ret < 0)
-            critical("gnutls_certificate_verify_peers2 faild!");
+            critical("gnutls_certificate_verify_peers2 failed!");
         if ((cstatus & GNUTLS_CERT_INVALID) || (cstatus & GNUTLS_CERT_SIGNER_NOT_FOUND)) {
             mp_strcat_comma(&untrusted, buf);
         }

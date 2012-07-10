@@ -66,15 +66,15 @@ int main (int argc, char **argv) {
     char                *slave_host;
     char                *slave_version;
     char                *connected = NULL;
-    char                *faild = NULL;
+    char                *failed = NULL;
 
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
-        critical("Setup SIGALRM trap faild!");
+        critical("Setup SIGALRM trap failed!");
 
     /* Process check arguments */
     if (process_arguments(argc, argv) != OK)
-        unknown("Parsing arguments faild!");
+        unknown("Parsing arguments failed!");
 
     /* Start plugin timeout */
     alarm(mp_timeout);
@@ -133,7 +133,7 @@ int main (int argc, char **argv) {
             slaveobj = json_object_object_get(obj, slave[i]);
             if(json_object_object_get(slaveobj,"error")) {
                 mp_snprintf(buf, 128, "%s - %s", slave[i], json_object_get_string(json_object_object_get(slaveobj,"error")));
-                mp_strcat_comma(&faild, buf);
+                mp_strcat_comma(&failed, buf);
                 continue;
             }
             slave_connected = json_object_get_boolean(json_object_object_get(slaveobj, (const char *)"connected"));
@@ -149,7 +149,7 @@ int main (int argc, char **argv) {
             if (slave_connected) {
                 mp_strcat_comma(&connected, buf);
             } else {
-                mp_strcat_comma(&faild, buf);
+                mp_strcat_comma(&failed, buf);
             }
         }
     } else {
@@ -168,7 +168,7 @@ int main (int argc, char **argv) {
             if (slave_connected) {
                 mp_strcat_comma(&connected, buf);
             } else {
-                mp_strcat_comma(&faild, buf);
+                mp_strcat_comma(&failed, buf);
             }
 
         }
@@ -178,10 +178,10 @@ int main (int argc, char **argv) {
     free(buf);
     json_object_put(obj);
 
-    if (faild && connected) {
-        critical("%s, (OK: %s)", faild, connected);
-    } else if (faild) {
-        critical(faild);
+    if (failed && connected) {
+        critical("%s, (OK: %s)", failed, connected);
+    } else if (failed) {
+        critical(failed);
     } else if (connected) {
         ok(connected);
     }

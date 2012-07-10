@@ -70,13 +70,13 @@ int main (int argc, char **argv) {
 
     se_enabled = is_selinux_enabled();
     if (se_enabled < 0)
-       critical("is_selinux_enabled faild!");
+       critical("is_selinux_enabled failed!");
 
     if (se_enabled) {
 
         se_enforced = security_getenforce();
         if (se_enforced < 0)
-            critical("security_getenforce faild!");
+            critical("security_getenforce failed!");
 
 	if (se_enforced) {
 	    state_name = strdup("Enforcing");

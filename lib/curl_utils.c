@@ -35,26 +35,26 @@ CURL *mp_curl_init(void) {
     /* Global init */
     ret = curl_global_init(CURL_GLOBAL_ALL);
     if (ret != CURLE_OK)
-        critical("libcurl initialisation faild!");
+        critical("libcurl initialisation failed!");
 
     /* Handler init */
     curl = curl_easy_init();
     if (!curl)
-        critical("libcurl handler initialisation faild!");
+        critical("libcurl handler initialisation failed!");
 
     /* UA setup */
     buf = mp_malloc(64);
     mp_snprintf(buf, 64, "monitoringplug-%s/%s", progname, progvers);
     ret = curl_easy_setopt(curl, CURLOPT_USERAGENT, buf);
     if (ret != CURLE_OK)
-        critical("libcurt setting User-Agent faild");
+        critical("libcurt setting User-Agent failed");
     free(buf);
 
     /* Debug setup */
     if (mp_verbose > 2)
         ret = curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
         if (ret != CURLE_OK)
-            critical("libcurt setting verbose faild");
+            critical("libcurt setting verbose failed");
 
     return curl;
 }

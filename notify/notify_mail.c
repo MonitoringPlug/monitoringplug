@@ -59,11 +59,11 @@ int main (int argc, char **argv) {
 
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
-        critical("Setup SIGALRM trap faild!");
+        critical("Setup SIGALRM trap failed!");
 
     /* Process check arguments */
     if (process_arguments(argc, argv) != OK)
-        unknown("Parsing arguments faild!");
+        unknown("Parsing arguments failed!");
 
     /* Start plugin timeout */
     alarm(mp_timeout);
@@ -93,7 +93,7 @@ int main (int argc, char **argv) {
     dprintf(subp->stdin, ".\n");
 
     if(mp_subprocess_close(subp) != 0)
-        printf("Send mail faild.\n");
+        printf("Send mail failed.\n");
     else
         printf("Mail sent.\n");
 

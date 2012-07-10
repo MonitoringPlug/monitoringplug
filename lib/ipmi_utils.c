@@ -24,6 +24,7 @@
 #include "mp_common.h"
 #include "ipmi_utils.h"
 
+#include <stdio.h>
 #include <string.h>
 #include <OpenIPMI/ipmi_smi.h>
 #include <OpenIPMI/ipmi_lan.h>

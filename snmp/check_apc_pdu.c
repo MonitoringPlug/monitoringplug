@@ -62,11 +62,11 @@ int main (int argc, char **argv) {
 
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
-        critical("Setup SIGALRM trap faild!");
+        critical("Setup SIGALRM trap failed!");
 
     /* Process check arguments */
     if (process_arguments(argc, argv) != OK)
-        unknown("Parsing arguments faild!");
+        unknown("Parsing arguments failed!");
 
     /* Start plugin timeout */
     alarm(mp_timeout);
@@ -91,10 +91,10 @@ int main (int argc, char **argv) {
     // Check for PSU Failure
     if (pdu_psu1 != 1) {
         status = STATE_CRITICAL;
-        output = strdup("Power Supply 1 Faild!");
+        output = strdup("Power Supply 1 Failed!");
     } else if (pdu_psu2 != 1) {
         status = STATE_CRITICAL;
-        output = strdup("Power Supply 2 Faild!");
+        output = strdup("Power Supply 2 Failed!");
     }
 
     if (stateOn == NULL && stateOff == NULL) {

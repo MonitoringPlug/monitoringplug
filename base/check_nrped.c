@@ -50,11 +50,11 @@ int main (int argc, char **argv) {
 
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
-        critical("Setup SIGALRM trap faild!");
+        critical("Setup SIGALRM trap failed!");
 
     /* Process check arguments */
     if (process_arguments(argc, argv) != OK)
-        unknown("Parsing arguments faild!");
+        unknown("Parsing arguments failed!");
 
     /* Start plugin timeout */
     alarm(mp_timeout);
@@ -67,13 +67,13 @@ int main (int argc, char **argv) {
             fd  = open(filename, O_WRONLY | O_CREAT | O_NONBLOCK | O_NOCTTY,
                     S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
             if (fd == -1)
-                warning("NRPE v%s - open '%s' faild", version, filename);
+                warning("NRPE v%s - open '%s' failed", version, filename);
             fd = close(fd);
             if (fd == -1)
-                warning("NRPE v%s - close '%s' faild", version, filename);
+                warning("NRPE v%s - close '%s' failed", version, filename);
             fd = utime(filename, NULL);
             if (fd == -1)
-                warning("NRPE v%s - utime '%s' faild", version, filename);
+                warning("NRPE v%s - utime '%s' failed", version, filename);
         }
         ok("NRPE v%s", version);
     } else {

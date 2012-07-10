@@ -98,60 +98,60 @@ END_TEST
 
 START_TEST (test_range_simple) {
     fail_unless (parse_range_string(my_range, "10", 0) == 0,
-        "Parse range string '10' faild");
+        "Parse range string '10' failed");
 
     double i;
     for (i = -10; i < 20; i++) {
         fail_unless (check_range(i, my_range) == (i<0 || i>10),
-	       "Range check for %g in '10' faild.", i);
+	       "Range check for %g in '10' failed.", i);
     }
 }
 END_TEST
 
 START_TEST (test_range_toinf) {
   fail_unless (parse_range_string(my_range, "10:", 0) == 0,
-	       "Parse range string '10:' faild");
+	       "Parse range string '10:' failed");
 
     double i;
     for (i = -10; i < 20; i++) {
         fail_unless (check_range(i, my_range) == (i<10),
-	       "Range check for %g in '10:' faild.", i);
+	       "Range check for %g in '10:' failed.", i);
     }
 }
 END_TEST
 
 START_TEST (test_range_frominf) {
   fail_unless (parse_range_string(my_range, "~:10", 0) == 0,
-	       "Parse range string '~:10' faild");
+	       "Parse range string '~:10' failed");
 
     double i;
     for (i = -10; i < 20; i++) {
         fail_unless (check_range(i, my_range) == (i>10),
-	       "Range check for %g in '~:10' faild.", i);
+	       "Range check for %g in '~:10' failed.", i);
     }
 }
 END_TEST
 
 START_TEST (test_range_fromto) {
   fail_unless (parse_range_string(my_range, "10:20", 0) == 0,
-	       "Parse range string '10:20' faild");
+	       "Parse range string '10:20' failed");
 
     double i;
     for (i = -10; i < 30; i++) {
         fail_unless (check_range(i, my_range) == (i<10 || i>20),
-	       "Range check for %g in '10:20' faild.", i);
+	       "Range check for %g in '10:20' failed.", i);
     }
 }
 END_TEST
 
 START_TEST (test_range_fromto_out) {
   fail_unless (parse_range_string(my_range, "@10:20", 0) == 0,
-	       "Parse range string '@10:20' faild");
+	       "Parse range string '@10:20' failed");
 
     double i;
     for (i = -10; i < 30; i++) {
         fail_unless (check_range(i, my_range) == (i>=10 && i<=20),
-	       "Range check for %g in '@10:20' faild.", i);
+	       "Range check for %g in '@10:20' failed.", i);
     }
 }
 END_TEST
@@ -159,14 +159,14 @@ END_TEST
 
 START_TEST (test_threshold_simple) {
     fail_unless (setWarn(&my_thresholds, "10", 0) == 0,
-        "Parse range string '10' faild");
+        "Parse range string '10' failed");
     fail_unless (setCrit(&my_thresholds, "20", 0) == 0,
-        "Parse range string '10' faild");
+        "Parse range string '10' failed");
 
     double i;
     for (i = -10; i < 20; i++) {
         fail_unless (get_status(i, my_thresholds) == 2-(i>=0 && i<=10)-(i>=0 && i<=20),
-	       "Threshold check for %g in w'10' c'20' faild.", i);
+	       "Threshold check for %g in w'10' c'20' failed.", i);
     }
 }
 END_TEST

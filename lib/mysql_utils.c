@@ -45,7 +45,7 @@ MYSQL *mp_mysql_init(void) {
 
     conn = mysql_init(NULL);
     if (conn == NULL)
-        unknown("MySQL library initialisation faild.");
+        unknown("MySQL library initialisation failed.");
 
     mysql_options(conn, MYSQL_READ_DEFAULT_GROUP, progname);
 
@@ -53,7 +53,7 @@ MYSQL *mp_mysql_init(void) {
             mp_mysql_pass, mp_mysql_db, mp_mysql_port, mp_mysql_socket, 0);
 
     if (ret == NULL)
-        unknown("MySQL connection faild: %s", mysql_error(conn));
+        unknown("MySQL connection failed: %s", mysql_error(conn));
 
     return conn;
 }

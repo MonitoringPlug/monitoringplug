@@ -245,7 +245,7 @@ ldns_rr_list* loadKeyfile(const char *filename) {
         ldns_zone_deep_free(trusted_zone);
     } else {
         if (mp_verbose >= 1)
-            fprintf(stderr,"loading keyfile faild.");
+            fprintf(stderr,"loading keyfile failed.");
         return NULL;
     }
 

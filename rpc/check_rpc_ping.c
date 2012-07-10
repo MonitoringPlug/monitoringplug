@@ -48,7 +48,7 @@ const char *export = NULL;
 const char *program_name = NULL;
 char *ping_ok = NULL;
 char *ping_warn = NULL;
-char *ping_faild = NULL;
+char *ping_failed = NULL;
 struct timeval to;
 char **rpcversion = NULL;
 int rpcversions = 0;
@@ -70,11 +70,11 @@ int main (int argc, char **argv) {
 
     /* Set signal handling and alarm */
     if (signal (SIGALRM, rpc_timeout_alarm_handler) == SIG_ERR)
-        critical("Setup SIGALRM trap faild!");
+        critical("Setup SIGALRM trap failed!");
 
     /* Process check arguments */
     if (process_arguments(argc, argv) != OK)
-        unknown("Parsing arguments faild!");
+        unknown("Parsing arguments failed!");
 
     /* Start plugin timeout */
     alarm(mp_timeout);
@@ -102,7 +102,7 @@ int main (int argc, char **argv) {
             tstate = get_status(time_delta, time_threshold);
 
             if (ret != RPC_SUCCESS || tstate == STATE_CRITICAL) {
-                mp_strcat_comma(&ping_faild, buf);
+                mp_strcat_comma(&ping_failed, buf);
             } else if(tstate == STATE_WARNING) {
                 mp_strcat_comma(&ping_warn, buf);
             } else {
@@ -122,8 +122,8 @@ int main (int argc, char **argv) {
         mp_strcat_space(&buf, ping_ok);
     }
 
-    if (ping_faild) {
-        critical("RPC Ping faild: %s%s", ping_faild, buf);
+    if (ping_failed) {
+        critical("RPC Ping failed: %s%s", ping_failed, buf);
     } else if (ping_warn) {
         warning("RPC Ping%s", buf);
     } else {

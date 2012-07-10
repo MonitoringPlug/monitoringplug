@@ -56,12 +56,12 @@ int main(int argc, char **argv) {
 
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
-        critical("Setup SIGALRM trap faild!");
+        critical("Setup SIGALRM trap failed!");
 
     /* Process check arguments */
     if (process_arguments(argc, argv) != OK) {
         ldns_rr_list_deep_free(trusted_keys);
-        unknown("Parsing arguments faild!");
+        unknown("Parsing arguments failed!");
     }
 
     /* Start plugin timeout */
@@ -73,7 +73,7 @@ int main(int argc, char **argv) {
     /* Create a new resolver with hostname or server from /etc/resolv.conf */
     res = createResolver(hostname);
     if (!res)
-        unknown("Creating resolver faild.");
+        unknown("Creating resolver failed.");
     resolverEnableDnssec(res);
 
     /* Test all trust anchors */
@@ -89,7 +89,7 @@ int main(int argc, char **argv) {
         /* Create a new resolver with hostname or server from /etc/resolv.conf */
         res = createResolver(hostname);
         if (!res)
-            unknown("Creating resolver faild.");
+            unknown("Creating resolver failed.");
 
         rrl_keys = ldns_validate_domain_dnskey(res, rd_owner, trusted_keys);
 

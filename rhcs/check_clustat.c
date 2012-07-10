@@ -69,11 +69,11 @@ int main (int argc, char **argv) {
 
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
-        critical("Setup SIGALRM trap faild!");
+        critical("Setup SIGALRM trap failed!");
 
     /* Process check arguments */
     if (process_arguments(argc, argv) != OK)
-        unknown("Parsing arguments faild!");
+        unknown("Parsing arguments failed!");
 
     /* Start plugin timeout */
     alarm(mp_timeout);
@@ -88,7 +88,7 @@ int main (int argc, char **argv) {
     if (nonroot == 0) {
         uid = getuid();
         if (setuid(0) != 0)
-            unknown("setuid faild");
+            unknown("setuid failed");
         subp = mp_subprocess((char *[]) {"/usr/sbin/clustat","-x", NULL});
         fp = fdopen(subp->stdout, "r");
         close(subp->stdin);
@@ -101,7 +101,7 @@ int main (int argc, char **argv) {
 
     if (nonroot == 0) {
         if (mp_subprocess_close(subp) != 0) { 
-            critical("Clustat faild!");
+            critical("Clustat failed!");
         }
     } else {
         fclose(fp);

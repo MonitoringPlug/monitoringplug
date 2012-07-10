@@ -60,11 +60,11 @@ int main (int argc, char **argv) {
 
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
-        critical("Setup SIGALRM trap faild!");
+        critical("Setup SIGALRM trap failed!");
 
     /* Process check arguments */
     if (process_arguments(argc, argv) != OK)
-        unknown("Parsing arguments faild!");
+        unknown("Parsing arguments failed!");
 
     /* Start plugin timeout */
     alarm(mp_timeout);
@@ -86,7 +86,7 @@ int main (int argc, char **argv) {
     // Check for pin
     if (mobile_at_command(fd, "+CPIN", "?", &answer, &answers) != 0) {
         mp_serial_close(fd);
-        critical("Checking pin faild.");
+        critical("Checking pin failed.");
     }
     if (answers == 1 && strcmp(answer[0], "SIM PIN") == 0) {
         if (mp_sms_pin) {
@@ -99,7 +99,7 @@ int main (int argc, char **argv) {
             if (strcmp(answer[0], "READY") != 0) {
                 mp_serial_close(fd);
                 mp_array_free(&answer, &answers);
-                critical("SIM unlock faild. Wrong PIN.");
+                critical("SIM unlock failed. Wrong PIN.");
             }
         } else {
             mp_serial_close(fd);

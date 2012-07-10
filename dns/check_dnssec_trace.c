@@ -68,11 +68,11 @@ int main(int argc, char **argv) {
 
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
-        critical("Setup SIGALRM trap faild!");
+        critical("Setup SIGALRM trap failed!");
 
     /* Process check arguments */
     if (process_arguments(argc, argv) != OK)
-        unknown("Parsing arguments faild!");
+        unknown("Parsing arguments failed!");
 
     /* Start plugin timeout */
     alarm(mp_timeout);
@@ -127,7 +127,7 @@ int main(int argc, char **argv) {
         ldns_rdf_deep_free(rd_domain);
         ldns_rdf_deep_free(rd_trace);
         ldns_rr_list_deep_free(rrl_valid_keys);
-        unknown("Creating resolver faild.");
+        unknown("Creating resolver failed.");
     }
     resolverEnableDnssec(res);
     ldns_resolver_set_dnssec_anchors(res, rrl_valid_keys);
@@ -322,7 +322,7 @@ int process_arguments (int argc, char **argv) {
             case 'k':
                 trusted_keys = loadKeyfile(optarg);
                 if (trusted_keys == NULL)
-                    usage("Parsing keyfiel faild.");
+                    usage("Parsing keyfiel failed.");
                 break;
             case 'T':
                 if (!is_hostname(optarg))

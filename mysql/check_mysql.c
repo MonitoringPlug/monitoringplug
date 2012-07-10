@@ -75,11 +75,11 @@ int main (int argc, char **argv) {
 
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
-        critical("Setup SIGALRM trap faild!");
+        critical("Setup SIGALRM trap failed!");
 
     /* Process check arguments */
     if (process_arguments(argc, argv) != OK)
-        unknown("Parsing arguments faild!");
+        unknown("Parsing arguments failed!");
 
     /* Start plugin timeout */
     alarm(mp_timeout);
@@ -95,7 +95,7 @@ int main (int argc, char **argv) {
     if (mp_showperfdata) {
         ret = mysql_query(conn, "SHOW /*!50002 GLOBAL */ STATUS;");
         if (ret != 0)
-            critical("Query 'SHOW GLOBAL STATUS' faild: %s", mysql_error(conn));
+            critical("Query 'SHOW GLOBAL STATUS' failed: %s", mysql_error(conn));
 
         result = mysql_store_result(conn);
 

@@ -88,9 +88,9 @@ START_TEST (test_subprocess_false) {
     char *cmd[] = { BIN_FALSE, (char *)0 };
 
     sph = mp_subprocess(cmd);
-    fail_if(sph == NULL, "subprocess " BIN_FALSE " faild!");
+    fail_if(sph == NULL, "subprocess " BIN_FALSE " failed!");
 
-    fail_unless(mp_subprocess_close(sph) == 1, "subprocess close faild!");
+    fail_unless(mp_subprocess_close(sph) == 1, "subprocess close failed!");
 }
 END_TEST
 
@@ -99,7 +99,7 @@ START_TEST (test_subprocess_dir) {
     char *cmd[] = { "/usr/bin/", (char *)0 };
 
     sph = mp_subprocess(cmd);
-    fail_unless(sph == NULL, "Popen '/usr/bin/' faild!");
+    fail_unless(sph == NULL, "subprocess '/usr/bin/' failed!");
 }
 END_TEST
 
@@ -108,7 +108,7 @@ START_TEST (test_subprocess_dev) {
     char *cmd[] = { "/dev/console", (char *)0 };
 
     sph = mp_subprocess(cmd);
-    fail_unless(sph == NULL, "Popen '/dev/console' faild!");
+    fail_unless(sph == NULL, "subprocess '/dev/console' failed!");
 }
 END_TEST
 
@@ -117,7 +117,7 @@ START_TEST (test_subprocess_nonexist) {
     char *cmd[] = { "/file/dont/exist", (char *)0 };
 
     sph = mp_subprocess(cmd);
-    fail_unless(sph == NULL, "Popen '/file/dont/exist' faild!");
+    fail_unless(sph == NULL, "subprocess '/file/dont/exist' failed!");
 }
 END_TEST
 
@@ -126,7 +126,7 @@ START_TEST (test_subprocess_nonexe) {
     char *cmd[] = { "/etc/hosts", (char *)0 };
 
     sph = mp_subprocess(cmd);
-    fail_unless(sph == NULL, "Popen '/etc/hosts' faild!");
+    fail_unless(sph == NULL, "subprocess '/etc/hosts' failed!");
 }
 END_TEST
 
@@ -135,7 +135,7 @@ START_TEST (test_subprocess_nonaccess) {
     char *cmd[] = { "/etc/sudoers", (char *)0 };
 
     sph = mp_subprocess(cmd);
-    fail_unless(sph == NULL, "Popen '/etc/sudoers' faild!");
+    fail_unless(sph == NULL, "subprocess '/etc/sudoers' failed!");
 }
 END_TEST
 

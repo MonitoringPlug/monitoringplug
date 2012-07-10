@@ -94,11 +94,11 @@ int main (int argc, char **argv) {
 
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
-        critical("Setup SIGALRM trap faild!");
+        critical("Setup SIGALRM trap failed!");
 
     /* Process check arguments */
     if (process_arguments(argc, argv) != OK)
-        unknown("Parsing arguments faild!");
+        unknown("Parsing arguments failed!");
 
     /* Start plugin timeout */
     alarm(mp_timeout);
@@ -190,7 +190,7 @@ int main (int argc, char **argv) {
 
         /* Check return */
         if (parserInfo->list == NULL)
-            critical("WebDAV - Parsing PROPFIND response faild!");
+            critical("WebDAV - Parsing PROPFIND response failed!");
         if (parserInfo->list->next != NULL)
             critical("WebDAV - Too many answers for PROPFIND Depth:0!");
         if(strstr(parserInfo->list->status, "200") == NULL)
