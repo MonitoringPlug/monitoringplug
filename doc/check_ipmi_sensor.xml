@@ -62,10 +62,18 @@
     <para>Check specific options</para>
     <variablelist>
       <varlistentry>
-        <term><option>-F</option></term>
+        <term><option>-S</option></term>
         <term><option>--sensor=<replaceable>SENSOR<group choice="opt">,<replaceable>SENSOR</replaceable></group></replaceable></option></term>
         <listitem>
           <para>Name of the sensor to check.</para>
+          <para>Sensors can be concatinated to check multiple sensors.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-E</option></term>
+        <term><option>--exclude=<replaceable>SENSOR<group choice="opt">,<replaceable>SENSOR</replaceable></group></replaceable></option></term>
+        <listitem>
+          <para>Name of the sensor to exclude.</para>
           <para>Sensors can be concatinated to check multiple sensors.</para>
         </listitem>
       </varlistentry>
