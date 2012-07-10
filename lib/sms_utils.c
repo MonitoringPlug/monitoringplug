@@ -77,14 +77,34 @@ int mobile_at_command_input(int fd, const char *cmd, const char *opt,
 
     // Send command
     len = write(fd, buf, strlen(buf));
+    if (len != strlen(buf)) {
+        if (mp_verbose > 0)
+            fprintf(stderr, "Write to device failed. "
+                    "Written %d of %d chars.\n", (int)len, (int)strlen(buf));
+        return -1;
+    }
     if (mp_verbose > 3)
         printf(" >> %s\n", buf);
 
     if (input) {
         len = write(fd, input, strlen(input));
+        if (len != strlen(input)) {
+            if (mp_verbose > 0)
+                fprintf(stderr, "Write to device failed. "
+                        "Written %d of %d chars.\n", (int)len,
+                        (int)strlen(buf));
+            return -1;
+        }
         if (mp_verbose > 3)
             printf(" >> %s\n", input);
         len = write(fd, "\r\x1A", 2);
+        if (len != 2) {
+            if (mp_verbose > 0)
+                fprintf(stderr, "Write to device failed. "
+                        "Written %d of 2 chars.\n", (int)len);
+            return -1;
+        }
+
     }
 
     // Read answers
@@ -137,9 +157,11 @@ int mobile_at_command_input(int fd, const char *cmd, const char *opt,
             }
         }
         // Move buffer
-        len = strlen(line);
-        memmove(buf, line, len+1);
-        len = strlen(buf);
+        if (line) {
+            len = strlen(line);
+            memmove(buf, line, len+1);
+            len = strlen(buf);
+        }
     }
 }
 
@@ -227,8 +249,8 @@ char *sms_encode_text(const char *text) {
     if (bits > 0) {
         mp_sprintf(ptr, "%02X", (bit & 0xFF));
         ptr += 2;
-        bits = 0;
     }
+
     // Add Length
     mp_asprintf(&ptr, "%02X", len);
     memcpy(pdu, ptr, 2);

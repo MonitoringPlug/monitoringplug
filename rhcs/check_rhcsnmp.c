@@ -51,10 +51,10 @@ int main (int argc, char **argv) {
     /* Local Vars */
     int status;
     char *clustername;
-    long int clusterstatus;
+    long int clusterstatus = 255;
     char *clusterstatusdesc;
     long int clustervotes;
-    long int clusterquorum;
+    long int clusterquorum = 0;
     long int clusternodes;
     netsnmp_session *ss;
 

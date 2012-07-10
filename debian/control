@@ -201,3 +201,13 @@ Description: Collection of xmlrpc monitoring plugins for Nagios.
  .
  This package provides a basic set of plugins with xmlrpc-c as
  dependency.
+
+Package: monitoringplug-notify
+Architecture: any
+Depends: monitoringplug, ${shlibs:Depends}, ${misc:Depends}
+Description: Collection of notification plugins for Nagios.
+ Collection of notification plugins for Nagios. It contains the following
+ plugins:
+ .
+  notify_mail, notify_sms, notify_stdout
+ .
