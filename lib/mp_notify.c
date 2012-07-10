@@ -1,5 +1,5 @@
 /***
- * Monitoring Plugin - mp_serial.c
+ * Monitoring Plugin - mp_notify.c
  **
  *
  * Copyright (C) 2012 Marius Rieder <marius.rieder@durchmesser.ch>

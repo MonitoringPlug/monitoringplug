@@ -145,7 +145,6 @@ int process_arguments (int argc, char **argv) {
             break;
 
         switch (c) {
-            /* Default opts */
             case LONGOPT_ON:
                 mp_array_push(&bool_on, optarg, &bools_on);
                 break;

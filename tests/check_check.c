@@ -2,8 +2,6 @@
  * Monitoring Plugin - check_check.c
  **
  *
- * check_check - 
- *
  * Copyright (C) 2012 Marius Rieder <marius.rieder@durchmesser.ch>
  *
  * This program is free software; you can redistribute it and/or modify

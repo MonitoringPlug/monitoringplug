@@ -222,7 +222,6 @@ int process_arguments (int argc, char **argv) {
             break;
 
         switch (c) {
-            /* Default opts */
             case 'b':
                 mp_array_push(&bond, strdup(optarg), &bonds);
                 break;

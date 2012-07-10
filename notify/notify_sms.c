@@ -2,7 +2,7 @@
  * Monitoring Plugin - notify_sms.c
  **
  *
- * check_nrped - Check if run inside of nrped.
+ * notify_sms - Send a notification by SMS with a Modem.
  *
  * Copyright (C) 2012 Marius Rieder <marius.rieder@durchmesser.ch>
  *

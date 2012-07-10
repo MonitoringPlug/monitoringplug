@@ -236,7 +236,6 @@ int process_arguments (int argc, char **argv) {
         getopt_wc_time(c, optarg, &expire_thresholds);
 
         switch (c) {
-            /* Default opts */
             /* Plugin opts */
             /* Hostname opt */
             case 'H':

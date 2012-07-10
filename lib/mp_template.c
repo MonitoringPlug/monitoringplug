@@ -1,5 +1,5 @@
 /***
- * Monitoring Plugin - mp_template.h
+ * Monitoring Plugin - mp_template.c
  **
  *
  * Copyright (C) 2012 Marius Rieder <marius.rieder@durchmesser.ch>

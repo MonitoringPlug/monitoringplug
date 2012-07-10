@@ -1,5 +1,5 @@
 /***
- * Monitoring Plugin - ipmi_sms.h
+ * Monitoring Plugin - sms_utils.h
  **
  *
  * Copyright (C) 2012 Marius Rieder <marius.rieder@durchmesser.ch>

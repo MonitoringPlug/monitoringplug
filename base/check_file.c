@@ -287,7 +287,6 @@ int process_arguments (int argc, char **argv) {
         getopt_wc_time(c, optarg, &age_thresholds);
 
         switch (c) {
-            /* Default opts */
             case 'f':
                 filename = optarg;
                 break;

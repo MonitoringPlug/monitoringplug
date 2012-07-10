@@ -314,7 +314,6 @@ int process_arguments (int argc, char **argv) {
         getopt_wc(c, optarg, &socket_thresholds);
 
         switch (c) {
-            /* Default opts */
             case 'T':
                 if (optarg)
                     tcpport = strtol(optarg,NULL,10);

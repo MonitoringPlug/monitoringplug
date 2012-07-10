@@ -141,7 +141,6 @@ int process_arguments (int argc, char **argv) {
         getopt_mysql(c);
 
         switch (c) {
-            /* Default opts */
             case LONGOPT_VARIABLE: {
                 char *u;
                 u = optarg;

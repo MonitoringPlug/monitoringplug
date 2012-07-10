@@ -184,7 +184,6 @@ int process_arguments (int argc, char **argv) {
         getopt_ipmi(c);
 
         switch (c) {
-            /* Default opts */
             /* Plugin opt */
             case 'D':
                 mp_array_push(&dimm, optarg, &dimms);

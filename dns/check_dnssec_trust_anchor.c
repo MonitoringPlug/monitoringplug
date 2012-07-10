@@ -143,7 +143,6 @@ int process_arguments (int argc, char **argv) {
         getopt_ldns(c);
 
         switch (c) {
-            /* Default opts */
             /* Host opt */
             case 'H':
                 getopt_host_ip(optarg, &hostname);

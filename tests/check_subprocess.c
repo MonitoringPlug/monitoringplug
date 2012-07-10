@@ -2,8 +2,6 @@
  * Monitoring Plugin - check_subprocess.c
  **
  *
- * check_subprocess - 
- *
  * Copyright (C) 2012 Marius Rieder <marius.rieder@durchmesser.ch>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -166,6 +164,5 @@ int main (void) {
   srunner_free(sr);
   return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
-
 
 /* vim: set ts=4 sw=4 et syn=c : */

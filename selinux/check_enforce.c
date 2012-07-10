@@ -130,7 +130,6 @@ int process_arguments (int argc, char **argv) {
             break;
 
         switch (c) {
-            /* Default opts */
             case 'e':
                 if (state_enforcing != -1)
                     usage("Only one state argument allowed.");

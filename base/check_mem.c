@@ -179,9 +179,6 @@ int process_arguments (int argc, char **argv) {
 
         getopt_wc(c, optarg, &usage_thresholds);
 
-        switch (c) {
-            /* Default opts */
-        }
     }
 
     /* Check requirements */

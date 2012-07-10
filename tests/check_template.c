@@ -1,8 +1,6 @@
 /***
- * Monitoring Plugin - main.c
+ * Monitoring Plugin - check_template.c
  **
- *
- * main - 
  *
  * Copyright (C) 2012 Marius Rieder <marius.rieder@durchmesser.ch>
  *

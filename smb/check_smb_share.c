@@ -204,7 +204,6 @@ int process_arguments (int argc, char **argv) {
         getopt_wc(c, optarg, &time_threshold);
 
         switch (c) {
-            /* Default opts */
             /* Host opt */
             case 'u':
                 getopt_url(optarg, &url);

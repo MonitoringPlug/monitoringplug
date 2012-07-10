@@ -232,7 +232,6 @@ int process_arguments (int argc, char **argv) {
         getopt_wc(c, optarg, &open_thresholds);
 
         switch (c) {
-            /* Default opts */
             case 'u':
                 getopt_url(optarg, &url);
                 break;

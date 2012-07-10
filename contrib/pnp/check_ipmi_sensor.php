@@ -1,6 +1,6 @@
 <?php
 #
-# Monitoring Plugin PNP - check_nfs.php
+# Monitoring Plugin PNP - check_ipmi_sensor.php
 #
 # Copyright (C) 2012 Marius Rieder <marius.rieder@durchmesser.ch>
 #

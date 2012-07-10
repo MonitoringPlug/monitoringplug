@@ -1,8 +1,6 @@
 /***
- * Monitoring Plugin - check_args.c
+ * Monitoring Plugin - check_perfdata.c
  **
- *
- * check_args - 
  *
  * Copyright (C) 2012 Marius Rieder <marius.rieder@durchmesser.ch>
  *

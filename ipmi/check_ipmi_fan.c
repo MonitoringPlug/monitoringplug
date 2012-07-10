@@ -2,7 +2,7 @@
  * Monitoring Plugin - check_ipmi_fan.c
  **
  *
- * check_ipmi_fab - Check the give or all FANs by IPMI.
+ * check_ipmi_fan - Check the give or all FANs by IPMI.
  *
  * Copyright (C) 2012 Marius Rieder <marius.rieder@durchmesser.ch>
  *
@@ -24,7 +24,7 @@
  */
 
 const char *progname  = "check_ipmi_fan";
-const char *progdesc  = "Check the give or all FANs IPMI.";
+const char *progdesc  = "Check the give or all FANs by IPMI.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2012";
 const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
@@ -164,7 +164,6 @@ int process_arguments (int argc, char **argv) {
         getopt_ipmi(c);
 
         switch (c) {
-            /* Default opts */
             /* Plugin opt */
             case 'F':
                 mp_array_push(&fan, optarg, &fans);

@@ -132,7 +132,6 @@ int process_arguments (int argc, char **argv) {
         getopt_wc(c, optarg, &row_thresholds);
 
         switch (c) {
-            /* Default opts */
             case 'T':
                 table = optarg;
                 break;

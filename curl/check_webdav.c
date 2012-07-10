@@ -422,7 +422,6 @@ int process_arguments (int argc, char **argv) {
         getopt_wc_time(c, optarg, &fetch_thresholds);
 
         switch (c) {
-            /* Default opts */
             case 'u':
                 getopt_url(optarg, &url);
                 break;

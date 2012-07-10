@@ -225,7 +225,6 @@ int process_arguments (int argc, char **argv) {
         getopt_virt(c);
 
         switch (c) {
-            /* Default opts */
             /* Domain opt */
             case 'D':
                 domainname = optarg;

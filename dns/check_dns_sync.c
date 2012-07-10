@@ -375,7 +375,6 @@ int process_arguments (int argc, char **argv) {
             break;
 
         switch (c) {
-            /* Default opts */
             /* Host opt */
             case 'H':
                 getopt_host_ip(optarg, &hostname);

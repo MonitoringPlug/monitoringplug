@@ -207,7 +207,6 @@ int process_arguments (int argc, char **argv) {
         getopt_wc_time(c, optarg, &credit_thresholds);
 
         switch (c) {
-            /* Default opts */
             case 'U':
                 userkey = optarg;
                 break;

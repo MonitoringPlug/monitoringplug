@@ -120,11 +120,7 @@ int process_arguments (int argc, char **argv) {
             break;
 
         getopt_virt(c);
-
-        switch (c) {
-            /* Default opts */
         }
-    }
 
     return(OK);
 }

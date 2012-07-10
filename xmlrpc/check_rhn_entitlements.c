@@ -291,7 +291,6 @@ int process_arguments (int argc, char **argv) {
             break;
 
         switch (c) {
-            /* Default opts */
             /* Local opts */
             case 'U':
                 getopt_url(optarg, &url);

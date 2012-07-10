@@ -160,7 +160,6 @@ int process_arguments (int argc, char **argv) {
         getopt_wc_time(c, optarg, &time_threshold);
 
         switch (c) {
-            /* Default opts */
             /* Host opt */
             case 'H':
                 getopt_host(optarg, &hostname);

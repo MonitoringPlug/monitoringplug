@@ -195,7 +195,6 @@ int process_arguments (int argc, char **argv) {
         getopt_wc(c, optarg, &count_threshold);
 
         switch (c) {
-            /* Default opts */
             /* Host opt */
             case 'H':
                 getopt_host(optarg, &hostname);

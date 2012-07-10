@@ -131,7 +131,6 @@ int process_arguments (int argc, char **argv) {
             break;
 
         switch(c) {
-            /* Default opts */
             case 'n':
                 nonroot = 1;
                 break;

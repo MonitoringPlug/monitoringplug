@@ -135,7 +135,6 @@ int process_arguments (int argc, char **argv) {
         getopt_snmp(c);
 
         switch (c) {
-            /* Default opts */
             /* Hostname opt */
             case 'H':
                 getopt_host(optarg, &hostname);

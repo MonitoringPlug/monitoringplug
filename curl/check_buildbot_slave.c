@@ -214,7 +214,6 @@ int process_arguments (int argc, char **argv) {
             break;
 
         switch (c) {
-            /* Default opts */
             case 'S':
                 mp_array_push(&slave, optarg, &slaves);
                 break;

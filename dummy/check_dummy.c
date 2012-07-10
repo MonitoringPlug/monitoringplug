@@ -118,10 +118,6 @@ int process_arguments (int argc, char **argv) {
 
         if (c == -1 || c == EOF)
             break;
-
-        switch (c) {
-            /* Default opts */
-        }
     }
 
     return(OK);

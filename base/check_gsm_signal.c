@@ -235,7 +235,6 @@ int process_arguments (int argc, char **argv) {
         getopt_wc(c, optarg, &dbm_thresholds);
 
         switch (c) {
-            /* Default opts */
             case 'P':
                 mp_sms_pin = optarg;
                 break;
