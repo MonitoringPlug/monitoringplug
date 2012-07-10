@@ -2,12 +2,14 @@
 <!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
 
+  <!ENTITY mpcheckname   "check_gsm_signal">
+
 ]>
 
 <refentry xmlns:xi="http://www.w3.org/2001/XInclude">
   <refentryinfo>
     <title>Monitoringplug  Manual</title>
-    <productname>monitoringplug-range</productname>
+    <productname>&mpcheckname;</productname>
     <authorgroup>
       <author>
        <firstname>Marius</firstname>
@@ -32,72 +34,71 @@
     </legalnotice>
   </refentryinfo>
   <refmeta>
-    <refentrytitle>MONITORINGPLUG-RANGE</refentrytitle>
-    <manvolnum>5</manvolnum>
+    <refentrytitle>CHECK_GSm_SIGNAL</refentrytitle>
+    <manvolnum>1</manvolnum>
   </refmeta>
   <refnamediv>
-    <refname>monitoringplug-range</refname>
-    <refpurpose>Range/Threshold definitions</refpurpose>
+    <refname>&mpcheckname;</refname>
+    <refpurpose>Check the signal qualiy of a GSM Modem.</refpurpose>
   </refnamediv>
   <refsynopsisdiv>
     <cmdsynopsis>
+      <command>&mpcheckname;</command>
       <arg choice="plain">
-        <option>--warning=<group choice="opt">@</group><group choice="opt">
-            <group choice="req">
-              <arg choice="plain"><parameter>FROM</parameter></arg>
-              <arg choice="plain"><parameter>~</parameter></arg>
-            </group>:</group><group choice="opt"><parameter>TO</parameter></group>
-        </option>
+        <option>--serial <replaceable>DEVICE</replaceable></option>
       </arg>
     </cmdsynopsis>
   </refsynopsisdiv>
   <refsect1 id="description">
     <title>DESCRIPTION</title>
-    <para>A alert is rised if the reading is outside of the defined range.
-      This can be inverted by prepending the definition tith a '@'.</para>
-    <para><parameter>FROM</parameter> must be smaler or equal to
-      <parameter>TO</parameter>.</para>
-    <para>'<parameter>FROM</parameter>:' may be omitted from the definition if
-      <parameter>FROM</parameter> is 0.</para>
-    <para>'<parameter>TO</parameter>' may be omitted from the definition if
-      <parameter>TO</parameter> is infinity.</para>
-    <para>'~' specify negativ infinity.</para>
+    <para>Check the state of one or more SELinux booleans.</para>
   </refsect1>
-  <refsect1 id="example">
-    <title>EXAMPLE</title>
-    <para>Some examples to illustrate.</para>
+  <refsect1 id="options">
+    <title>OPTIONS</title>
+    <para>The Monitoringplug default options</para>
+    <xi:include href="mp_opts.xml"/>
+    <para>Check specific options</para>
     <variablelist>
       <varlistentry>
-        <term><option>21:42</option></term>
+        <term><option>-S</option></term>
+        <term><option>--serial=<replaceable>DEVICE</replaceable></option></term>
         <listitem>
-          <para>Generates a warning if less than 21 or greater than 42.</para>
+          <para>Serial device of the GSM Modem.</para>
         </listitem>
       </varlistentry>
       <varlistentry>
-        <term><option>~:42</option></term>
+        <term><option>-s</option></term>
+        <term><option>--speed=<replaceable>SPEED</replaceable></option></term>
         <listitem>
-          <para>Generates a warning if greater than 42.</para>
+          <para>Serial devive connection speed.
+             (Default to 9600)</para>
         </listitem>
       </varlistentry>
       <varlistentry>
-        <term><option>21:</option></term>
+        <term><option>-P</option></term>
+        <term><option>--pin=<replaceable>PIN</replaceable></option></term>
         <listitem>
-          <para>Generates a warning if less than 21.</para>
+          <para>PIN to unlock the SIM.</para>
         </listitem>
       </varlistentry>
       <varlistentry>
-        <term><option>42</option></term>
+        <term><option>-w</option></term>
+        <term><option>--warning=<replaceable>DBM</replaceable></option></term>
         <listitem>
-          <para>Generates a warning if less than 0 or greater than 42.</para>
+          <para>Return warning if signal quality exceeds limit.
+            (Default to -80dbm:)</para>
         </listitem>
       </varlistentry>
       <varlistentry>
-        <term><option>@21:42</option></term>
+        <term><option>-c</option></term>
+        <term><option>--critical=<replaceable>DBM</replaceable></option></term>
         <listitem>
-          <para>Generates a warning if between 21 and 42.</para>
+          <para>Return critical if signal quality exceeds limit.
+            (Default to -90dbm:)</para>
         </listitem>
       </varlistentry>
     </variablelist>
   </refsect1>
+  <xi:include href="mp_seealso.xml"/>
 </refentry>
 <!-- vim: set ts=2 sw=2 expandtab ai syn=docbk : -->

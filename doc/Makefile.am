@@ -4,7 +4,9 @@ docdir = @docdir@
 
 doc_DATA = README-EOPT
 
-man_MANS = monitoringplug-eopt.5 monitoringplug-range.5
+man_MANS = monitoringplug-eopt.5 \
+		   monitoringplug-range.5 \
+		   monitoringplug-template.5
 
 EXTRA_DIST = $(doc_DATA) $(man_MANS)
 
@@ -14,8 +16,11 @@ if OS_LINUX
 man_MANS += check_bonding.1 check_dhcp.1 check_mem.1 check_multipath.1 \
 			check_sockets.1
 endif
+if HAVE_TERMIOS
+man_MANS += check_gsm_signal.1
+endif
 EXTRA_DIST += check_file.1 check_nrped.1 check_bonding.1 check_dhcp.1 \
-			  check_mem.1 check_multipath.1 check_sockets.1
+			  check_mem.1 check_multipath.1 check_sockets.1 check_gsm_signal.1
 
 # cups
 if HAVE_CUPS

@@ -48,7 +48,6 @@ const char *progusage = "--number <NUMBER> --message <MSG>";
 
 /* Global Vars */
 char *number = NULL;
-char *msg = NULL;
 
 int main (int argc, char **argv) {
     /* Local Vars */
@@ -56,6 +55,7 @@ int main (int argc, char **argv) {
     int fd;
     char *cmd;
     char *pdu;
+    char *msg;
     char **answer = NULL;
     int answers;
 
@@ -117,6 +117,15 @@ int main (int argc, char **argv) {
     }
 
     // Prepare SMS
+    if (mp_notify_file) {
+        fd = fopen(mp_notify_file, "r");
+        if (fd == NULL)
+            critical("Can't open '%s'", mp_notify_file);
+        msg = mp_template(fd);
+        fclose(fd);
+    } else {
+        msg = mp_template_str(mp_notify_msg);
+    }
     pdu = sms_encode_pdu(NULL, number, msg);
     mp_asprintf(&cmd, "=%02d", strlen(pdu)/2);
     if (mp_verbose > 0)
@@ -138,12 +147,13 @@ int process_arguments (int argc, char **argv) {
     static struct option longopts[] = {
         MP_LONGOPTS_NOTIFY,
         MP_SERIAL_LONGOPTS,
+        SMS_LONGOPTS,
         {"number", required_argument, NULL, (int)'n'},
         MP_LONGOPTS_END
     };
 
     while (1) {
-        c = mp_getopt(argc, argv, MP_OPTSTR_NOTIFY"n:"MP_SERIAL_OPTSTR, longopts, &option);
+        c = mp_getopt(argc, argv, MP_OPTSTR_NOTIFY"P:n:"MP_SERIAL_OPTSTR, longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -152,6 +162,9 @@ int process_arguments (int argc, char **argv) {
         getopt_serial(c);
         switch (c) {
             /* Plugin opts */
+            case 'P':
+                mp_sms_pin = optarg;
+                break;
             case 'n':
                 number = optarg;
                 break;
@@ -183,7 +196,8 @@ void print_help (void) {
     print_help_serial();
     printf(" -n, --number=DESTINATION\n");
     printf("      Number to send SMS to.\n");
-
+    printf(" -P, --pin=PIN\n");
+    printf("      PIN to unlock the SIM.\n");
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */

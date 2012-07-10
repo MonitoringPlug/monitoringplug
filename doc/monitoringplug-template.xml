@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+
+]>
+
+<refentry xmlns:xi="http://www.w3.org/2001/XInclude">
+  <refentryinfo>
+    <title>Monitoringplug  Manual</title>
+    <productname>monitoringplug-template</productname>
+    <authorgroup>
+      <author>
+       <firstname>Marius</firstname>
+        <surname>Rieder</surname>
+        <address>
+          <email>marius.rieder@durchmesser.ch</email>
+        </address>
+       <contrib>For monitoringplug</contrib>
+      </author>
+    </authorgroup>
+    <copyright>
+      <year>2012</year>
+      <holder>Marius Rieder</holder>
+    </copyright>
+    <legalnotice>
+      <para>This manual page was written for Monitoringplug
+        (and may be used by others).</para>
+      <para>Permission is granted to copy, distribute and/or modify this
+        document under the terms of the GNU General Public License,
+        Version 2 or (at your option) any later version published by
+        the Free Software Foundation.</para>
+    </legalnotice>
+  </refentryinfo>
+  <refmeta>
+    <refentrytitle>MONITORINGPLUG-TEMPLATE</refentrytitle>
+    <manvolnum>5</manvolnum>
+  </refmeta>
+  <refnamediv>
+    <refname>monitoringplug-template</refname>
+    <refpurpose>Notification template language</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <cmdsynopsis>
+      <arg choice="plain">
+        <option>[% <parameter>VARIABLE</parameter> %]</option>
+      </arg>
+      <arg choice="plain">
+        <option>[% GET <parameter>VARIABLE</parameter> %]</option>
+      </arg>
+      <arg choice="plain">
+        <option>[% URL <parameter>VARIABLE</parameter> %]</option>
+      </arg>
+    </cmdsynopsis>
+    <cmdsynopsis>
+      <arg choice="plain">
+        <option>[% IF <parameter>EXPRESSION</parameter> %] block [% ELSE %] block [% END %]</option>
+      </arg>
+    </cmdsynopsis>
+    <cmdsynopsis>
+      <arg choice="plain">
+        <option>[% SWITCH <parameter>EXPRESSION</parameter> %][% CASE <parameter>EXPRESSION</parameter> %] block [% CASE <parameter>EXPRESSION</parameter> %] block [% END %]</option>
+      </arg>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+  <refsect1 id="description">
+    <title>DESCRIPTION</title>
+    <para>A simple templating language to format the notification notice.</para>
+    <para>A tag with just a VARIABLE name or optionala a get in frot of will be
+      replaced with the environment variable of the same name. If prepended
+      with URL the string will be url encoded.</para>
+    <para>The IF construct will show only one of the blocks. ELSE and the
+      second block can be ommitet.</para>
+    <para>The SWITCH construct will show only the block following a CASE
+      statement which match with the expression of the SWITCH.</para>
+    <para>[%- and -%] remove the linefeed befor/after the statement.</para>
+  </refsect1>
+  <refsect1 id="example">
+    <title>EXAMPLE</title>
+    <para>Some examples to illustrate.</para>
+    <programlisting>
+      [% HOSTNAME %]
+      [% IF EDITOR -%]
+      You editor is: [% EDITOR %]
+      [% END %]
+    </programlisting>
+  </refsect1>
+</refentry>
+<!-- vim: set ts=2 sw=2 expandtab ai syn=docbk : -->

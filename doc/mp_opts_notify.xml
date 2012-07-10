@@ -29,19 +29,27 @@
     <term><option>-t</option></term>
     <term><option>--timeout=<replaceable>INTEGER</replaceable></option></term>
     <listitem>
-      <para>Seconds before the check return with a timeout alert.</para>
+      <para>Seconds before the notify return with a timeout alert.</para>
     </listitem>
   </varlistentry>
   <varlistentry>
     <term><option>--eopt=<group choice="opt"><parameter>section</parameter></group><group choice="opt">@<parameter>file</parameter></group></option></term>
     <listitem>
-      <para>>Read extended options from file.</para>
+      <para>Read extended options from file.</para>
     </listitem>
   </varlistentry>
   <varlistentry>
-    <term><option>--perfdata</option></term>
+    <term><option>-F</option></term>
+    <term><option>--file=<replaceable>FILE</replaceable></option></term>
     <listitem>
-      <para>Print performance data (if available).</para>
+      <para>File to read the notification template from.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><option>-m</option></term>
+    <term><option>--message=<replaceable>MESSAGE</replaceable></option></term>
+    <listitem>
+      <para>Use MESSAGE as the notification template.</para>
     </listitem>
   </varlistentry>
 </variablelist>

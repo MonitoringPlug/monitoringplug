@@ -152,6 +152,12 @@ void print_help(void) {
     print_usage();
 
     print_help_notify();
+    printf(" -T, --to=DESTINATION\n");
+    printf("      Address to send Mail to.\n");
+    printf(" -f, --from=DESTINATION\n");
+    printf("      Address to send Mail from.\n");
+    printf("     --bcc\n");
+    printf("      Send notification as BCC messages..\n");
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */

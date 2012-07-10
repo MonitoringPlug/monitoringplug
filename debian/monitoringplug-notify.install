@@ -1,1 +1,2 @@
 /usr/lib/nagios/plugins/notify_*
+/usr/share/man/man1/notify_*

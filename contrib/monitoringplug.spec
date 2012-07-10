@@ -337,6 +337,7 @@ fi
 %{_mandir}/man1/check_file.1.gz
 %{_mandir}/man1/check_bonding.1.gz
 %{_mandir}/man1/check_dhcp.1.gz
+%{_mandir}/man1//nagios/plugins/check_gsm_signal.1.gz
 %{_mandir}/man1/check_mem.1.gz
 %{_mandir}/man1/check_multipath.1.gz
 %{_mandir}/man1/check_nrped.1.gz
@@ -449,6 +450,7 @@ fi
 %files notify
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/notify_*
+%{_mandir}/man1/notify_*
 
 %changelog
 * Thu Jun 26 2012 Marius Rieder <marius.rieder@durchmesser.ch> - 0.11-1
