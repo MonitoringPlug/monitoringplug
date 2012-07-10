@@ -235,6 +235,9 @@ int main(int argc, char **argv) {
         status = ldns_verify_rrsig_keylist(rrl_domain_soa, rr, rrl_valid_keys, NULL);
         if (status == LDNS_STATUS_OK)
             soa_valid++;
+        else if (mp_verbose > 0)
+            fprintf(stderr, "ldns_verify_rrsig_keylist SOA failed: %s\n",
+                    ldns_get_errorstr_by_id(status));
     }
 
     ldns_rr_list_deep_free(rrl_domain_soa);
@@ -257,6 +260,9 @@ int main(int argc, char **argv) {
         status = ldns_verify_rrsig_keylist(rrl_domain_ns, rr, rrl_valid_keys, NULL);
         if (status == LDNS_STATUS_OK)
             ns_valid++;
+        else if (mp_verbose > 0)
+            fprintf(stderr, "ldns_verify_rrsig_keylist NS failed: %s\n",
+                    ldns_get_errorstr_by_id(status));
     }
 
     ldns_rr_list_deep_free(rrl_domain_ns);

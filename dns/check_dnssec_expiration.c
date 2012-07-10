@@ -167,8 +167,12 @@ int main (int argc, char **argv) {
 
         /* Check rrsigs */
         status = ldns_verify_rrsig_keylist(rrl_soa, rr, rrl_keys, NULL);
-        if (status != LDNS_STATUS_OK)
+        if (status != LDNS_STATUS_OK) {
+            if (mp_verbose > 0)
+                fprintf(stderr, "ldns_verify_rrsig_keylist failed: %s\n",
+                        ldns_get_errorstr_by_id(status));
             continue;
+        }
 
         ttl = ldns_rr_ttl(rr);
 
