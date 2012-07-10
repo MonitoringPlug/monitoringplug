@@ -9,6 +9,7 @@ if HAVE_CHECK
 
 TESTS = check_monitoringplug \
 		check_sms \
+		check_subprocess \
 		check_template
 if HAVE_EXPAT
 TESTS += check_rhcs

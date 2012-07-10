@@ -14,7 +14,8 @@ libmonitoringplug_a_SOURCES = mp_common.c mp_common.h \
                               mp_perfdata.c mp_perfdata.h \
                               mp_popen.c mp_popen.h \
                               mp_eopt.c mp_eopt.h \
-                              mp_net.c mp_net.h
+                              mp_net.c mp_net.h \
+							  mp_subprocess.c mp_subprocess.h
 if HAVE_TERMIOS
 libmonitoringplug_a_SOURCES += mp_serial.c mp_serial.h
 endif
