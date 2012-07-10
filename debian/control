@@ -5,6 +5,8 @@ Maintainer: Marius Rieder <marius.rieder@durchmesser.ch>
 Build-Depends: debhelper (>= 7.0.50~),
                autoconf, libtool,
                pkg-config,
+	       bison,
+	       flex,
                libcurl4-gnutls-dev,
                libxmlrpc-c3-dev,
                libgnutls-dev,
