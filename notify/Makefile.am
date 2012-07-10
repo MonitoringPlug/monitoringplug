@@ -18,4 +18,11 @@ bin_PROGRAMS += notify_sms
 notify_sms_LDADD = ../lib/libsmsutils.a $(LDADD)
 endif
 
+if HAVE_CURL
+bin_PROGRAMS += notify_aspsms
+
+notify_aspsms_LDADD = ../lib/libcurlutils.a $(LDADD)
+notify_aspsms_LDFLAGS = $(LIBCURL)
+endif
+
 ## vim: set ts=4 sw=4 syn=automake :

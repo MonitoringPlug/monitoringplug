@@ -118,11 +118,12 @@ int main (int argc, char **argv) {
 
     // Prepare SMS
     if (mp_notify_file) {
-        fd = fopen(mp_notify_file, "r");
-        if (fd == NULL)
+        FILE *tfd;
+        tfd = fopen(mp_notify_file, "r");
+        if (tfd == NULL)
             critical("Can't open '%s'", mp_notify_file);
-        msg = mp_template(fd);
-        fclose(fd);
+        msg = mp_template(tfd);
+        fclose(tfd);
     } else {
         msg = mp_template_str(mp_notify_msg);
     }
