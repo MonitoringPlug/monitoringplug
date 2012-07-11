@@ -115,7 +115,7 @@ EXTRA_DIST += check_rhn_entitlements.1 check_koji_hub.1 check_koji_builder.1
 #notify
 man_MANS += notify_mail.1 notify_stdout.1
 if HAVE_TERMIOS
-bin_PROGRAMS += notify_sms.1
+man_MANS += notify_sms.1
 endif
 if HAVE_CURL
 man_MANS += notify_aspsms.1
