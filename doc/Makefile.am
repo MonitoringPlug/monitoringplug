@@ -111,11 +111,18 @@ if HAVE_XMLRPC
 man_MANS += check_rhn_entitlements.1 check_koji_hub.1 check_koji_builder.1
 endif
 EXTRA_DIST += check_rhn_entitlements.1 check_koji_hub.1 check_koji_builder.1
-if HAVE_XSLTPROC
 
 #notify
-man_MANS += notify_aspsms.1 notify_mail.1 notify_sms.1 notify_stdout.1
+man_MANS += notify_mail.1 notify_stdout.1
+if HAVE_TERMIOS
+bin_PROGRAMS += notify_sms.1
+endif
+if HAVE_CURL
+man_MANS += notify_aspsms.1
+endif
 EXTRA_DIST += notify_aspsms.1 notify_mail.1 notify_sms.1 notify_stdout.1
+
+if HAVE_XSLTPROC
 
 CLEANFILES = $(man_MANS)
 
