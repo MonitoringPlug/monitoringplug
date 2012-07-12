@@ -22,7 +22,6 @@ endif
 libmonitoringplugnotify_a_SOURCES = mp_notify.c mp_notify.h
 
 AM_YFLAGS = -d
-AM_LFLAGS = --header-file
 noinst_LIBRARIES  += libmonitoringplugtemplate.a
 libmonitoringplugtemplate_a_SOURCES = mp_template_yacc.y \
 									  mp_template_lex.l \
