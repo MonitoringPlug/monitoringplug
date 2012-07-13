@@ -41,7 +41,7 @@ const char *progusage = "--to <DEST> --file <TEMPLATE> | --message <MESSAGE>";
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <utime.h>
-#include <error.h>
+#include <errno.h>
 #include <string.h>
 
 /* Global Vars */
@@ -80,17 +80,17 @@ int main (int argc, char **argv) {
 
     subp = mp_subprocess((char *[]) {"/usr/sbin/sendmail", "-t", NULL});
     if (bcc && from)
-        dprintf(subp->stdin, "To: %s\n", from);
+        dprintf(subp->sp_stdin, "To: %s\n", from);
     for(i=0; i < emails; i++) {
         if (bcc)
-            dprintf(subp->stdin, "Bcc: %s\n", email[i]);
+            dprintf(subp->sp_stdin, "Bcc: %s\n", email[i]);
         else
-            dprintf(subp->stdin, "To: %s\n", email[i]);
+            dprintf(subp->sp_stdin, "To: %s\n", email[i]);
     }
-    dprintf(subp->stdin, "X-Mailer: %s (%s)\n", PACKAGE_NAME, PACKAGE_VERSION);
+    dprintf(subp->sp_stdin, "X-Mailer: %s (%s)\n", PACKAGE_NAME, PACKAGE_VERSION);
 
-    write(subp->stdin, out, strlen(out));
-    dprintf(subp->stdin, ".\n");
+    write(subp->sp_stdin, out, strlen(out));
+    dprintf(subp->sp_stdin, ".\n");
 
     if(mp_subprocess_close(subp) != 0)
         printf("Send mail failed.\n");

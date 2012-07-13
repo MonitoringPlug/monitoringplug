@@ -29,8 +29,8 @@
 
 typedef struct {
     pid_t   pid;
-    int     stdin;
-    int     stdout;
+    int     sp_stdin;
+    int     sp_stdout;
 } mp_subprocess_t;
 
 /**

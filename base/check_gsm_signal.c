@@ -41,7 +41,7 @@ const char *progusage = "--serial <DEV>";
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <utime.h>
-#include <error.h>
+#include <errno.h>
 #include <string.h>
 
 /* Global Vars */

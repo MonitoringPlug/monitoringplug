@@ -43,7 +43,7 @@ const char *progusage = "--number <NUMBER> --message <MSG>";
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <utime.h>
-#include <error.h>
+#include <errno.h>
 #include <string.h>
 
 /* Global Vars */

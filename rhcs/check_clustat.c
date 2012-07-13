@@ -90,8 +90,8 @@ int main (int argc, char **argv) {
         if (setuid(0) != 0)
             unknown("setuid failed");
         subp = mp_subprocess((char *[]) {"/usr/sbin/clustat","-x", NULL});
-        fp = fdopen(subp->stdout, "r");
-        close(subp->stdin);
+        fp = fdopen((subp->sp_stdout), "r");
+        close(subp->sp_stdin);
     } else {
         fp = fopen("clustat.xml","r");
     }

@@ -49,7 +49,7 @@ START_TEST (test_subprocess_echo) {
     sph = mp_subprocess(cmd);
     fail_if(sph == NULL, "subprocess '/bin/echo', '-n', 'TEST' failed!");
 
-    s = read(sph->stdout, buffer, 9);
+    s = read(sph->sp_stdout, buffer, 9);
     fail_unless(s == 4, "subprocess stdout fread failed! %d=>'%s'", s, buffer);
 
     fail_unless(mp_subprocess_close(sph) == 0, "subprocess close failed!");
@@ -70,9 +70,9 @@ START_TEST (test_subprocess_cat) {
     sph = mp_subprocess(cmd);
     fail_if(sph == NULL, "subprocess '/bin/cat', '-' failed!");
 
-    write(sph->stdin, "TEST", 4);
+    write(sph->sp_stdin, "TEST", 4);
 
-    s = read(sph->stdout, buffer, 9);
+    s = read(sph->sp_stdout, buffer, 9);
     fail_unless(s == 4, "subprocess stdout fread failed! %d=>'%s'", s, buffer);
 
     kill(sph->pid, SIGHUP);

@@ -76,14 +76,14 @@ int main (int argc, char **argv) {
         if (setuid(0) != 0)
             unknown("setuid failed");
         subp = mp_subprocess((char *[]) {"/sbin/multipath","-l", NULL});
-        fp = fdopen(subp->stdout, "r");
-        close(subp->stdin);
+        fp = fdopen(subp->sp_stdout, "r");
+        close(subp->sp_stdin);
         if (uid != 0)
             setuid(uid);
     } else {
         subp = mp_subprocess((char *[]) {"/usr/bin/sudo", "/sbin/multipath","-l", NULL});
-        fp = fdopen(subp->stdout, "r");
-        close(subp->stdin);
+        fp = fdopen(subp->sp_stdout, "r");
+        close(subp->sp_stdin);
     }
 
     if (fp == NULL)

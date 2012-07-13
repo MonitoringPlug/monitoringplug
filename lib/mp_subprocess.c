@@ -74,8 +74,8 @@ mp_subprocess_t *mp_subprocess(char *command[]) {
     /* Init suprocess handle. */
     sph = mp_malloc(sizeof(mp_subprocess_t));
     memset(sph, 0, sizeof(mp_subprocess_t));
-    sph->stdin = pfp[1];
-    sph->stdout = pfp[0];
+    sph->sp_stdin = pfp[1];
+    sph->sp_stdout = pfp[0];
 
     /* Fork subprocess way */
     sph->pid = fork();
