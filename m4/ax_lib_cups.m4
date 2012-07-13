@@ -130,7 +130,6 @@ AC_DEFUN([AX_LIB_CUPS],
         cups_version_check=`expr $cups_version_number \>\= $cups_version_req_number`
         if test "$cups_version_check" = "1"; then
             AC_MSG_RESULT([yes])
-	    found_cups="no"
         else
             AC_MSG_RESULT([no])
 	    found_cups="no"
