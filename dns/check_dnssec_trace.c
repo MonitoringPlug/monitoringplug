@@ -341,6 +341,7 @@ int process_arguments (int argc, char **argv) {
 
 void print_help (void) {
     print_revision();
+    print_revision_ldns();
     print_copyright();
 
     printf("\n");

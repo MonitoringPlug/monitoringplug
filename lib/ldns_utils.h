@@ -102,6 +102,11 @@ void getopt_ldns(int c);
  */
 void print_help_ldns(void);
 
+/**
+ * Print the ldns revision.
+ */
+void print_revision_ldns(void);
+
 #endif /* _DNS_UTILS_H_ */
 
 /* vim: set ts=4 sw=4 et syn=c : */

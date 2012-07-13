@@ -366,4 +366,8 @@ void print_help_ldns(void) {
     printf("      Use TCP for DNS queries.\n");
 }
 
+void print_revision_ldns(void) {
+    printf(" ldns v%s\n", LDNS_VERSION);
+}
+
 /* vim: set ts=4 sw=4 et syn=c : */
