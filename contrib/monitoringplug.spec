@@ -17,7 +17,7 @@ BuildRequires:  mysql-devel
 BuildRequires:  net-snmp-devel
 BuildRequires:  xmlrpc-c-devel
 BuildRequires:  selinux-policy-devel
-BuildRequires:	OpenIPMI-devel
+BuildRequires:  OpenIPMI-devel
 
 %if 0%{?rhel} == 5
 BuildRequires:  curl-devel
