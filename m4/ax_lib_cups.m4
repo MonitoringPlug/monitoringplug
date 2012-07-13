@@ -130,14 +130,20 @@ AC_DEFUN([AX_LIB_CUPS],
         cups_version_check=`expr $cups_version_number \>\= $cups_version_req_number`
         if test "$cups_version_check" = "1"; then
             AC_MSG_RESULT([yes])
+	    found_cups="no"
         else
             AC_MSG_RESULT([no])
+	    found_cups="no"
         fi
     fi
 
     if test "$found_cups" = "yes" ; then
         AC_DEFINE([HAVE_CUPS], [1],
                   [Define to 1 if CUPS libraries are available])
+    else
+        CUPS_CFLAGS=""
+        CUPS_LDFLAGS=""
+        CUPS_VERSION=""
     fi
 
     AC_SUBST([CUPS_VERSION])

@@ -22,12 +22,14 @@
  */
 %{
 #include <stdlib.h>
+#include <string.h>
 #include "mp_template.h"
 #include "mp_template_yacc.h"
 %}
 
 %option nounput
 %option noinput
+%option yylineno
 
 %x TT
 %x COMMENT
@@ -93,13 +95,17 @@ void mp_template_parse_file(FILE *in) {
     do {
         yyparse();
     } while (!feof(yyin));
+#ifdef FLEX_SUBMINOR_VERSION
     yylex_destroy();
+#endif
 }
 
 void mp_template_parse_string(const char *in) {
     yy_scan_string(in);
     yyparse();
+#ifdef FLEX_SUBMINOR_VERSION
     yylex_destroy();
+#endif
 }
 
 /* vim: set ts=4 sw=4 et syn=lex : */
