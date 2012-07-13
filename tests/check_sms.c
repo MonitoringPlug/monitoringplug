@@ -25,6 +25,7 @@
 #include "sms_utils.h"
 
 #include <stdlib.h>
+#include <locale.h>
 #include <check.h>
 
 const char *progname  = "TEST";
@@ -72,6 +73,8 @@ START_TEST (test_sms_encode_text) {
 
     c = &test_encode_text[_i];
 
+    setlocale(LC_CTYPE, "en_US.UTF-8");
+
     dest = sms_encode_text(c->in);
 
     fail_unless (strcmp(dest, c->out) == 0,
@@ -84,6 +87,8 @@ END_TEST
 START_TEST (test_sms_encode_pdu) {
     char *pdu;
 
+    setlocale(LC_CTYPE, "en_US.UTF-8");
+
     pdu = sms_encode_pdu(NULL, "+491721234567", "Testtext:€");
 
     fail_unless (strcmp(pdu, "0005000C9194711232547600000BD4F29C4E2FE3E9BA4D19") == 0,
@@ -93,6 +98,8 @@ END_TEST
 
 START_TEST (test_sms_encode_pdu_smsc) {
     char *pdu;
+
+    setlocale(LC_CTYPE, "en_US.UTF-8");
 
     pdu = sms_encode_pdu("+491722270333", "+491721234567", "Testtext:€");
 
@@ -117,7 +124,7 @@ int main (void) {
   suite_add_tcase (s, tc);
 
   sr = srunner_create(s);
-  srunner_run_all(sr, CK_VERBOSE);
+  srunner_run_all(sr, CK_NORMAL);
   number_failed = srunner_ntests_failed(sr);
   srunner_free(sr);
   return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;

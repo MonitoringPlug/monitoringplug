@@ -27,7 +27,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <wchar.h>
-#include <locale.h>
 #include <unistd.h>
 
 /**
@@ -203,8 +202,6 @@ char *sms_encode_text(const char *text) {
     char *ptr;
     char *pdu;
     wchar_t *t = NULL;
-
-    setlocale(LC_CTYPE, "");
 
     i = mbstowcs(NULL, text, 0);
     t = mp_malloc(sizeof(wchar_t)*(i+1));
