@@ -45,17 +45,26 @@ extern const char *mp_ipmi_port;
 extern const char *mp_ipmi_username;
 /** Password for ipmi lan connection. */
 extern const char *mp_ipmi_password;
+#if OS_LINUX
 /** SMI number for local connection. */
 extern int mp_ipmi_smi;
+#endif
 
 /** LibVirt specific short option string. */
 #define IPMI_OPTSTR "H:P:u:p:"
 /** LibVirt specific longopt struct. */
+#if OS_LINUX
 #define IPMI_LONGOPTS MP_LONGOPTS_HOST, \
                       MP_LONGOPTS_PORT, \
                       {"username", required_argument, NULL, (int)'u'}, \
                       {"password", required_argument, NULL, (int)'p'}, \
                       {"smi", required_argument, NULL, (int)MP_LONGOPT_PRIV0}
+#else
+#define IPMI_LONGOPTS MP_LONGOPTS_HOST, \
+                      MP_LONGOPTS_PORT, \
+                      {"username", required_argument, NULL, (int)'u'}, \
+                      {"password", required_argument, NULL, (int)'p'}
+#endif
 
 /** IPMI Sensor linked list struct */
 struct mp_ipmi_sensor_list {

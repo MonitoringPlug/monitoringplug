@@ -196,6 +196,15 @@ int process_arguments (int argc, char **argv) {
         }
     }
 
+    /* Check requirements */
+#if OS_LINUX
+    if (!mp_ipmi_hostname && !mp_hostname_smi)
+        usage("Hostname or SMI is mandatory.");
+#else
+    if (!mp_ipmi_hostname)
+        usage("Hostname is mandatory.");
+#endif
+
     return(OK);
 }
 

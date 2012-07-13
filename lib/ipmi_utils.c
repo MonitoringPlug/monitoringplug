@@ -64,10 +64,12 @@ const char *mp_ipmi_hostname = NULL;
 const char *mp_ipmi_port = "623";
 const char *mp_ipmi_username = NULL;
 const char *mp_ipmi_password = NULL;
+#if OS_LINUX
 int mp_ipmi_smi=-1;
+#endif
 
 void mp_ipmi_init(void) {
-    int rv;
+    int rv = 1;
 
     /* OS handler allocated first. */
     mp_ipmi_hnd = ipmi_posix_setup_os_handler();
@@ -92,8 +94,10 @@ void mp_ipmi_init(void) {
                 (void *)mp_ipmi_username, strlen(mp_ipmi_username),
                 (void *)mp_ipmi_password, strlen(mp_ipmi_password),
                 mp_ipmi_hnd, NULL, &mp_ipmi_con);
+#if OS_LINUX
     } else {
         rv = ipmi_smi_setup_con(0, mp_ipmi_hnd, NULL, &mp_ipmi_con);
+#endif
     }
 
     if (rv)
@@ -133,8 +137,10 @@ void getopt_ipmi(int c) {
     switch ( c ) {
          /* Hostname opt */
         case 'H':
+#if OS_LINUX
             if (mp_ipmi_smi != -1)
                 usage("--hostname and --smi are exclusive options.");
+#endif
             getopt_host_ip(optarg, &mp_ipmi_hostname);
             break;
         /* Port opt */
@@ -152,11 +158,13 @@ void getopt_ipmi(int c) {
                 usage("IPMI max username leng is 16.");
             mp_ipmi_password = optarg;
             break;
+#if OS_LINUX
         case MP_LONGOPT_PRIV0:
             if (mp_ipmi_hostname)
                 usage("--hostname and --smi are exclusive options.");
             mp_ipmi_smi = (int) strtol(optarg, NULL, 10);
             break;
+#endif
     }
 }
 
@@ -167,8 +175,10 @@ void print_help_ipmi(void) {
     printf("      User name for IPMI lan connect.\n");
     printf(" -p, --password=PASSWORD\n");
     printf("      Authentication password.\n");
+#if OS_LINUX
     printf("     --smi=INDEX\n");
     printf("      SMI to connect to. (Default to 0)\n");
+#endif
 }
 
 void print_revision_ipmi(void) {
