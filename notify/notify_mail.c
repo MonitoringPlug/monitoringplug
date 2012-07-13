@@ -49,6 +49,7 @@ char **email = NULL;
 int emails = 0;
 char *from = NULL;
 int bcc = 0;
+char *bin_sendmail = BIN_SENDMAIL;
 
 int main (int argc, char **argv) {
     /* Local Vars */
@@ -78,7 +79,7 @@ int main (int argc, char **argv) {
         out = mp_template_str(mp_notify_msg);
     }
 
-    subp = mp_subprocess((char *[]) {"/usr/sbin/sendmail", "-t", NULL});
+    subp = mp_subprocess((char *[]) {bin_sendmail, "-t", NULL});
     if (bcc && from)
         dprintf(subp->sp_stdin, "To: %s\n", from);
     for(i=0; i < emails; i++) {
@@ -109,11 +110,12 @@ int process_arguments (int argc, char **argv) {
         {"to", required_argument, NULL, (int)'T'},
         {"from", required_argument, NULL, (int)'f'},
         {"bcc", required_argument, &bcc, 1},
+        {"sendmail" , required_argument, NULL, (int)'s'},
         MP_LONGOPTS_END
     };
 
     while (1) {
-        c = mp_getopt(argc, argv, MP_OPTSTR_NOTIFY, longopts, &option);
+        c = mp_getopt(argc, argv, MP_OPTSTR_NOTIFY"s:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -126,6 +128,9 @@ int process_arguments (int argc, char **argv) {
                 break;
             case 'f':
                 from = optarg;
+                break;
+            case 's':
+                bin_sendmail = optarg;
                 break;
         };
     }

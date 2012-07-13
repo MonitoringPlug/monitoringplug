@@ -127,6 +127,9 @@ fi
 AC_PATH_PROGS(BIN_FALSE, false)
 AC_DEFINE_UNQUOTED([BIN_FALSE], ["$ac_cv_path_BIN_FALSE"],
             [false path.])
+AC_PATH_PROG([BIN_SENDMAIL], [sendmail2], [/usr/sbin/sendmail])
+AC_DEFINE_UNQUOTED([BIN_SENDMAIL], ["$ac_cv_path_BIN_SENDMAIL"],
+		               [sendmail path.])
 AC_PATH_PROG([XSLTPROC], [xsltproc])
 AC_PATH_PROG([DEBUILD], [debuild])
 AC_PATH_PROG([RPMBUILD], [rpmbuild])
