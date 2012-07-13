@@ -50,12 +50,12 @@ int port = 0;
 int main (int argc, char **argv) {
     /* Local Vars */
     int status;
-    char *clustername;
+    char *clustername = NULL;
     long int clusterstatus = 255;
-    char *clusterstatusdesc;
-    long int clustervotes;
+    char *clusterstatusdesc = NULL;
+    long int clustervotes = 0;
     long int clusterquorum = 0;
-    long int clusternodes;
+    long int clusternodes = 0;
     netsnmp_session *ss;
 
     /* OIDs to query */

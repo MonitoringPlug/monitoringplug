@@ -177,6 +177,7 @@ int main (int argc, char **argv) {
     /* XML Error Code */
     if (errorCode != 1) {
         printf("SMS sending failed: %s\n", errorDescription);
+        free(errorDescription);
         return 1;
     }
     if (errorDescription)
