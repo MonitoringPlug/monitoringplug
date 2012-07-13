@@ -41,7 +41,7 @@
 #   and this notice are preserved. This file is offered as-is, without any
 #   warranty.
 
-#serial 1 
+#serial 2
 
 AC_DEFUN([AX_LIB_XMLRPC],
 [
@@ -131,12 +131,17 @@ AC_DEFUN([AX_LIB_XMLRPC],
             AC_MSG_RESULT([yes])
         else
             AC_MSG_RESULT([no])
+            found_xmlrpc="no"
         fi
     fi
 
     if test "$found_xmlrpc" = "yes" ; then
         AC_DEFINE([HAVE_XMLRPC], [1],
                   [Define to 1 if xmlrcp-c libraries are available])
+    else
+        XMLRPC_CFLAGS=""
+        XMLRPC_LDFLAGS=""
+        XMLRPC_VERSION=""
     fi
 
     AC_SUBST([XMLRPC_VERSION])

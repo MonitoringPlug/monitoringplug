@@ -41,7 +41,7 @@
 #   and this notice are preserved. This file is offered as-is, without any
 #   warranty.
 
-#serial 1 
+#serial 2
 
 AC_DEFUN([AX_LIB_NETSNMP],
 [
@@ -131,12 +131,17 @@ AC_DEFUN([AX_LIB_NETSNMP],
             AC_MSG_RESULT([yes])
         else
             AC_MSG_RESULT([no])
+	    found_netsnmp="no"
         fi
     fi
 
     if test "$found_netsnmp" = "yes" ; then
         AC_DEFINE([HAVE_NETSNMP], [1],
                   [Define to 1 if Net-SNMP libraries are available])
+    else
+        NETSNMP_CFLAGS=""
+        NETSNMP_LDFLAGS=""
+        NETSNMP_VERSION=""
     fi
 
     AC_SUBST([NETSNMP_VERSION])
