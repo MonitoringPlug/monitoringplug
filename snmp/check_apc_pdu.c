@@ -53,8 +53,8 @@ int main (int argc, char **argv) {
     char        *output = NULL;
     char        *pdu_name = NULL;
     int         status = STATE_OK;
-    long        pdu_psu1;
-    long        pdu_psu2;
+    long        pdu_psu1 = -1;
+    long        pdu_psu2 = -1;
     int         i;
     struct mp_snmp_table    table_state;
     netsnmp_session         *ss;

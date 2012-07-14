@@ -90,7 +90,8 @@ int main (int argc, char **argv) {
     }
     dprintf(subp->sp_stdin, "X-Mailer: %s (%s)\n", PACKAGE_NAME, PACKAGE_VERSION);
 
-    write(subp->sp_stdin, out, strlen(out));
+    if (write(subp->sp_stdin, out, strlen(out)) == -1)
+        printf("Send mail failed.\n");
     dprintf(subp->sp_stdin, ".\n");
 
     if(mp_subprocess_close(subp) != 0)
