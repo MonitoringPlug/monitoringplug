@@ -18,8 +18,13 @@ case $host_os in
 	AC_DEFINE([OS_LINUX], 1, [True if program is to be compiled for a Linux kernel])
 	ac_system="Linux"
 	;;
+    *freebsd*)
+    AC_DEFINE([OS_FREEBSD], 1, [True if program is to be compiled for a FreeBSD kernel])
+    AC_DEFINE([_WITH_DPRINTF], 1, [Expose dprintf])
+    ac_system="Freebsd"
+    ;;
 	*darwin*)
-	AC_DEFINE([OS_DARWIN], 1, [True if program is to be compiled for a Linux kernel])
+	AC_DEFINE([OS_DARWIN], 1, [True if program is to be compiled for a Darwin kernel])
 	ac_system="Darwin"
 	;;
 	*)
@@ -27,6 +32,7 @@ case $host_os in
 esac
 AC_MSG_RESULT([$ac_system])
 AM_CONDITIONAL([OS_LINUX], [test x$ac_system == xLinux])
+AM_CONDITIONAL([OS_FREEBSD], [test x$ac_system == xFreebsd])
 AM_CONDITIONAL([OS_DARWIN], [test x$ac_system == xDarwin])
 
 # Checks for programs.
