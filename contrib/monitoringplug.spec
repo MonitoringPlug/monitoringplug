@@ -1,6 +1,6 @@
 Name:           monitoringplug
 Version:        0.11
-Release:        a1%{?dist}
+Release:        1%{?dist}
 Summary:        Collection of monitoring plugins for Nagios
 
 Group:          Applications/System
@@ -453,10 +453,10 @@ fi
 %{_mandir}/man1/notify_*
 
 %changelog
-* Thu Jun 26 2012 Marius Rieder <marius.rieder@durchmesser.ch> - 0.11-1
+* Sat Jul 14 2012 Marius Rieder <marius.rieder@durchmesser.ch> - 0.11-1
 - Added IPMI checks with OpenIPMI
 - Added GSM-Modem signal quality check.
-- Added SMS notification command.
+- Added SMS and mail notification command.
 
 * Thu Jun 21 2012 Marius Rieder <marius.rieder@durchmesser.ch> - 0.10-1
 - new check_dhcp

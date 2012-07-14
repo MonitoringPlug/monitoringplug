@@ -1,8 +1,10 @@
-monitoringplug (0.11) UNRELEASED; urgency=low
+monitoringplug (0.11) monitoringplug; urgency=low
 
   * Added IPMI checks with OpenIPMI.
+  * Added GSM-Modem signal quality check.
+  * Added SMS and mail notification command.
 
- -- Marius Rieder <marius.rieder@durchmesser.ch>  Tue, 26 June 2012 21:04:23 +0200
+ -- Marius Rieder <marius.rieder@durchmesser.ch>  Sat, 14 Jul 2012 16:51:23 +0200
 
 monitoringplug (0.10) monitoringplug; urgency=low
 
