@@ -47,6 +47,7 @@ char *ifOperStatusText[] = {"", "up", "down", "testing", "unknown",
        "dormant", "notPresent", "lowerLayerDown", ""};
 
 extern char* hostname;
+extern int* port;
 
 netsnmp_session *mp_snmp_init(void) {
 
@@ -59,7 +60,7 @@ netsnmp_session *mp_snmp_init(void) {
     if (mp_snmp_community == NULL)
         mp_snmp_community = strdup("public");
 
-    session.peername = hostname;
+    mp_asprintf(&(session.peername), "%s:%d", hostname, port);
 
     switch(mp_snmp_version) {
         case SNMP_VERSION_1:

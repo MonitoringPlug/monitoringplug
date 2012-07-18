@@ -46,7 +46,7 @@ const char *progusage = "--hostname <HOSTNAME>";
 
 /* Global Vars */
 const char  *hostname = NULL;
-int         port = 0;
+int         port = 161;
 
 int main (int argc, char **argv) {
     /* Local Vars */
@@ -139,7 +139,7 @@ int process_arguments (int argc, char **argv) {
 
 
     while (1) {
-        c = mp_getopt(argc, argv, MP_OPTSTR_DEFAULT"H:p:o:O:"SNMP_OPTSTR, longopts, &option);
+        c = mp_getopt(argc, argv, MP_OPTSTR_DEFAULT"H:P:o:O:"SNMP_OPTSTR, longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
