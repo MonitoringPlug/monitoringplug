@@ -1,6 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 
-#AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/lib
+SUBDIRS = replayd
+
 LDADD = ../lib/libmonitoringplug.a
 AM_LDFLAGS = $(CHECK_LIBS)
 AM_CFLAGS = $(AM_CPPFLAGS) $(CHECK_CFLAGS)

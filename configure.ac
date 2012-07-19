@@ -226,5 +226,6 @@ AC_CONFIG_FILES([Makefile
 		 policy/Makefile
 		 policy/monitoringplug.te
 		 notify/Makefile
-                 tests/Makefile])
+                 tests/Makefile
+		 tests/replayd/Makefile])
 AC_OUTPUT
