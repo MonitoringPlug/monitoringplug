@@ -187,7 +187,7 @@ int process_arguments (int argc, char **argv) {
     setCritTime(&time_threshold, "10m");
 
     while (1) {
-        c = mp_getopt(argc, argv, MP_OPTSTR_DEFAULT"P:sw:c:W:C:H:", longopts, &option);
+        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"P:sw:c:W:C:H:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;

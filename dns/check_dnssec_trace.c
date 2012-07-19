@@ -303,7 +303,7 @@ int process_arguments (int argc, char **argv) {
     }
 
     while (1) {
-        c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"H:D:T:k:"LDNS_OPTSTR, long_opts, &option);
+        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"H:D:T:k:"LDNS_OPTSTR, long_opts, &option);
         if (c == -1 || c == EOF)
             break;
 

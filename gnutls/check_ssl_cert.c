@@ -227,7 +227,7 @@ int process_arguments (int argc, char **argv) {
     setCritTime(&expire_thresholds, "10d:");
 
     while (1) {
-        c = mp_getopt(argc, argv, MP_OPTSTR_DEFAULT"H:P:46w:c:C:", longopts, &option);
+        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"H:P:46w:c:C:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;

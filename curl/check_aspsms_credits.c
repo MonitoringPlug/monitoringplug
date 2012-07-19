@@ -199,7 +199,7 @@ int process_arguments (int argc, char **argv) {
     setCritTime(&credit_thresholds, "50:");
 
     while (1) {
-        c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"U:P:w:c:", longopts, &option);
+        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"U:P:w:c:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;

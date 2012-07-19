@@ -146,7 +146,7 @@ int process_arguments (int argc, char **argv) {
 
 
     while (1) {
-        c = mp_getopt(argc, argv, MP_OPTSTR_DEFAULT"H:P:o:O:"SNMP_OPTSTR, longopts, &option);
+        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"H:P:o:O:"SNMP_OPTSTR, longopts, &option);
 
         if (c == -1 || c == EOF)
             break;

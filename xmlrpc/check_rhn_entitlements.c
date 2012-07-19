@@ -285,7 +285,7 @@ int process_arguments (int argc, char **argv) {
     setCrit(&free_thresholds, "5:",0);
 
     while (1) {
-        c = mp_getopt(argc, argv, MP_OPTSTR_DEFAULT"U:u:p:C:S:w:c:", longopts, &option);
+        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"U:u:p:C:S:w:c:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;

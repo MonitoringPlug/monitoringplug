@@ -305,7 +305,7 @@ int process_arguments (int argc, char **argv) {
     setCritTime(&socket_thresholds, "1024");
 
     while (1) {
-        c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"T:U:R:c:w:46", longopts, &option);
+        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"T:U:R:c:w:46", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;

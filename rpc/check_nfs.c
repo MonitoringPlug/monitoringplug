@@ -275,7 +275,7 @@ int process_arguments (int argc, char **argv) {
     setCritTime(&time_threshold, "1s");
 
     while (1) {
-        c = mp_getopt(argc, argv, MP_OPTSTR_DEFAULT"H:w:c:e:r:T:", longopts, &option);
+        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"H:w:c:e:r:T:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;

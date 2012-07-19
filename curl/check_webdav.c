@@ -414,7 +414,7 @@ int process_arguments (int argc, char **argv) {
     setCritTime(&fetch_thresholds, "9s");
 
     while (1) {
-        c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"u:C:a:w:c:", longopts, &option);
+        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"u:C:a:w:c:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;

@@ -41,7 +41,7 @@
 /**
  * Wrapper around getopt_long for check commands.
  */
-int mp_getopt(int argc, char *argv[], const char *optstring,
+int mp_getopt(int *argc, char **argv[], const char *optstring,
         const struct option *longopts, int *longindex);
 
 #endif /* _MP_GETOPT_H_ */

@@ -224,7 +224,7 @@ int process_arguments (int argc, char **argv) {
     /* Set default */
 
     while (1) {
-        c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"H:P:u:w:c:", longopts, &option);
+        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"H:P:u:w:c:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;

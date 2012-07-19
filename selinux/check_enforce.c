@@ -124,7 +124,7 @@ int process_arguments (int argc, char **argv) {
     };
 
     while (1) {
-        c = mp_getopt(argc, argv, MP_OPTSTR_DEFAULT"epdP:", longopts, &option);
+        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"epdP:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;

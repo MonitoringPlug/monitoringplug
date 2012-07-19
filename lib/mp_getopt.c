@@ -27,12 +27,12 @@
 
 #include <stdio.h>
 
-int mp_getopt(int argc, char *argv[], const char *optstring,
+int mp_getopt(int *argc, char **argv[], const char *optstring,
                 const struct option *longopts, int *longindex) {
     int c;
 
     while (1) {
-        c = getopt_long(argc, argv, optstring, longopts, NULL);
+        c = getopt_long(*argc, *argv, optstring, longopts, NULL);
 
         if (c == -1 || c == EOF)
             return c;
@@ -49,7 +49,7 @@ int mp_getopt(int argc, char *argv[], const char *optstring,
                 mp_verbose++;
                 break;
             case MP_LONGOPT_EOPT:
-                argv = mp_eopt(&argc, argv, optarg);
+                *argv = mp_eopt(argc, *argv, optarg);
                 break;
             case 't':
                 mp_timeout = (int)strtol(optarg, NULL, 10);

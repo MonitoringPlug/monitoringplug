@@ -172,7 +172,7 @@ int process_arguments (int argc, char **argv) {
     setCrit(&usage_thresholds, "95", 0);
 
     while (1) {
-        c = getopt_long(argc, argv, MP_OPTSTR_DEFAULT"c:w:", longopts, &option);
+        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"c:w:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
