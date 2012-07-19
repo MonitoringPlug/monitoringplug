@@ -70,7 +70,7 @@ void mp_perfdata_int2(const char *label, long int value, const char *unit,
     mp_strcat(&mp_perfdata, ";");
 
     if(have_min) {
-        mp_asprintf(&buf, "%ld;", min);
+        mp_asprintf(&buf, "%ld", min);
         mp_strcat(&mp_perfdata, buf);
         free(buf);
     }
@@ -157,7 +157,7 @@ void mp_perfdata_float2(const char *label, float value, const char *unit,
     mp_strcat(&mp_perfdata, ";");
 
     if(have_min) {
-        mp_asprintf(&buf, "%.*f;", precision, min);
+        mp_asprintf(&buf, "%.*f", precision, min);
         mp_strcat(&mp_perfdata, buf);
         free(buf);
     }
