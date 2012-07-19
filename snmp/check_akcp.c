@@ -43,16 +43,24 @@ const char *progusage = "-H <HOST>";
 #include <net-snmp/net-snmp-config.h>
 #include <net-snmp/net-snmp-includes.h>
 
+#define MP_LONGOPT_TEMP MP_LONGOPT_PRIV0
+#define MP_LONGOPT_HUM  MP_LONGOPT_PRIV1
+
 /* Global Vars */
 const char  *hostname = NULL;
 int         port = 161;
-int         sensorport = -1;
+int         sensor_name = 0;
+int         sensor_temp = 0;
+int         sensor_hum = 0;
+int         sensor_found = 0;
+int         *sensor = NULL;
+int         sensors = 0;
 char        *degreeeUnit[] = { "F", "C" };
 
 int main (int argc, char **argv) {
     /* Local Vars */
     int             i;
-    int             last = 10;
+    int             idx;
     int             state = STATE_OK;
     char            *output = NULL;
     char            *buf;
@@ -71,94 +79,206 @@ int main (int argc, char **argv) {
 
     ss = mp_snmp_init();
 
-    if (sensorport == -1)
-        sensorport = 0;
-    else
-        last = sensorport + 1;
-
-    buf = mp_malloc(32);
-
     /* Query Temp */
-    for (i = sensorport; i < last; i++) {
-        long int temp;
-        long int temp_state = 0;
-        long int temp_warn, temp_crit;
-        long int temp_unit;
+    if (sensor_temp) {
+        for (i=0; i<(sensors?sensors:10); i++) {
+            char *temp_name = NULL;
+            long int temp;
+            long int temp_state = 0;
+            long int temp_online = 0;
+            long int temp_warn_high, temp_crit_high, temp_warn_low, temp_crit_low;
+            long int temp_unit;
 
-        struct mp_snmp_query_cmd snmpcmd[] = {
-            {{1,3,6,1,4,1,3854,1,2,2,1,16,1,3,i}, 15, ASN_INTEGER, (void *)&temp},
-            {{1,3,6,1,4,1,3854,1,2,2,1,16,1,4,i}, 15, ASN_INTEGER, (void *)&temp_state},
-            {{1,3,6,1,4,1,3854,1,2,2,1,16,1,7,i}, 15, ASN_INTEGER, (void *)&temp_warn},
-            {{1,3,6,1,4,1,3854,1,2,2,1,16,1,8,i}, 15, ASN_INTEGER, (void *)&temp_crit},
-            {{1,3,6,1,4,1,3854,1,2,2,1,16,1,12,i}, 15, ASN_INTEGER, (void *)&temp_unit},
-            {{0}, 0, 0, NULL},
-        };
+            // Set index
+            idx = sensor ? sensor[i]-1 : i;
 
-        mp_snmp_query(ss, snmpcmd);
+            struct mp_snmp_query_cmd snmpcmd[] = {
+                {{1,3,6,1,4,1,3854,1,2,2,1,16,1,1,idx}, 15,  ASN_OCTET_STR, (void *)&temp_name},
+                {{1,3,6,1,4,1,3854,1,2,2,1,16,1,3,idx}, 15,  ASN_INTEGER,   (void *)&temp},
+                {{1,3,6,1,4,1,3854,1,2,2,1,16,1,4,idx}, 15,  ASN_INTEGER,   (void *)&temp_state},
+                {{1,3,6,1,4,1,3854,1,2,2,1,16,1,5,idx}, 15,  ASN_INTEGER,   (void *)&temp_online},
+                {{1,3,6,1,4,1,3854,1,2,2,1,16,1,7,idx}, 15,  ASN_INTEGER,   (void *)&temp_warn_high},
+                {{1,3,6,1,4,1,3854,1,2,2,1,16,1,8,idx}, 15,  ASN_INTEGER,   (void *)&temp_crit_high},
+                {{1,3,6,1,4,1,3854,1,2,2,1,16,1,9,idx}, 15,  ASN_INTEGER,   (void *)&temp_warn_low},
+                {{1,3,6,1,4,1,3854,1,2,2,1,16,1,10,idx}, 15, ASN_INTEGER,   (void *)&temp_crit_low},
+                {{1,3,6,1,4,1,3854,1,2,2,1,16,1,12,idx}, 15, ASN_INTEGER,   (void *)&temp_unit},
+                {{0}, 0, 0, NULL},
+            };
 
-        if (temp_state == 0)
-            break;
+            if(mp_verbose)
+                printf("Query Temp Sensor %d\n", idx);
 
-        switch (temp_state) {
-            case 2:
-                mp_snprintf(buf, 32, "Temperature%d: %ld%s", i+1, temp, degreeeUnit[temp_unit]);
+            mp_snmp_query(ss, snmpcmd);
+
+            // skip if sensor is non-existent or offline in all sensor mode
+            if (sensors == 0 && (temp_state == 0 || temp_online != 1)) {
+                if(mp_verbose)
+                    printf(" skip\n");
                 break;
-            case 3:
-            case 5:
-                state = state == STATE_OK ? STATE_WARNING : state;
-                mp_snprintf(buf, 32, "Warning Temperature%d: %ld%s", i+1, temp, degreeeUnit[temp_unit]);
-                break;
-            default:
-                state = STATE_CRITICAL;
-                mp_snprintf(buf, 32, "Critical Temperature%d: %ld%s", i+1, temp, degreeeUnit[temp_unit]);
+            }
+
+            // Get string of sensor name.
+            if (sensor_name == 0) {
+                if (temp_name)
+                    free(temp_name);
+                mp_asprintf(&temp_name, "%d", i+1);
+            }
+
+            // Handle offline or unavailable sensors
+            if (temp_online != 1) {
+                state = state == STATE_OK ? STATE_UNKNOWN : state;
+                mp_asprintf(&buf, "Temperature %s: %s", temp_name,
+                        (temp_online == 0 ? "not available" : "offline"));
+                mp_strcat_comma(&output, buf);
+                free(buf);
+                continue;
+            }
+
+            // Count Sensor
+            sensor_found++;
+
+            // Check state
+            switch (temp_state) {
+                case 2:
+                    mp_asprintf(&buf, "Temperature %s: %ld%s",
+                            temp_name, temp, degreeeUnit[temp_unit]);
+                    break;
+                case 3:
+                case 5:
+                    state = state == STATE_OK ? STATE_WARNING : state;
+                    mp_asprintf(&buf, "Warning Temperature %s: %ld%s",
+                            temp_name, temp, degreeeUnit[temp_unit]);
+                    break;
+                default:
+                    state = STATE_CRITICAL;
+                    mp_asprintf(&buf, "Critical Temperature %s: %ld%s",
+                            temp_name, temp, degreeeUnit[temp_unit]);
+            }
+
+            mp_strcat_comma(&output, buf);
+
+            if (mp_showperfdata) {
+                thresholds *threshold = NULL;
+
+                //Build threshold
+                threshold = mp_malloc(sizeof(thresholds));
+                threshold->warning = mp_malloc(sizeof(range));
+                memset(threshold->warning, 0, sizeof(range));
+                threshold->critical = mp_malloc(sizeof(range));
+                memset(threshold->critical, 0, sizeof(range));
+
+                threshold->critical->start = temp_crit_low;
+                threshold->warning->start = temp_warn_low;
+                threshold->warning->end = temp_warn_high;
+                threshold->critical->end = temp_crit_high;
+
+                mp_asprintf(&buf, "temp%d", idx+1);
+
+                mp_perfdata_int(buf, temp, degreeeUnit[temp_unit], threshold);
+
+                free_threshold(threshold);
+                free(buf);
+            }
         }
-
-        mp_strcat_comma(&output, buf);
-
-        mp_snprintf(buf, 32, "temp%d", i+1);
-        mp_perfdata_int3(buf, temp, degreeeUnit[temp_unit], 1, temp_warn, 1, temp_crit, 0,0,0,0);
     }
 
     /* Query Hum */
-    for (i = sensorport; i < last; i++) {
-        long int    hum;
-        long int    hum_state = 0;
-        long int    hum_warn, hum_crit;
+    if (sensor_hum) {
+        for (i=0; i<(sensors?sensors:10); i++) {
+            char        *hum_name = NULL;
+            long int    hum;
+            long int    hum_state = 0;
+            long int    hum_online = 0;
+            long int    hum_warn_high, hum_crit_high, hum_warn_low, hum_crit_low;
 
-        struct mp_snmp_query_cmd snmpcmd[] = {
-            {{1,3,6,1,4,1,3854,1,2,2,1,17,1,3,i}, 15, ASN_INTEGER, (void *)&hum},
-            {{1,3,6,1,4,1,3854,1,2,2,1,17,1,4,i}, 15, ASN_INTEGER, (void *)&hum_state},
-            {{1,3,6,1,4,1,3854,1,2,2,1,17,1,7,i}, 15, ASN_INTEGER, (void *)&hum_warn},
-            {{1,3,6,1,4,1,3854,1,2,2,1,17,1,8,i}, 15, ASN_INTEGER, (void *)&hum_crit},
-            {{0}, 0, 0, NULL},
-        };
+            // Set index
+            idx = sensor ? sensor[i]-1 : i;
 
-        mp_snmp_query(ss, snmpcmd);
+            struct mp_snmp_query_cmd snmpcmd[] = {
+                {{1,3,6,1,4,1,3854,1,2,2,1,17,1,1,idx}, 15,  ASN_OCTET_STR, (void *)&hum_name},
+                {{1,3,6,1,4,1,3854,1,2,2,1,17,1,3,idx}, 15,  ASN_INTEGER,   (void *)&hum},
+                {{1,3,6,1,4,1,3854,1,2,2,1,17,1,4,idx}, 15,  ASN_INTEGER,   (void *)&hum_state},
+                {{1,3,6,1,4,1,3854,1,2,2,1,17,1,5,idx}, 15,  ASN_INTEGER,   (void *)&hum_online},
+                {{1,3,6,1,4,1,3854,1,2,2,1,17,1,7,idx}, 15,  ASN_INTEGER,   (void *)&hum_warn_high},
+                {{1,3,6,1,4,1,3854,1,2,2,1,17,1,8,idx}, 15,  ASN_INTEGER,   (void *)&hum_crit_high},
+                {{1,3,6,1,4,1,3854,1,2,2,1,17,1,9,idx}, 15,  ASN_INTEGER,   (void *)&hum_warn_low},
+                {{1,3,6,1,4,1,3854,1,2,2,1,17,1,10,idx}, 15, ASN_INTEGER,   (void *)&hum_crit_low},
+                {{0}, 0, 0, NULL},
+            };
 
-        if (hum_state == 0)
-            break;
+            if(mp_verbose)
+                printf("Query Hum Sensor %d\n", idx);
 
-        switch (hum_state) {
-            case 2:
-                mp_snprintf(buf, 32, "Humidity%d: %ld%%", i+1, hum);
+            mp_snmp_query(ss, snmpcmd);
+
+            // skip if sensor is non-existent or offline in all sensor mode
+            if (sensors == 0 && (hum_state == 0 || hum_online != 1)) {
+                if(mp_verbose)
+                    printf(" skip\n");
                 break;
-            case 3:
-            case 5:
-                state = state == STATE_OK ? STATE_WARNING : state;
-                mp_snprintf(buf, 32, "Warning Humidity%d: %ld%%", i+1, hum);
-                break;
-            default:
-                state = STATE_CRITICAL;
-                mp_snprintf(buf, 32, "Critical Humidity%d: %ld%%", i+1, hum);
+            }
+
+            // Get string of sensor name.
+            if (sensor_name == 0) {
+                if (hum_name)
+                    free(hum_name);
+                mp_asprintf(&hum_name, "%d", i+1);
+            }
+
+            // Handle offline or unavailable sensors
+            if (hum_online != 1) {
+                state = state == STATE_OK ? STATE_UNKNOWN : state;
+                mp_asprintf(&buf, "Humidity %s: %s", hum_name,
+                        (hum_online == 0 ? "not available" : "offline"));
+                mp_strcat_comma(&output, buf);
+                free(buf);
+                continue;
+            }
+
+            // Count Sensor
+            sensor_found++;
+
+            // Check state
+            switch (hum_state) {
+                case 2:
+                    mp_asprintf(&buf, "Humidity%d: %ld%%", i+1, hum);
+                    break;
+                case 3:
+                case 5:
+                    state = state == STATE_OK ? STATE_WARNING : state;
+                    mp_asprintf(&buf, "Warning Humidity%d: %ld%%", i+1, hum);
+                    break;
+                default:
+                    state = STATE_CRITICAL;
+                    mp_asprintf(&buf, "Critical Humidity%d: %ld%%", i+1, hum);
+            }
+
+            mp_strcat_comma(&output, buf);
+
+            if (mp_showperfdata) {
+                thresholds *threshold = NULL;
+
+                //Build threshold
+                threshold = mp_malloc(sizeof(thresholds));
+                threshold->warning = mp_malloc(sizeof(range));
+                memset(threshold->warning, 0, sizeof(range));
+                threshold->critical = mp_malloc(sizeof(range));
+                memset(threshold->critical, 0, sizeof(range));
+
+                threshold->critical->start = hum_crit_low;
+                threshold->warning->start = hum_warn_low;
+                threshold->warning->end = hum_warn_high;
+                threshold->critical->end = hum_crit_high;
+
+                mp_asprintf(&buf, "hum%d", idx+1);
+
+                mp_perfdata_int(buf, hum, "%", threshold);
+
+                free_threshold(threshold);
+                free(buf);
+            }
         }
-
-        mp_strcat_comma(&output, buf);
-
-        mp_snprintf(buf, 32, "hum%d", i+1);
-        mp_perfdata_int3(buf, hum, "%", 1, hum_warn, 1, hum_crit, 1,0,1,100);
     }
-
-    free(buf);
 
     mp_snmp_deinit();
 
@@ -183,6 +303,9 @@ int process_arguments (int argc, char **argv) {
             MP_LONGOPTS_HOST,
             MP_LONGOPTS_PORT,
             {"sensor", required_argument, NULL, (int)'s'},
+            {"name", no_argument, NULL, (int)'n'},
+            {"temp", no_argument, NULL, MP_LONGOPT_TEMP},
+            {"hum", no_argument, NULL, MP_LONGOPT_HUM},
             SNMP_LONGOPTS,
             MP_LONGOPTS_END
     };
@@ -196,7 +319,7 @@ int process_arguments (int argc, char **argv) {
 
 
     while (1) {
-        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"H:P:s:"SNMP_OPTSTR, longopts, &option);
+        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"H:P:s:n"SNMP_OPTSTR, longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -214,8 +337,24 @@ int process_arguments (int argc, char **argv) {
                 break;
             /* Plugin opt */
             case 's':
-                sensorport = (int)strtol(optarg, NULL, 10);
+                mp_array_push_int(&sensor, optarg, &sensors);
+                break;
+            case 'n':
+                sensor_name = 1;
+                break;
+            case MP_LONGOPT_TEMP:
+                sensor_temp = 1;
+                break;
+            case MP_LONGOPT_HUM:
+                sensor_hum = 1;
+                break;
         }
+    }
+
+    // Apply defaults
+    if (sensor_temp == 0 && sensor_hum == 0) {
+        sensor_temp = 1;
+        sensor_hum = 1;
     }
 
     return(OK);
@@ -238,6 +377,12 @@ void print_help (void) {
 
     printf(" -s, --sensor=[INDEX]\n");
     printf("      Index of the sensor to check.\n");
+    printf(" -n, --name\n");
+    printf("      Print names of sensors.\n");
+    printf("     --temp\n");
+    printf("      Check Temperature sensors.\n");
+    printf("     --hum\n");
+    printf("      Check Humidity sensors.\n");
 
     print_help_snmp();
 }

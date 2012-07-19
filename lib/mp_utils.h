@@ -93,6 +93,14 @@ void mp_array_push(char ***array, char *obj, int *num);
 void mp_array_free(char ***array, int *num);
 
 /**
+ * push the int value of a string or some comma separated strings to a array.
+ * \para[in|out] array Pointer to the array to push to.
+ * \para[in] obj Object to push to the array.
+ * \para[in\out] num Number of array entries.
+ */
+void mp_array_push_int(int **array, char *obj, int *num);
+
+/**
  * Return time in secound since tv.
  */
 double mp_time_delta(struct timeval tv);

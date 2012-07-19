@@ -168,6 +168,14 @@ void mp_array_free(char ***array, int *num) {
     (*num) = 0;
 }
 
+void mp_array_push_int(int **array, char *obj, int *num) {
+    while(obj != NULL) {
+        *array = realloc(*array, sizeof(int)*((*num)+1));
+        (*array)[*num] = (int)strtol(strsep(&obj, ","), NULL, 10);
+        (*num)++;
+    }
+}
+
 double mp_time_delta(struct timeval time_start) {
    struct timeval time_end;
 

@@ -67,7 +67,26 @@
         <term><option>-s</option></term>
         <term><option>--sensor=<replaceable>SENSOR</replaceable></option></term>
         <listitem>
-          <para>Index of the sensor to check.</para>
+          <para>Index of the sensor to check. Can be repeated.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-n</option></term>
+        <term><option>--name</option></term>
+        <listitem>
+          <para>Print the names of the sensors instead of the number.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>--temp</option></term>
+        <listitem>
+          <para>Check Temperature sensors.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>--hum</option></term>
+        <listitem>
+          <para>Check Humidity sensors.</para>
         </listitem>
       </varlistentry>
     </variablelist>
