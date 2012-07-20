@@ -122,4 +122,42 @@ unsigned short int mp_ip_csum(unsigned short int *addr, int len) {
     return ~sum;
 }
 
+char *mp_recv_line_buffer = NULL;
+char *mp_recv_line(int sd) {
+    char *endPtr;
+    char *line;
+    size_t len;
+
+    if (!mp_recv_line_buffer) {
+        mp_recv_line_buffer = mp_malloc(128);
+        memset(mp_recv_line_buffer, 0, 128);
+    }
+
+    // Find newline
+    endPtr = mp_recv_line_buffer;
+    mp_recv_line_buffer = strsep(&endPtr, "\n");
+    if (!endPtr) {
+        endPtr = strchr(mp_recv_line_buffer, '\0');
+        len = 127 - (endPtr-mp_recv_line_buffer);
+        len = recv(sd, endPtr, len , 0);
+        endPtr[len] = '\0';
+
+        endPtr = mp_recv_line_buffer;
+        mp_recv_line_buffer = strsep(&endPtr, "\n");
+    }
+    if (!endPtr)
+        return NULL;
+
+    // Get line
+    line = strdup(mp_recv_line_buffer);
+    if (mp_verbose > 3)
+        printf("< %s\n", line);
+
+    // Rotate
+    len = 128 - (endPtr-mp_recv_line_buffer);
+    memmove(mp_recv_line_buffer, endPtr, len);
+
+    return line;
+}
+
 /* vim: set ts=4 sw=4 et syn=c : */

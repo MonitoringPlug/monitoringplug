@@ -48,9 +48,12 @@ const char *progusage = "--host <HOSTNAME> --port <PORT>";
 #include <gnutls/gnutls.h>
 #include <gnutls/x509.h>
 
+#define MP_LONGOPT_STARTTLS MP_LONGOPT_PRIV0
+
 /* Global Vars */
 thresholds *expire_thresholds = NULL;
 const char *hostname = NULL;
+const char *starttls = NULL;
 int port = 0;
 int ipv = AF_UNSPEC;
 char **ca_file = NULL;
@@ -89,6 +92,60 @@ int main (int argc, char **argv) {
 
     // Connect to Server
     socket = mp_connect(hostname, port, ipv, SOCK_STREAM);
+
+    // StartTLS handling
+    if (starttls) {
+        if (strcmp(starttls, "smtp") == 0) {
+            char *line;
+            int has_starttls = 0;
+
+            // Wait for 220
+            line = mp_recv_line(socket);
+            if (strncmp(line, "220 ", 4) != 0) {
+                mp_disconnect(socket);
+                unknown("Don't looks like smtp: %s", line);
+            }
+            free(line);
+
+            // Send EHLO
+            line = mp_malloc(128);
+            mp_sprintf(line, "EHLO ");
+            gethostname(line+5, 122);
+            line[strlen(line)+1] = '\0';
+            line[strlen(line)] = '\n';
+            send(socket, line, strlen(line), 0);
+            if (mp_verbose > 3)
+                printf("> %s", line);
+
+            // Read EHLO reply
+            do {
+                free(line);
+                line = mp_recv_line(socket);
+                if (strncmp(line, "250", 3) != 0) {
+                    mp_disconnect(socket);
+                    critical("EHLO failed: %s", line);
+                }
+                if (strncmp(line+4, "STARTTLS", 8) == 0)
+                    has_starttls = 1;
+            } while (line && (strncmp(line, "250 ", 4) != 0));
+            free(line);
+
+            if (has_starttls == 0)
+                critical("SMTP do not offer STARTTLS");
+
+            send(socket, "STARTTLS\n", 9, 0);
+            if (mp_verbose > 3)
+                printf("> STARTTLS\n");
+
+            line = mp_recv_line(socket);
+            if (strncmp(line, "220 ", 4) != 0) {
+                mp_disconnect(socket);
+                unknown("STARTTLS Error: %s", line);
+            }
+        } else {
+            unknown("STARTTLS protocoll %s not known.", starttls);
+        }
+    }
 
     // GNUTLS init
     gnutls_global_init ();
@@ -219,6 +276,7 @@ int process_arguments (int argc, char **argv) {
         MP_LONGOPTS_HOST,
         MP_LONGOPTS_PORT,
         // PLUGIN OPTS
+        {"starttls", required_argument, NULL, MP_LONGOPT_STARTTLS},
         MP_LONGOPTS_WC,
         MP_LONGOPTS_END
     };
@@ -237,6 +295,9 @@ int process_arguments (int argc, char **argv) {
 
         switch (c) {
             /* Plugin opts */
+            case MP_LONGOPT_STARTTLS:
+                starttls = optarg;
+                break;
             /* Hostname opt */
             case 'H':
                 getopt_host(optarg, &hostname);
@@ -277,6 +338,8 @@ void print_help (void) {
 #ifdef USE_IPV6
     print_help_46();
 #endif //USE_IPV6
+    printf("     --starttls=[PROTO]\n");
+    printf("      Use named STARTTLS protocoll.\n");
     printf(" -C, --trusted-ca=[NAME:]FILE\n");
     printf("      File to read trust-CAs from.\n");
     print_help_warn_time("30 days");

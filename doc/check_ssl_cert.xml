@@ -69,6 +69,13 @@
       <xi:include href="mp_opts_port.xml"/>
       <xi:include href="mp_opts_46.xml"/>
       <varlistentry>
+        <term><option>--starttls<replaceable>PROTO</replaceable></option></term>
+        <listitem>
+          <para>Use named STARTSSL protocol.</para>
+          <para>Only smtp is implemented.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
         <term><option>-C</option></term>
         <term><option>--trusted-ca=<group choise="opt"><replaceable>NAME</replaceable>:</group><replaceable>FILE</replaceable></option></term>
         <listitem>

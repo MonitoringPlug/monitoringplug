@@ -70,6 +70,13 @@ void mp_disconnect(int sd);
  */
 unsigned short int mp_ip_csum(unsigned short int *addr, int len);
 
+/**
+ * Receive a line from a socket
+ * \para[in] sd Socket to read from.
+ * \return Return a new allocated string containing a line or NULL.
+ */
+char *mp_recv_line(int sd);
+
 #endif /* MP_NET_H_ */
 
 /* vim: set ts=4 sw=4 et syn=c : */
