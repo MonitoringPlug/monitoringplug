@@ -39,29 +39,6 @@
     <refname>monitoringplug-template</refname>
     <refpurpose>Notification template language</refpurpose>
   </refnamediv>
-  <refsynopsisdiv>
-    <cmdsynopsis>
-      <arg choice="plain">
-        <option>[% <parameter>VARIABLE</parameter> %]</option>
-      </arg>
-      <arg choice="plain">
-        <option>[% GET <parameter>VARIABLE</parameter> %]</option>
-      </arg>
-      <arg choice="plain">
-        <option>[% URL <parameter>VARIABLE</parameter> %]</option>
-      </arg>
-    </cmdsynopsis>
-    <cmdsynopsis>
-      <arg choice="plain">
-        <option>[% IF <parameter>EXPRESSION</parameter> %] block [% ELSE %] block [% END %]</option>
-      </arg>
-    </cmdsynopsis>
-    <cmdsynopsis>
-      <arg choice="plain">
-        <option>[% SWITCH <parameter>EXPRESSION</parameter> %][% CASE <parameter>EXPRESSION</parameter> %] block [% CASE <parameter>EXPRESSION</parameter> %] block [% END %]</option>
-      </arg>
-    </cmdsynopsis>
-  </refsynopsisdiv>
   <refsect1 id="description">
     <title>DESCRIPTION</title>
     <para>A simple templating language to format the notification notice.</para>
