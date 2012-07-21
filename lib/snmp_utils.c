@@ -165,6 +165,7 @@ int mp_snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd)
                     }
                     switch(vars->type) {
                         case ASN_INTEGER:       // 0x02
+                        case ASN_TIMETICKS:
                             *(p->target) = (void *)(*vars->val.integer);
                             break;
                         case ASN_OCTET_STR: {   // 0x04

@@ -282,6 +282,9 @@ int main (int argc, char **argv) {
 
     mp_snmp_deinit();
 
+    if (sensor_found == 0)
+        unknown("No Sensors found.");
+
     switch (state) {
         case STATE_OK:
             ok("AKCP - %s", output);

@@ -12,9 +12,6 @@ TESTS = check_monitoringplug \
 		check_sms \
 		check_subprocess \
 		check_template
-if HAVE_EXPAT
-TESTS += check_rhcs
-endif
 
 check_PROGRAMS = $(TESTS)
 
@@ -26,15 +23,25 @@ check_monitoringplug_SOURCES = main.c main.h \
     check_utils.c \
 	check_perfdata.c
 
+check_sms_LDADD = ../lib/libsmsutils.a $(LDADD)
+
+check_template_LDADD = ../lib/libmonitoringplugtemplate.a $(LDADD)
+
 if HAVE_EXPAT
+TESTS += check_rhcs
+
 check_rhcs_LDADD = ../lib/librhcsutils.a $(LDADD)
 check_rhcs_CPPFLAGS = $(AM_CPPFLAGS) $(EXPAT_CFLAGS)
 check_rhcs_LDFLAGS = $(AM_LDFLAGS) $(EXPAT_LDFLAGS)
 endif
 
-check_sms_LDADD = ../lib/libsmsutils.a $(LDADD)
+if HAVE_NET_SNMP
+TESTS += check_snmp
 
-check_template_LDADD = ../lib/libmonitoringplugtemplate.a $(LDADD)
+check_snmp_LDADD = ../lib/libsnmputils.a $(LDADD)
+check_snmp_CPPFLAGS = $(AM_CPPFLAGS) $(NETSNMP_CFLAGS)
+check_snmp_LDFLAGS = $(AM_LDFLAGS) $(NETSNMP_LDFLAGS)
+endif
 
 endif
 
