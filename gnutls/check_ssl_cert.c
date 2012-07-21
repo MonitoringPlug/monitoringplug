@@ -131,17 +131,86 @@ int main (int argc, char **argv) {
             free(line);
 
             if (has_starttls == 0)
-                critical("SMTP do not offer STARTTLS");
+                critical("SMTP Server do not offer STARTTLS");
 
+            // Ask for STARTTLS
             send(socket, "STARTTLS\n", 9, 0);
             if (mp_verbose > 3)
                 printf("> STARTTLS\n");
 
+            // Check reply
             line = mp_recv_line(socket);
             if (strncmp(line, "220 ", 4) != 0) {
                 mp_disconnect(socket);
                 unknown("STARTTLS Error: %s", line);
             }
+        } else if (strcmp(starttls, "pop") == 0) {
+            char *line;
+
+            // Wait for banner
+            line = mp_recv_line(socket);
+            if (strncmp(line, "+OK ", 4) != 0) {
+                mp_disconnect(socket);
+                unknown("Don't looks like pop: %s", line);
+            }
+            free(line);
+
+            // Ask for STARTTLS
+            send(socket, "STLS\n", 5, 0);
+            if (mp_verbose > 3)
+                printf("> STLS\n");
+
+            // Check reply
+            line = mp_recv_line(socket);
+            if (strncmp(line, "+OK ", 4) != 0) {
+                mp_disconnect(socket);
+                unknown("STARTTLS Error: %s", line);
+            }
+            free(line);
+        } else if (strcmp(starttls, "imap") == 0) {
+            char *line;
+            int has_starttls = 0;
+
+            // Wait for banner
+            line = mp_recv_line(socket);
+            if (strncmp(line, "* OK ", 4) != 0) {
+                mp_disconnect(socket);
+                unknown("Don't looks like imap: %s", line);
+            }
+
+            // Ask for CAPABILITY
+            send(socket, "a001 CAPABILITY\n", 16, 0);
+            if (mp_verbose > 3)
+                printf("> a001 CAPABILITY\n");
+
+            // Read CAPABILITY reply
+            do {
+                free(line);
+                line = mp_recv_line(socket);
+                if (strncmp(line, "a001 BAD", 8) == 0) {
+                    mp_disconnect(socket);
+                    critical("CAPABILITY failed: %s", line);
+                }
+                if (strstr(line, "STARTTLS"))
+                    has_starttls = 1;
+            } while (line && (strncmp(line, "a001 OK ", 8) != 0));
+            free(line);
+
+            if (has_starttls == 0)
+                critical("IMAP Server do not offer STARTTLS");
+
+            // Ask for STARTTLS
+            send(socket, "a002 STARTTLS\n", 14, 0);
+            if (mp_verbose > 3)
+                printf("> a002 STARTTLS\n");
+
+            // Check reply
+            line = mp_recv_line(socket);
+            if (strncmp(line, "a002 OK ", 8) != 0) {
+                mp_disconnect(socket);
+                unknown("STARTTLS Error: %s", line);
+            }
+            free(line);
         } else {
             unknown("STARTTLS protocoll %s not known.", starttls);
         }
@@ -339,7 +408,7 @@ void print_help (void) {
     print_help_46();
 #endif //USE_IPV6
     printf("     --starttls=[PROTO]\n");
-    printf("      Use named STARTTLS protocoll.\n");
+    printf("      Use named STARTTLS protocol. (smtp, pop or imap)\n");
     printf(" -C, --trusted-ca=[NAME:]FILE\n");
     printf("      File to read trust-CAs from.\n");
     print_help_warn_time("30 days");

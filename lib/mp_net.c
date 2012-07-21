@@ -122,39 +122,39 @@ unsigned short int mp_ip_csum(unsigned short int *addr, int len) {
     return ~sum;
 }
 
+#define RLB_LEN 128
 char *mp_recv_line_buffer = NULL;
 char *mp_recv_line(int sd) {
-    char *endPtr;
-    char *line;
+    char *endPtr = NULL;
+    char *line  = NULL;
     size_t len;
 
+    // Init buffer
     if (!mp_recv_line_buffer) {
-        mp_recv_line_buffer = mp_malloc(128);
-        memset(mp_recv_line_buffer, 0, 128);
+        mp_recv_line_buffer = mp_malloc(RLB_LEN);
+        memset(mp_recv_line_buffer, 0, RLB_LEN);
+    }
+
+    // Fetch buffer by buffer.
+    while (strchr(mp_recv_line_buffer, '\n') == NULL) {
+        if (strlen(mp_recv_line_buffer) > 0)
+            mp_strcat(&line, mp_recv_line_buffer);
+
+        len = recv(sd, mp_recv_line_buffer, RLB_LEN-1, 0);
+        mp_recv_line_buffer[len] = '\0';
     }
 
     // Find newline
     endPtr = mp_recv_line_buffer;
     mp_recv_line_buffer = strsep(&endPtr, "\n");
-    if (!endPtr) {
-        endPtr = strchr(mp_recv_line_buffer, '\0');
-        len = 127 - (endPtr-mp_recv_line_buffer);
-        len = recv(sd, endPtr, len , 0);
-        endPtr[len] = '\0';
 
-        endPtr = mp_recv_line_buffer;
-        mp_recv_line_buffer = strsep(&endPtr, "\n");
-    }
-    if (!endPtr)
-        return NULL;
-
-    // Get line
-    line = strdup(mp_recv_line_buffer);
+    // Append last part of line
+    mp_strcat(&line, mp_recv_line_buffer);
     if (mp_verbose > 3)
         printf("< %s\n", line);
 
     // Rotate
-    len = 128 - (endPtr-mp_recv_line_buffer);
+    len = 128 - strlen(mp_recv_line_buffer) -1;
     memmove(mp_recv_line_buffer, endPtr, len);
 
     return line;

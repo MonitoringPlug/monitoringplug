@@ -71,8 +71,8 @@
       <varlistentry>
         <term><option>--starttls<replaceable>PROTO</replaceable></option></term>
         <listitem>
-          <para>Use named STARTSSL protocol.</para>
-          <para>Only smtp is implemented.</para>
+          <para>Use named STARTSSL protocol. smtp, imap or pop are valid
+            protocols.</para>
         </listitem>
       </varlistentry>
       <varlistentry>
