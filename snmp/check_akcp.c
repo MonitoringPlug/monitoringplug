@@ -233,16 +233,18 @@ int main (int argc, char **argv) {
                 // Check state
                 switch (sensor_state) {
                     case 2:
-                        mp_asprintf(&buf, "Humidity%d: %ld%%", i+1, hum);
+                        mp_asprintf(&buf, "Humidity %s: %ld%%", name, hum);
                         break;
                     case 3:
                     case 5:
                         state = state == STATE_OK ? STATE_WARNING : state;
-                        mp_asprintf(&buf, "Warning Humidity%d: %ld%%", i+1, hum);
+                        mp_asprintf(&buf, "Warning Humidity %s: %ld%%",
+                                name, hum);
                         break;
                     default:
                         state = STATE_CRITICAL;
-                        mp_asprintf(&buf, "Critical Humidity%d: %ld%%", i+1, hum);
+                        mp_asprintf(&buf, "Critical Humidity %s: %ld%%",
+                                name, hum);
                 }
 
                 mp_strcat_comma(&output, buf);
