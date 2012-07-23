@@ -148,7 +148,19 @@ int mp_snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd)
     }
 
     /* Send the SNMP Query */
-    status = snmp_synch_response(ss, pdu, &response);
+    do {
+        status = snmp_synch_response(ss, pdu, &response);
+
+        if (mp_verbose > 3)
+            printf("snmp_synch_response:%d pduerr:%ld\n", status, response->errstat);
+
+        if (status == STAT_SUCCESS && response->errindex == 0)
+            break;
+
+        pdu = snmp_fix_pdu(response, SNMP_MSG_GET);
+        snmp_free_pdu(response);
+        response = NULL;
+    } while (status == STAT_SUCCESS && pdu);
 
     /* Process the response. */
     if (status == STAT_SUCCESS && response->errstat == SNMP_ERR_NOERROR) {
