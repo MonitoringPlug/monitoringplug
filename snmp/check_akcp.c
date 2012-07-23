@@ -160,7 +160,7 @@ int main (int argc, char **argv) {
                     threshold->warning->end = temp_warn_high;
                     threshold->critical->end = temp_crit_high;
 
-                    mp_asprintf(&buf, "temp%d", idx+1);
+                    mp_asprintf(&buf, "temp_%s", name);
 
                     mp_perfdata_int(buf, temp, degreeeUnit[temp_unit], threshold);
 
@@ -264,7 +264,7 @@ int main (int argc, char **argv) {
                     threshold->warning->end = hum_warn_high;
                     threshold->critical->end = hum_crit_high;
 
-                    mp_asprintf(&buf, "hum%d", idx+1);
+                    mp_asprintf(&buf, "hum_%s", name);
 
                     mp_perfdata_int(buf, hum, "%", threshold);
 
