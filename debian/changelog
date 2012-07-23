@@ -1,3 +1,11 @@
+monitoringplug (0.12) monitoringplug; urgency=low
+
+  * Fix a SNMP, eopt, perfdata and clustat bug.
+  * Improved check_akcp.
+  * Added STARTTLS support to check_ssl_cert
+
+ -- Marius Rieder <marius.rieder@durchmesser.ch>  Sun, 23 Jul 2012 17:55:23 +0200
+
 monitoringplug (0.11) monitoringplug; urgency=low
 
   * Added IPMI checks with OpenIPMI.

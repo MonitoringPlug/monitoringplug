@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.59])
 
-AC_INIT([monitoringplug],[0.11],[marius.rieder@durchmesser.ch])
+AC_INIT([monitoringplug],[0.12],[marius.rieder@durchmesser.ch])
 AC_CONFIG_AUX_DIR(build-aux)
 AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADERS([config.h])
@@ -14,21 +14,21 @@ AM_INIT_AUTOMAKE([1.9 -Wall -Werror foreign])
 AC_CANONICAL_HOST
 AC_MSG_CHECKING([for kernel type ($host_os)])
 case $host_os in
-	*linux*)
-	AC_DEFINE([OS_LINUX], 1, [True if program is to be compiled for a Linux kernel])
-	ac_system="Linux"
-	;;
+    *linux*)
+    AC_DEFINE([OS_LINUX], 1, [True if program is to be compiled for a Linux kernel])
+    ac_system="Linux"
+    ;;
     *freebsd*)
     AC_DEFINE([OS_FREEBSD], 1, [True if program is to be compiled for a FreeBSD kernel])
     AC_DEFINE([_WITH_DPRINTF], 1, [Expose dprintf])
     ac_system="Freebsd"
     ;;
-	*darwin*)
-	AC_DEFINE([OS_DARWIN], 1, [True if program is to be compiled for a Darwin kernel])
-	ac_system="Darwin"
-	;;
-	*)
-	ac_system="unknown"
+    *darwin*)
+    AC_DEFINE([OS_DARWIN], 1, [True if program is to be compiled for a Darwin kernel])
+    ac_system="Darwin"
+    ;;
+    *)
+    ac_system="unknown"
 esac
 AC_MSG_RESULT([$ac_system])
 AM_CONDITIONAL([OS_LINUX], [test x$ac_system == xLinux])
