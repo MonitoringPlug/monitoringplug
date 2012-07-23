@@ -175,8 +175,7 @@ int main (int argc, char **argv) {
 
             if ((*groups)->owner != clustat->local && localprio < ownerprio)
                 mp_strcat_comma(&missing, (*groups)->name);
-
-	        if ((*groups)->owner == NULL && localprio == bestprio && autostart)
+            else if ((*groups)->owner == NULL && localprio == bestprio && autostart)
 	            mp_strcat_comma(&missing, (*groups)->name);
         }
     }
