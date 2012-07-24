@@ -171,6 +171,37 @@ START_TEST (test_threshold_simple) {
 }
 END_TEST
 
+START_TEST (test_threshold_wc_at) {
+    getopt_wc_at('w', "10", &my_thresholds);
+    getopt_wc_at('c', "5", &my_thresholds);
+
+    fail_unless(get_status(11, my_thresholds) == STATE_OK);
+    fail_unless(get_status(10, my_thresholds) == STATE_WARNING);
+    fail_unless(get_status(6, my_thresholds) == STATE_WARNING);
+    fail_unless(get_status(5, my_thresholds) == STATE_CRITICAL);
+    fail_unless(get_status(0, my_thresholds) == STATE_CRITICAL);
+
+    getopt_wc_at('w', "10:", &my_thresholds);
+    getopt_wc_at('c', "5:", &my_thresholds);
+
+    fail_unless(get_status(10, my_thresholds) == STATE_OK);
+    fail_unless(get_status(9, my_thresholds) == STATE_WARNING);
+    fail_unless(get_status(5, my_thresholds) == STATE_WARNING);
+    fail_unless(get_status(4, my_thresholds) == STATE_CRITICAL);
+    fail_unless(get_status(0, my_thresholds) == STATE_CRITICAL);
+
+    getopt_wc_at('w', ":5", &my_thresholds);
+    getopt_wc_at('c', ":10", &my_thresholds);
+
+    fail_unless(get_status(0, my_thresholds) == STATE_OK);
+    fail_unless(get_status(5, my_thresholds) == STATE_OK);
+    fail_unless(get_status(6, my_thresholds) == STATE_WARNING);
+    fail_unless(get_status(10, my_thresholds) == STATE_WARNING);
+    fail_unless(get_status(11, my_thresholds) == STATE_CRITICAL);
+
+}
+END_TEST
+
 
 Suite* make_lib_args_suite(void) {
 
@@ -196,6 +227,7 @@ Suite* make_lib_args_suite(void) {
     TCase *tc_threshold = tcase_create ("Threshold");
     tcase_add_checked_fixture (tc_threshold, threshold_setup, threshold_teardown);
     tcase_add_test (tc_threshold, test_threshold_simple);
+    tcase_add_test(tc_threshold, test_threshold_wc_at);
     suite_add_tcase (s, tc_threshold);
 
     return s;

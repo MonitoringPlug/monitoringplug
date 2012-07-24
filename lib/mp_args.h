@@ -297,6 +297,24 @@ void getopt_wc(int c, const char *optarg, thresholds **threshold);
 void getopt_wc_time(int c, const char *optarg, thresholds **threshold);
 
 /**
+ * Parse the option for warning and critical value. This function
+ * sets alert_on if no colon is found.
+ * \param[in] c commantline switch
+ * \param[in] optarg option argument
+ * \param[out] threshold threshold to apply range to
+ */
+void getopt_wc_at(int c, const char *optarg, thresholds **threshold);
+
+/**
+ * Parse the option for warning and critical time range value. This
+ * function sets alert_on if no colon is found.
+ * \param[in] c commantline switch
+ * \param[in] optarg option argument
+ * \param[out] threshold threshold to apply range to
+ */
+void getopt_wc_time_at(int c, const char *optarg, thresholds **threshold);
+
+/**
  * Parse the option for IPv4/IPv6 flags.
  * \param[in] c commantline switch
  * \param[out] family IP protocol families to use.

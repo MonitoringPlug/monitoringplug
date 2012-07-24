@@ -395,7 +395,7 @@ void getopt_wc(int c, const char *optarg, thresholds **threshold) {
             usage("Illegal -w threshold '%s'.", optarg);
     } else if (c == 'c') {
         if (setCrit(threshold, optarg, BISI) == ERROR)
-                usage("Illegal -c threshold '%s'.", optarg);
+            usage("Illegal -c threshold '%s'.", optarg);
     }
 }
 
@@ -405,7 +405,35 @@ void getopt_wc_time(int c, const char *optarg, thresholds **threshold) {
             usage("Illegal -w threshold '%s'.", optarg);
     } else if (c == 'c') {
         if (setCritTime(threshold, optarg) == ERROR)
-                usage("Illegal -c threshold '%s'.", optarg);
+            usage("Illegal -c threshold '%s'.", optarg);
+    }
+}
+
+void getopt_wc_at(int c, const char *optarg, thresholds **threshold) {
+    if (c == 'w') {
+        if (setWarn(threshold, optarg, BISI) == ERROR)
+            usage("Illegal -w threshold '%s'.", optarg);
+        if (!strchr(optarg, ':'))
+            (*threshold)->warning->alert_on = INSIDE;
+    } else if (c == 'c') {
+        if (setCrit(threshold, optarg, BISI) == ERROR)
+            usage("Illegal -c threshold '%s'.", optarg);
+        if (!strchr(optarg, ':'))
+            (*threshold)->critical->alert_on = INSIDE;
+    }
+}
+
+void getopt_wc_time_at(int c, const char *optarg, thresholds **threshold) {
+    if (c == 'w') {
+        if (setWarnTime(threshold, optarg) == ERROR)
+            usage("Illegal -w threshold '%s'.", optarg);
+        if (!strchr(optarg, ':'))
+            (*threshold)->warning->alert_on = INSIDE;
+    } else if (c == 'c') {
+        if (setCritTime(threshold, optarg) == ERROR)
+            usage("Illegal -c threshold '%s'.", optarg);
+        if (!strchr(optarg, ':'))
+            (*threshold)->critical->alert_on = INSIDE;
     }
 }
 
