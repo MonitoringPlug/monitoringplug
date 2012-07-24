@@ -167,6 +167,11 @@ int mp_snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd)
         for(vars = response->variables; vars; vars = vars->next_variable) {
             if (mp_verbose > 1)
                 print_variable(vars->name, vars->name_length, vars);
+            // Skip non existing vars
+            if (vars->type == SNMP_NOSUCHINSTANCE ||
+                    vars->type == SNMP_NOSUCHINSTANCE ||
+                    vars->type == SNMP_ENDOFMIBVIEW)
+                continue;
             for(p = querycmd; p->len; p++) {
                 if (snmp_oid_compare(vars->name, vars->name_length, p->oid, p->len) == 0) {
                     if (vars->type != p->type) {
