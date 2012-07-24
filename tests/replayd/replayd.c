@@ -196,6 +196,11 @@ int replay_handler(netsnmp_mib_handler *handler,
             netsnmp_set_request_error(reqinfo, requests, SNMP_ERR_GENERR);
             break;
         }
+
+        if (verbose > 1) {
+            printf("[replay] %s ", reginfo->contextName);
+            print_variable(var->name, var->name_length, var);
+        }
         requests = requests->next;
     }
     return SNMP_ERR_NOERROR;
@@ -247,6 +252,7 @@ int main(int argc, char *argv[]) {
     for (rEnt = replay_list; rEnt; rEnt = rEnt->next) {
         fprintf(file, "com2sec -Cn %s rSec default %s\n", rEnt->name, rEnt->name);
     }
+    fprintf(file, "group rGroup v1 rSec\n");
     fprintf(file, "group rGroup v2c rSec\n");
     fprintf(file, "view all included .1 80\n");
     fprintf(file, "access rGroup \"\" any noauth prefix all none none\n");
