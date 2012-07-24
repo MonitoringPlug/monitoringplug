@@ -52,6 +52,7 @@ extern int* port;
 netsnmp_session *mp_snmp_init(void) {
 
     netsnmp_session session, *ss;
+    int status;
 
     init_snmp(progname);
 
@@ -90,7 +91,6 @@ netsnmp_session *mp_snmp_init(void) {
             session.securityAuthProtoLen = 10;
             session.securityAuthKeyLen = USM_AUTH_KU_LEN;
 
-            int status;
             status = generate_Ku(session.securityAuthProto,
                     session.securityAuthProtoLen,
                     (u_char *) mp_snmp_authpass, strlen(mp_snmp_authpass),
@@ -168,7 +168,7 @@ int mp_snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd)
             if (mp_verbose > 1)
                 print_variable(vars->name, vars->name_length, vars);
             // Skip non existing vars
-            if (vars->type == SNMP_NOSUCHINSTANCE ||
+            if (vars->type == SNMP_NOSUCHOBJECT ||
                     vars->type == SNMP_NOSUCHINSTANCE ||
                     vars->type == SNMP_ENDOFMIBVIEW)
                 continue;
@@ -228,6 +228,8 @@ int mp_snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *que
     int status;
     int index = 0;
     int alloc = 0;
+    oid current_oid[MAX_OID_LEN];
+    size_t current_len;
 
     struct mp_snmp_table *table;
     table = (struct mp_snmp_table *)querycmd->target;
@@ -236,8 +238,6 @@ int mp_snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *que
     table->col = cols;
     table->var = NULL;
 
-    oid current_oid[MAX_OID_LEN];
-    size_t current_len;
     memcpy(current_oid, querycmd->oid, querycmd->len * sizeof(oid));
     current_len = querycmd->len;
     status = STAT_SUCCESS;
