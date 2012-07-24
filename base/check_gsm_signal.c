@@ -232,7 +232,7 @@ int process_arguments (int argc, char **argv) {
             break;
 
         getopt_serial(c);
-        getopt_wc(c, optarg, &dbm_thresholds);
+        getopt_wc_at(c, optarg, &dbm_thresholds);
 
         switch (c) {
             case 'P':

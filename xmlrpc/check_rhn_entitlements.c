@@ -309,7 +309,7 @@ int process_arguments (int argc, char **argv) {
                 break;
         }
 
-        getopt_wc(c, optarg, &free_thresholds);
+        getopt_wc_at(c, optarg, &free_thresholds);
     }
 
     /* Check requirements */

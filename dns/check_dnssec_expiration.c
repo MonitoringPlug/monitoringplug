@@ -245,7 +245,7 @@ int process_arguments (int argc, char **argv) {
         if (c == -1 || c == EOF)
             break;
 
-        getopt_wc_time(c, optarg, &exp_thresholds);
+        getopt_wc_time_at(c, optarg, &exp_thresholds);
         getopt_ldns(c);
 
         switch (c) {

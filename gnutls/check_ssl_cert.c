@@ -360,7 +360,7 @@ int process_arguments (int argc, char **argv) {
             break;
 
         getopt_46(c, &ipv);
-        getopt_wc_time(c, optarg, &expire_thresholds);
+        getopt_wc_time_at(c, optarg, &expire_thresholds);
 
         switch (c) {
             /* Plugin opts */
