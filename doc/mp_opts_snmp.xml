@@ -11,7 +11,7 @@
     <listitem>
       <para>SNMP community (defaults to public, used with SNMP v1 and v2c)</para>
     </listitem>
-  </varlistentry> 
+  </varlistentry>
   <varlistentry>
     <term><option>-S</option></term>
     <term><option>--snmp=<replaceable>VERSION</replaceable></option></term>
@@ -26,7 +26,7 @@
     <term><option>-L</option></term>
     <term><option>--seclevel=<replaceable>SECLEVEL</replaceable></option></term>
     <listitem>
-      <para>SNMPv3 Security Level to use. (noAuthNoPriv, authNoPriv , or authPriv)</para>
+      <para>SNMPv3 Security Level to use. (noAuthNoPriv, authNoPriv or authPriv)</para>
     </listitem>
   </varlistentry>
   <varlistentry>

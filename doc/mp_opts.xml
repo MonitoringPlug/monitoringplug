@@ -10,7 +10,7 @@
     <listitem>
       <para>Print detailed help screen.</para>
     </listitem>
-  </varlistentry> 
+  </varlistentry>
   <varlistentry>
     <term><option>-V</option></term>
     <term><option>--version</option></term>
@@ -35,7 +35,7 @@
   <varlistentry>
     <term><option>--eopt=<group choice="opt"><parameter>section</parameter></group><group choice="opt">@<parameter>file</parameter></group></option></term>
     <listitem>
-      <para>>Read extended options from file.</para>
+      <para>Read extended options from file.</para>
     </listitem>
   </varlistentry>
   <varlistentry>

@@ -54,8 +54,8 @@
   <refsect1 id="description">
     <title>DESCRIPTION</title>
     <para>A alert is rised if the reading is outside of the defined range.
-      This can be inverted by prepending the definition tith a '@'.</para>
-    <para><parameter>FROM</parameter> must be smaler or equal to
+      This can be inverted by prepending the definition with a '@'.</para>
+    <para><parameter>FROM</parameter> must be smaller or equal to
       <parameter>TO</parameter>.</para>
     <para>'<parameter>FROM</parameter>:' may be omitted from the definition if
       <parameter>FROM</parameter> is 0.</para>
