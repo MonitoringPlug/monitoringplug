@@ -102,9 +102,9 @@ EXTRA_DIST += check_smb_share.1
 
 #snmp
 if HAVE_NET_SNMP
-man_MANS += check_akcp.1 check_arc_raid.1 check_apc_pdu.1 check_interface.1 check_qnap_disks.1 check_qnap_vols.1
+man_MANS += check_akcp.1 check_arc_raid.1 check_apc_pdu.1 check_interface.1 check_qnap_disks.1 check_qnap_vols.1 check_snmp_ups.1
 endif
-EXTRA_DIST += check_akcp.1 check_arc_raid.1 check_apc_pdu.1 check_interface.1 check_qnap_disks.1 check_qnap_vols.1
+EXTRA_DIST += check_akcp.1 check_arc_raid.1 check_apc_pdu.1 check_interface.1 check_qnap_disks.1 check_qnap_vols.1 check_snmp_ups.1
 
 #xmprpc
 if HAVE_XMLRPC
