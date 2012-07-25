@@ -21,8 +21,8 @@
  * $Id$
  */
 
-#ifndef MP_UTILS_H_
-#define MP_UTILS_H_
+#ifndef _MP_UTILS_H_
+#define _MP_UTILS_H_
 
 #include <stdlib.h>
 #include <sys/time.h>
@@ -115,6 +115,6 @@ char *mp_human_size(float size);
  */
 int mp_strmatch(const char *string, const char *match);
 
-#endif /* MP_UTILS_H_ */
+#endif /* _MP_UTILS_H_ */
 
 /* vim: set ts=4 sw=4 et syn=c : */

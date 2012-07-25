@@ -21,8 +21,8 @@
  * $Id$
  */
 
-#ifndef MP_EOPT_H_
-#define MP_EOPT_H_
+#ifndef _MP_EOPT_H_
+#define _MP_EOPT_H_
 
 /**
  * Inject extended options from a ini file.
@@ -41,6 +41,6 @@ void print_help_eopt(void);
 /** longopts option for timeout */
 #define MP_LONGOPTS_EOPT {"eopt", optional_argument, NULL, (int)MP_LONGOPT_EOPT}
 
-#endif /* MP_EOPT_H_ */
+#endif /* _MP_EOPT_H_ */
 
 /* vim: set ts=4 sw=4 et syn=c : */

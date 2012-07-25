@@ -21,8 +21,8 @@
  * $Id$
  */
 
-#ifndef RHCS_UTILS_H_
-#define RHCS_UTILS_H_
+#ifndef _RHCS_UTILS_H_
+#define _RHCS_UTILS_H_
 
 #include <stdio.h>
 
@@ -152,6 +152,6 @@ void rhcs_conf_startElement(void *conf, const char *name, const char **atts);
  */
 void rhcs_conf_stopElement(void *conf, const char *name);
 
-#endif /* RHCS_UTILS_H_ */
+#endif /* _RHCS_UTILS_H_ */
 
 /* vim: set ts=4 sw=4 et syn=c : */

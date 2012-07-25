@@ -21,8 +21,8 @@
  * $Id$
  */
 
-#ifndef XMLRPC_UTILS_H_
-#define XMLRPC_UTILS_H_
+#ifndef _XMLRPC_UTILS_H_
+#define _XMLRPC_UTILS_H_
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -42,6 +42,6 @@ xmlrpc_env mp_xmlrpc_init(void);
  */
 void unknown_if_xmlrpc_fault(xmlrpc_env *env);
 
-#endif /* XMLRPC_UTILS_H_ */
+#endif /* _XMLRPC_UTILS_H_ */
 
 /* vim: set ts=4 sw=4 et syn=c : */

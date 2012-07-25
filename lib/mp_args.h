@@ -363,7 +363,7 @@ void getopt_46(int c, int *family);
 #define MP_LONGOPTS_IPV     {"ipv4", no_argument, NULL, (int)'4'}, \
                             {"ipv6", no_argument, NULL, (int)'6'}
 #else
-#define MP_OPTSTR_IPV
+#define MP_LONGOPTS_IPV
 #endif
 
 /** optstring for warn and crit */

@@ -21,8 +21,8 @@
  * $Id$
  */
 
-#ifndef VIRT_UTILS_H_
-#define VIRT_UTILS_H_
+#ifndef _VIRT_UTILS_H_
+#define _VIRT_UTILS_H_
 
 #include <libvirt/libvirt.h>
 
@@ -77,6 +77,6 @@ void print_help_virt(void);
  */
 void print_revision_virt(void);
 
-#endif /* VIRT_UTILS_H_ */
+#endif /* _VIRT_UTILS_H_ */
 
 /* vim: set ts=4 sw=4 et syn=c : */

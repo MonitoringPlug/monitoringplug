@@ -21,8 +21,8 @@
  * $Id$
  */
 
-#ifndef RPC_UTILS_H_
-#define RPC_UTILS_H_
+#ifndef _RPC_UTILS_H_
+#define _RPC_UTILS_H_
 
 #include <rpc/rpc.h>
 #include <rpcsvc/mount.h>
@@ -69,6 +69,6 @@ int rpc_ping(char *hostname, struct rpcent *programm, unsigned long version,
  */
 bool_t mp_xdr_exports(XDR *xdrs, exports *export);
 
-#endif /* RPC_UTILS_H_ */
+#endif /* _RPC_UTILS_H_ */
 
 /* vim: set ts=4 sw=4 et syn=c : */

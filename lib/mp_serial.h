@@ -21,8 +21,8 @@
  * $Id$
  */
 
-#ifndef MP_SERIAL_H_
-#define MP_SERIAL_H_
+#ifndef _MP_SERIAL_H_
+#define _MP_SERIAL_H_
 
 #include <termios.h>
 
@@ -70,6 +70,6 @@ void getopt_serial(int c);
  */
 void print_help_serial(void);
 
-#endif /* MP_SERIAL_H_ */
+#endif /* _MP_SERIAL_H_ */
 
 /* vim: set ts=4 sw=4 et syn=c : */

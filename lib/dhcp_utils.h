@@ -21,8 +21,8 @@
  * $Id$
  */
 
-#ifndef DHCP_UTILS_H_
-#define DHCP_UTILS_H_
+#ifndef _DHCP_UTILS_H_
+#define _DHCP_UTILS_H_
 
 #include <stdint.h>
 #include <netinet/in.h>
@@ -144,6 +144,6 @@ struct dhcp_pkt_opt *mp_dhcp_pkt_getopt(struct dhcp_pkt *pkt, uint8_t code);
  */
 void mp_dhcp_pkt_dump(struct dhcp_pkt *pkt);
 
-#endif /* DHCP_UTILS_H_ */
+#endif /* _DHCP_UTILS_H_ */
 
 /* vim: set ts=4 sw=4 et syn=c : */

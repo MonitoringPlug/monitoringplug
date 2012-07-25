@@ -21,8 +21,8 @@
  * $Id$
  */
 
-#ifndef MP_NET_H_
-#define MP_NET_H_
+#ifndef _MP_NET_H_
+#define _MP_NET_H_
 
 #include <sys/socket.h>
 #include <netdb.h>
@@ -77,6 +77,6 @@ unsigned short int mp_ip_csum(unsigned short int *addr, int len);
  */
 char *mp_recv_line(int sd);
 
-#endif /* MP_NET_H_ */
+#endif /* _MP_NET_H_ */
 
 /* vim: set ts=4 sw=4 et syn=c : */
