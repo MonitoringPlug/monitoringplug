@@ -45,5 +45,5 @@ endif
 
 endif
 
-EXTRA_DIST = eopt.ini testdata
+EXTRA_DIST = mpcheck.h eopt.ini testdata
 ## vim: set ts=4 sw=4 syn=automake :
