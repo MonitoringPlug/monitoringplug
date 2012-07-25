@@ -9,6 +9,8 @@ AM_CFLAGS = $(AM_CPPFLAGS) $(CHECK_CFLAGS)
 if HAVE_CHECK
 
 TESTS = check_monitoringplug \
+		check_args \
+		check_check \
 		check_sms \
 		check_subprocess \
 		check_template
@@ -16,9 +18,7 @@ TESTS = check_monitoringplug \
 check_PROGRAMS = $(TESTS)
 
 check_monitoringplug_SOURCES = main.c main.h \
-    check_check.c \
     check_common.c \
-    check_args.c \
     check_eopt.c \
     check_utils.c \
 	check_perfdata.c

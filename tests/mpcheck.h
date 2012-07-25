@@ -1,5 +1,5 @@
 /***
- * Monitoring Plugin Tests - main.h
+ * Monitoring Plugin Tests - mp_check.h
  **
  *
  * Copyright (C) 2012 Marius Rieder <marius.rieder@durchmesser.ch>
@@ -21,28 +21,54 @@
  * $Id$
  */
 
-#ifndef _TESTS_MAIN_H
-#define _TESTS_MAIN_H
+#ifndef _MPCHECK_H_
+#define _MPCHECK_H_
 
 #include "mp_common.h"
 
 #include <check.h>
+#include <stdlib.h>
+#include <stdio.h>
 
-struct string_return {
-    char    *string;
-    double  returning;
-};
+const char *progname  = "TEST";
+const char *progvers  = "TEST";
+const char *progcopy  = "TEST";
+const char *progauth  = "TEST";
+const char *progusage = "TEST";
 
-/* LIB COMMON Suite */
-Suite *make_lib_common_suite(void);
+typedef struct {
+    char    *in;
+    int     out;
+} string_int;
 
-/* LIB EOPT Suite */
-Suite *make_lib_eopt_suite(void);
+typedef struct {
+    char    *in;
+    double  out;
+} string_double;
 
-/* LIB UTILS Suite */
-Suite *make_lib_utils_suite(void);
+typedef struct {
+   char     *in;
+   char     *out;
+} string_string;
 
-/* Lib PERFDATA Suite */
-Suite *make_lib_perfdata_suite(void);
+typedef struct {
+    char    *in;
+    double  test;
+    int     out;
+} string_double_int;
 
-#endif /* _TESTS_MAIN_H */
+typedef struct {
+    double  in;
+    int     out;
+} double_int;
+
+typedef struct {
+    char    *ina;
+    char    *inb;
+    double  test;
+    int     out;
+} string_string_double_int;
+
+#endif /* _MPCHECK_H_ */
+
+/* vim: set ts=4 sw=4 et syn=c : */

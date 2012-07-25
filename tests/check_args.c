@@ -21,41 +21,12 @@
  * $Id$
  */
 
-#include "main.h"
-
-#include <check.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include "mpcheck.h"
 
 void range_setup(void);
 void range_teardown(void);
 void threshold_setup(void);
 void threshold_teardown(void);
-
-static struct string_return test_multi_case[] = {
-    { "k",  1000 },                     { "K",  1024 },
-    { "kB", 1000 },                     { "KB", 1024 },
-    { "m",  1000000 },                  { "M",  1048578 },
-    { "mB", 1000000 },                  { "MB", 1048578 },
-    { "g",  1000000000 },               { "G",  1073741824 },
-    { "gB", 1000000000 },               { "GB", 1073741824 },
-    { "t",  1000000000000LL },          { "T",  1099511627776LL },
-    { "tB", 1000000000000LL },          { "TB", 1099511627776LL },
-    { "p",  1000000000000000LL },       { "P",  1125899906842624LL },
-    { "pB", 1000000000000000LL },       { "PB", 1125899906842624LL },
-    { "e",  1000000000000000000LL },    { "E",  1152921504606846976LL },
-    { "eB", 1000000000000000000LL },    { "EB", 1152921504606846976LL },
-    {0,0}
-};
-
-static struct string_return test_multi_time_case[] = {
-    { "s", 1 },         { "sec",  1 },
-    { "m", 60 },        { "min",  60 },
-    { "h", 3600 },      { "hr",   3600 },
-    { "d", 86400 },     { "day",  86400 },
-    { "w", 604800 },    { "week", 604800 },
-    {0,0}
-};
 
 range *my_range;
 thresholds *my_thresholds;
@@ -80,130 +51,127 @@ void threshold_teardown(void) {
   free (my_thresholds);
 }
 
-START_TEST (test_multi) {
-    struct string_return *c = &test_multi_case[_i];
 
-    fail_unless (parse_multiplier_string(c->string) == c->returning,
-        "Fail: parse_multiplier_string(%s) is not %0.f", c->string,c->returning);
+static string_double test_multi_case[] = {
+    { "k",  1000 },                     { "K",  1024 },
+    { "kB", 1000 },                     { "KB", 1024 },
+    { "m",  1000000 },                  { "M",  1048578 },
+    { "mB", 1000000 },                  { "MB", 1048578 },
+    { "g",  1000000000 },               { "G",  1073741824 },
+    { "gB", 1000000000 },               { "GB", 1073741824 },
+    { "t",  1000000000000LL },          { "T",  1099511627776LL },
+    { "tB", 1000000000000LL },          { "TB", 1099511627776LL },
+    { "p",  1000000000000000LL },       { "P",  1125899906842624LL },
+    { "pB", 1000000000000000LL },       { "PB", 1125899906842624LL },
+    { "e",  1000000000000000000LL },    { "E",  1152921504606846976LL },
+    { "eB", 1000000000000000000LL },    { "EB", 1152921504606846976LL },
+    {0,0}
+};
+
+START_TEST (test_multi) {
+    string_double *c = &test_multi_case[_i];
+
+    fail_unless (parse_multiplier_string(c->in) == c->out,
+        "Fail: parse_multiplier_string(%s) is not %0.f", c->in,c->out);
 }
 END_TEST
+
+
+static string_double test_multi_time_case[] = {
+    { "s", 1 },         { "sec",  1 },
+    { "m", 60 },        { "min",  60 },
+    { "h", 3600 },      { "hr",   3600 },
+    { "d", 86400 },     { "day",  86400 },
+    { "w", 604800 },    { "week", 604800 },
+    {0,0}
+};
 
 START_TEST (test_multi_time) {
-    struct string_return *c = &test_multi_time_case[_i];
+    string_double *c = &test_multi_time_case[_i];
 
-    fail_unless (parse_time_multiplier_string(c->string) == c->returning,
-        "Fail: parse_time_multiplier_string(%s) is not %0.f", c->string,c->returning);
+    fail_unless (parse_time_multiplier_string(c->in) == c->out,
+        "Fail: parse_time_multiplier_string(%s) is not %0.f", c->in,c->out);
 }
 END_TEST
 
-START_TEST (test_range_simple) {
-    fail_unless (parse_range_string(my_range, "10", 0) == 0,
-        "Parse range string '10' failed");
+static string_double_int test_range_case[] = {
+    {"10", 0, 0}, {"10", 1, 0}, {"10", 10, 0}, {"10", 11, 1},
+    {"~:10", -1, 0}, {"~:10", 0, 0}, {"~:10", 10, 0}, {"~:10", 11, 1},
+    {"0:10", -1, 1}, {"0:10", 0, 0}, {"0:10", 10, 0}, {"0:10", 11, 1},
+    {"10:", 9, 1}, {"10:", 10, 0},
+    {"10:20", 9, 1}, {"10:20", 10, 0}, {"10:20", 20, 0}, {"10:20", 21, 1},
+    /* AT*/
+    {"@10", 0, 1}, {"@10", 1, 1}, {"@10", 10, 1}, {"@10", 11, 0},
+    {"@~:10", -1, 1}, {"@~:10", 0, 1}, {"@~:10", 10, 1}, {"@~:10", 11, 0},
+    {"@0:10", -1, 0}, {"@0:10", 0, 1}, {"@0:10", 10, 1}, {"@0:10", 11, 0},
+    {"@10:", 9, 0}, {"@10:", 10, 1},
+    {"@10:20", 9, 0}, {"@10:20", 10, 1}, {"@10:20", 20, 1}, {"@10:20", 21, 0},
+};
 
-    double i;
-    for (i = -10; i < 20; i++) {
-        fail_unless (check_range(i, my_range) == (i<0 || i>10),
-	       "Range check for %g in '10' failed.", i);
-    }
+START_TEST (test_range) {
+    string_double_int *c = &test_range_case[_i];
+
+    fail_unless (parse_range_string(my_range, c->in, 0) == 0,
+        "Parse range string '%s' failed", c->in);
+
+    fail_unless(check_range(c->test, my_range) == c->out,
+            "Range check for %g in '%s' failed.", c->test, c->in);
 }
 END_TEST
 
-START_TEST (test_range_toinf) {
-  fail_unless (parse_range_string(my_range, "10:", 0) == 0,
-	       "Parse range string '10:' failed");
+static string_string_double_int test_threshold_case[] = {
+    {"10",      "20",       10,     0}, {"10",      "20",       11,     1},
+    {"10",      "20",       20,     1}, {"10",      "20",       21,     2},
+    {"10:20",   "5:25",     1,      2}, {"10:20",   "5:25",     5,      1},
+    {"10:20",   "5:25",     6,      1}, {"10:20",   "5:25",     10,     0},
+    {"10:20",   "5:25",     20,     0}, {"10:20",   "5:25",     21,     1},
+    {"10:20",   "5:25",     25,     1}, {"10:20",   "5:25",     26,     2},
+// Cases for _at */
+    {"20",      "10",       21,     0}, {"20",      "10",       20,     1},
+    {"20",      "10",       11,     1}, {"20",      "10",       10,     2},
+};
 
-    double i;
-    for (i = -10; i < 20; i++) {
-        fail_unless (check_range(i, my_range) == (i<10),
-	       "Range check for %g in '10:' failed.", i);
-    }
+START_TEST (test_threshold) {
+    string_string_double_int *c = &test_threshold_case[_i];
+
+    fail_unless (setWarn(&my_thresholds, c->ina, 0) == 0,
+        "Parse range string '%s' failed", c->ina);
+    fail_unless (setCrit(&my_thresholds, c->inb, 0) == 0,
+        "Parse range string '%s' failed", c->inb);
+
+    fail_unless(get_status(c->test, my_thresholds) == c->out,
+            "Threshold check for %g in w'%s' c'%s' failed.",
+            c->test, c->ina, c->inb);
 }
 END_TEST
 
-START_TEST (test_range_frominf) {
-  fail_unless (parse_range_string(my_range, "~:10", 0) == 0,
-	       "Parse range string '~:10' failed");
+START_TEST (test_getopt_wc) {
+    string_string_double_int *c = &test_threshold_case[_i];
 
-    double i;
-    for (i = -10; i < 20; i++) {
-        fail_unless (check_range(i, my_range) == (i>10),
-	       "Range check for %g in '~:10' failed.", i);
-    }
+    getopt_wc('w', c->ina, &my_thresholds);
+    getopt_wc('c', c->inb, &my_thresholds);
+
+    fail_unless(get_status(c->test, my_thresholds) == c->out,
+            "Threshold check for %g in w'%s' c'%s' failed. => %d",
+            c->test, c->ina, c->inb, get_status(c->test, my_thresholds));
 }
 END_TEST
 
-START_TEST (test_range_fromto) {
-  fail_unless (parse_range_string(my_range, "10:20", 0) == 0,
-	       "Parse range string '10:20' failed");
+START_TEST (test_getopt_wc_at) {
+    string_string_double_int *c = &test_threshold_case[_i];
 
-    double i;
-    for (i = -10; i < 30; i++) {
-        fail_unless (check_range(i, my_range) == (i<10 || i>20),
-	       "Range check for %g in '10:20' failed.", i);
-    }
+    getopt_wc_at('w', c->ina, &my_thresholds);
+    getopt_wc_at('c', c->inb, &my_thresholds);
+
+    fail_unless(get_status(c->test, my_thresholds) == c->out,
+            "Threshold check for %g in w'%s' c'%s' failed. => %d",
+            c->test, c->ina, c->inb, get_status(c->test, my_thresholds));
 }
 END_TEST
 
-START_TEST (test_range_fromto_out) {
-  fail_unless (parse_range_string(my_range, "@10:20", 0) == 0,
-	       "Parse range string '@10:20' failed");
-
-    double i;
-    for (i = -10; i < 30; i++) {
-        fail_unless (check_range(i, my_range) == (i>=10 && i<=20),
-	       "Range check for %g in '@10:20' failed.", i);
-    }
-}
-END_TEST
-
-
-START_TEST (test_threshold_simple) {
-    fail_unless (setWarn(&my_thresholds, "10", 0) == 0,
-        "Parse range string '10' failed");
-    fail_unless (setCrit(&my_thresholds, "20", 0) == 0,
-        "Parse range string '10' failed");
-
-    double i;
-    for (i = -10; i < 20; i++) {
-        fail_unless (get_status(i, my_thresholds) == 2-(i>=0 && i<=10)-(i>=0 && i<=20),
-	       "Threshold check for %g in w'10' c'20' failed.", i);
-    }
-}
-END_TEST
-
-START_TEST (test_threshold_wc_at) {
-    getopt_wc_at('w', "10", &my_thresholds);
-    getopt_wc_at('c', "5", &my_thresholds);
-
-    fail_unless(get_status(11, my_thresholds) == STATE_OK);
-    fail_unless(get_status(10, my_thresholds) == STATE_WARNING);
-    fail_unless(get_status(6, my_thresholds) == STATE_WARNING);
-    fail_unless(get_status(5, my_thresholds) == STATE_CRITICAL);
-    fail_unless(get_status(0, my_thresholds) == STATE_CRITICAL);
-
-    getopt_wc_at('w', "10:", &my_thresholds);
-    getopt_wc_at('c', "5:", &my_thresholds);
-
-    fail_unless(get_status(10, my_thresholds) == STATE_OK);
-    fail_unless(get_status(9, my_thresholds) == STATE_WARNING);
-    fail_unless(get_status(5, my_thresholds) == STATE_WARNING);
-    fail_unless(get_status(4, my_thresholds) == STATE_CRITICAL);
-    fail_unless(get_status(0, my_thresholds) == STATE_CRITICAL);
-
-    getopt_wc_at('w', ":5", &my_thresholds);
-    getopt_wc_at('c', ":10", &my_thresholds);
-
-    fail_unless(get_status(0, my_thresholds) == STATE_OK);
-    fail_unless(get_status(5, my_thresholds) == STATE_OK);
-    fail_unless(get_status(6, my_thresholds) == STATE_WARNING);
-    fail_unless(get_status(10, my_thresholds) == STATE_WARNING);
-    fail_unless(get_status(11, my_thresholds) == STATE_CRITICAL);
-
-}
-END_TEST
-
-
-Suite* make_lib_args_suite(void) {
+int main (void) {
+    int number_failed;
+    SRunner *sr;
 
     Suite *s = suite_create ("Args");
 
@@ -216,21 +184,22 @@ Suite* make_lib_args_suite(void) {
     /* Range test case */
     TCase *tc_range = tcase_create ("Range");
     tcase_add_checked_fixture (tc_range, range_setup, range_teardown);
-    tcase_add_test (tc_range, test_range_simple);
-    tcase_add_test (tc_range, test_range_toinf);
-    tcase_add_test (tc_range, test_range_frominf);
-    tcase_add_test (tc_range, test_range_fromto);
-    tcase_add_test (tc_range, test_range_fromto_out);
+    tcase_add_loop_test(tc_range, test_range, 0, 36);
     suite_add_tcase (s, tc_range);
 
     /* Threshold test case */
     TCase *tc_threshold = tcase_create ("Threshold");
     tcase_add_checked_fixture (tc_threshold, threshold_setup, threshold_teardown);
-    tcase_add_test (tc_threshold, test_threshold_simple);
-    tcase_add_test(tc_threshold, test_threshold_wc_at);
+    tcase_add_loop_test(tc_threshold, test_threshold, 0, 12);
+    tcase_add_loop_test(tc_threshold, test_getopt_wc, 0, 12);
+    tcase_add_loop_test(tc_threshold, test_getopt_wc_at, 4, 16);
     suite_add_tcase (s, tc_threshold);
 
-    return s;
+    sr = srunner_create(s);
+    srunner_run_all(sr, CK_VERBOSE);
+    number_failed = srunner_ntests_failed(sr);
+    srunner_free(sr);
+    return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */
