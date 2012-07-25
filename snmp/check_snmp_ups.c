@@ -40,6 +40,7 @@ const char *progusage = "-H <HOST>";
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <limits.h>
 /* Library Includes */
 #include <net-snmp/net-snmp-config.h>
 #include <net-snmp/net-snmp-includes.h>

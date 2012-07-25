@@ -4,9 +4,11 @@
 /usr/lib/nagios/plugins/check_interface
 /usr/lib/nagios/plugins/check_qnap_disks
 /usr/lib/nagios/plugins/check_qnap_vols
+/usr/lib/nagios/plugins/check_snmp_ups
 /usr/share/man/man1/check_akcp*
 /usr/share/man/man1/check_apc_pdu*
 /usr/share/man/man1/check_arc_raid*
 /usr/share/man/man1/check_interface*
 /usr/share/man/man1/check_qnap_disks*
 /usr/share/man/man1/check_qnap_vols*
+/usr/share/man/man1/check_snmp_ups*
