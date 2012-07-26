@@ -12,7 +12,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  expat-devel
 BuildRequires:  json-c-devel
 BuildRequires:  ldns-devel
-BuildRequires:	python-libs
+BuildRequires:	python-devel
 BuildRequires:  libselinux-devel
 BuildRequires:  mysql-devel
 BuildRequires:  net-snmp-devel
