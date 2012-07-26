@@ -6,7 +6,7 @@
 #
 # DESCRIPTION
 #
-#   This macro provides tests of availability of xmlrcp-c library of
+#   This macro provides tests of availability of xmlrpc-c library of
 #   particular version or newer.
 #
 #   AX_LIB_XMLRPC macro takes only one argument which is optional. If there
@@ -61,7 +61,7 @@ AC_DEFUN([AX_LIB_XMLRPC],
         ],
         [want_xmlrpc="yes"]
     )
-    AC_ARG_VAR([XMLRPC_CONFIG], [Full path to xmlrcp-c-config program])
+    AC_ARG_VAR([XMLRPC_CONFIG], [Full path to xmlrpc-c-config program])
 
     XMLRPC_CFLAGS=""
     XMLRPC_LDFLAGS=""
@@ -137,7 +137,7 @@ AC_DEFUN([AX_LIB_XMLRPC],
 
     if test "$found_xmlrpc" = "yes" ; then
         AC_DEFINE([HAVE_XMLRPC], [1],
-                  [Define to 1 if xmlrcp-c libraries are available])
+                  [Define to 1 if xmlrpc-c libraries are available])
     else
         XMLRPC_CFLAGS=""
         XMLRPC_LDFLAGS=""
