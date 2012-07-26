@@ -3,10 +3,9 @@
 bindir = ${libdir}/nagios/plugins
 
 AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/lib $(IPMI_CFLAGS)
-AM_LDFLAGS = $(IPMI_LIBS)
 AM_DEFAULT_SOURCE_EXT = .c
 
-LDADD = ../lib/libmonitoringplug.a ../lib/libipmiutils.a
+LDADD = ../lib/libmonitoringplug.a ../lib/libipmiutils.a $(IPMI_LIBS)
 
 bin_PROGRAMS = 
 

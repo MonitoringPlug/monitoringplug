@@ -3,10 +3,9 @@
 bindir = ${libdir}/nagios/plugins
 
 AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/lib $(GNUTLS_CFLAGS)
-AM_LDFLAGS = $(GNUTLS_LIBS)
 AM_DEFAULT_SOURCE_EXT = .c
 
-LDADD = ../lib/*.a
+LDADD = ../lib/libmonitoringplug.a $(GNUTLS_LIBS)
 
 bin_PROGRAMS = 
 

@@ -3,10 +3,9 @@
 bindir = ${libdir}/nagios/plugins
 
 AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/lib $(XMLRPC_CFLAGS)
-AM_LDFLAGS = $(XMLRPC_LDFLAGS)
 AM_DEFAULT_SOURCE_EXT = .c
 
-LDADD = ../lib/*.a
+LDADD = ../lib/libmonitoringplug.a ../lib/libxmlrpcutils.a $(XMLRPC_LDFLAGS)
 
 bin_PROGRAMS = 
 

@@ -3,10 +3,9 @@
 bindir = ${libdir}/nagios/plugins
 
 AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/lib $(MYSQL_CFLAGS)
-AM_LDFLAGS = $(MYSQL_LDFLAGS)
 AM_DEFAULT_SOURCE_EXT = .c
 
-LDADD = ../lib/libmonitoringplug.a ../lib/libmysqlutils.a -lmysqlclient
+LDADD = ../lib/libmonitoringplug.a ../lib/libmysqlutils.a $(MYSQL_LDFLAGS)
 
 bin_PROGRAMS = 
 

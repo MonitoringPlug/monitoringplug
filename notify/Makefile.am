@@ -3,7 +3,6 @@
 bindir = ${libdir}/nagios/plugins
 
 AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/lib 
-AM_LDFLAGS = 
 AM_DEFAULT_SOURCE_EXT = .c
 
 LDADD = ../lib/libmonitoringplugtemplate.a \
@@ -22,8 +21,7 @@ if HAVE_CURL
 bin_PROGRAMS += notify_aspsms
 
 notify_aspsms_CPPFLAGS = $(AM_CPPFLAGS) $(LIBCURL_CPPFLAGS)
-notify_aspsms_LDADD = ../lib/libcurlutils.a $(LDADD)
-notify_aspsms_LDFLAGS = $(LIBCURL)
+notify_aspsms_LDADD = $(LDADD) ../lib/libcurlutils.a $(LIBCURL)
 endif
 
 ## vim: set ts=4 sw=4 syn=automake :
