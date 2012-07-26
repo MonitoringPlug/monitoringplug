@@ -17,7 +17,7 @@ Build-Depends: debhelper (>= 7.0.50~),
                libselinux1-dev,
                libsmbclient-dev,
                libexpat1-dev,
-               libldns-dev,
+               libldns-dev, ldnsutils,
                libmysqlclient-dev,
 	       libopenipmi-dev
 Standards-Version: 3.9.1
