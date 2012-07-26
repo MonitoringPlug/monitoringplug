@@ -169,8 +169,8 @@ int main (int argc, char **argv) {
             if (pkt && ldns_pkt_get_rcode(pkt) == LDNS_RCODE_NXDOMAIN) {
                 ldns_pkt_free(pkt);
                 critical("Domain '%s' don't exist.", domainname);
-        }
-        ldns_pkt_free(pkt);
+            }
+            ldns_pkt_free(pkt);
             critical("Unable to get SOA for %s from master.", domainname);
         }
 
@@ -205,11 +205,11 @@ int main (int argc, char **argv) {
             ldns_rdf_deep_free(domain);
             ldns_resolver_deep_free(res);
             if (pkt && ldns_pkt_get_rcode(pkt) == LDNS_RCODE_NXDOMAIN) {
-           ldns_pkt_free(pkt);
-           critical("Domain '%s' don't exist.", domainname);
-        }
-        ldns_pkt_free(pkt);
-        critical("Unable to get NS for %s.", domainname);
+                ldns_pkt_free(pkt);
+                critical("Domain '%s' don't exist.", domainname);
+            }
+            ldns_pkt_free(pkt);
+            critical("Unable to get NS for %s.", domainname);
         }
 
         if (mp_verbose > 2) {
@@ -287,7 +287,7 @@ int main (int argc, char **argv) {
 
             rr = ldns_rr_list_pop_rr(rrl);
             ldns_rr_list_deep_free(rrl);
-        ldns_pkt_free(pkt);
+            ldns_pkt_free(pkt);
 
             if (mp_verbose>0) {
                 tmp = ldns_rdf2str(ns_name[i]);
@@ -306,6 +306,9 @@ int main (int argc, char **argv) {
 
             while (ldns_resolver_nameserver_count(res) > 0)
                 ldns_rdf_deep_free(ldns_resolver_pop_nameserver(res));
+            /* Work around a double free bug in ldns_resolver_pop_nameserver */
+            ldns_resolver_set_nameservers(res, NULL);
+            ldns_resolver_set_rtt(res, NULL);
         }
     }
 
@@ -329,8 +332,8 @@ int main (int argc, char **argv) {
             }
             error_cnt++;
         }
-    ldns_rr_free(ns_soa[i]);
-    ldns_rdf_deep_free(ns_name[i]);
+        ldns_rr_free(ns_soa[i]);
+        ldns_rdf_deep_free(ns_name[i]);
     }
 
     free(ns_soa);
