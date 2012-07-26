@@ -173,6 +173,14 @@ AX_CFLAGS_GCC_OPTION(-Wformat)
 AX_CFLAGS_GCC_OPTION(-Wformat-security)
 AX_CFLAGS_GCC_OPTION(-Winline)
 
+# Prevent from overlinking
+AC_ARG_ENABLE([as-needed],
+  AC_HELP_STRING([--disable-as-needed], [Disable overlinking protection]),
+  [enable_as_needed=$enableval], [enable_as_needed=yes])
+if test "x$enable_as_needed" != "xno"; then
+   AX_CHECK_LINK_FLAG(["-Wl,--as-needed"], [LDFLAGS="$LDFLAGS -Wl,--as-needed"])
+fi
+
 # MP VARS
 CPPFLAGS="-I\$(top_srcdir) -I\$(top_srcdir)/lib";
 LDFLAGS="$LDFLAGS -L\$(top_srcdir)/lib";
