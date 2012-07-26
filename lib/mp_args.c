@@ -328,31 +328,31 @@ void print_help_host(void) {
 void print_help_port(const char *def) {
 	printf("\
  -P, --port=PORT\n\
-      Port number to use. Default to %s\n", def);
+      Port number to use. Defaults to %s\n", def);
 }
 
 void print_help_warn_time(const char *def) {
 	printf("\
  -w, --warning=time[d|h|m|s]\n\
-      Return warning if elapsed time exceeds value. Default to %s\n", def);
+      Return warning if elapsed time exceeds value. Defaults to %s\n", def);
 }
 
 void print_help_crit_time(const char *def) {
 	printf("\
  -c, --critical=time[d|h|m|s]\n\
-      Return critical if elapsed time exceeds value. Default to %s\n", def);
+      Return critical if elapsed time exceeds value. Defaults to %s\n", def);
 }
 
 void print_help_warn(const char *limit, const char *def) {
 	printf("\
  -w, --warning=LIMIT\n\
-      Return warning if %s exceeds limit. Default to %s\n", limit, def);
+      Return warning if %s exceeds limit. Defaults to %s\n", limit, def);
 }
 
 void print_help_crit(const char *limit, const char *def) {
 	printf("\
  -c, --critical=LIMIT\n\
-      Return critical if %s exceeds limit. Default to %s\n", limit, def);
+      Return critical if %s exceeds limit. Defaults to %s\n", limit, def);
 }
 
 void print_help_46(void) {
