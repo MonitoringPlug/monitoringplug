@@ -40,7 +40,7 @@ TESTS += check_snmp
 
 check_snmp_LDADD = ../lib/libsnmputils.a $(LDADD)
 check_snmp_CPPFLAGS = $(AM_CPPFLAGS) $(NETSNMP_CFLAGS)
-check_snmp_LDFLAGS = $(AM_LDFLAGS) $(NETSNMP_LDFLAGS)
+check_snmp_LDFLAGS = $(AM_LDFLAGS) $(NETSNMP_LIBS)
 endif
 
 endif

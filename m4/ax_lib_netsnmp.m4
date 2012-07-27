@@ -25,8 +25,8 @@
 #   This macro calls:
 #
 #     AC_SUBST(NETSNMP_CFLAGS)
-#     AC_SUBST(NETSNMP_LDFLAGS)
-#     AC_SUBST(NETSNMP_AGENT_LDFLAGS)
+#     AC_SUBST(NETSNMP_LIBS)
+#     AC_SUBST(NETSNMP_AGENT_LIBS)
 #     AC_SUBST(NETSNMP_VERSION)
 #
 #   And sets:
@@ -42,7 +42,7 @@
 #   and this notice are preserved. This file is offered as-is, without any
 #   warranty.
 
-#serial 2
+#serial 3
 
 AC_DEFUN([AX_LIB_NETSNMP],
 [
@@ -65,8 +65,8 @@ AC_DEFUN([AX_LIB_NETSNMP],
     AC_ARG_VAR([NETSNMP_CONFIG], [Full path to net-snmp-config program])
 
     NETSNMP_CFLAGS=""
-    NETSNMP_LDFLAGS=""
-    NETSNMP_AGENT_LDFLAGS=""
+    NETSNMP_LIBS=""
+    NETSNMP_AGENT_LIBS=""
     NETSNMP_VERSION=""
 
     dnl
@@ -81,8 +81,8 @@ AC_DEFUN([AX_LIB_NETSNMP],
 
         if test "$NETSNMP_CONFIG" != "no"; then
             NETSNMP_CFLAGS="`$NETSNMP_CONFIG --cflags`"
-            NETSNMP_LDFLAGS="`$NETSNMP_CONFIG --libs`"
-	    NETSNMP_AGENT_LDFLAGS="`$NETSNMP_CONFIG --agent-libs`"
+            NETSNMP_LIBS="`$NETSNMP_CONFIG --libs`"
+	    NETSNMP_AGENT_LIBS="`$NETSNMP_CONFIG --agent-libs`"
 
             NETSNMP_VERSION=`$NETSNMP_CONFIG --version`
 
@@ -143,13 +143,13 @@ AC_DEFUN([AX_LIB_NETSNMP],
                   [Define to 1 if Net-SNMP libraries are available])
     else
         NETSNMP_CFLAGS=""
-        NETSNMP_LDFLAGS=""
-	NETSNMP_AGENT_LDFLAGS=""
+        NETSNMP_LIBS=""
+	NETSNMP_AGENT_LIBS=""
         NETSNMP_VERSION=""
     fi
 
     AC_SUBST([NETSNMP_VERSION])
     AC_SUBST([NETSNMP_CFLAGS])
-    AC_SUBST([NETSNMP_LDFLAGS])
-    AC_SUBST([NETSNMP_AGENT_LDFLAGS])
+    AC_SUBST([NETSNMP_LIBS])
+    AC_SUBST([NETSNMP_AGENT_LIBS])
 ])

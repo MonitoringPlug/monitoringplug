@@ -19,7 +19,7 @@ if HAVE_NET_SNMP
 bin_PROGRAMS += check_rhcsnmp
 
 check_rhcsnmp_CPPFLAGS = $(AM_CPPFLAGS) $(NETSNMP_CFLAGS)
-check_rhcsnmp_LDADD = $(LDADD) ../lib/libsnmputils.a $(NETSNMP_LDFLAGS)
+check_rhcsnmp_LDADD = $(LDADD) ../lib/libsnmputils.a $(NETSNMP_LIBS)
 endif
 
 endif
