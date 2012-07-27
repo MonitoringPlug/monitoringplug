@@ -32,7 +32,7 @@ TESTS += check_rhcs
 
 check_rhcs_LDADD = ../lib/librhcsutils.a $(LDADD)
 check_rhcs_CPPFLAGS = $(AM_CPPFLAGS) $(EXPAT_CFLAGS)
-check_rhcs_LDFLAGS = $(AM_LDFLAGS) $(EXPAT_LDFLAGS)
+check_rhcs_LDFLAGS = $(AM_LDFLAGS) $(EXPAT_LIBS)
 endif
 
 if HAVE_NET_SNMP

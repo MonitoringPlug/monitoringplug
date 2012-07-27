@@ -13,7 +13,7 @@ if HAVE_EXPAT
 bin_PROGRAMS += check_clustat
 
 check_clustat_CPPFLAGS = $(AM_CPPFLAGS) $(EXPAT_CFLAGS)
-check_clustat_LDADD = $(LDADD) $(EXPAT_LDFLAGS)
+check_clustat_LDADD = $(LDADD) $(EXPAT_LIBS)
 
 if HAVE_NET_SNMP
 bin_PROGRAMS += check_rhcsnmp

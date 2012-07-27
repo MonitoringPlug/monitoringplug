@@ -13,7 +13,7 @@ if HAVE_CURL
 bin_PROGRAMS += check_apache_status check_aspsms_credits check_webdav
 
 if HAVE_EXPAT
-check_webdav_LDADD = $(LDADD) ../lib/libexpatutils.a $(EXPAT_LDFLAGS)
+check_webdav_LDADD = $(LDADD) ../lib/libexpatutils.a $(EXPAT_LIBS)
 else
 check_webdav_LDADD = $(LDADD)
 endif
