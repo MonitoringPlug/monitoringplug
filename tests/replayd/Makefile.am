@@ -6,7 +6,7 @@ LDFLAGS += -Wl,--no-as-needed
 LDADD = $(NETSNMP_AGENT_LIBS)
 
 if HAVE_NET_SNMP
-noinst_PROGRAMS = replayd
+check_PROGRAMS = replayd
 
 replayd_SOURCES = replayd.c replayd.h \
 				  parse_type.c
