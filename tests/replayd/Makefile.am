@@ -1,7 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 
 AM_CPPFLAGS = $(NETSNMP_CFLAGS)
-AM_LDFLAGS = -Wl,--no-as-needed
+LDFLAGS += -Wl,--no-as-needed
 
 LDADD = $(NETSNMP_AGENT_LIBS)
 
