@@ -1,8 +1,9 @@
 ## Process this file with automake to produce Makefile.in
 
 AM_CPPFLAGS = $(NETSNMP_CFLAGS)
+AM_LDFLAGS = -Wl,--no-as-needed
 
-AM_LDFLAGS = $(NETSNMP_AGENT_LIBS)
+LDADD = $(NETSNMP_AGENT_LIBS)
 
 if HAVE_NET_SNMP
 noinst_PROGRAMS = replayd
