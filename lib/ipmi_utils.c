@@ -342,7 +342,9 @@ static void mp_ipmi_sensor_read_handler (ipmi_sensor_t *sensor, int err,
             printf("[Sensor Read %s %f]\n", s->name, value);
     }
 
-    if (value_present == IPMI_NO_VALUES_PRESENT) {
+    if (value_present == IPMI_NO_VALUES_PRESENT
+            || !ipmi_is_sensor_scanning_enabled(states)
+            || ipmi_is_initial_update_in_progress(states)) {
         free(s->name);
         s->name = NULL;
         return;
