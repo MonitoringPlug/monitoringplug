@@ -234,7 +234,9 @@ bzip2 %{name}.pp
 cd ..
 
 %check
+%if 0%{?rhel} != 5
 make %{?_smp_mflags} check
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
