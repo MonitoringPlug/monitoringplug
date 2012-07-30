@@ -162,6 +162,9 @@ int mp_snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd)
         response = NULL;
     } while (status == STAT_SUCCESS && pdu);
 
+    if (!response)
+        return status;
+
     /* Process the response. */
     if (status == STAT_SUCCESS && response->errstat == SNMP_ERR_NOERROR) {
         for(vars = response->variables; vars; vars = vars->next_variable) {
