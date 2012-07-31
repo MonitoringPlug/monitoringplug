@@ -1,3 +1,12 @@
+monitoringplug (0.13) monitoringplug; urgency=low
+
+  * Added check_snmp_usv check (Credits to Oliver Schonefeld)
+  * Some snmp bugfixed
+  * check_ipmi_*: Ignore unreadable sensors.
+  * Build system improvments.
+
+ -- Marius Rieder <marius.rieder@durchmesser.ch>  Tue, 31 Jul 2012 11:55:23 +0200
+
 monitoringplug (0.12) monitoringplug; urgency=low
 
   * Fix a SNMP, eopt, perfdata and clustat bug.

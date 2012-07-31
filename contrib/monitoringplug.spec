@@ -1,5 +1,5 @@
 Name:           monitoringplug
-Version:        0.12
+Version:        0.13
 Release:        1%{?dist}
 Summary:        Collection of monitoring plugins for Nagios
 
@@ -458,6 +458,12 @@ fi
 %{_mandir}/man1/notify_*
 
 %changelog
+* Tue Jul 31 2012 Marius Rieder <marius.rieder@durchmesser.ch> - 0.13-1
+- Added check_snmp_ups check (Credits to Oliver Schonefeld)
+- Some snmp bugfixed
+- check_ipmi_*: Ignore unreadable sensors.
+- Build system improvments.
+
 * Sun Jul 23 2012 Marius Rieder <marius.rieder@durchmesser.ch> - 0.12-1
 - Fix a SNMP, eopt, perfdata and clustat bug.
 - Improved check_akcp.
