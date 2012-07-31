@@ -45,6 +45,7 @@ char    **sensor  = NULL;
 int     sensors   = 0;
 char    **exclude = NULL;
 int     excludes  = 0;
+int     quiet = 0;
 
 int main (int argc, char **argv) {
     /* Local Vars */
@@ -95,9 +96,10 @@ int main (int argc, char **argv) {
         if (mp_verbose > 0)
             printf("%s: %f\n", s->name, s->value);
 
-        mp_perfdata_float(s->name, s->value,
-                ipmi_sensor_get_base_unit_string(s->sensor),
-                s->sensorThresholds);
+        if (ipmi_sensor_get_event_reading_type(s->sensor) == IPMI_EVENT_READING_TYPE_THRESHOLD)
+            mp_perfdata_float(s->name, s->value,
+                    ipmi_sensor_get_base_unit_string(s->sensor),
+                    s->sensorThresholds);
 
         lstate = get_status(s->value, s->sensorThresholds);
         if (lstate > state)
@@ -122,10 +124,14 @@ int main (int argc, char **argv) {
         critical("No (matching) Sensors found.");
 
     /* Output and return */
-    if (state == STATE_OK)
+    if (state == STATE_OK) {
+        if (mp_verbose == 0 && quiet > 0 && sensors == 0)
+            ok("IPMI Sensors");
         ok("IPMI Sensors: %s", out_ok);
-    else if (state == STATE_WARNING)
+
+    } else if (state == STATE_WARNING) {
         warning("IPMI Sensors: %s", out_warning);
+    }
     critical("IPMI Sensors: %s", out_critical);
 }
 
@@ -138,11 +144,12 @@ int process_arguments (int argc, char **argv) {
             IPMI_LONGOPTS,
             {"sensor", required_argument, NULL, (int)'S'},
             {"exclude", required_argument, NULL, (int)'E'},
+            {"quiet", no_argument, NULL, (int)'q'},
             MP_LONGOPTS_END
     };
 
     while (1) {
-        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"S:E:"IPMI_OPTSTR, longopts, &option);
+        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"S:E:q"IPMI_OPTSTR, longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -156,6 +163,9 @@ int process_arguments (int argc, char **argv) {
                 break;
             case 'E':
                 mp_array_push(&exclude, optarg, &excludes);
+                break;
+            case 'q':
+                quiet++;
                 break;
         }
     }
