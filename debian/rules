@@ -22,5 +22,8 @@ export SMBCLIENT_CFLAGS=
 %:
 	dh $@
 
+override_dh_auto_configure:
+	dh_auto_configure -- $(shell dpkg-buildflags --export=configure)
+
 override_dh_install:
 	dh_install --fail-missing -Xcheck_dummy
