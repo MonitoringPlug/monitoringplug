@@ -30,6 +30,7 @@
 #include <getopt.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <stdio.h>
 
 char *mp_snmp_community;
@@ -307,6 +308,489 @@ netsnmp_variable_list *mp_snmp_table_get(const struct mp_snmp_table table, int x
         return NULL;
     return table.var[x*table.row+y];
 }
+
+
+/* forward declaration */
+static int copy_value(const netsnmp_variable_list *var, const u_char type,
+                      size_t target_len, void **target);
+
+
+int mp_snmp_values_fetch1(netsnmp_session *ss,
+                          const mp_snmp_value_oid *values) {
+    netsnmp_pdu *request;
+    netsnmp_pdu *response;
+    const netsnmp_variable_list *var;
+    const mp_snmp_value_oid *vp;
+    int rc;
+
+    /*
+     *  set-up request
+     */
+    request = snmp_pdu_create(SNMP_MSG_GET);
+    for (vp = values; vp->oid_len && vp->oid; vp++) {
+        snmp_add_null_var(request, vp->oid, vp->oid_len);
+    }
+
+    /*
+     * commence request
+     */
+    do {
+        rc = snmp_synch_response(ss, request, &response);
+
+        if (mp_verbose > 3)
+            printf("snmp_synch_response(): rc=%d\n", rc);
+
+        /* no result, so something went wrong ... */
+        if (!response)
+            return STAT_ERROR;
+
+        if ((rc == STAT_SUCCESS) && (response->errindex == 0))
+            break;
+
+        /* rety with fixed request */
+        request = snmp_fix_pdu(response, SNMP_MSG_GET);
+        snmp_free_pdu(response);
+        response = NULL;
+    } while (request && (rc == STAT_SUCCESS));
+
+    /*
+     * process results
+     */
+    if ((rc == STAT_SUCCESS) && response) {
+        if (response->errstat == SNMP_ERR_NOERROR) {
+            /*
+             * extract values from response
+             */
+            for(var = response->variables; var; var = var->next_variable) {
+                for (vp = values; vp->oid_len && vp->oid; vp++) {
+                    if (snmp_oid_compare(var->name, var->name_length,
+                                         vp->oid, vp->oid_len) == 0) {
+                        if (mp_verbose > 1)
+                            print_variable(var->name, var->name_length, var);
+
+                        /* copy value, if not erroneous */
+                        if ((var->type != SNMP_NOSUCHOBJECT) &&
+                            (var->type != SNMP_NOSUCHINSTANCE) &&
+                            (var->type != SNMP_ENDOFMIBVIEW))
+                            copy_value(var, vp->type,
+                                       vp->target_len, vp->target);
+                        else
+                            if (mp_verbose > 2)
+                                printf("OID not available: type=0x%X\n",
+                                       var->type);
+
+                        /* short-circuit to next result variable */
+                        break;
+                    }
+                }
+            }
+        } else if ((ss->version == SNMP_VERSION_1) &&
+                   (response->errstat == SNMP_ERR_NOSUCHNAME)) {
+            if (mp_verbose > 3)
+                printf("SNMP-V1: end of tree\n");
+        } else {
+            /*
+             * some other error occured
+             */
+            if (mp_verbose > 0)
+                printf("SNMP error: respose->errstat = %ld",
+                       response->errstat);
+            rc = STAT_ERROR;
+        }
+    } else {
+        /*
+         * no response (i.e. all vars have been removed by
+         * snmp_pid_fixup()) go ahead an assume an error
+         */
+        rc = STAT_ERROR;
+    }
+
+    if (response)
+        snmp_free_pdu(response);
+
+    return rc;
+}
+
+
+int mp_snmp_values_fetch2(netsnmp_session *ss,
+                          const mp_snmp_value *values) {
+    const mp_snmp_value *vp1;
+    mp_snmp_value_oid *vp2;
+    size_t count;
+    mp_snmp_value_oid *oid_values = NULL;
+    int rc = 0;
+
+    for (count = 0, vp1 = values; vp1->oid; vp1++, count++)
+        ;
+
+    oid_values = (mp_snmp_value_oid *)
+        mp_malloc(count * sizeof(mp_snmp_value_oid));
+
+    for (vp1 = values, vp2 = oid_values; vp1->oid; vp1++, vp2++) {
+        vp2->oid_len = MAX_OID_LEN;
+        if (!read_objid(vp1->oid, vp2->oid, &vp2->oid_len)) {
+            if (mp_verbose > 3)
+                printf("Invalid OID: %s\n", vp1->oid);
+            goto done;
+        }
+        vp2->type       = vp1->type;
+        vp2->target     = vp1->target;
+        vp2->target_len = vp1->target_len;
+    }
+
+    rc = mp_snmp_values_fetch1(ss, oid_values);
+
+ done:
+    free(oid_values);
+    return rc;
+}
+
+
+int mp_snmp_values_fetch3(netsnmp_session *ss,
+                          const mp_snmp_value *values, ...) {
+
+    va_list ap;
+    const mp_snmp_value *vp1;
+    mp_snmp_value_oid *vp2;
+    size_t count;
+    char formatted_oid[1024];
+    mp_snmp_value_oid *oid_values = NULL;
+    int rc = 0;
+
+    for (count = 0, vp1 = values; vp1->oid; vp1++, count++)
+        ;
+
+    oid_values = (mp_snmp_value_oid *)
+        mp_malloc(count * sizeof(mp_snmp_value_oid));
+
+    for (vp1 = values, vp2 = oid_values; vp1->oid; vp1++, vp2++) {
+        va_start(ap, values);
+        vsnprintf(formatted_oid, sizeof(formatted_oid), vp1->oid, ap);
+        va_end(ap);
+
+        vp2->oid_len = MAX_OID_LEN;
+        if (!read_objid(formatted_oid, vp2->oid, &vp2->oid_len)) {
+            if (mp_verbose > 3)
+                printf("Invalid OID: %s\n", vp1->oid);
+            goto done;
+        }
+        vp2->type       = vp1->type;
+        vp2->target     = vp1->target;
+        vp2->target_len = vp1->target_len;
+    }
+
+    rc = mp_snmp_values_fetch1(ss, oid_values);
+
+ done:
+    free(oid_values);
+    return rc;
+}
+
+
+int mp_snmp_subtree_fetch1(netsnmp_session *ss,
+                           const oid *subtree_oid,
+                           const size_t subtree_oid_len,
+                           mp_snmp_subtree *subtree) {
+
+    oid last_oid[MAX_OID_LEN];
+    size_t last_oid_len;
+    netsnmp_pdu *request  = NULL;
+    netsnmp_pdu *response = NULL;
+    netsnmp_variable_list *var;
+    size_t alloc_size = 0;
+    int rc;
+
+    /* prepare result */
+    memset(subtree, '\0', sizeof(subtree));
+    subtree->vars = NULL;
+
+    memcpy(last_oid, subtree_oid, subtree_oid_len * sizeof(oid));
+    last_oid_len = subtree_oid_len;
+
+    for (;;) {
+        /*
+         * setup request
+         */
+        if (ss->version == SNMP_VERSION_1) {
+            request = snmp_pdu_create(SNMP_MSG_GETNEXT);
+        } else {
+            request = snmp_pdu_create(SNMP_MSG_GETBULK);
+            request->non_repeaters   = 0;
+            request->max_repetitions = 16;
+        }
+        snmp_add_null_var(request, last_oid, last_oid_len);
+
+        /*
+         * commence request
+         */
+        if (response) {
+            snmp_free_pdu(response);
+            response = NULL;
+        }
+
+        if (mp_verbose > 2) {
+            char buf[128];
+
+            snprint_objid((char *) &buf, sizeof(buf), last_oid, last_oid_len);
+            printf("Fetching next from OID %s\n", buf);
+        }
+
+        rc = snmp_synch_response(ss, request, &response);
+
+        if (mp_verbose > 3)
+            printf("snmp_synch_response(): rc=%d, errstat=%ld\n",
+                   rc, response->errstat);
+
+        if ((rc == STAT_SUCCESS) && response) {
+            if (response->errstat == SNMP_ERR_NOERROR) {
+                /*
+                 * loop over results (may only be one result in case of SNMP v1)
+                 */
+                for (var = response->variables; var; var = var->next_variable) {
+                    /*
+                     * check, if OIDs are incresing to prevent infinite
+                     * loop with broken SNMP agents
+                     */
+                    if (snmp_oidtree_compare(var->name, var->name_length,
+                                             last_oid, last_oid_len) < 0) {
+                        if (response)
+                            snmp_free_pdu(response);
+
+                        mp_snmp_deinit();
+
+                        critical("SNMP error: OIDs are not incresing");
+                    }
+
+                    /*
+                     * terminate, if oid does not belong to subtree anymore
+                     */
+                    if ((var->type == SNMP_ENDOFMIBVIEW) ||
+                        (snmp_oidtree_compare(subtree_oid,
+                                              subtree_oid_len,
+                                              var->name,
+                                              var->name_length) != 0)) {
+                        goto done;
+                    }
+
+                    if (mp_verbose > 2)
+                        print_variable(var->name, var->name_length, var);
+
+                    if (var->type != SNMP_NOSUCHOBJECT ||
+                        var->type != SNMP_NOSUCHINSTANCE) {
+                        if (alloc_size <= subtree->size) {
+                            alloc_size += 16;
+                            subtree->vars =
+                                mp_realloc(subtree->vars,
+                                           alloc_size *
+                                           sizeof(netsnmp_variable_list*));
+                        }
+
+                        subtree->vars[subtree->size] =
+                            mp_malloc(sizeof(netsnmp_variable_list));
+                        snmp_clone_var(var, subtree->vars[subtree->size]);
+                        subtree->size++;
+                    }
+
+                    /*
+                     * save last fetched oid
+                     */
+                    memcpy(last_oid, var->name,
+                           var->name_length * sizeof(oid));
+                    last_oid_len = var->name_length;
+                } /* for */
+            } else if ((ss->version == SNMP_VERSION_1) &&
+                       (response->errstat == SNMP_ERR_NOSUCHNAME)) {
+                if (mp_verbose > 3)
+                    printf("SNMP-V1: end of tree\n");
+            } else {
+                /*
+                 * some other error occured
+                 */
+                if (mp_verbose > 0)
+                    printf("SNMP error: respose->errstat = %ld",
+                           response->errstat);
+
+                rc = STAT_ERROR;
+                goto done;
+            }
+        } else {
+            /* no response, assume an error */
+            rc = STAT_ERROR;
+            break;
+        }
+    } /* for */
+
+ done:
+    if (response)
+        snmp_free_pdu(response);
+
+    return rc;
+}
+
+
+int mp_snmp_subtree_fetch2(netsnmp_session *ss, const char *subtree_oid,
+                           mp_snmp_subtree *subtree) {
+    oid subtree_oid_prefix[MAX_OID_LEN];
+    size_t subtree_oid_prefix_len = MAX_OID_LEN;
+
+    if (!read_objid(subtree_oid, subtree_oid_prefix, &subtree_oid_prefix_len)) {
+        if (mp_verbose > 3)
+            printf("Invalid OID: %s\n", subtree_oid);
+
+        return 0;
+    }
+
+    return mp_snmp_subtree_fetch1(ss, subtree_oid_prefix,
+                                  subtree_oid_prefix_len, subtree);
+}
+
+
+int mp_snmp_subtree_get_value1(const mp_snmp_subtree *subtree,
+                               const oid *oid_prefix,
+                               const size_t oid_prefix_len,
+                               const size_t idx,
+                               const u_char type,
+                               void **target,
+                               const size_t target_len) {
+    size_t i, j = 0;
+
+    if (!subtree || (subtree->size < 1))
+        return 0;
+
+    for (i = 0; i < subtree->size; i++) {
+        if (snmp_oidtree_compare(oid_prefix,
+                                 oid_prefix_len,
+                                 subtree->vars[i]->name,
+                                 subtree->vars[i]->name_length) == 0) {
+            if (j == idx) {
+                return copy_value(subtree->vars[i], type, target_len, target);
+            }
+            j++;
+        }
+    }
+    return 0;
+}
+
+
+int mp_snmp_subtree_get_value2(const mp_snmp_subtree *subtree,
+                               const char* value_oid,
+                               const size_t idx,
+                               const u_char type,
+                               void **target,
+                               const size_t target_len) {
+    oid oid_prefix[MAX_OID_LEN];
+    size_t oid_prefix_len = MAX_OID_LEN;
+
+    if (!subtree || (subtree->size < 1))
+        return 0;
+
+    if (!read_objid(value_oid, oid_prefix, &oid_prefix_len)) {
+        if (mp_verbose > 3)
+            printf("Invalid OID: %s\n", value_oid);
+
+        return 0;
+    }
+
+    return mp_snmp_subtree_get_value1(subtree, oid_prefix, oid_prefix_len,
+                                      idx, type, target, target_len);
+}
+
+
+int mp_snmp_subtree_get_values(const mp_snmp_subtree *subtree,
+                               const size_t idx,
+                               const mp_snmp_value *values) {
+    const mp_snmp_value *vp;
+    oid oid_prefix[MAX_OID_LEN];
+    size_t oid_prefix_len;
+    int count = 0;
+
+    if (!subtree || (subtree->size < 1))
+        return 0;
+
+
+    for (vp = values; vp->oid; vp++) {
+        oid_prefix_len = MAX_OID_LEN;
+        read_objid(vp->oid, oid_prefix, &oid_prefix_len);
+
+        if (mp_snmp_subtree_get_value1(subtree, oid_prefix, oid_prefix_len,
+                                       idx, vp->type, vp->target,
+                                       vp->target_len) > 0) {
+            count++;
+        }
+    }
+    return count;
+}
+
+
+void mp_snmp_subtree_free(mp_snmp_subtree *subtree) {
+    size_t i;
+
+    if (!subtree || (subtree->size < 1))
+        return;
+
+    for (i = 0; i < subtree->size; i++) {
+        free(subtree->vars[i]);
+    }
+    free(subtree->vars);
+    subtree->size = 0;
+    subtree->vars = NULL;
+}
+
+
+static int copy_value(const netsnmp_variable_list *var, const u_char type,
+                      size_t target_len, void **target) {
+    if (var->type != type) {
+        if (mp_verbose > 1)
+            printf("TYPE Mismatch: 0x%X ~ 0x%X\n", var->type, type);
+        return 0;
+    } else {
+        switch(var->type) {
+        case ASN_INTEGER:       // 0x02
+            /* FALL-TROUGH */
+        case ASN_COUNTER:       // 0x41
+            /* FALL-TROUGH */
+        case ASN_GAUGE:         // 0x42
+            /* FALL-TROUGH */
+        case ASN_TIMETICKS:
+            if (var->val_len > target_len) {
+                if (mp_verbose > 1)
+                    printf("TARGET size mismatch: provided storage "
+                           "to small (have %zu, need %zu)\n",
+                           target_len, var->val_len);
+                return 0;
+            } else {
+                memcpy(target, var->val.integer, var->val_len);
+            }
+            break;
+        case ASN_OCTET_STR:    // 0x04
+            {
+                char *buffer;
+
+                if (target_len > 0) {
+                    if ((var->val_len + 1) > target_len) {
+                        if (mp_verbose > 1)
+                            printf("TARGET size mismatch: provided storage "
+                                   "to small (have %zu, need %zu)\n",
+                                   target_len, var->val_len);
+                        return 0;
+                    }
+                    buffer = (char *) target;
+                } else {
+                    buffer = mp_malloc(var->val_len + 1);
+                    *target = (void*) buffer;
+                }
+                memcpy(buffer, var->val.string, var->val_len);
+                buffer[var->val_len] = '\0';
+            }
+            break;
+        default:
+            printf("TYPE Mismatch: unexpected type 0x%X\n", var->type);
+            return 0;
+        } /* switch */
+    }
+    return 1;
+}
+
 
 void getopt_snmp(int c) {
     switch ( c ) {

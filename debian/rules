@@ -23,7 +23,11 @@ export SMBCLIENT_CFLAGS=
 	dh $@
 
 override_dh_auto_configure:
-	dh_auto_configure -- $(shell dpkg-buildflags --export=configure)
+	dh_auto_configure -- CFLAGS="$(shell dpkg-buildflags --get CFLAGS)" \
+			CPPFLAGS="$(shell dpkg-buildflags --get CPPFLAGS)" \
+			CXXFLAGS="$(shell dpkg-buildflags --get CXXFLAGS)" \
+			FFLAGS="$(shell dpkg-buildflags --get FFLAGS)" \
+			LDFLAGS="$(shell dpkg-buildflags --get LDFLAGS)"
 
 override_dh_install:
 	dh_install --fail-missing -Xcheck_dummy

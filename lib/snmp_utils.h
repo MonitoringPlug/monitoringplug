@@ -128,6 +128,164 @@ int mp_snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *que
  */
 netsnmp_variable_list *mp_snmp_table_get(const struct mp_snmp_table table, int x, int y);
 
+#define MP_OID(...) {__VA_ARGS__}, (sizeof((oid[]){__VA_ARGS__})/sizeof(oid))
+
+
+/**
+ * a list OID to be fetched and where to store results
+ */
+typedef struct {
+    /** OID name */
+    const char *oid;
+    /** expected OID type */
+    u_char type;
+    /** pointer to store OID value in */
+    void **target;
+    /** size of target */
+    size_t target_len;
+} mp_snmp_value;
+
+
+typedef struct {
+    /** OID name */
+    oid oid[MAX_OID_LEN];
+    /** length of OID */
+    size_t oid_len;
+    /** expected OID type */
+    u_char type;
+    /** pointer to store OID value in */
+    void **target;
+    /** size of target */
+    size_t target_len;
+} mp_snmp_value_oid;
+
+
+/**
+ * a OID subtree
+ */
+typedef struct {
+    /** subtree size */
+    size_t size;
+    /** subtree data */
+    netsnmp_variable_list **vars;
+} mp_snmp_subtree;
+
+
+/**
+ * Fetch all OIDs given in values and save results to target pointer
+ * given in values.
+ *
+ * \param[in] ss snmp session to use.
+ * \param[in|out] values the OIDs to be fetched and where store the results
+ * \return returns STAT_SUCESS on success, other value otherwise
+ */
+int mp_snmp_values_fetch1(netsnmp_session *ss,
+                          const mp_snmp_value_oid *values);
+
+
+/**
+ * Fetch all OIDs given in values and save results to target pointer
+ * given in values.
+ *
+ * \param[in] ss snmp session to use.
+ * \param[in|out] values the OIDs to be fetched and where store the results
+ * \return returns STAT_SUCESS on success, other value otherwise
+ */
+int mp_snmp_values_fetch2(netsnmp_session *ss,
+                          const mp_snmp_value *values);
+
+
+int mp_snmp_values_fetch3(netsnmp_session *ss,
+                          const mp_snmp_value *values, ...);
+
+/**
+ * Fetch a subtree of OIDs starting on subtree_oid and save results to subtree.
+ *
+ * \param[in] ss snmp session to use.
+ * \param[in] subtree_oid start OID
+ * \param[in] subtree_oid_len the size of subtree_oid
+ * \param[in|out] subtree store fetched OIDs result
+ * \return returns STAT_SUCESS on success, other value otherwise
+ */
+int mp_snmp_subtree_fetch1(netsnmp_session *ss,
+                           const oid *subtree_oid,
+                           const size_t subtree_oid_len,
+                           mp_snmp_subtree *subtree);
+
+
+/**
+ * Fetch a subtree of OIDs starting on subtree_oid and save results to subtree.
+ *
+ * \param[in] ss snmp session to use.
+ * \param[in] subtree_oid start OID (not included in result)
+ * \param[in|out] subtree store fetched OIDs result
+ * \return returns STAT_SUCESS on success, other value otherwise
+ */
+int mp_snmp_subtree_fetch2(netsnmp_session *ss,
+                           const char *subtree_oid,
+                           mp_snmp_subtree *subtree);
+
+
+/**
+ * Get a value from a fetched OID subtree. Use the idx parameter to specify,
+ * the row of an OID table.
+ *
+ * \param[in] subtree the OID subtree
+ * \param[in] value_oid the OID to get the value for
+ * \param[in] idx the instance of OID (aka row in OID table); 0-based
+ * \param[in] type the expected type of the OID value
+ * \param[in|out] target a pointer, where to store the OID value
+ * \return returns 1, if value was found, 0 otherwise
+ */
+int mp_snmp_subtree_get_value1(const mp_snmp_subtree *subtree,
+                               const oid *value_oid,
+                               const size_t value_oid_len,
+                               const size_t idx,
+                               const u_char type,
+                               void **target,
+                               const size_t target_len);
+
+/**
+ * Get a value from a fetched OID subtree. Use the idx parameter to specify,
+ * the row of an OID table.
+ *
+ * \param[in] subtree the OID subtree
+ * \param[in] value_oid the OID to get the value for
+ * \param[in] idx the instance of OID (aka row in OID table); 0-based
+ * \param[in] type the expected type of the OID value
+ * \param[in|out] target a pointer, where to store the OID value
+ * \return returns 1, if value was found, 0 otherwise
+ */
+int mp_snmp_subtree_get_value2(const mp_snmp_subtree *subtree,
+                               const char* value_oid,
+                               const size_t idx,
+                               const u_char type,
+                               void **target,
+                               const size_t target_len);
+
+
+/**
+ * Get multiple value from a fetched OID subtree. Use the idx parameter to
+ * specify, the row of an OID table.
+ *
+ * \param[in] subtree the OID subtree
+ * \param[in] idx the instance of OID (aka row in OID table); 0-based
+ * \param[in|out] values the list of OIDs to get and where to store results
+ * \return return number of variables found, or 0 of none where found
+ */
+int mp_snmp_subtree_get_values(const mp_snmp_subtree *subtree,
+                               const size_t idx,
+                               const mp_snmp_value *values);
+
+
+/**
+ * Free memory used by a subtree.
+ *
+ * \param[in|out] subtree subtree to free
+ */
+void mp_snmp_subtree_free(mp_snmp_subtree *subtree);
+
+
 /**
  * Handle SNMP related command line options.
  * \param[in] c Command line option to handle.
@@ -135,6 +293,7 @@ netsnmp_variable_list *mp_snmp_table_get(const struct mp_snmp_table table, int x
 void getopt_snmp(int c);
 
 /**
+
  * Print the help for the SNMP related command line options.
  */
 void print_help_snmp(void);
