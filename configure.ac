@@ -182,7 +182,7 @@ if test "x$enable_as_needed" != "xno"; then
 fi
 
 # MP VARS
-CPPFLAGS="-I\$(top_srcdir) -I\$(top_srcdir)/lib";
+CPPFLAGS="$CPPFLAGS -I\$(top_srcdir) -I\$(top_srcdir)/lib";
 LDFLAGS="$LDFLAGS -L\$(top_srcdir)/lib";
 
 SNMPUTIL_LIBS="-lsnmputils"
