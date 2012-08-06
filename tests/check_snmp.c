@@ -71,9 +71,11 @@ START_TEST (test_snmp_query_cmd) {
     netsnmp_session *ss;
     char *sysName;
     long sysUpTime;
-    struct mp_snmp_query_cmd snmpcmd[] = {
-        {{1,3,6,1,2,1,1,3,0}, 9, ASN_TIMETICKS, (void *)&sysUpTime},
-        {{1,3,6,1,2,1,1,5,0}, 9, ASN_OCTET_STR, (void *)&sysName},
+    mp_snmp_query_cmd snmpcmd[] = {
+        {{1,3,6,1,2,1,1,3,0}, 9,
+            ASN_TIMETICKS, (void *)&sysUpTime, sizeof(long int)},
+        {{1,3,6,1,2,1,1,5,0}, 9,
+            ASN_OCTET_STR, (void *)&sysName, 0},
         {{0}, 0, 0, NULL},
     };
     ss = mp_snmp_init();
@@ -96,12 +98,17 @@ START_TEST (test_snmp_query_int) {
     long int i4 = -1;
     long int i5 = -1;
 
-    struct mp_snmp_query_cmd snmpcmd[] = {
-        {{1,3,6,1,4,1,31865,9999,42,2,1}, 11, ASN_INTEGER, (void *)&i1},
-        {{1,3,6,1,4,1,31865,9999,42,2,2}, 11, ASN_INTEGER, (void *)&i2},
-        {{1,3,6,1,4,1,31865,9999,42,2,3}, 11, ASN_INTEGER, (void *)&i3},
-        {{1,3,6,1,4,1,31865,9999,42,2,4}, 11, ASN_INTEGER, (void *)&i4},
-        {{1,3,6,1,4,1,31865,9999,42,2,5}, 11, ASN_INTEGER, (void *)&i5},
+    mp_snmp_query_cmd snmpcmd[] = {
+        {{1,3,6,1,4,1,31865,9999,42,2,1}, 11,
+            ASN_INTEGER, (void *)&i1, sizeof(long int)},
+        {{1,3,6,1,4,1,31865,9999,42,2,2}, 11,
+            ASN_INTEGER, (void *)&i2, sizeof(long int)},
+        {{1,3,6,1,4,1,31865,9999,42,2,3}, 11,
+            ASN_INTEGER, (void *)&i3, sizeof(long int)},
+        {{1,3,6,1,4,1,31865,9999,42,2,4}, 11,
+            ASN_INTEGER, (void *)&i4, sizeof(long int)},
+        {{1,3,6,1,4,1,31865,9999,42,2,5}, 11,
+            ASN_INTEGER, (void *)&i5, sizeof(long int)},
         {{0}, 0, 0, NULL},
     };
     ss = mp_snmp_init();
@@ -129,12 +136,12 @@ START_TEST (test_snmp_query_string) {
     char *s3 = NULL;
     char *s4 = NULL;
     char *s5 = NULL;
-    struct mp_snmp_query_cmd snmpcmd[] = {
-        {{1,3,6,1,4,1,31865,9999,42,4,1}, 11, ASN_OCTET_STR, (void *)&s1},
-        {{1,3,6,1,4,1,31865,9999,42,4,2}, 11, ASN_OCTET_STR, (void *)&s2},
-        {{1,3,6,1,4,1,31865,9999,42,4,3}, 11, ASN_OCTET_STR, (void *)&s3},
-        {{1,3,6,1,4,1,31865,9999,42,4,4}, 11, ASN_OCTET_STR, (void *)&s4},
-        {{1,3,6,1,4,1,31865,9999,42,4,5}, 11, ASN_OCTET_STR, (void *)&s5},
+    mp_snmp_query_cmd snmpcmd[] = {
+        {{1,3,6,1,4,1,31865,9999,42,4,1}, 11, ASN_OCTET_STR, (void *)&s1, 0},
+        {{1,3,6,1,4,1,31865,9999,42,4,2}, 11, ASN_OCTET_STR, (void *)&s2, 0},
+        {{1,3,6,1,4,1,31865,9999,42,4,3}, 11, ASN_OCTET_STR, (void *)&s3, 0},
+        {{1,3,6,1,4,1,31865,9999,42,4,4}, 11, ASN_OCTET_STR, (void *)&s4, 0},
+        {{1,3,6,1,4,1,31865,9999,42,4,5}, 11, ASN_OCTET_STR, (void *)&s5, 0},
         {{0}, 0, 0, NULL},
     };
     ss = mp_snmp_init();
@@ -156,6 +163,54 @@ START_TEST (test_snmp_query_string) {
 }
 END_TEST
 
+START_TEST (test_snmp_query_string_pre) {
+    netsnmp_session *ss;
+    char *s1 = NULL;
+    char *s2 = NULL;
+    char *s3 = NULL;
+    char *s4 = NULL;
+    char *s5 = NULL;
+
+    s1 = mp_malloc(24);
+    s2 = mp_malloc(24);
+    s3 = strdup("FOOBAR");
+    s4 = mp_malloc(24);
+    s5 = mp_malloc(24);
+
+    mp_snmp_query_cmd snmpcmd[] = {
+        {{1,3,6,1,4,1,31865,9999,42,4,1}, 11, ASN_OCTET_STR, (void *)&s1, 0},
+        {{1,3,6,1,4,1,31865,9999,42,4,2}, 11, ASN_OCTET_STR, (void *)&s2, 0},
+        {{1,3,6,1,4,1,31865,9999,42,4,3}, 11, ASN_OCTET_STR, (void *)&s3, 0},
+        {{1,3,6,1,4,1,31865,9999,42,4,4}, 11, ASN_OCTET_STR, (void *)&s4, 0},
+        {{1,3,6,1,4,1,31865,9999,42,4,5}, 11, ASN_OCTET_STR, (void *)&s5, 0},
+        {{0}, 0, 0, NULL},
+    };
+    ss = mp_snmp_init();
+
+    mp_snmp_query(ss, snmpcmd);
+
+    fail_unless(strcmp(s1, "String1") == 0,
+            "DURCHMESSER-MIB::durchmesserExperimental.42.4.1 is not String1");
+    fail_unless(strcmp(s2, "String2") == 0,
+            "DURCHMESSER-MIB::durchmesserExperimental.42.4.2 is not String2");
+    fail_unless(strcmp(s3, "FOOBAR") == 0,
+            "DURCHMESSER-MIB::durchmesserExperimental.42.4.3 is not FOOBAR");
+    fail_unless(strcmp(s4, "String4") == 0,
+            "DURCHMESSER-MIB::durchmesserExperimental.42.4.4 is not String4");
+    fail_unless(strcmp(s5, "String5") == 0,
+            "DURCHMESSER-MIB::durchmesserExperimental.42.4.5 is not String5");
+
+    mp_snmp_deinit();
+
+    free(s1);
+    free(s2);
+    free(s3);
+    free(s4);
+    free(s5);
+}
+END_TEST
+
+
 START_TEST (test_snmp_query_counter) {
     netsnmp_session *ss;
     long int i1 = -1;
@@ -164,12 +219,17 @@ START_TEST (test_snmp_query_counter) {
     long int i4 = -1;
     long int i5 = -1;
 
-    struct mp_snmp_query_cmd snmpcmd[] = {
-        {{1,3,6,1,4,1,31865,9999,42,65,1}, 11, ASN_COUNTER, (void *)&i1},
-        {{1,3,6,1,4,1,31865,9999,42,65,2}, 11, ASN_COUNTER, (void *)&i2},
-        {{1,3,6,1,4,1,31865,9999,42,65,3}, 11, ASN_COUNTER, (void *)&i3},
-        {{1,3,6,1,4,1,31865,9999,42,65,4}, 11, ASN_COUNTER, (void *)&i4},
-        {{1,3,6,1,4,1,31865,9999,42,65,5}, 11, ASN_COUNTER, (void *)&i5},
+    mp_snmp_query_cmd snmpcmd[] = {
+        {{1,3,6,1,4,1,31865,9999,42,65,1}, 11,
+            ASN_COUNTER, (void *)&i1, sizeof(long int)},
+        {{1,3,6,1,4,1,31865,9999,42,65,2}, 11,
+            ASN_COUNTER, (void *)&i2, sizeof(long int)},
+        {{1,3,6,1,4,1,31865,9999,42,65,3}, 11,
+            ASN_COUNTER, (void *)&i3, sizeof(long int)},
+        {{1,3,6,1,4,1,31865,9999,42,65,4}, 11,
+            ASN_COUNTER, (void *)&i4, sizeof(long int)},
+        {{1,3,6,1,4,1,31865,9999,42,65,5}, 11,
+            ASN_COUNTER, (void *)&i5, sizeof(long int)},
         {{0}, 0, 0, NULL},
     };
     ss = mp_snmp_init();
@@ -198,12 +258,17 @@ START_TEST (test_snmp_query_gauge) {
     long int i4 = -1;
     long int i5 = -1;
 
-    struct mp_snmp_query_cmd snmpcmd[] = {
-        {{1,3,6,1,4,1,31865,9999,42,66,1}, 11, ASN_GAUGE, (void *)&i1},
-        {{1,3,6,1,4,1,31865,9999,42,66,2}, 11, ASN_GAUGE, (void *)&i2},
-        {{1,3,6,1,4,1,31865,9999,42,66,3}, 11, ASN_GAUGE, (void *)&i3},
-        {{1,3,6,1,4,1,31865,9999,42,66,4}, 11, ASN_GAUGE, (void *)&i4},
-        {{1,3,6,1,4,1,31865,9999,42,66,5}, 11, ASN_GAUGE, (void *)&i5},
+    mp_snmp_query_cmd snmpcmd[] = {
+        {{1,3,6,1,4,1,31865,9999,42,66,1}, 11,
+            ASN_GAUGE, (void *)&i1, sizeof(long int)},
+        {{1,3,6,1,4,1,31865,9999,42,66,2}, 11,
+            ASN_GAUGE, (void *)&i2, sizeof(long int)},
+        {{1,3,6,1,4,1,31865,9999,42,66,3}, 11,
+            ASN_GAUGE, (void *)&i3, sizeof(long int)},
+        {{1,3,6,1,4,1,31865,9999,42,66,4}, 11,
+            ASN_GAUGE, (void *)&i4, sizeof(long int)},
+        {{1,3,6,1,4,1,31865,9999,42,66,5}, 11,
+            ASN_GAUGE, (void *)&i5, sizeof(long int)},
         {{0}, 0, 0, NULL},
     };
     ss = mp_snmp_init();
@@ -236,14 +301,17 @@ int main (void) {
   tcase_add_test(tc, test_snmp_query_cmd);
   tcase_add_test(tc, test_snmp_query_int);
   tcase_add_test(tc, test_snmp_query_string);
+  tcase_add_test(tc, test_snmp_query_string_pre);
   tcase_add_test(tc, test_snmp_query_counter);
   tcase_add_test(tc, test_snmp_query_gauge);
   suite_add_tcase(s, tc);
 
   tc = tcase_create ("SNMPv2");
   tcase_add_unchecked_fixture(tc, snmp_replay_setup_v2, snmp_replay_teardown);
+  tcase_add_test(tc, test_snmp_query_cmd);
   tcase_add_test(tc, test_snmp_query_int);
   tcase_add_test(tc, test_snmp_query_string);
+  tcase_add_test(tc, test_snmp_query_string_pre);
   tcase_add_test(tc, test_snmp_query_counter);
   tcase_add_test(tc, test_snmp_query_gauge);
   suite_add_tcase(s, tc);

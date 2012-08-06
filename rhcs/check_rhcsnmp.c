@@ -59,7 +59,7 @@ int main (int argc, char **argv) {
     netsnmp_session *ss;
 
     /* OIDs to query */
-    struct mp_snmp_query_cmd snmpcmd[] = {
+    mp_snmp_query_cmd snmpcmd[] = {
         {{1,3,6,1,4,1,2312,8,2,1,0}, 11, ASN_OCTET_STR, (void *)&clustername},
         {{1,3,6,1,4,1,2312,8,2,2,0}, 11, ASN_INTEGER, (void *)&clusterstatus},
         {{1,3,6,1,4,1,2312,8,2,3,0}, 11, ASN_OCTET_STR, (void *)&clusterstatusdesc},

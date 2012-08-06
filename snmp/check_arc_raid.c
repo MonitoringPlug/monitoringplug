@@ -51,11 +51,13 @@ int         port = 161;
 int main (int argc, char **argv) {
     /* Local Vars */
     int         i;
+    int         rc = 0;
     char        *output = NULL;
+    char        *raid_state = NULL;
+    char        *raid_name = NULL;
     int         status = STATE_OK;
-    struct mp_snmp_table    table_state;
+    mp_snmp_subtree         table_state;
     netsnmp_session         *ss;
-    netsnmp_variable_list   *vars, *vars2;
 
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
@@ -72,12 +74,8 @@ int main (int argc, char **argv) {
     ss = mp_snmp_init();
 
     /* OIDs to query */
-    struct mp_snmp_query_cmd snmpcmd_table = {{1,3,6,1,4,1,18928,1,2,4,1}, 11, 0, (void *)&table_state};
-    table_state.row = 0;
-    table_state.col = 0;
-    table_state.var = NULL;
-
-    status = mp_snmp_table_query(ss, &snmpcmd_table, 8);
+    status = mp_snmp_subtree_fetch1(ss, MP_OID(1,3,6,1,4,1,18928,1,2,4,1),
+        &table_state);
     if (status != STAT_SUCCESS) {
         char *string;
         snmp_error(ss, NULL, NULL, &string);
@@ -88,30 +86,40 @@ int main (int argc, char **argv) {
 
     status = STATE_OK;
 
-    for (i = 0; i<table_state.row; i++) {
-        vars = mp_snmp_table_get(table_state, 3, i);
+    raid_state = mp_malloc(24);
+    raid_name = mp_malloc(64);
 
-        if (strcmp((char *)vars->val.string, "Normal") == 0) {
+    for (i = 0; i<table_state.size; i++) {
+        rc = mp_snmp_subtree_get_value1(&table_state,
+            MP_OID(1,3,6,1,4,1,18928,1,2,4,1,1,4), i,
+            ASN_OCTET_STR, (void *)&raid_state, 24);
+
+        if (rc == 0)
+            break;
+
+        if (strcmp(raid_state, "Normal") == 0) {
             continue;
         }
 
-        vars2 = mp_snmp_table_get(table_state, 1, i);
+        rc = mp_snmp_subtree_get_value1(&table_state,
+            MP_OID(1,3,6,1,4,1,18928,1,2,4,1,1,2), i,
+            ASN_OCTET_STR, (void *)&raid_name, 64);
 
-        char *t = (char *)(vars2->val.string + vars2->val_len - 1);
-        while (*t == ' ') {
-            *t = '\0';
-            t--;
-        }
-        t = (char *)malloc(7 + vars->val_len + vars2->val_len);
-        sprintf(t, "'%s' is %s", vars2->val.string, vars->val.string);
-        mp_strcat_comma(&output, t);
-        free(t);
+        mp_strcat_comma(&output, raid_name);
+        mp_strcat_space(&output, "is");
+        mp_strcat_space(&output, raid_state);
 
-        if (status == STATE_CRITICAL || strcmp((char *)vars->val.string, "Rebuilding") != 0)
+        if (status == STATE_CRITICAL || strcmp(raid_state, "Rebuilding") != 0)
             status = STATE_CRITICAL;
         else
             status = STATE_WARNING;
     }
+    free(raid_state);
+    free(raid_name);
+
+    if (i == 0)
+        unknown("ARC: No raid set found.");
+
     /* Output and return */
     if (status == STATE_OK)
         ok("ARC: All RAIDs in \"Normal\" state.");

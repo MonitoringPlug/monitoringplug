@@ -53,6 +53,9 @@ extern int mp_snmp_retries;
 /** Maps ifOperStatus to text. */
 extern char *ifOperStatusText[];
 
+/** Wrapper to simplify 'oid[], len' notation */
+#define MP_OID(...) (oid[]){__VA_ARGS__}, (sizeof((oid[]){__VA_ARGS__})/sizeof(oid))
+
 /** SNMP specific short option string. */
 #define SNMP_OPTSTR "C:S:L:U:K:A:a:X:T:R:"
 /** SNMP specific longopt struct. */
@@ -69,16 +72,18 @@ extern char *ifOperStatusText[];
 /**
  * SNMP Query struct
  */
-struct mp_snmp_query_cmd {
+typedef struct mp_snmp_query_cmd_s {
     /** OID name to query */
     oid oid[MAX_OID_LEN];
     /** OID lenght */
-    size_t len;
+    size_t oid_len;
     /** OID return type */
     u_char type;
     /** Pointer to store value in */
     void **target;
-};
+    /** size of target */
+    size_t target_len;
+} mp_snmp_query_cmd;
 
 /**
  * SNMP Table Query struct
@@ -91,6 +96,16 @@ struct mp_snmp_table {
     /** Table data count */
     netsnmp_variable_list **var;
 };
+
+/**
+ * SNMP subtree struct
+ */
+typedef struct {
+    /** subtree size */
+    size_t size;
+    /** subtree data */
+    netsnmp_variable_list **vars;
+} mp_snmp_subtree;
 
 /**
  * Init the Net-SNMP library and return a new session.
@@ -109,7 +124,7 @@ void mp_snmp_deinit(void);
  * \param[in|out] querycmd Query commands
  * \return return a status value like snmp.
  */
-int mp_snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd);
+int mp_snmp_query(netsnmp_session *ss, const mp_snmp_query_cmd *querycmd);
 
 /**
  * Run table query for querycmd and save mp_snmp_table to pointer in querycmd.
@@ -117,7 +132,7 @@ int mp_snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd)
  * \param[in|out] querycmd Table query command
  * \return return a status value like snmp.
  */
-int mp_snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd, int cols);
+int mp_snmp_table_query(netsnmp_session *ss, const mp_snmp_query_cmd *querycmd, int cols);
 
 
 /**
@@ -128,12 +143,7 @@ int mp_snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *que
  */
 netsnmp_variable_list *mp_snmp_table_get(const struct mp_snmp_table table, int x, int y);
 
-#define MP_OID(...) {__VA_ARGS__}, (sizeof((oid[]){__VA_ARGS__})/sizeof(oid))
 
-
-/**
- * a list OID to be fetched and where to store results
- */
 typedef struct {
     /** OID name */
     const char *oid;
@@ -145,32 +155,6 @@ typedef struct {
     size_t target_len;
 } mp_snmp_value;
 
-
-typedef struct {
-    /** OID name */
-    oid oid[MAX_OID_LEN];
-    /** length of OID */
-    size_t oid_len;
-    /** expected OID type */
-    u_char type;
-    /** pointer to store OID value in */
-    void **target;
-    /** size of target */
-    size_t target_len;
-} mp_snmp_value_oid;
-
-
-/**
- * a OID subtree
- */
-typedef struct {
-    /** subtree size */
-    size_t size;
-    /** subtree data */
-    netsnmp_variable_list **vars;
-} mp_snmp_subtree;
-
-
 /**
  * Fetch all OIDs given in values and save results to target pointer
  * given in values.
@@ -180,7 +164,7 @@ typedef struct {
  * \return returns STAT_SUCESS on success, other value otherwise
  */
 int mp_snmp_values_fetch1(netsnmp_session *ss,
-                          const mp_snmp_value_oid *values);
+                          const mp_snmp_query_cmd *values);
 
 
 /**

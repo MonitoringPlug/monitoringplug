@@ -42,6 +42,14 @@ const char *progusage = "--hostname <HOSTNAME>";
 #include <net-snmp/net-snmp-config.h>
 #include <net-snmp/net-snmp-includes.h>
 
+/* Global Enums */
+enum {
+    HDD_Ready = 0,
+    HDD_NoDisk = -5,
+    HDD_Invalid = -6,
+    HDD_RWError = -9,
+    HDD_Unknown = -4,
+};
 
 /* Global Vars */
 const char  *hostname = NULL;
@@ -50,11 +58,13 @@ int         port = 161;
 int main (int argc, char **argv) {
     /* Local Vars */
     int         i;
+    int         rc = 0;
     char        *output = NULL;
+    long int    disk_state;
+    char        *disk_name;
     int         status = STATE_OK;
-    struct mp_snmp_table    table_state;
+    mp_snmp_subtree         table_state;
     netsnmp_session         *ss;
-    netsnmp_variable_list   *vars, *vars2;
 
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
@@ -71,56 +81,61 @@ int main (int argc, char **argv) {
     ss = mp_snmp_init();
 
     /* OIDs to query */
-    struct mp_snmp_query_cmd snmpcmd_table = {{1,3,6,1,4,1,24681,1,2,11}, 10, 0, (void *)&table_state};
-    table_state.row = 0;
-    table_state.col = 0;
-    table_state.var = NULL;
-
-    status = mp_snmp_table_query(ss, &snmpcmd_table, 7);
+    status = mp_snmp_subtree_fetch1(ss, MP_OID(1,3,6,1,4,1,24681,1,2,11),
+        &table_state);
     if (status != STAT_SUCCESS) {
         char *string;
         snmp_error(ss, NULL, NULL, &string);
-        printf("Error fetching table: %s", string);
+        unknown("QNAP: Error fetching table: %s", string);
     }
 
     mp_snmp_deinit();
 
     status = STATE_OK;
 
-    for (i = 0; i<table_state.row; i++) {
-        vars = mp_snmp_table_get(table_state, 3, i);
+    disk_name = mp_malloc(64);
 
-        if (*vars->val.integer == 0) {
+    for (i = 0; i<table_state.size; i++) {
+        rc = mp_snmp_subtree_get_value1(&table_state,
+            MP_OID(1,3,6,1,4,1,24681,1,2,11,1,4), i,
+            ASN_INTEGER, (void *)&disk_state, sizeof(long int));
+
+        if (rc == 0)
+            break;
+
+        if (disk_state == HDD_Ready)
             continue;
-        }
 
-        vars2 = mp_snmp_table_get(table_state, 1, i);
-        char *t;
+        mp_snmp_subtree_get_value1(&table_state,
+            MP_OID(1,3,6,1,4,1,24681,1,2,11,1,2), i,
+            ASN_OCTET_STR, (void *)&disk_name, 64);
 
-        switch ((int)*vars->val.integer) {
-            case -5:
-                t = (char *)malloc(9 + vars2->val_len);
-                sprintf(t, "%s missing", vars2->val.string);
+        mp_strcat_comma(&output, disk_name);
+
+        switch (disk_state) {
+            case HDD_NoDisk:
+                mp_strcat_space(&output, "missing");
                 break;
-            case -6:
-                t = (char *)malloc(9 + vars2->val_len);
-                sprintf(t, "%s invalid", vars2->val.string);
+            case HDD_Invalid:
+                mp_strcat_space(&output, "invalid");
                 break;
-            case -9:
-                t = (char *)malloc(11 + vars2->val_len);
-                sprintf(t, "%s r/w-error", vars2->val.string);
+            case HDD_RWError:
+                mp_strcat_space(&output, "r/w-error");
                 break;
-            case -4:
+            case HDD_Unknown:
             default:
-                t = (char *)malloc(9 + vars2->val_len);
-                sprintf(t, "%s unknown", vars2->val.string);
+                mp_strcat_space(&output, "unknown");
                 break;
         }
 
-        mp_strcat_comma(&output, t);
-        free(t);
         status = STATE_CRITICAL;
     }
+
+    free(disk_name);
+
+    if (i == 0)
+        unknown("QNAP: No Disks found.");
+
     /* Output and return */
     if (status == STATE_OK)
         ok("QNAP: All Disks \"GOOD\"");

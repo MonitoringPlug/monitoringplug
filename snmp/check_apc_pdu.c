@@ -55,10 +55,12 @@ int main (int argc, char **argv) {
     int         status = STATE_OK;
     long        pdu_psu1 = -1;
     long        pdu_psu2 = -1;
+    long int    outlet_state;
+    char        *outlet_name;
     int         i;
-    struct mp_snmp_table    table_state;
+    int         rc = 0;
+    mp_snmp_subtree         table_state;
     netsnmp_session         *ss;
-    netsnmp_variable_list   *vars;
 
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
@@ -74,17 +76,20 @@ int main (int argc, char **argv) {
     ss = mp_snmp_init();
 
     /* OIDs to query */
-    struct mp_snmp_query_cmd snmpcmd[] = {
-        {{1,3,6,1,4,1,318,1,1,12,4,1,1,0}, 14, ASN_INTEGER, (void *)&pdu_psu1},
-        {{1,3,6,1,4,1,318,1,1,12,4,1,2,0}, 14, ASN_INTEGER, (void *)&pdu_psu2},
-        {{1,3,6,1,2,1,1,5,0}, 9, ASN_OCTET_STR, (void *)&pdu_name},
+    mp_snmp_query_cmd snmpcmd[] = {
+        {{1,3,6,1,4,1,318,1,1,12,4,1,1,0}, 14,
+            ASN_INTEGER, (void *)&pdu_psu1, sizeof(long int)},
+        {{1,3,6,1,4,1,318,1,1,12,4,1,2,0}, 14,
+            ASN_INTEGER, (void *)&pdu_psu2, sizeof(long int)},
+        {{1,3,6,1,2,1,1,5,0}, 9,
+            ASN_OCTET_STR, (void *)&pdu_name, 0},
         {{0}, 0, 0, 0},
     };
-    struct mp_snmp_query_cmd snmpcmd_table = {{1,3,6,1,4,1,318,1,1,12,3,5,1}, 13, 0, (void *)&table_state};
 
     mp_snmp_query(ss, snmpcmd);
 
-    mp_snmp_table_query(ss, &snmpcmd_table, 7);
+    mp_snmp_subtree_fetch1(ss, MP_OID(1,3,6,1,4,1,318,1,1,12,3,5,1),
+        &table_state);
 
     mp_snmp_deinit();
 
@@ -97,21 +102,26 @@ int main (int argc, char **argv) {
         output = strdup("Power Supply 2 Failed!");
     }
 
+    outlet_name = mp_malloc(64);
+
     if (stateOn == NULL && stateOff == NULL) {
         // Check all outlets for on.
-        for (i = 0; i<table_state.row; i++) {
-            vars = mp_snmp_table_get(table_state, 3, i);
+        long int outlet_state;
+        for (i = 0; i<table_state.size; i++) {
+            rc = mp_snmp_subtree_get_value1(&table_state,
+                MP_OID(1,3,6,1,4,1,318,1,1,12,3,5,1,1,4), i,
+                ASN_INTEGER, (void *)&outlet_state, sizeof(long int));
+            
+            if (rc != 1)
+                break;
 
-            if (*vars->val.integer != 1) {
-                vars = mp_snmp_table_get(table_state, 1, i);
+            if (outlet_state != 1) {
+                mp_snmp_subtree_get_value1(&table_state,
+                    MP_OID(1,3,6,1,4,1,318,1,1,12,3,5,1,1,2), i,
+                    ASN_OCTET_STR, (void *)&outlet_name, 64);
 
-                char *t = (char *)malloc(9 + vars->val_len);
-                memcpy(t, vars->val.string, vars->val_len);
-                t[vars->val_len] = '\0';
-                strcat(t, " is off!");
-
-                mp_strcat_space(&output, t);
-                free(t);
+                mp_strcat_space(&output, outlet_name);
+                mp_strcat_space(&output, " is off!");
                 status = STATE_CRITICAL;
             }
         }
@@ -122,27 +132,42 @@ int main (int argc, char **argv) {
             while((c = strsep(&s, ","))) {
                 i = strtol(c, NULL, 10);
                 if (i == 0) {
-                    for (i = 0; i<table_state.row; i++) {
-                        vars = mp_snmp_table_get(table_state, 1, i);
-                        if (strcmp(c, (char*)vars->val.string) == 0)
+                    for (i = 0; i<table_state.size; i++) {
+                        rc = mp_snmp_subtree_get_value1(&table_state,
+                            MP_OID(1,3,6,1,4,1,318,1,1,12,3,5,1,1,2), i,
+                            ASN_OCTET_STR, (void *)&outlet_name, 64);
+
+                        if (rc == 0 || strcmp(c, outlet_name) == 0)
                             break;
+                    }
+                    if (rc == 0) {
+                        mp_strcat_space(&output, c);
+                        mp_strcat_space(&output, " not found!");
+                        status = status == STATE_OK ? STATE_UNKNOWN : status;
+                        continue;
                     }
                 } else {
                     i--;
                 }
-                if (i >= table_state.row)
+                    
+                rc = mp_snmp_subtree_get_value1(&table_state,
+                    MP_OID(1,3,6,1,4,1,318,1,1,12,3,5,1,1,4), i,
+                    ASN_INTEGER, (void *)&outlet_state, sizeof(long int));
+
+                if (rc == 0) {
+                    mp_strcat_space(&output, c);
+                    mp_strcat_space(&output, " not found!");
+                    status = status == STATE_OK ? STATE_UNKNOWN : status;
                     continue;
+                }
 
-                vars = mp_snmp_table_get(table_state, 3, i);
-                if (*vars->val.integer != 1) {
-                    vars = mp_snmp_table_get(table_state, 1, i);
+                if (outlet_state != 1) {
+                    mp_snmp_subtree_get_value1(&table_state,
+                        MP_OID(1,3,6,1,4,1,318,1,1,12,3,5,1,1,2), i,
+                        ASN_OCTET_STR, (void *)&outlet_name, 64);
 
-                    char *t = (char *)malloc(9 + vars->val_len);
-                    memcpy(t, vars->val.string, vars->val_len);
-                    t[vars->val_len] = '\0';
-                    strcat(t, " is off!");
-                    mp_strcat_space(&output, t);
-                    free(t);
+                    mp_strcat_space(&output, outlet_name);
+                    mp_strcat_space(&output, " is off!");
                     status = STATE_CRITICAL;
                 }
             }
@@ -154,27 +179,42 @@ int main (int argc, char **argv) {
             while((c = strsep(&s, ","))) {
                 i = strtol(c, NULL, 10);
                 if (i == 0) {
-                    for (i = 0; i<table_state.row; i++) {
-                        vars = mp_snmp_table_get(table_state, 1, i);
-                        if (strcmp(c, (char*)vars->val.string) == 0)
+                    for (i = 0; i<table_state.size; i++) {
+                        rc = mp_snmp_subtree_get_value1(&table_state,
+                            MP_OID(1,3,6,1,4,1,318,1,1,12,3,5,1,1,2), i,
+                            ASN_OCTET_STR, (void *)&outlet_name, 64);
+
+                        if (rc == 0 || strcmp(c, outlet_name) == 0)
                             break;
+                    }
+                    if (rc == 0) {
+                        mp_strcat_space(&output, c);
+                        mp_strcat_space(&output, " not found!");
+                        status = status == STATE_OK ? STATE_UNKNOWN : status;
+                        continue;
                     }
                 } else {
                     i--;
                 }
-                if (i >= table_state.row)
+
+                rc = mp_snmp_subtree_get_value1(&table_state,
+                    MP_OID(1,3,6,1,4,1,318,1,1,12,3,5,1,1,4), i,
+                    ASN_INTEGER, (void *)&outlet_state, sizeof(long int));
+
+                if (rc == 0) {
+                    mp_strcat_space(&output, c);
+                    mp_strcat_space(&output, " not found!");
+                    status = status == STATE_OK ? STATE_UNKNOWN : status;
                     continue;
+                }
 
-                vars = mp_snmp_table_get(table_state, 3, i);
-                if (*vars->val.integer != 2) {
-                    vars = mp_snmp_table_get(table_state, 1, i);
+                if (outlet_state != 2) {
+                    mp_snmp_subtree_get_value1(&table_state,
+                        MP_OID(1,3,6,1,4,1,318,1,1,12,3,5,1,1,2), i,
+                        ASN_OCTET_STR, (void *)&outlet_name, 64);
 
-                    char *t = (char *)malloc(9 + vars->val_len);
-                    memcpy(t, vars->val.string, vars->val_len);
-                    t[vars->val_len] = '\0';
-                    strcat(t, " is on!");
-                    mp_strcat_space(&output, t);
-                    free(t);
+                    mp_strcat_space(&output, outlet_name);
+                    mp_strcat_space(&output, " is on!");
                     status = STATE_CRITICAL;
                 }
             }
@@ -182,11 +222,15 @@ int main (int argc, char **argv) {
         }
     }
 
+    free(outlet_name);
+
     /* Output and return */
     if (status == STATE_OK)
         ok("APC PDU %s", pdu_name);
     if (status == STATE_WARNING)
         warning("APC PDU %s [%s]", pdu_name, output);
+    if (status == STATE_UNKNOWN)
+        unknown("APC PDU %s [%s]", pdu_name, output);
     critical("APC PDU %s [%s]", pdu_name, output);
 }
 

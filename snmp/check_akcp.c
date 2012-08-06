@@ -92,19 +92,29 @@ int main (int argc, char **argv) {
         /* Query Temp */
         if (sensor_temp != 0) {
             long int temp;
-            long int temp_warn_high, temp_crit_high, temp_warn_low, temp_crit_low;
+            long int temp_warn_high, temp_crit_high;
+            long int temp_warn_low, temp_crit_low;
             long int temp_unit;
 
-            struct mp_snmp_query_cmd snmpcmd[] = {
-                {{1,3,6,1,4,1,3854,1,2,2,1,16,1,1,idx}, 15,  ASN_OCTET_STR, (void *)&name},
-                {{1,3,6,1,4,1,3854,1,2,2,1,16,1,3,idx}, 15,  ASN_INTEGER,   (void *)&temp},
-                {{1,3,6,1,4,1,3854,1,2,2,1,16,1,4,idx}, 15,  ASN_INTEGER,   (void *)&sensor_state},
-                {{1,3,6,1,4,1,3854,1,2,2,1,16,1,5,idx}, 15,  ASN_INTEGER,   (void *)&sensor_online},
-                {{1,3,6,1,4,1,3854,1,2,2,1,16,1,7,idx}, 15,  ASN_INTEGER,   (void *)&temp_warn_high},
-                {{1,3,6,1,4,1,3854,1,2,2,1,16,1,8,idx}, 15,  ASN_INTEGER,   (void *)&temp_crit_high},
-                {{1,3,6,1,4,1,3854,1,2,2,1,16,1,9,idx}, 15,  ASN_INTEGER,   (void *)&temp_warn_low},
-                {{1,3,6,1,4,1,3854,1,2,2,1,16,1,10,idx}, 15, ASN_INTEGER,   (void *)&temp_crit_low},
-                {{1,3,6,1,4,1,3854,1,2,2,1,16,1,12,idx}, 15, ASN_INTEGER,   (void *)&temp_unit},
+            mp_snmp_query_cmd snmpcmd[] = {
+                {{1,3,6,1,4,1,3854,1,2,2,1,16,1,1,idx}, 15,
+                    ASN_OCTET_STR, (void *)&name, 0},
+                {{1,3,6,1,4,1,3854,1,2,2,1,16,1,3,idx}, 15,
+                    ASN_INTEGER,   (void *)&temp, sizeof(long int)},
+                {{1,3,6,1,4,1,3854,1,2,2,1,16,1,4,idx}, 15,
+                    ASN_INTEGER,   (void *)&sensor_state, sizeof(long int)},
+                {{1,3,6,1,4,1,3854,1,2,2,1,16,1,5,idx}, 15,
+                    ASN_INTEGER,   (void *)&sensor_online, sizeof(long int)},
+                {{1,3,6,1,4,1,3854,1,2,2,1,16,1,7,idx}, 15,
+                    ASN_INTEGER,   (void *)&temp_warn_high, sizeof(long int)},
+                {{1,3,6,1,4,1,3854,1,2,2,1,16,1,8,idx}, 15,
+                    ASN_INTEGER,   (void *)&temp_crit_high, sizeof(long int)},
+                {{1,3,6,1,4,1,3854,1,2,2,1,16,1,9,idx}, 15,
+                    ASN_INTEGER,   (void *)&temp_warn_low, sizeof(long int)},
+                {{1,3,6,1,4,1,3854,1,2,2,1,16,1,10,idx}, 15,
+                    ASN_INTEGER,   (void *)&temp_crit_low, sizeof(long int)},
+                {{1,3,6,1,4,1,3854,1,2,2,1,16,1,12,idx}, 15,
+                    ASN_INTEGER,   (void *)&temp_unit, sizeof(long int)},
                 {{0}, 0, 0, NULL},
             };
 
@@ -198,17 +208,26 @@ int main (int argc, char **argv) {
         sensor_online = 0;
         if (sensor_hum != 0) {
             long int    hum;
-            long int    hum_warn_high, hum_crit_high, hum_warn_low, hum_crit_low;
+            long int    hum_warn_high, hum_crit_high;
+            long int hum_warn_low, hum_crit_low;
 
-            struct mp_snmp_query_cmd snmpcmd[] = {
-                {{1,3,6,1,4,1,3854,1,2,2,1,17,1,1,idx}, 15,  ASN_OCTET_STR, (void *)&name},
-                {{1,3,6,1,4,1,3854,1,2,2,1,17,1,3,idx}, 15,  ASN_INTEGER,   (void *)&hum},
-                {{1,3,6,1,4,1,3854,1,2,2,1,17,1,4,idx}, 15,  ASN_INTEGER,   (void *)&sensor_state},
-                {{1,3,6,1,4,1,3854,1,2,2,1,17,1,5,idx}, 15,  ASN_INTEGER,   (void *)&sensor_online},
-                {{1,3,6,1,4,1,3854,1,2,2,1,17,1,7,idx}, 15,  ASN_INTEGER,   (void *)&hum_warn_high},
-                {{1,3,6,1,4,1,3854,1,2,2,1,17,1,8,idx}, 15,  ASN_INTEGER,   (void *)&hum_crit_high},
-                {{1,3,6,1,4,1,3854,1,2,2,1,17,1,9,idx}, 15,  ASN_INTEGER,   (void *)&hum_warn_low},
-                {{1,3,6,1,4,1,3854,1,2,2,1,17,1,10,idx}, 15, ASN_INTEGER,   (void *)&hum_crit_low},
+            mp_snmp_query_cmd snmpcmd[] = {
+                {{1,3,6,1,4,1,3854,1,2,2,1,17,1,1,idx}, 15,
+                    ASN_OCTET_STR, (void *)&name},
+                {{1,3,6,1,4,1,3854,1,2,2,1,17,1,3,idx}, 15,
+                    ASN_INTEGER,   (void *)&hum, sizeof(long int)},
+                {{1,3,6,1,4,1,3854,1,2,2,1,17,1,4,idx}, 15,
+                    ASN_INTEGER,   (void *)&sensor_state, sizeof(long int)},
+                {{1,3,6,1,4,1,3854,1,2,2,1,17,1,5,idx}, 15,
+                    ASN_INTEGER,   (void *)&sensor_online, sizeof(long int)},
+                {{1,3,6,1,4,1,3854,1,2,2,1,17,1,7,idx}, 15,
+                    ASN_INTEGER,   (void *)&hum_warn_high, sizeof(long int)},
+                {{1,3,6,1,4,1,3854,1,2,2,1,17,1,8,idx}, 15,
+                    ASN_INTEGER,   (void *)&hum_crit_high, sizeof(long int)},
+                {{1,3,6,1,4,1,3854,1,2,2,1,17,1,9,idx}, 15,
+                    ASN_INTEGER,   (void *)&hum_warn_low, sizeof(long int)},
+                {{1,3,6,1,4,1,3854,1,2,2,1,17,1,10,idx}, 15,
+                    ASN_INTEGER,   (void *)&hum_crit_low, sizeof(long int)},
                 {{0}, 0, 0, NULL},
             };
 

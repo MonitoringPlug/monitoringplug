@@ -108,7 +108,7 @@ int main (int argc, char **argv) {
     char            buf[64];
     netsnmp_session *snmp_session;
 
-    struct mp_snmp_query_cmd snmpcmd[] = {
+    mp_snmp_query_cmd snmpcmd[] = {
         {{1,3,6,1,2,1,33,1,1,5,0}, 11, ASN_OCTET_STR,
          (void *)&ups_ident},
         {{1,3,6,1,2,1,33,1,2,1,0}, 11, ASN_INTEGER,

@@ -33,6 +33,10 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+/* Local functions */
+static int copy_value(const netsnmp_variable_list *var, const u_char type,
+                      size_t target_len, void **target);
+
 char *mp_snmp_community;
 int mp_snmp_version = SNMP_VERSION_2c;
 int mp_snmp_seclevel;
@@ -134,18 +138,18 @@ void mp_snmp_deinit(void) {
 }
 
 
-int mp_snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd) {
+int mp_snmp_query(netsnmp_session *ss, const mp_snmp_query_cmd *querycmd) {
 
     netsnmp_pdu *pdu;
     netsnmp_pdu *response;
     netsnmp_variable_list *vars;
     int status;
-    const struct mp_snmp_query_cmd *p;
+    const mp_snmp_query_cmd *p;
 
     pdu = snmp_pdu_create(SNMP_MSG_GET);
 
-    for(p = querycmd; p->len; p++) {
-        snmp_add_null_var(pdu, p->oid, p->len);
+    for(p = querycmd; p->oid_len; p++) {
+        snmp_add_null_var(pdu, p->oid, p->oid_len);
     }
 
     /* Send the SNMP Query */
@@ -153,7 +157,8 @@ int mp_snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd)
         status = snmp_synch_response(ss, pdu, &response);
 
         if (mp_verbose > 3)
-            printf("snmp_synch_response:%d pduerr:%ld\n", status, response->errstat);
+            printf("snmp_synch_response:%d pduerr:%ld\n", status,
+                   response->errstat);
 
         if (status == STAT_SUCCESS && response->errindex == 0)
             break;
@@ -176,34 +181,10 @@ int mp_snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd)
                     vars->type == SNMP_NOSUCHINSTANCE ||
                     vars->type == SNMP_ENDOFMIBVIEW)
                 continue;
-            for(p = querycmd; p->len; p++) {
-                if (snmp_oid_compare(vars->name, vars->name_length, p->oid, p->len) == 0) {
-                    if (vars->type != p->type) {
-                        if (mp_verbose > 1)
-                            printf("TYPE Missmatch 0x%X ~ 0x%X\n", vars->type, p->type);
-                        *p->target = NULL;
-                        break;
-                    }
-                    switch(vars->type) {
-                        case ASN_INTEGER:       // 0x02
-                        case ASN_TIMETICKS:
-                            *(p->target) = (void *)(*vars->val.integer);
-                            break;
-                        case ASN_OCTET_STR: {   // 0x04
-                            char *t = (char *)mp_malloc(1 + vars->val_len);
-                            memcpy(t, vars->val.string, vars->val_len);
-                            t[vars->val_len] = '\0';
-
-                            *p->target = (void*)t;}
-                            break;
-                        case ASN_COUNTER:       // 0x41
-                        case ASN_GAUGE:         // 0x42
-                            *(p->target) = (void *)(*vars->val.integer);
-                            break;
-                        default:
-                            printf("Unknown Var type: 0x%X\n", vars->type);
-
-                    }
+            for(p = querycmd; p->oid_len; p++) {
+                if (snmp_oid_compare(vars->name, vars->name_length,
+                                     p->oid, p->oid_len) == 0) {
+                    copy_value(vars, p->type, p->target_len, p->target);
                     break;
                 }
             }
@@ -225,7 +206,7 @@ int mp_snmp_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd)
     return status;
 }
 
-int mp_snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *querycmd, int cols) {
+int mp_snmp_table_query(netsnmp_session *ss, const mp_snmp_query_cmd *querycmd, int cols) {
     netsnmp_pdu *pdu;
     netsnmp_pdu *response;
     netsnmp_variable_list *vars, *last_var;
@@ -242,8 +223,8 @@ int mp_snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *que
     table->col = cols;
     table->var = NULL;
 
-    memcpy(current_oid, querycmd->oid, querycmd->len * sizeof(oid));
-    current_len = querycmd->len;
+    memcpy(current_oid, querycmd->oid, querycmd->oid_len * sizeof(oid));
+    current_len = querycmd->oid_len;
     status = STAT_SUCCESS;
 
     while(status == STAT_SUCCESS) {
@@ -260,10 +241,13 @@ int mp_snmp_table_query(netsnmp_session *ss, const struct mp_snmp_query_cmd *que
 
         status = snmp_synch_response(ss, pdu, &response);
 
-        if (status == STAT_SUCCESS && response->errstat == SNMP_ERR_NOERROR && response->variables != NULL) {
+        if (status == STAT_SUCCESS && response->errstat == SNMP_ERR_NOERROR
+            && response->variables != NULL) {
             for(last_var = vars = response->variables; vars; last_var=vars, vars = vars->next_variable) {
                 /* Check for leafing of subtree */
-                if (snmp_oid_ncompare(querycmd->oid, querycmd->len, vars->name, vars->name_length, querycmd->len) != 0) {
+                if (snmp_oid_ncompare(querycmd->oid, querycmd->oid_len,
+                                      vars->name, vars->name_length,
+                                      querycmd->oid_len) != 0) {
                     snmp_free_pdu(response);
                     table->row = index/cols;
                     return status;
@@ -310,17 +294,12 @@ netsnmp_variable_list *mp_snmp_table_get(const struct mp_snmp_table table, int x
 }
 
 
-/* forward declaration */
-static int copy_value(const netsnmp_variable_list *var, const u_char type,
-                      size_t target_len, void **target);
-
-
 int mp_snmp_values_fetch1(netsnmp_session *ss,
-                          const mp_snmp_value_oid *values) {
+                          const mp_snmp_query_cmd *values) {
     netsnmp_pdu *request;
     netsnmp_pdu *response;
     const netsnmp_variable_list *var;
-    const mp_snmp_value_oid *vp;
+    const mp_snmp_query_cmd *vp;
     int rc;
 
     /*
@@ -415,16 +394,16 @@ int mp_snmp_values_fetch1(netsnmp_session *ss,
 int mp_snmp_values_fetch2(netsnmp_session *ss,
                           const mp_snmp_value *values) {
     const mp_snmp_value *vp1;
-    mp_snmp_value_oid *vp2;
+    mp_snmp_query_cmd *vp2;
     size_t count;
-    mp_snmp_value_oid *oid_values = NULL;
+    mp_snmp_query_cmd *oid_values = NULL;
     int rc = 0;
 
     for (count = 0, vp1 = values; vp1->oid; vp1++, count++)
         ;
 
-    oid_values = (mp_snmp_value_oid *)
-        mp_malloc(count * sizeof(mp_snmp_value_oid));
+    oid_values = (mp_snmp_query_cmd *)
+        mp_malloc(count * sizeof(mp_snmp_query_cmd));
 
     for (vp1 = values, vp2 = oid_values; vp1->oid; vp1++, vp2++) {
         vp2->oid_len = MAX_OID_LEN;
@@ -451,17 +430,17 @@ int mp_snmp_values_fetch3(netsnmp_session *ss,
 
     va_list ap;
     const mp_snmp_value *vp1;
-    mp_snmp_value_oid *vp2;
+    mp_snmp_query_cmd *vp2;
     size_t count;
     char formatted_oid[1024];
-    mp_snmp_value_oid *oid_values = NULL;
+    mp_snmp_query_cmd *oid_values = NULL;
     int rc = 0;
 
     for (count = 0, vp1 = values; vp1->oid; vp1++, count++)
         ;
 
-    oid_values = (mp_snmp_value_oid *)
-        mp_malloc(count * sizeof(mp_snmp_value_oid));
+    oid_values = (mp_snmp_query_cmd *)
+        mp_malloc(count * sizeof(mp_snmp_query_cmd));
 
     for (vp1 = values, vp2 = oid_values; vp1->oid; vp1++, vp2++) {
         va_start(ap, values);
@@ -489,11 +468,11 @@ int mp_snmp_values_fetch3(netsnmp_session *ss,
 
 int mp_snmp_subtree_fetch1(netsnmp_session *ss,
                            const oid *subtree_oid,
-                           const size_t subtree_oid_len,
+                           const size_t subtree_len,
                            mp_snmp_subtree *subtree) {
 
     oid last_oid[MAX_OID_LEN];
-    size_t last_oid_len;
+    size_t last_len;
     netsnmp_pdu *request  = NULL;
     netsnmp_pdu *response = NULL;
     netsnmp_variable_list *var;
@@ -504,8 +483,8 @@ int mp_snmp_subtree_fetch1(netsnmp_session *ss,
     memset(subtree, '\0', sizeof(subtree));
     subtree->vars = NULL;
 
-    memcpy(last_oid, subtree_oid, subtree_oid_len * sizeof(oid));
-    last_oid_len = subtree_oid_len;
+    memcpy(last_oid, subtree_oid, subtree_len * sizeof(oid));
+    last_len = subtree_len;
 
     for (;;) {
         /*
@@ -518,7 +497,7 @@ int mp_snmp_subtree_fetch1(netsnmp_session *ss,
             request->non_repeaters   = 0;
             request->max_repetitions = 16;
         }
-        snmp_add_null_var(request, last_oid, last_oid_len);
+        snmp_add_null_var(request, last_oid, last_len);
 
         /*
          * commence request
@@ -531,7 +510,7 @@ int mp_snmp_subtree_fetch1(netsnmp_session *ss,
         if (mp_verbose > 2) {
             char buf[128];
 
-            snprint_objid((char *) &buf, sizeof(buf), last_oid, last_oid_len);
+            snprint_objid((char *) &buf, sizeof(buf), last_oid, last_len);
             printf("Fetching next from OID %s\n", buf);
         }
 
@@ -547,12 +526,13 @@ int mp_snmp_subtree_fetch1(netsnmp_session *ss,
                  * loop over results (may only be one result in case of SNMP v1)
                  */
                 for (var = response->variables; var; var = var->next_variable) {
+
                     /*
                      * check, if OIDs are incresing to prevent infinite
                      * loop with broken SNMP agents
                      */
                     if (snmp_oidtree_compare(var->name, var->name_length,
-                                             last_oid, last_oid_len) < 0) {
+                                             last_oid, last_len) < 0) {
                         if (response)
                             snmp_free_pdu(response);
 
@@ -566,10 +546,11 @@ int mp_snmp_subtree_fetch1(netsnmp_session *ss,
                      */
                     if ((var->type == SNMP_ENDOFMIBVIEW) ||
                         (snmp_oidtree_compare(subtree_oid,
-                                              subtree_oid_len,
+                                              subtree_len,
                                               var->name,
                                               var->name_length) != 0)) {
-                        goto done;
+                        snmp_free_pdu(response);
+                        return rc;
                     }
 
                     if (mp_verbose > 2)
@@ -596,7 +577,7 @@ int mp_snmp_subtree_fetch1(netsnmp_session *ss,
                      */
                     memcpy(last_oid, var->name,
                            var->name_length * sizeof(oid));
-                    last_oid_len = var->name_length;
+                    last_len = var->name_length;
                 } /* for */
             } else if ((ss->version == SNMP_VERSION_1) &&
                        (response->errstat == SNMP_ERR_NOSUCHNAME)) {
@@ -611,16 +592,16 @@ int mp_snmp_subtree_fetch1(netsnmp_session *ss,
                            response->errstat);
 
                 rc = STAT_ERROR;
-                goto done;
+                //goto done;
+                break;
             }
         } else {
             /* no response, assume an error */
             rc = STAT_ERROR;
             break;
         }
-    } /* for */
+    }
 
- done:
     if (response)
         snmp_free_pdu(response);
 
@@ -743,8 +724,8 @@ static int copy_value(const netsnmp_variable_list *var, const u_char type,
         if (mp_verbose > 1)
             printf("TYPE Mismatch: 0x%X ~ 0x%X\n", var->type, type);
         return 0;
-    } else {
-        switch(var->type) {
+    }
+    switch(var->type) {
         case ASN_INTEGER:       // 0x02
             /* FALL-TROUGH */
         case ASN_COUNTER:       // 0x41
@@ -764,8 +745,6 @@ static int copy_value(const netsnmp_variable_list *var, const u_char type,
             break;
         case ASN_OCTET_STR:    // 0x04
             {
-                char *buffer;
-
                 if (target_len > 0) {
                     if ((var->val_len + 1) > target_len) {
                         if (mp_verbose > 1)
@@ -774,20 +753,19 @@ static int copy_value(const netsnmp_variable_list *var, const u_char type,
                                    target_len, var->val_len);
                         return 0;
                     }
-                    buffer = (char *) target;
                 } else {
+                    char *buffer;
                     buffer = mp_malloc(var->val_len + 1);
                     *target = (void*) buffer;
                 }
-                memcpy(buffer, var->val.string, var->val_len);
-                buffer[var->val_len] = '\0';
+                memcpy(*target, var->val.string, var->val_len);
+                ((char *) *target)[var->val_len] = '\0';
             }
             break;
         default:
             printf("TYPE Mismatch: unexpected type 0x%X\n", var->type);
             return 0;
-        } /* switch */
-    }
+    } /* switch */
     return 1;
 }
 

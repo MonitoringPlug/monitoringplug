@@ -74,20 +74,30 @@ int main (int argc, char **argv) {
     ss = mp_snmp_init();
 
     /* OIDs to query */
-    struct mp_snmp_query_cmd snmpcmd[] = {
-        {{1,3,6,1,2,1,2,2,1,2,ifIndex}, 11, ASN_OCTET_STR, (void *)&ifDescr},
-        {{1,3,6,1,2,1,2,2,1,5,ifIndex}, 11, ASN_GAUGE, (void *)&ifSpeed},
-        {{1,3,6,1,2,1,2,2,1,8,ifIndex}, 11, ASN_INTEGER, (void *)&ifOperStatus},
-        {{1,3,6,1,2,1,2,2,1,10,ifIndex}, 11, ASN_COUNTER, (void *)&ifInOctets},
-        {{1,3,6,1,2,1,2,2,1,14,ifIndex}, 11, ASN_COUNTER, (void *)&ifInErrors},
-        {{1,3,6,1,2,1,2,2,1,16,ifIndex}, 11, ASN_COUNTER, (void *)&ifOutOctets},
-        {{1,3,6,1,2,1,2,2,1,20,ifIndex}, 11, ASN_COUNTER, (void *)&ifOutErrors},
-        {{0}, 0, 0, 0},
+    mp_snmp_query_cmd snmpcmd[] = {
+        {{1,3,6,1,2,1,2,2,1,2,ifIndex}, 11,
+            ASN_OCTET_STR, (void *)&ifDescr, 0},
+        {{1,3,6,1,2,1,2,2,1,5,ifIndex}, 11,
+            ASN_GAUGE, (void *)&ifSpeed, sizeof(long int)},
+        {{1,3,6,1,2,1,2,2,1,8,ifIndex}, 11,
+            ASN_INTEGER, (void *)&ifOperStatus, sizeof(long int)},
+        {{1,3,6,1,2,1,2,2,1,10,ifIndex}, 11,
+            ASN_COUNTER, (void *)&ifInOctets, sizeof(long int)},
+        {{1,3,6,1,2,1,2,2,1,14,ifIndex}, 11,
+            ASN_COUNTER, (void *)&ifInErrors, sizeof(long int)},
+        {{1,3,6,1,2,1,2,2,1,16,ifIndex}, 11,
+            ASN_COUNTER, (void *)&ifOutOctets, sizeof(long int)},
+        {{1,3,6,1,2,1,2,2,1,20,ifIndex}, 11,
+            ASN_COUNTER, (void *)&ifOutErrors, sizeof(long int)},
+        {{0}, 0, 0, 0, 0},
     };
-
+    
     mp_snmp_query(ss, snmpcmd);
 
     mp_snmp_deinit();
+
+    if (ifDescr == NULL)
+        unknown("Interface with index %d not found.", ifIndex);
 
     mp_perfdata_int("ifInOctets", ifInOctets, "c", NULL);
     mp_perfdata_int("ifInErrors", ifInErrors, "c", NULL);
