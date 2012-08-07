@@ -110,33 +110,33 @@ int main (int argc, char **argv) {
 
     mp_snmp_query_cmd snmpcmd[] = {
         {{1,3,6,1,2,1,33,1,1,5,0}, 11, ASN_OCTET_STR,
-         (void *)&ups_ident},
+         (void *)&ups_ident, 0},
         {{1,3,6,1,2,1,33,1,2,1,0}, 11, ASN_INTEGER,
-         (void *)&ups_battery_status},
+         (void *)&ups_battery_status, sizeof(long int)},
         {{1,3,6,1,2,1,33,1,2,2,0}, 11, ASN_INTEGER,
-         (void *)&ups_seconds_on_battery},
+         (void *)&ups_seconds_on_battery, sizeof(long int)},
         {{1,3,6,1,2,1,33,1,2,3,0}, 11, ASN_INTEGER,
-         (void *)&ups_remaining_runtime},
+         (void *)&ups_remaining_runtime, sizeof(long int)},
         {{1,3,6,1,2,1,33,1,2,4,0}, 11, ASN_INTEGER,
-         (void *)&ups_remaining_charge},
+         (void *)&ups_remaining_charge, sizeof(long int)},
         {{1,3,6,1,2,1,33,1,2,5,0}, 11, ASN_INTEGER,
-         (void *)&ups_battery_voltage},     /* 0.1 volts DC */
+         (void *)&ups_battery_voltage, sizeof(long int)},     /* 0.1 volts DC */
         {{1,3,6,1,2,1,33,1,2,6,0}, 11, ASN_INTEGER,
-         (void *)&ups_battery_current},     /* 0.1 amps DC */
+         (void *)&ups_battery_current, sizeof(long int)},     /* 0.1 amps DC */
         {{1,3,6,1,2,1,33,1,2,7,0}, 11, ASN_INTEGER,
-         (void *)&ups_battery_temperature}, /* degrees celsius */
+         (void *)&ups_battery_temperature, sizeof(long int)}, /* deg C */
         {{1,3,6,1,2,1,33,1,3,1,0}, 11, ASN_COUNTER,
-         (void *)&ups_input_line_bads},
+         (void *)&ups_input_line_bads, sizeof(long int)},
         {{1,3,6,1,2,1,33,1,3,2,0}, 11, ASN_INTEGER,
-         (void *)&ups_input_lines},
+         (void *)&ups_input_lines, sizeof(long int)},
         {{1,3,6,1,2,1,33,1,4,1,0}, 11, ASN_INTEGER,
-         (void *)&ups_output_source},
+         (void *)&ups_output_source, sizeof(long int)},
         {{1,3,6,1,2,1,33,1,4,2,0}, 11, ASN_INTEGER,
-         (void *)&ups_output_frequency}, /* 0.1 RMS */
+         (void *)&ups_output_frequency, sizeof(long int)}, /* 0.1 RMS */
         {{1,3,6,1,2,1,33,1,4,3,0}, 11, ASN_INTEGER,
-         (void *)&ups_output_lines},
+         (void *)&ups_output_lines, sizeof(long int)},
         {{1,3,6,1,2,1,33,1,6,1,0}, 11, ASN_GAUGE,
-         (void *)&ups_alarms_present},
+         (void *)&ups_alarms_present, sizeof(long int)},
         {{0}, 0, 0, NULL},
     };
 

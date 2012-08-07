@@ -157,11 +157,16 @@ int mp_snmp_query(netsnmp_session *ss, const mp_snmp_query_cmd *querycmd) {
         status = snmp_synch_response(ss, pdu, &response);
 
         if (mp_verbose > 3)
-            printf("snmp_synch_response:%d pduerr:%ld\n", status,
-                   response->errstat);
+            printf("snmp_synch_response() rc=%d\n", status);
+
+        if (!response)
+            return STAT_ERROR;
 
         if (status == STAT_SUCCESS && response->errindex == 0)
             break;
+
+        if (mp_verbose > 3)
+            printf(" errindex=%ld\n", response->errindex);
 
         pdu = snmp_fix_pdu(response, SNMP_MSG_GET);
         snmp_free_pdu(response);

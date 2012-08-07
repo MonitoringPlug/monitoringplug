@@ -60,12 +60,18 @@ int main (int argc, char **argv) {
 
     /* OIDs to query */
     mp_snmp_query_cmd snmpcmd[] = {
-        {{1,3,6,1,4,1,2312,8,2,1,0}, 11, ASN_OCTET_STR, (void *)&clustername},
-        {{1,3,6,1,4,1,2312,8,2,2,0}, 11, ASN_INTEGER, (void *)&clusterstatus},
-        {{1,3,6,1,4,1,2312,8,2,3,0}, 11, ASN_OCTET_STR, (void *)&clusterstatusdesc},
-        {{1,3,6,1,4,1,2312,8,2,5,0}, 11, ASN_INTEGER, (void *)&clustervotes},
-        {{1,3,6,1,4,1,2312,8,2,4,0}, 11, ASN_INTEGER, (void *)&clusterquorum},
-        {{1,3,6,1,4,1,2312,8,2,7,0}, 11, ASN_INTEGER, (void *)&clusternodes},
+        {{1,3,6,1,4,1,2312,8,2,1,0}, 11,
+            ASN_OCTET_STR, (void *)&clustername, 0},
+        {{1,3,6,1,4,1,2312,8,2,2,0}, 11,
+            ASN_INTEGER, (void *)&clusterstatus, sizeof(long int)},
+        {{1,3,6,1,4,1,2312,8,2,3,0}, 11,
+            ASN_OCTET_STR, (void *)&clusterstatusdesc, 0},
+        {{1,3,6,1,4,1,2312,8,2,5,0}, 11,
+            ASN_INTEGER, (void *)&clustervotes, sizeof(long int)},
+        {{1,3,6,1,4,1,2312,8,2,4,0}, 11,
+            ASN_INTEGER, (void *)&clusterquorum, sizeof(long int)},
+        {{1,3,6,1,4,1,2312,8,2,7,0}, 11,
+            ASN_INTEGER, (void *)&clusternodes, sizeof(long int)},
         {{0}, 0, 0, 0},
     };
 
@@ -94,6 +100,9 @@ int main (int argc, char **argv) {
 
     /* Finish Net-SNMP */
     mp_snmp_deinit();
+
+    if (!clustername || clusterstatus == 255)
+        unknown("No Cluster Status found");
 
     /* Perfdata */
     if (mp_showperfdata)

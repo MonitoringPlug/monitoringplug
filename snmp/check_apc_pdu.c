@@ -86,10 +86,20 @@ int main (int argc, char **argv) {
         {{0}, 0, 0, 0},
     };
 
-    mp_snmp_query(ss, snmpcmd);
+    rc = mp_snmp_query(ss, snmpcmd);
+    if (rc != STAT_SUCCESS) {
+        char *string;
+        snmp_error(ss, NULL, NULL, &string);
+        unknown("APC PDU: Error fetching values: %s", string);
+    }
 
-    mp_snmp_subtree_fetch1(ss, MP_OID(1,3,6,1,4,1,318,1,1,12,3,5,1),
+    rc = mp_snmp_subtree_fetch1(ss, MP_OID(1,3,6,1,4,1,318,1,1,12,3,5,1),
         &table_state);
+    if (rc != STAT_SUCCESS) {
+        char *string;
+        snmp_error(ss, NULL, NULL, &string);
+        unknown("APC PDU: Error fetching table: %s", string);
+    }
 
     mp_snmp_deinit();
 
