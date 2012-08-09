@@ -383,7 +383,7 @@ int mp_snmp_values_fetch3(netsnmp_session *ss,
 }
 
 
-int mp_snmp_subtree_fetch1(netsnmp_session *ss,
+int mp_snmp_subtree_query(netsnmp_session *ss,
                            const oid *subtree_oid,
                            const size_t subtree_len,
                            mp_snmp_subtree *subtree) {
@@ -526,7 +526,7 @@ int mp_snmp_subtree_fetch1(netsnmp_session *ss,
 }
 
 
-int mp_snmp_subtree_fetch2(netsnmp_session *ss, const char *subtree_oid,
+int mp_snmp_subtree_query_string(netsnmp_session *ss, const char *subtree_oid,
                            mp_snmp_subtree *subtree) {
     oid subtree_oid_prefix[MAX_OID_LEN];
     size_t subtree_oid_prefix_len = MAX_OID_LEN;
@@ -538,12 +538,12 @@ int mp_snmp_subtree_fetch2(netsnmp_session *ss, const char *subtree_oid,
         return 0;
     }
 
-    return mp_snmp_subtree_fetch1(ss, subtree_oid_prefix,
+    return mp_snmp_subtree_query(ss, subtree_oid_prefix,
                                   subtree_oid_prefix_len, subtree);
 }
 
 
-int mp_snmp_subtree_get_value1(const mp_snmp_subtree *subtree,
+int mp_snmp_subtree_get_value(const mp_snmp_subtree *subtree,
                                const oid *oid_prefix,
                                const size_t oid_prefix_len,
                                const size_t idx,
@@ -570,7 +570,7 @@ int mp_snmp_subtree_get_value1(const mp_snmp_subtree *subtree,
 }
 
 
-int mp_snmp_subtree_get_value2(const mp_snmp_subtree *subtree,
+int mp_snmp_subtree_get_value_string(const mp_snmp_subtree *subtree,
                                const char* value_oid,
                                const size_t idx,
                                const u_char type,
@@ -589,7 +589,7 @@ int mp_snmp_subtree_get_value2(const mp_snmp_subtree *subtree,
         return 0;
     }
 
-    return mp_snmp_subtree_get_value1(subtree, oid_prefix, oid_prefix_len,
+    return mp_snmp_subtree_get_value(subtree, oid_prefix, oid_prefix_len,
                                       idx, type, target, target_len);
 }
 
@@ -610,7 +610,7 @@ int mp_snmp_subtree_get_values(const mp_snmp_subtree *subtree,
         oid_prefix_len = MAX_OID_LEN;
         read_objid(vp->oid, oid_prefix, &oid_prefix_len);
 
-        if (mp_snmp_subtree_get_value1(subtree, oid_prefix, oid_prefix_len,
+        if (mp_snmp_subtree_get_value(subtree, oid_prefix, oid_prefix_len,
                                        idx, vp->type, vp->target,
                                        vp->target_len) > 0) {
             count++;

@@ -93,7 +93,7 @@ int main (int argc, char **argv) {
         unknown("APC PDU: Error fetching values: %s", string);
     }
 
-    rc = mp_snmp_subtree_fetch1(ss, MP_OID(1,3,6,1,4,1,318,1,1,12,3,5,1),
+    rc = mp_snmp_subtree_query(ss, MP_OID(1,3,6,1,4,1,318,1,1,12,3,5,1),
         &table_state);
     if (rc != STAT_SUCCESS) {
         char *string;
@@ -118,7 +118,7 @@ int main (int argc, char **argv) {
         // Check all outlets for on.
         long int outlet_state;
         for (i = 0; i<table_state.size; i++) {
-            rc = mp_snmp_subtree_get_value1(&table_state,
+            rc = mp_snmp_subtree_get_value(&table_state,
                 MP_OID(1,3,6,1,4,1,318,1,1,12,3,5,1,1,4), i,
                 ASN_INTEGER, (void *)&outlet_state, sizeof(long int));
             
@@ -126,7 +126,7 @@ int main (int argc, char **argv) {
                 break;
 
             if (outlet_state != 1) {
-                mp_snmp_subtree_get_value1(&table_state,
+                mp_snmp_subtree_get_value(&table_state,
                     MP_OID(1,3,6,1,4,1,318,1,1,12,3,5,1,1,2), i,
                     ASN_OCTET_STR, (void *)&outlet_name, 64);
 
@@ -143,7 +143,7 @@ int main (int argc, char **argv) {
                 i = strtol(c, NULL, 10);
                 if (i == 0) {
                     for (i = 0; i<table_state.size; i++) {
-                        rc = mp_snmp_subtree_get_value1(&table_state,
+                        rc = mp_snmp_subtree_get_value(&table_state,
                             MP_OID(1,3,6,1,4,1,318,1,1,12,3,5,1,1,2), i,
                             ASN_OCTET_STR, (void *)&outlet_name, 64);
 
@@ -160,7 +160,7 @@ int main (int argc, char **argv) {
                     i--;
                 }
                     
-                rc = mp_snmp_subtree_get_value1(&table_state,
+                rc = mp_snmp_subtree_get_value(&table_state,
                     MP_OID(1,3,6,1,4,1,318,1,1,12,3,5,1,1,4), i,
                     ASN_INTEGER, (void *)&outlet_state, sizeof(long int));
 
@@ -172,7 +172,7 @@ int main (int argc, char **argv) {
                 }
 
                 if (outlet_state != 1) {
-                    mp_snmp_subtree_get_value1(&table_state,
+                    mp_snmp_subtree_get_value(&table_state,
                         MP_OID(1,3,6,1,4,1,318,1,1,12,3,5,1,1,2), i,
                         ASN_OCTET_STR, (void *)&outlet_name, 64);
 
@@ -190,7 +190,7 @@ int main (int argc, char **argv) {
                 i = strtol(c, NULL, 10);
                 if (i == 0) {
                     for (i = 0; i<table_state.size; i++) {
-                        rc = mp_snmp_subtree_get_value1(&table_state,
+                        rc = mp_snmp_subtree_get_value(&table_state,
                             MP_OID(1,3,6,1,4,1,318,1,1,12,3,5,1,1,2), i,
                             ASN_OCTET_STR, (void *)&outlet_name, 64);
 
@@ -207,7 +207,7 @@ int main (int argc, char **argv) {
                     i--;
                 }
 
-                rc = mp_snmp_subtree_get_value1(&table_state,
+                rc = mp_snmp_subtree_get_value(&table_state,
                     MP_OID(1,3,6,1,4,1,318,1,1,12,3,5,1,1,4), i,
                     ASN_INTEGER, (void *)&outlet_state, sizeof(long int));
 
@@ -219,7 +219,7 @@ int main (int argc, char **argv) {
                 }
 
                 if (outlet_state != 2) {
-                    mp_snmp_subtree_get_value1(&table_state,
+                    mp_snmp_subtree_get_value(&table_state,
                         MP_OID(1,3,6,1,4,1,318,1,1,12,3,5,1,1,2), i,
                         ASN_OCTET_STR, (void *)&outlet_name, 64);
 

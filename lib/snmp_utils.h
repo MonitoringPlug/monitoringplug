@@ -173,7 +173,7 @@ int mp_snmp_values_fetch3(netsnmp_session *ss,
  * \param[in|out] subtree store fetched OIDs result
  * \return returns STAT_SUCESS on success, other value otherwise
  */
-int mp_snmp_subtree_fetch1(netsnmp_session *ss,
+int mp_snmp_subtree_query(netsnmp_session *ss,
                            const oid *subtree_oid,
                            const size_t subtree_oid_len,
                            mp_snmp_subtree *subtree);
@@ -187,7 +187,7 @@ int mp_snmp_subtree_fetch1(netsnmp_session *ss,
  * \param[in|out] subtree store fetched OIDs result
  * \return returns STAT_SUCESS on success, other value otherwise
  */
-int mp_snmp_subtree_fetch2(netsnmp_session *ss,
+int mp_snmp_subtree_query_string(netsnmp_session *ss,
                            const char *subtree_oid,
                            mp_snmp_subtree *subtree);
 
@@ -203,7 +203,7 @@ int mp_snmp_subtree_fetch2(netsnmp_session *ss,
  * \param[in|out] target a pointer, where to store the OID value
  * \return returns 1, if value was found, 0 otherwise
  */
-int mp_snmp_subtree_get_value1(const mp_snmp_subtree *subtree,
+int mp_snmp_subtree_get_value(const mp_snmp_subtree *subtree,
                                const oid *value_oid,
                                const size_t value_oid_len,
                                const size_t idx,
@@ -222,7 +222,7 @@ int mp_snmp_subtree_get_value1(const mp_snmp_subtree *subtree,
  * \param[in|out] target a pointer, where to store the OID value
  * \return returns 1, if value was found, 0 otherwise
  */
-int mp_snmp_subtree_get_value2(const mp_snmp_subtree *subtree,
+int mp_snmp_subtree_get_value_string(const mp_snmp_subtree *subtree,
                                const char* value_oid,
                                const size_t idx,
                                const u_char type,

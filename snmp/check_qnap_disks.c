@@ -81,7 +81,7 @@ int main (int argc, char **argv) {
     ss = mp_snmp_init();
 
     /* OIDs to query */
-    status = mp_snmp_subtree_fetch1(ss, MP_OID(1,3,6,1,4,1,24681,1,2,11),
+    status = mp_snmp_subtree_query(ss, MP_OID(1,3,6,1,4,1,24681,1,2,11),
         &table_state);
     if (status != STAT_SUCCESS) {
         char *string;
@@ -96,7 +96,7 @@ int main (int argc, char **argv) {
     disk_name = mp_malloc(64);
 
     for (i = 0; i<table_state.size; i++) {
-        rc = mp_snmp_subtree_get_value1(&table_state,
+        rc = mp_snmp_subtree_get_value(&table_state,
             MP_OID(1,3,6,1,4,1,24681,1,2,11,1,4), i,
             ASN_INTEGER, (void *)&disk_state, sizeof(long int));
 
@@ -106,7 +106,7 @@ int main (int argc, char **argv) {
         if (disk_state == HDD_Ready)
             continue;
 
-        mp_snmp_subtree_get_value1(&table_state,
+        mp_snmp_subtree_get_value(&table_state,
             MP_OID(1,3,6,1,4,1,24681,1,2,11,1,2), i,
             ASN_OCTET_STR, (void *)&disk_name, 64);
 
