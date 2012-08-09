@@ -126,24 +126,6 @@ void mp_snmp_deinit(void);
  */
 int mp_snmp_query(netsnmp_session *ss, const mp_snmp_query_cmd *querycmd);
 
-/**
- * Run table query for querycmd and save mp_snmp_table to pointer in querycmd.
- * \param[in] ss Session to use.
- * \param[in|out] querycmd Table query command
- * \return return a status value like snmp.
- */
-int mp_snmp_table_query(netsnmp_session *ss, const mp_snmp_query_cmd *querycmd, int cols);
-
-
-/**
- * Get a netsnmp_variable_list out of a mp_snmp_table.
- * \param[in] table Table to fetch value from.
- * \param[in] x X coordinate of value.
- * \param[in] y Y coordinate of value.
- */
-netsnmp_variable_list *mp_snmp_table_get(const struct mp_snmp_table table, int x, int y);
-
-
 typedef struct {
     /** OID name */
     const char *oid;
