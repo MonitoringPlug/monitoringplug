@@ -130,7 +130,7 @@ int main (int argc, char **argv) {
 
         status = STATE_CRITICAL;
     }
-
+    mp_snmp_subtree_free(&table_state);
     free(disk_name);
 
     if (i == 0)

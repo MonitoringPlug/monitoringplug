@@ -232,6 +232,7 @@ int main (int argc, char **argv) {
         }
     }
 
+    mp_snmp_subtree_free(&table_state);
     free(outlet_name);
 
     /* Output and return */

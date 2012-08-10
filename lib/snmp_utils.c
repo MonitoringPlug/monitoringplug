@@ -71,7 +71,7 @@ netsnmp_session *mp_snmp_init(void) {
     switch(mp_snmp_version) {
         case SNMP_VERSION_1:
             session.version = SNMP_VERSION_1;
-            session.community = (u_char *)strdup(mp_snmp_community);
+            session.community = (u_char *)mp_snmp_community;
             session.community_len = strlen((char *)session.community);
             break;
         case SNMP_VERSION_2c:
@@ -122,6 +122,8 @@ netsnmp_session *mp_snmp_init(void) {
       SOCK_CLEANUP;
       exit(1);
     }
+
+    free(session.peername);
 
     if (mp_snmp_retries > 0)
         ss->retries = mp_snmp_retries;

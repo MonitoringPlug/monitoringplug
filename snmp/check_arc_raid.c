@@ -114,6 +114,7 @@ int main (int argc, char **argv) {
         else
             status = STATE_WARNING;
     }
+    mp_snmp_subtree_free(&table_state);
     free(raid_state);
     free(raid_name);
 

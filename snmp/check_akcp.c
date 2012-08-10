@@ -154,6 +154,7 @@ int main (int argc, char **argv) {
                                 name, temp, degreeeUnit[temp_unit]);
                 }
                 mp_strcat_comma(&output, buf);
+                free(buf);
 
                 if (mp_showperfdata) {
                     thresholds *threshold = NULL;
@@ -197,10 +198,8 @@ int main (int argc, char **argv) {
                     free(buf);
                 }
             }
-
         }
-        if(name)
-            free(name);
+        free(name);
 
         /* Query Hum */
         name = NULL;
@@ -265,8 +264,8 @@ int main (int argc, char **argv) {
                         mp_asprintf(&buf, "Critical Humidity %s: %ld%%",
                                 name, hum);
                 }
-
                 mp_strcat_comma(&output, buf);
+                free(buf);
 
                 if (mp_showperfdata) {
                     thresholds *threshold = NULL;
@@ -318,6 +317,8 @@ int main (int argc, char **argv) {
             mp_strcat_comma(&output, buf);
             free(buf);
         }
+
+        free(name);
 
         sensor_found += found;
     }
