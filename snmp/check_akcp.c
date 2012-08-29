@@ -152,6 +152,7 @@ int main (int argc, char **argv) {
                         state = STATE_CRITICAL;
                         mp_asprintf(&buf, "Critical Temperature %s: %ld%s",
                                 name, temp, degreeeUnit[temp_unit]);
+                        break;
                 }
                 mp_strcat_comma(&output, buf);
                 free(buf);
@@ -263,6 +264,7 @@ int main (int argc, char **argv) {
                         state = STATE_CRITICAL;
                         mp_asprintf(&buf, "Critical Humidity %s: %ld%%",
                                 name, hum);
+                        break;
                 }
                 mp_strcat_comma(&output, buf);
                 free(buf);
@@ -331,12 +333,16 @@ int main (int argc, char **argv) {
     switch (state) {
         case STATE_OK:
             ok("AKCP - %s", output);
+            break;
         case STATE_WARNING:
             warning("AKCP - %s", output);
+            break;
         case STATE_CRITICAL:
             critical("AKCP - %s", output);
+            break;
         default:
             unknown("AKCP - %s", output);
+            break;
     }
 }
 

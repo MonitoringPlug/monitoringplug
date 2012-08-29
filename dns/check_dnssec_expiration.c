@@ -206,10 +206,13 @@ int main (int argc, char **argv) {
     switch ( get_status((exp-ttl-now),exp_thresholds) ) {
         case STATE_OK:
             ok("RRSIG for %s valid till %s.", domainname, exp_str);
+            break;
         case STATE_WARNING:
             warning("RRSIG for %s expires soon (%s).", domainname, exp_str);
+            break;
         case STATE_CRITICAL:
             critical("RRSIG for %s expires to soon (%s).", domainname, exp_str);
+            break;
 
     }
 

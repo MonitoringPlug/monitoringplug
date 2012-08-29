@@ -91,14 +91,19 @@ int main (int argc, char **argv) {
     switch ( r ) {
         case STATE_OK:
             ok(msg);
+            break;
         case STATE_WARNING:
             warning(msg);
+            break;
         case STATE_CRITICAL:
             critical(msg);
+            break;
         case STATE_UNKNOWN:
             unknown(msg);
+            break;
         case STATE_DEPENDENT:
             unknown(msg);
+            break;
     }
 
     critical("You should never reach this point.");

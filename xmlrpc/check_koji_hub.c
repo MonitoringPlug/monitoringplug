@@ -124,10 +124,13 @@ int main (int argc, char **argv) {
     switch (get_status(time_delta, time_threshold)) {
        case STATE_OK:
           ok("Koji-Hub running. (API v%d)", api);
+          break;
        case STATE_WARNING:
           warning("Koji-Hub running slow. (API v%d)", api);
+          break;
        default:
           critical("Koji-Hub running to slow. (API v%d)", api);
+          break;
     }
 }
 

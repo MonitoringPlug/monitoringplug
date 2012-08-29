@@ -152,6 +152,7 @@ int main (int argc, char **argv) {
                 break;
             default:
                 network = "5G or newer";
+                break;
         }
         if (format == 2) {
             // Query operator names
@@ -196,14 +197,17 @@ int main (int argc, char **argv) {
             if (operator)
                 ok("%s [%s] %ddBm", operator, network, sq);
             ok("Signal Quality %ddBm", sq);
+            break;
         case STATE_WARNING:
             if (operator)
                 warning("%s [%s] %ddBm", operator, network, sq);
             warning("Signal Quality %ddBm", sq);
+            break;
         case STATE_CRITICAL:
             if (operator)
                 critical("%s [%s] %ddBm", operator, network, sq);
             critical("Signal Quality %ddBm", sq);
+            break;
     }
 
 

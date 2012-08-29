@@ -59,6 +59,8 @@ int mp_getopt(int *argc, char **argv[], const char *optstring,
                 return c;
         };
     }
+
+    return EOF;
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */

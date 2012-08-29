@@ -166,12 +166,15 @@ int main (int argc, char **argv) {
         case STATE_OK:
             free_threshold(credit_thresholds);
             ok("ASP SMS %.2f credits left for %s.", credits, userkey);
+            break;
         case STATE_WARNING:
             free_threshold(credit_thresholds);
             warning("ASP SMS %.2f credits left for %s.", credits, userkey);
+            break;
         case STATE_CRITICAL:
             free_threshold(credit_thresholds);
             critical("ASP SMS %.2f credits left for %s.", credits, userkey);
+            break;
     }
 
     critical("You should never reach this point.");

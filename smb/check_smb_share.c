@@ -169,10 +169,13 @@ int main (int argc, char **argv) {
     switch (get_status(time_delta, time_threshold)) {
         case STATE_OK:
             ok("SMB %s", url);
+            break;
         case STATE_WARNING:
             warning("SMB %s is slow", url);
+            break;
         default:
             critical("SMB %s is too slow.", url);
+            break;
     }
 }
 

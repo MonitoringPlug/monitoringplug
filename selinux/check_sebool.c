@@ -120,8 +120,10 @@ int main (int argc, char **argv) {
     switch (state) {
        case STATE_OK:
            ok("SEBool: %s", bools_crit);
+           break;
        case STATE_CRITICAL:
            critical("SEBool: %s", bools_crit);
+           break;
     }
 
     critical("You should never reach this point.");

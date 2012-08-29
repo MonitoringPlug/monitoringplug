@@ -150,6 +150,7 @@ int main (int argc, char **argv) {
                 break;
             default:
                 services_failed++;
+                break;
         }
 
         fodomnode = NULL;

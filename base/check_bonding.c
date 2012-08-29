@@ -138,12 +138,16 @@ int main (int argc, char **argv) {
     switch (status) {
         case STATE_OK:
             ok(output);
+            break;
         case STATE_WARNING:
             warning(output);
+            break;
         case STATE_CRITICAL:
             critical(output);
+            break;
         case STATE_UNKNOWN:
             unknown(output);
+            break;
     }
 
     critical("You should never reach this point.");

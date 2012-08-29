@@ -317,6 +317,7 @@ int main (int argc, char **argv) {
         case STATE_CRITICAL:
             status = STATE_CRITICAL;
             mp_strcat_space(&output, "Answer too slow");
+            break;
     }
 
     free_threshold(fetch_thresholds);
@@ -324,10 +325,13 @@ int main (int argc, char **argv) {
     switch(status) {
         case STATE_OK:
             ok("WebDAV %s", dav);
+            break;
         case STATE_WARNING:
             warning("WebDAV %s - %s", dav, output);
+            break;
         case STATE_CRITICAL:
             critical("WebDAV %s - %s", dav, output);
+            break;
     }
 
     unknown("WebDAV %s - %s", dav, output);

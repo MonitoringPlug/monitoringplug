@@ -192,12 +192,15 @@ int main (int argc, char **argv) {
         case STATE_OK:
             free_threshold(open_thresholds);
             ok("Apache HTTPD status - %s", server);
+            break;
         case STATE_WARNING:
             free_threshold(open_thresholds);
             warning("Apache HTTPD low on open slots - %s", server);
+            break;
         case STATE_CRITICAL:
             free_threshold(open_thresholds);
             critical("Apache HTTPD not enough open slots - %s", server);
+            break;
         }
     }
     ok("Apache HTTPD status - %s", server);

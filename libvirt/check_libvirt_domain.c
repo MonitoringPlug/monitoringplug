@@ -188,6 +188,7 @@ int main (int argc, char **argv) {
             break;
         case VIR_DOMAIN_SHUTDOWN:
             critical("%s is being shut down", domainname);
+            break;
         case VIR_DOMAIN_SHUTOFF:
             critical("%s is shutt off", domainname);
             break;
@@ -196,6 +197,7 @@ int main (int argc, char **argv) {
             break;
         default:
             critical("%s is in unknown state.", domainname);
+            break;
     }
 }
 
@@ -228,6 +230,7 @@ int process_arguments (int argc, char **argv) {
             /* Domain opt */
             case 'D':
                 domainname = optarg;
+                break;
         }
     }
 

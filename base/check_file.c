@@ -175,10 +175,13 @@ int main (int argc, char **argv) {
     switch (status) {
         case STATE_OK:
             ok("%s: Everithing ok.", filename);
+            break;
         case STATE_WARNING:
             warning("%s: %s", filename, output);
+            break;
         case STATE_CRITICAL:
             critical("%s: %s", filename, output);
+            break;
     }
 
     critical("You should never reach this point.");
@@ -306,6 +309,7 @@ int process_arguments (int argc, char **argv) {
             case 'C':
                 if (setCrit(&size_thresholds, optarg, BISI) == ERROR)
                     usage("Illegal -C argument '%s'.", optarg);
+                break;
         }
     }
 

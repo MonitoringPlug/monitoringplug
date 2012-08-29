@@ -707,6 +707,7 @@ void getopt_snmp(int c) {
                     break;
                 default:
                     usage("Illegal SNMP version '%s'", optarg);
+                    break;
             }
             break;
         case 'L':

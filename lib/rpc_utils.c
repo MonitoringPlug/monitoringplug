@@ -126,6 +126,7 @@ bool_t mp_xdr_exports(XDR *xdrs, exports *export) {
         }
         case XDR_ENCODE: {
             critical("mp_xdr_exports XDR_ENCODE not supported.");
+            break;
         }
         case XDR_DECODE: {
             /* Decode struct */

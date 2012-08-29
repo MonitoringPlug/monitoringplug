@@ -213,6 +213,7 @@ int process_arguments (int argc, char **argv) {
             case 'C':
                 if (setCritTime(&time_threshold, optarg) == ERROR)
                     usage("Illegal -c warning '%s'.", optarg);
+                break;
         }
     }
 

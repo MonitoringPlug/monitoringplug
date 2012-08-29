@@ -124,10 +124,13 @@ int main (int argc, char **argv) {
     switch (get_status(usedp, usage_thresholds)) {
         case STATE_OK:
             ok("Memory - %2.2f%% (%s of %s) used", usedp, mp_human_size(used), mp_human_size(mem_total));
+            break;
         case STATE_WARNING:
             warning("Memory - %2.2f%% (%s of %s) used", usedp, mp_human_size(used), mp_human_size(mem_total));
+            break;
         case STATE_CRITICAL:
             critical("Memory - %2.2f%% (%s of %s) used", usedp, mp_human_size(used), mp_human_size(mem_total));
+            break;
     }
 
     unknown("Memory - %2.2f%% (%s of %s) used", usedp, mp_human_size(used), mp_human_size(mem_total));
@@ -147,10 +150,13 @@ float readValue(char *str) {
         switch(unit[1]) {
             case 'g':
                 value *= 1024;
+                /* no break */
             case 'm':
                 value *= 1024;
+                /* no break */
             case 'k':
                 value *= 1024;
+                /* no break */
         }
     }
 

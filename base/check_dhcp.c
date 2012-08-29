@@ -68,7 +68,6 @@ uint32_t xid;
 
 /* Function prototype */
 int dhcp_setup();
-unsigned short int ip_checksum(unsigned short int *addr, int len);
 
 int main (int argc, char **argv) {
     /* Local Vars */
@@ -175,19 +174,25 @@ int main (int argc, char **argv) {
                 switch (type) {
                     case DHCPOFFER:
                         ok("Got offer for %s from %s", inet_ntoa(pkt->yiaddr), pkt->sname);
+                        break;
                     case DHCPACK:
                         ok("Got ACK from %s", pkt->sname);
+                        break;
                     case DHCPNAK:
                         ok("Got NAK from %s", pkt->sname);
+                        break;
                 };
             } else {
                 switch (opt->data.uint8) {
                     case DHCPOFFER:
                         ok("Got offer for %s from %s", inet_ntoa(pkt->yiaddr), pkt->sname);
+                        break;
                     case DHCPACK:
                         ok("Got ACK from %s", pkt->sname);
+                        break;
                     case DHCPNAK:
                         ok("Got NAK from %s", pkt->sname);
+                        break;
                 };
             }
         } else {
@@ -198,10 +203,13 @@ int main (int argc, char **argv) {
                 switch (type) {
                     case DHCPOFFER:
                         ok("Got offer for %s from %s", inet_ntoa(pkt->yiaddr), pkt->sname);
+                        break;
                     case DHCPACK:
                         ok("Got ACK from %s", pkt->sname);
+                        break;
                     case DHCPNAK:
                         ok("Got NAK from %s", pkt->sname);
+                        break;
                 };
             }
         }
@@ -216,10 +224,13 @@ int main (int argc, char **argv) {
         switch (type) {
             case DHCPOFFER:
                 ok("No DHCP Offer received.");
+                break;
             case DHCPACK:
                 ok("No DHCP Ack received.");
+                break;
             case DHCPNAK:
                 ok("No DHCP Nak received.");
+                break;
         }
     }
 
@@ -308,6 +319,7 @@ int process_arguments (int argc, char **argv) {
                 break;
             case 'i':
                 interface = optarg;
+                break;
             case 'm': {
                 memset(&mac,0,sizeof(mac));
                 maclen = sscanf(optarg, "%"SCNx8":%"SCNx8":%"SCNx8":%"SCNx8":%"SCNx8":%"SCNx8":%"SCNx8":%"SCNx8":%"SCNx8":%"SCNx8":%"SCNx8":%"SCNx8":%"SCNx8":%"SCNx8":%"SCNx8":%"SCNx8,

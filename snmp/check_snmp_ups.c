@@ -215,6 +215,7 @@ int main (int argc, char **argv) {
             if (state == STATE_OK)
                 state = STATE_WARNING;
             mp_strcat(&output, "RUNTIME WARNING, ");
+            break;
         } /* switch */
     }
 
@@ -248,6 +249,7 @@ int main (int argc, char **argv) {
     default:
         if (state == STATE_OK)
             state = STATE_UNKNOWN;
+        break;
     } /* switch */
 
     /* check output source */
@@ -274,6 +276,7 @@ int main (int argc, char **argv) {
     default:
         if (state == STATE_OK)
             state = STATE_UNKNOWN;
+        break;
     } /* switch */
 
     /*
@@ -385,12 +388,16 @@ int main (int argc, char **argv) {
     switch (state) {
         case STATE_OK:
             ok("UPS: %s", output);
+            break;
         case STATE_WARNING:
             warning("UPS: %s", output);
+            break;
         case STATE_CRITICAL:
             critical("UPS: %s", output);
+            break;
         default:
             unknown("UPS: %s", output);
+            break;
     }
 }
 

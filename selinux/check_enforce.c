@@ -99,12 +99,15 @@ int main (int argc, char **argv) {
     }
 
     switch (state) {
-       case STATE_OK:
-	  ok("SELinux: %s (%s)", state_name, pol_name);
-       case STATE_WARNING:
-	  warning("SELinux: %s (%s)", state_name, pol_name);
-       case STATE_CRITICAL:
-	  critical("SELinux: %s (%s)", state_name, pol_name);
+		case STATE_OK:
+			ok("SELinux: %s (%s)", state_name, pol_name);
+			break;
+		case STATE_WARNING:
+			warning("SELinux: %s (%s)", state_name, pol_name);
+			break;
+		case STATE_CRITICAL:
+			critical("SELinux: %s (%s)", state_name, pol_name);
+			break;
     }
 
     critical("You should never reack this point.");

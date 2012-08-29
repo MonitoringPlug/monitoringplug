@@ -210,14 +210,14 @@ static void mp_ipmi_log(os_handler_t *hnd, const char *format,
             break;
         case IPMI_LOG_DEBUG_START:
             nl = 0;
-            /* FALLTHROUGH */
+            /* no break | FALLTHROUGH */
         case IPMI_LOG_DEBUG:
             if (mp_verbose < 4) return;
             printf("OpenIPMI Debg: ");
             break;
         case IPMI_LOG_DEBUG_CONT:
             nl = 0;
-            /* FALLTHROUGH */
+            /* no break | FALLTHROUGH */
         case IPMI_LOG_DEBUG_END:
             break;
     }

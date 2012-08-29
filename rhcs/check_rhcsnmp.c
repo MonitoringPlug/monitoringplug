@@ -94,8 +94,10 @@ int main (int argc, char **argv) {
     switch (status) {
         case STAT_ERROR:
             unknown("Error in libnetsnmp");
+            break;
         case STAT_TIMEOUT:
             critical("Timeout in libnetsnmp");
+            break;
     }
 
     /* Finish Net-SNMP */

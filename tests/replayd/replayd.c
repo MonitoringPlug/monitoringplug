@@ -225,6 +225,7 @@ int main(int argc, char *argv[]) {
                 break;
             case 'L':
                 snmp_log_options(optarg, arg, argv);
+                break;
         }
     }
 

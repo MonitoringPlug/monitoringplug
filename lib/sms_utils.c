@@ -162,6 +162,7 @@ int mobile_at_command_input(int fd, const char *cmd, const char *opt,
             len = strlen(buf);
         }
     }
+    return 0;
 }
 
 char *sms_encode_number(const char *number) {
