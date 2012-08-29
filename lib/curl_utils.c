@@ -51,10 +51,11 @@ CURL *mp_curl_init(void) {
     free(buf);
 
     /* Debug setup */
-    if (mp_verbose > 2)
+    if (mp_verbose > 2) {
         ret = curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
         if (ret != CURLE_OK)
             critical("libcurt setting verbose failed");
+    }
 
     return curl;
 }
