@@ -100,7 +100,13 @@ AX_LIB_RPC()
 AX_LIB_NETSNMP()
 # OpenIPMI
 PKG_CHECK_MODULES([IPMI],[OpenIPMI OpenIPMIposix], [],[AC_MSG_WARN([Skipping OpenIPMI])])
+# Termios
 AC_SYS_POSIX_TERMIOS()
+# oping
+AC_ARG_WITH([oping], AS_HELP_STRING([--without-oping], [Build without the oping library]))
+AS_IF([test "x$with_oping" != "xno"], [
+       AC_CHECK_HEADERS([oping.h], [], [AC_MSG_WARN([Skipping liboping])])
+       ],[AC_MSG_WARN([Skipping liboping])])
 
 # IPv6 Option
 AC_ARG_WITH([ipv6],
@@ -161,6 +167,7 @@ AM_CONDITIONAL([HAVE_DEBUILD], [test "x$DEBUILD" != x])
 AM_CONDITIONAL([HAVE_RPMBUILD], [test "x$RPMBUILD" != x])
 AM_CONDITIONAL([HAVE_IPMI], [test "x$IPMI_LIBS" != x])
 AM_CONDITIONAL([HAVE_TERMIOS], [test "x$ac_cv_sys_posix_termios" != x])
+AM_CONDITIONAL([HAVE_OPING], [test "x$ac_cv_header_oping_h" != x])
 
 # GCC Opts
 #AX_CFLAGS_WARN_ALL()
@@ -223,6 +230,7 @@ AC_CONFIG_FILES([Makefile
 		 ipmi/Makefile
 		 libvirt/Makefile
 		 mysql/Makefile
+		 oping/Makefile
                  rhcs/Makefile
                  rpc/Makefile
                  selinux/Makefile
