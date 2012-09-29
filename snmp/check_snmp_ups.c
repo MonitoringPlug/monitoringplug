@@ -2,9 +2,9 @@
  * Monitoring Plugin - check_snmp_ups.c
  **
  *
- * check_snmp_ups - Check ups battery by snmp.
+ * check_snmp_ups - Check status of a UPS conforming to RFC 1628 by SNMP.
  *
- * Copyright (C) 2012 Oliver Schonefeld <schonefeld@ids-mannheim.de>
+ * Copyright (C) 2012 Marius Rieder <marius.rieder@durchmesser.ch>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

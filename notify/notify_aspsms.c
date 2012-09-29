@@ -1,8 +1,8 @@
 /***
- * Monitoring Plugin - notify_mail.c
+ * Monitoring Plugin - notify_aspsms.c
  **
  *
- * notify_mail - Send a notification by mail.
+ * notify_aspsms - Send a notification by mail.
  *
  * Copyright (C) 2012 Marius Rieder <marius.rieder@durchmesser.ch>
  *

@@ -1,5 +1,5 @@
 /***
- * Monitoring Plugin - reply_agent.h
+ * Monitoring Plugin - replayd.h
  **
  *
  * Copyright (C) 2012 Marius Rieder <marius.rieder@durchmesser.ch>
