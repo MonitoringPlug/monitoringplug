@@ -131,7 +131,7 @@ int main (int argc, char **argv) {
         }
 
         if (mp_verbose > 2) {
-            printf("[ SOA Anser ]----------\n");
+            printf("[ SOA Answer ]----------\n");
             ldns_pkt_print(stdout,pkt);
         }
 
@@ -213,7 +213,7 @@ int main (int argc, char **argv) {
         }
 
         if (mp_verbose > 2) {
-            printf("[ NS Anser ]----------\n");
+            printf("[ NS Answer ]----------\n");
             ldns_pkt_print(stdout,pkt);
         }
 
@@ -256,7 +256,6 @@ int main (int argc, char **argv) {
 
             ldns_rr_list_deep_free(rrl);
 
-            //
             // Fetch SOA
             pkt = mp_ldns_resolver_query(res, domain, LDNS_RR_TYPE_SOA,
                                       LDNS_RR_CLASS_IN, LDNS_RD);
@@ -276,7 +275,7 @@ int main (int argc, char **argv) {
 
             if (mp_verbose > 2) {
                 tmp = ldns_rdf2str(ns_name[i]);
-                printf("[ SO Anser from %s ]----------\n", tmp);
+                printf("[ SOA Answer from %s ]----------\n", tmp);
                 free(tmp);
                 ldns_pkt_print(stdout,pkt);
             }

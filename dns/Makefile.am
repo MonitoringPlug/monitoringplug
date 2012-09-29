@@ -10,7 +10,8 @@ LDADD = ../lib/libmonitoringplug.a ../lib/libldnsutils.a $(LDNS_LDFLAGS)
 bin_PROGRAMS = 
 
 if HAVE_LDNS
-bin_PROGRAMS += check_dns_sync \
+bin_PROGRAMS += check_dns_authoritative\
+                check_dns_sync \
                 check_dnssec_expiration \
                 check_dnssec_trace \
                 check_dnssec_trust_anchor

@@ -43,10 +43,12 @@ EXTRA_DIST += check_apache_status.1 check_aspsms_credits.1 check_webdav.1 \
 
 #dns
 if HAVE_LDNS
-man_MANS += check_dns_sync.1 check_dnssec_expiration.1 check_dnssec_trace.1 \
+man_MANS += check_dns_authoritative.1 check_dns_sync.1 \
+			check_dnssec_expiration.1 check_dnssec_trace.1 \
 			check_dnssec_trust_anchor.1
 endif #HAVE_LDNS
-EXTRA_DIST += check_dns_sync.1 check_dnssec_expiration.1 check_dnssec_trace.1 \
+EXTRA_DIST += check_dns_authoritative.1 check_dns_sync.1 \
+			  check_dnssec_expiration.1 check_dnssec_trace.1 \
 			  check_dnssec_trust_anchor.1
 
 #gnutls

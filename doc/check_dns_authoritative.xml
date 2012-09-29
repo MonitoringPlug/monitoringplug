@@ -2,7 +2,7 @@
 <!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
 
-  <!ENTITY mpcheckname   "check_dns_sync">
+  <!ENTITY mpcheckname   "check_dns_authoritative">
 
 ]>
 
@@ -34,7 +34,7 @@
     </legalnotice>
   </refentryinfo>
   <refmeta>
-    <refentrytitle>CHECK_DNS_SYNC</refentrytitle>
+    <refentrytitle>CHECK_DNS_AUTHORITATIVE</refentrytitle>
     <manvolnum>1</manvolnum>
   </refmeta>
   <refnamediv>
@@ -44,19 +44,19 @@
   <refsynopsisdiv>
     <cmdsynopsis>
       <command>&mpcheckname;</command>
+      <arg choise="plain">
+        <option>-H <replaceable>HOST</replaceable></option>
+      </arg>
       <arg choice="plain">
         <option>--D <replaceable>DOMAIN</replaceable></option>
-      </arg>
-      <arg choise="opt">
-        <option>-H <replaceable>HOST</replaceable></option>
       </arg>
     </cmdsynopsis>
   </refsynopsisdiv>
   <refsect1 id="description">
     <title>DESCRIPTION</title>
-    <para>Check if the zone serial are in sync</para>
-    <para>The specified, or all, nameservers are compared against the
-     master.</para>
+    <para>Check a Authoritative DNS server.</para>
+    <para>Check for UDP and tcp authoritative answers as well as for disabled
+      recursion and transfer.</para>
   </refsect1>
   <refsect1 id="options">
     <title>OPTIONS</title>
@@ -70,6 +70,30 @@
         <term><option>--domain=<replaceable>DOMAIN</replaceable></option></term>
         <listitem>
           <para>The name of the domain to check.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>--norecursion</option></term>
+        <listitem>
+          <para>Do not test for disabled recursion.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>--notcp</option></term>
+        <listitem>
+          <para>Do not test TCP queries.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>--noudp</option></term>
+        <listitem>
+          <para>Do not test UDP queries.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>--noaxfr</option></term>
+        <listitem>
+          <para>Do not test for disabled AXFR transfer.</para>
         </listitem>
       </varlistentry>
     </variablelist>

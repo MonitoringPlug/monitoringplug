@@ -1,5 +1,3 @@
-/usr/lib/nagios/plugins/check_dnssec_expiration
-/usr/lib/nagios/plugins/check_dnssec_trace
-/usr/lib/nagios/plugins/check_dnssec_trust_anchor
-/usr/lib/nagios/plugins/check_dns_sync
+/usr/lib/nagios/plugins/check_dns_*
+/usr/lib/nagios/plugins/check_dnssec_*
 /usr/share/man/man1/check_dns*.1
