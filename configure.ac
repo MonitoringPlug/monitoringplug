@@ -167,7 +167,7 @@ AM_CONDITIONAL([HAVE_DEBUILD], [test "x$DEBUILD" != x])
 AM_CONDITIONAL([HAVE_RPMBUILD], [test "x$RPMBUILD" != x])
 AM_CONDITIONAL([HAVE_IPMI], [test "x$IPMI_LIBS" != x])
 AM_CONDITIONAL([HAVE_TERMIOS], [test "x$ac_cv_sys_posix_termios" != x])
-AM_CONDITIONAL([HAVE_OPING], [test "x$ac_cv_header_oping_h" != x])
+AM_CONDITIONAL([HAVE_OPING], [test "x$ac_cv_header_oping_h" == "xyes"])
 
 # GCC Opts
 #AX_CFLAGS_WARN_ALL()
