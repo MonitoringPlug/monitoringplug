@@ -28,7 +28,7 @@ const char *progdesc  = "Check if the zone serial are in sync.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2010";
 const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
-const char *progusage = "-D <domain> [-H <host>]";
+const char *progusage = "-D <domain> [-H <host> [-M]]";
 
 /* MP Includes */
 #include "mp_common.h"
@@ -43,6 +43,7 @@ const char *progusage = "-D <domain> [-H <host>]";
 /* Global Vars */
 const char *hostname = NULL;
 char *domainname = NULL;
+int hidden_master = 0;
 
 int main (int argc, char **argv) {
     /* Local Vars */
@@ -77,7 +78,7 @@ int main (int argc, char **argv) {
     if (!domain)
         usage("Invalid domainname '%s'", domainname);
 
-    if (hostname) {
+    if (hostname && hidden_master == 0) {
         // Check one nameserver against master
         if (mp_verbose > 0)
             printf("Check zone sync for %s on %s\n", domainname, hostname);
@@ -310,6 +311,66 @@ int main (int argc, char **argv) {
             ldns_resolver_set_rtt(res, NULL);
         }
     }
+    if (hidden_master == 1) {
+        // Create rdf from hostaddr
+        host = ldns_rdf_new_frm_str(LDNS_RDF_TYPE_A, hostname);
+#ifdef USE_IPV6
+        if (!host)
+            host = ldns_rdf_new_frm_str(LDNS_RDF_TYPE_AAAA, hostname);
+#endif
+        if (!host) {
+            ldns_rdf_deep_free(domain);
+            printf("ldns_rdf_get_type %d\n", ldns_rdf_get_type(host));
+            usage("Invalid hostname '%s'", hostname);
+        }
+
+        status = ldns_resolver_push_nameserver(res, host);
+        if (status != LDNS_STATUS_OK) {
+            warning("Query hidden master failed.");
+        }
+
+        // Fetch SOA
+        pkt = mp_ldns_resolver_query(res, domain, LDNS_RR_TYPE_SOA,
+                                  LDNS_RR_CLASS_IN, LDNS_RD);
+
+        if (pkt == NULL || ldns_pkt_get_rcode(pkt) != LDNS_RCODE_NOERROR) {
+            ldns_rdf_deep_free(domain);
+            ldns_resolver_deep_free(res);
+            if (pkt && ldns_pkt_get_rcode(pkt) == LDNS_RCODE_NXDOMAIN) {
+                ldns_pkt_free(pkt);
+                critical("Domain '%s' don't exist on hidden master.", domainname);
+            }
+            ldns_pkt_free(pkt);
+            critical("Unable to get SOA for %s from hidden master.", domainname);
+        }
+
+        if (mp_verbose > 2) {
+            printf("[ SOA Answer from hidden master %s ]----------\n",
+                    hostname);
+            ldns_pkt_print(stdout,pkt);
+        }
+
+        rrl = ldns_pkt_rr_list_by_name_and_type(pkt, domain,
+                                                LDNS_RR_TYPE_SOA,
+                                                LDNS_SECTION_ANSWER);
+
+        rr = ldns_rr_list_pop_rr(rrl);
+        ldns_rr_list_deep_free(rrl);
+        ldns_pkt_free(pkt);
+
+        if (mp_verbose>0) {
+            printf("[ SOA for hidden master %s ]----------\n", hostname);
+            ldns_rr_print(stdout, rr);
+        }
+
+        master_soa = rr;
+
+        while (ldns_resolver_nameserver_count(res) > 0)
+            ldns_rdf_deep_free(ldns_resolver_pop_nameserver(res));
+        /* Work around a double free bug in ldns_resolver_pop_nameserver */
+        ldns_resolver_set_nameservers(res, NULL);
+        ldns_resolver_set_rtt(res, NULL);
+    }
 
     ldns_resolver_deep_free(res);
 
@@ -361,6 +422,7 @@ int process_arguments (int argc, char **argv) {
         MP_LONGOPTS_DEFAULT,
         MP_LONGOPTS_HOST,
         {"domainname", required_argument, 0, 'D'},
+        {"hidden-master", no_argument, NULL, 'M'},
         MP_LONGOPTS_END
     };
 
@@ -371,7 +433,7 @@ int process_arguments (int argc, char **argv) {
     }
 
     while (1) {
-        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"H:D:", longopts, &option);
+        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"H:D:M", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -383,6 +445,9 @@ int process_arguments (int argc, char **argv) {
                 break;
             case 'D':
                 domainname = optarg;
+                break;
+            case 'M':
+                hidden_master = 1;
                 break;
         }
     }
@@ -411,6 +476,8 @@ void print_help (void) {
    print_help_host();
    printf(" -D, --domain=DOMAIN\n");
    printf("      The name of the domain to check.\n");
+   printf(" -M, --hidden-master\n");
+   printf("      Host is the hidden master.\n");
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */

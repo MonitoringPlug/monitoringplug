@@ -72,6 +72,13 @@
           <para>The name of the domain to check.</para>
         </listitem>
       </varlistentry>
+      <varlistentry>
+        <term><option>-M</option></term>
+        <term><option>--hiden-master</option></term>
+        <listitem>
+          <para>Host is the hidden master.</para>
+        </listitem>
+      </varlistentry>
     </variablelist>
   </refsect1>
   <xi:include href="mp_seealso.xml"/>
