@@ -127,9 +127,12 @@ int main (int argc, char **argv) {
 
         if (recursion) {
             // Fetch example.com SOA
+            ldns_resolver_set_recursive(res, TRUE);
             pkt = mp_ldns_resolver_query(res, example, LDNS_RR_TYPE_SOA,
                     LDNS_RR_CLASS_IN, LDNS_RD);
-            if (pkt && ldns_pkt_get_rcode(pkt) != LDNS_RCODE_SERVFAIL) {
+            ldns_resolver_set_recursive(res, FALSE);
+            if (pkt && (ldns_pkt_get_rcode(pkt) != LDNS_RCODE_REFUSED &&
+                    ldns_pkt_get_rcode(pkt) != LDNS_RCODE_SERVFAIL)) {
                 mp_strcat_comma(&out, "Recursive UDP Answer");
             }
             if (mp_verbose > 2) {
@@ -160,9 +163,12 @@ int main (int argc, char **argv) {
 
         if (recursion) {
             // Fetch example.com SOA
+            ldns_resolver_set_recursive(res, TRUE);
             pkt = mp_ldns_resolver_query(res, example, LDNS_RR_TYPE_SOA,
                     LDNS_RR_CLASS_IN, LDNS_RD);
-            if (pkt && ldns_pkt_get_rcode(pkt) != LDNS_RCODE_SERVFAIL) {
+            ldns_resolver_set_recursive(res, FALSE);
+            if (pkt && (ldns_pkt_get_rcode(pkt) != LDNS_RCODE_REFUSED &&
+                    ldns_pkt_get_rcode(pkt) != LDNS_RCODE_SERVFAIL)) {
                 mp_strcat_comma(&out, "Recursive TCP Answer");
             }
             if (mp_verbose > 2) {
@@ -236,30 +242,30 @@ int process_arguments (int argc, char **argv) {
 }
 
 void print_help (void) {
-   print_revision();
-   print_revision_ldns();
-   print_copyright();
+    print_revision();
+    print_revision_ldns();
+    print_copyright();
 
-   printf("\n");
+    printf("\n");
 
-   printf("Check description: %s", progdesc);
+    printf("Check description: %s", progdesc);
 
-   printf("\n\n");
+    printf("\n\n");
 
-   print_usage();
+    print_usage();
 
-   print_help_default();
-   print_help_host();
-   printf(" -D, --domain=DOMAIN\n");
-   printf("      The name of the domain to check.\n");
-   printf("     --norecursion\n");
-   printf("      Do not test for disabled recursion.\n");
-   printf("     --notcp\n");
-   printf("      Do not test TCP queries.\n");
-   printf("     --noudp\n");
-   printf("      Do not test UDP queries.\n");
-   printf("     --noaxfrn\n");
-   printf("      Do not test for disabled AXFR.\n");
+    print_help_default();
+    print_help_host();
+    printf(" -D, --domain=DOMAIN\n");
+    printf("      The name of the domain to check.\n");
+    printf("     --norecursion\n");
+    printf("      Do not test for disabled recursion.\n");
+    printf("     --notcp\n");
+    printf("      Do not test TCP queries.\n");
+    printf("     --noudp\n");
+    printf("      Do not test UDP queries.\n");
+    printf("     --noaxfrn\n");
+    printf("      Do not test for disabled AXFR.\n");
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */
