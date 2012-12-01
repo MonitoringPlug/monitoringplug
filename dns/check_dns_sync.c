@@ -306,9 +306,11 @@ int main (int argc, char **argv) {
 
             while (ldns_resolver_nameserver_count(res) > 0)
                 ldns_rdf_deep_free(ldns_resolver_pop_nameserver(res));
+#if LDNS_REVISION < ((1<<16)|(6<<8)|(15))
             /* Work around a double free bug in ldns_resolver_pop_nameserver */
             ldns_resolver_set_nameservers(res, NULL);
             ldns_resolver_set_rtt(res, NULL);
+#endif
         }
     }
     if (hidden_master == 1) {
@@ -367,12 +369,18 @@ int main (int argc, char **argv) {
 
         while (ldns_resolver_nameserver_count(res) > 0)
             ldns_rdf_deep_free(ldns_resolver_pop_nameserver(res));
+#if LDNS_REVISION < ((1<<16)|(6<<8)|(15))
         /* Work around a double free bug in ldns_resolver_pop_nameserver */
         ldns_resolver_set_nameservers(res, NULL);
         ldns_resolver_set_rtt(res, NULL);
+#endif
     }
 
     ldns_resolver_deep_free(res);
+
+    if (!master_soa) {
+        unknown("Master not within Nameservers. Please use --hidden-master");
+    }
 
     char *error_str = NULL;
     int error_cnt = 0;
@@ -455,6 +463,8 @@ int process_arguments (int argc, char **argv) {
     /* Check requirements */
     if (!domainname)
         usage("A domainname is mandatory.");
+    if (hidden_master && !hostname)
+        usage("Hidden Master requires Hostname.");
 
     return(OK);
 }
