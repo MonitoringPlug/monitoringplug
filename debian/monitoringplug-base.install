@@ -3,6 +3,7 @@
 /usr/lib/nagios/plugins/check_file
 /usr/lib/nagios/plugins/check_gsm_signal
 /usr/lib/nagios/plugins/check_mem
+/usr/lib/nagios/plugins/check_memcached
 /usr/lib/nagios/plugins/check_multipath
 /usr/lib/nagios/plugins/check_nrped
 /usr/lib/nagios/plugins/check_sockets
@@ -12,6 +13,7 @@
 /usr/share/man/man1/check_gsm_signal.1
 /usr/share/man/man1/check_file.1
 /usr/share/man/man1/check_mem.1
+/usr/share/man/man1/check_memcached.1
 /usr/share/man/man1/check_multipath.1
 /usr/share/man/man1/check_nrped.1
 /usr/share/man/man1/check_sockets.1

@@ -332,6 +332,7 @@ fi
 %{_libdir}/nagios/plugins/check_dhcp
 %{_libdir}/nagios/plugins/check_gsm_signal
 %{_libdir}/nagios/plugins/check_mem
+%{_libdir}/nagios/plugins/check_memcached
 %attr(4111, root, root) %{_libdir}/nagios/plugins/check_multipath
 %{_libdir}/nagios/plugins/check_nrped
 %{_libdir}/nagios/plugins/check_sockets
@@ -342,6 +343,7 @@ fi
 %{_mandir}/man1/check_dhcp.1.gz
 %{_mandir}/man1/check_gsm_signal.1.gz
 %{_mandir}/man1/check_mem.1.gz
+%{_mandir}/man1/check_memcached.1.gz
 %{_mandir}/man1/check_multipath.1.gz
 %{_mandir}/man1/check_nrped.1.gz
 %{_mandir}/man1/check_sockets.1.gz
