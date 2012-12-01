@@ -7,7 +7,7 @@ AM_DEFAULT_SOURCE_EXT = .c
 
 LDADD = ../lib/libmonitoringplug.a
 
-bin_PROGRAMS = check_file check_nrped
+bin_PROGRAMS = check_file check_memcached check_nrped
 
 if OS_LINUX
 bin_PROGRAMS += check_bonding check_dhcp check_mem check_multipath check_sockets

@@ -157,6 +157,11 @@ char *mp_recv_line(int sd) {
     len = 128 - strlen(mp_recv_line_buffer) -1;
     memmove(mp_recv_line_buffer, endPtr, len);
 
+    // Chomp
+    len = strlen(line);
+    if (line[len-1] == '\r')
+        line[len-1] = 0;
+
     return line;
 }
 
