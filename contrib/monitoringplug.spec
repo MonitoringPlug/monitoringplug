@@ -1,5 +1,5 @@
 Name:           monitoringplug
-Version:        0.13
+Version:        0.14
 Release:        1%{?dist}
 Summary:        Collection of monitoring plugins for Nagios
 
@@ -460,6 +460,13 @@ fi
 %{_mandir}/man1/notify_*
 
 %changelog
+* Sat Dec 01 2012 Marius Rieder <marius.rieder@durchmesser.ch> - 0.14-1
+- Added check_oping
+- Added check_dns_authoritative
+- Hidden master support for check_dns_sync
+- Added check_memcached
+- Fix some minor bugs
+
 * Tue Jul 31 2012 Marius Rieder <marius.rieder@durchmesser.ch> - 0.13-1
 - Added check_snmp_ups check (Credits to Oliver Schonefeld)
 - Some snmp bugfixed
