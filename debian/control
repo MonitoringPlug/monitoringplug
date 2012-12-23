@@ -5,8 +5,8 @@ Maintainer: Marius Rieder <marius.rieder@durchmesser.ch>
 Build-Depends: debhelper (>= 7.0.50~),
                autoconf, libtool,
                pkg-config,
-	       bison,
-	       flex,
+               bison,
+               flex,
                libcurl4-gnutls-dev,
                libxmlrpc-c3-dev,
                libgnutls-dev,
@@ -19,7 +19,8 @@ Build-Depends: debhelper (>= 7.0.50~),
                libexpat1-dev,
                libldns-dev, ldnsutils,
                libmysqlclient-dev,
-	       libopenipmi-dev
+               liboping-dev,
+               libopenipmi-dev
 Standards-Version: 3.9.1
 Homepage: http://svn.durchmesser.ch/trac/monitoringplug/
 
@@ -128,6 +129,17 @@ Description: Collection of MySQL monitoring plugins for Nagios.
  .
  This package provides a basic set of plugins with libmysqlclient as
  dependency.
+
+Package: monitoringplug-oping
+Architecture: any
+Depends: monitoringplug, liboping0, ${shlibs:Depends}, ${misc:Depends}
+Description: Collection of MySQL monitoring plugins for Nagios.
+ Collection of MySQL monitoring plugins for Nagios. It contains the following
+ plugins:
+ .
+  check_oping
+ .
+ This package provides a basic set of plugins with liboping as dependency.
 
 Package: monitoringplug-rhcs
 Architecture: any

@@ -98,6 +98,14 @@ Group:          Applications/System
 Requires:       mysql-libs
 Requires:       monitoringplug
 
+%if 0%{?rhel} != 5
+%package oping
+Summary:        Collection of liboping monitoring plugins for Nagios
+Group:          Applications/System
+Requires:       liboping
+Requires:       monitoringplug
+%endif
+
 %package rhcs
 Summary:        Collection of RedHat Cluster Suit monitoring plugins for Nagios
 Group:          Applications/System
@@ -186,6 +194,12 @@ This package contains the libvirt based plugins.
 %description mysql
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the mysql based plugins.
+
+%if 0%{?rhel} != 5
+%description oping
+Collection of monitoring plugins for Nagios and similar monitoring systems.
+This package contains the liboping based plugins.
+%endif
 
 %description rhcs
 Collection of monitoring plugins for Nagios and similar monitoring systems.
@@ -289,6 +303,11 @@ fi
 
 %post mysql
 /sbin/fixfiles -F -R monitoringplug-mysql restore ||:
+
+%if 0%{?rhel} != 5
+%post oping
+/sbin/fixfiles -F -R monitoringplug-oping restore ||:
+%endif
 
 %post rhcs
 /sbin/fixfiles -F -R monitoringplug-rhcs restore ||:
@@ -401,6 +420,13 @@ fi
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_mysql*
 %{_mandir}/man1/check_mysql*
+
+%if 0%{?rhel} != 5
+%files oping
+%defattr(-,root,root,-)
+%attr(4111, root, root) %{_libdir}/nagios/plugins/check_oping*
+%{_mandir}/man1/check_oping*
+%endif
 
 %files rhcs
 %defattr(-,root,root,-)

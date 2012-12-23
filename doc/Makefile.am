@@ -76,6 +76,12 @@ man_MANS += check_mysql.1 check_mysql_rows.1
 endif #HAVE_MYSQL
 EXTRA_DIST += check_mysql.1 check_mysql_rows.1
 
+#oping
+if HAVE_OPING
+man_MANS += check_oping.1
+endif #HAVE_OPING
+EXTRA_DIST += check_oping.1
+
 #rhcs
 if HAVE_EXPAT
 man_MANS += check_clustat.1

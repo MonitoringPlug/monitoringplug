@@ -24,11 +24,11 @@
  */
 
 const char *progname  = "check_oping";
-const char *progdesc  = "Check if a file can be downloaded from tftp.";
+const char *progdesc  = "Check if a Host can be reached by ICMP Echo Requeste.";
 const char *progvers  = "0.1";
-const char *progcopy  = "2010";
+const char *progcopy  = "2012";
 const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
-const char *progusage = "-H host -F file [-t timeout] [-w warn] [-c crit]";
+const char *progusage = "-H host";
 
 /* MP Includes */
 #include "mp_common.h"
@@ -138,7 +138,7 @@ int main (int argc, char **argv) {
             buf_len = sizeof(ttl);
 	        ping_iterator_get_info (iter, PING_INFO_RECV_TTL, &ttl, &buf_len);
     	
-	        if (mp_verbose > 0)
+	        if (mp_verbose > 0 && ttl > 0)
 	            printf("%zu bytes from %s (%s): icmp_seq=%u ttl=%i time=%.2f ms\n",
 	                data_len, hostname,  haddr, num, ttl, rt);
 	    }
@@ -158,6 +158,7 @@ int main (int argc, char **argv) {
 
     mp_perfdata_float("rta", (float)(rta/num), "s", rta_thresholds);
     mp_perfdata_int("pl", (int)(dropped*100)/num, "%", lost_thresholds);
+
 
     int result1, result2;
 
@@ -202,12 +203,16 @@ int process_arguments (int argc, char **argv) {
         MP_LONGOPTS_END
     };
 
-    if (argc < 4) {
+    if (argc < 2) {
         print_help();
         exit(STATE_OK);
     }
 
     /* Set default */
+    setWarn(&rta_thresholds, "~:90", NOEXT);
+    setWarn(&lost_thresholds, "80", NOEXT);
+    setCrit(&rta_thresholds, "~:100", NOEXT);
+    setCrit(&lost_thresholds, "90", NOEXT);
 
     while (1) {
         c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"H:46p:qi:I:T:w:c:", longopts, &option);
@@ -303,6 +308,23 @@ void print_help (void) {
 #ifdef USE_IPV6
     print_help_46();
 #endif //USE_IPV6
+
+    printf(" -p, --packets=[NUM]\n");
+    printf("      Number of packets to send. (Default to 5)\n");
+    printf(" -q, --quick\n");
+    printf("      Return as soon as OK is reached.\n");
+    printf(" -i, --interval=[SEC]\n");
+    printf("      Number of secounds to wait between packets. (Default to 1)\n");
+    printf(" -I, --interfact=[DEV]\n");
+    printf("      Set the outgoing network device to use.\n"); 
+    printf(" -T, --ttl=[NUM]\n");
+    printf("      Set TTL of packets to given value.\n");
+    printf(" -w, --warning=<rta>,<pl>%%\n");
+    printf("      Return warning if check exceeds TRA or Packet loss limit.\n");
+    printf("            (Default to 90ms and 10%%)\n");
+    printf(" -c, --critical=<rta>,<pl>%%\n");
+    printf("      Return critical if check exceeds TRA or Packet loss limit\n");
+    printf("            (Default to 100ms and 20%%)\n");
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */
