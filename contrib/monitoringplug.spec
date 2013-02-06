@@ -29,6 +29,7 @@ BuildRequires:  cups-devel
 BuildRequires:  gnutls-devel
 BuildRequires:  libvirt-devel
 BuildRequires:  libsmbclient-devel
+BuildRequires:  liboping-devel
 %endif
 
 %package base
