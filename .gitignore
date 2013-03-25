@@ -1,0 +1,15 @@
+*.o
+Makefile.in
+Makefile
+configure
+*.a
+.deps
+aclocal.m4
+autom4te.cache
+build-aux
+config.*
+check_*
+!check_*.c
+lib/mp_template_lex.c
+lib/mp_template_yacc.c
+lib/mp_template_yacc.h
