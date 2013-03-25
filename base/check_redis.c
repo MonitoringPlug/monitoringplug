@@ -56,12 +56,9 @@ int main (int argc, char **argv) {
     /* Local Vars */
     int socket;
     char *line;
-    char *key;
-    char *value;
     char *redis_version = NULL;
     int answer_size = 0;
     int used_memory = -1;              /** < Memory used now. */
-    int mc_limit_maxbytes = -1;     /** < Memory limit configured. */
     struct timeval start_time;
     double time_delta;
 
@@ -86,7 +83,7 @@ int main (int argc, char **argv) {
 
     line = mp_recv_line(socket);
     if (line[0] != '$')
-        unknown('Redis Server did not respong propperly.');
+        unknown("Redis Server did not respong propperly.");
 
     answer_size = strtol(line+1, NULL, 10);
 
@@ -121,7 +118,7 @@ int main (int argc, char **argv) {
 
     if (mp_showperfdata) {
         mp_perfdata_int3("bytes", used_memory, "", 0, 0, 0, 0,
-                1, 0, 1, mc_limit_maxbytes);
+                1, 0, 0, 0);
         mp_perfdata_float("time", (float)time_delta, "s", time_thresholds);
     }
 
