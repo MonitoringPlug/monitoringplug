@@ -355,6 +355,7 @@ fi
 %{_libdir}/nagios/plugins/check_memcached
 %attr(4111, root, root) %{_libdir}/nagios/plugins/check_multipath
 %{_libdir}/nagios/plugins/check_nrped
+%{_libdir}/nagios/plugins/check_redis
 %{_libdir}/nagios/plugins/check_sockets
 %{_libdir}/nagios/plugins/check_dummy_mp
 %{_libdir}/nagios/plugins/check_timeout
