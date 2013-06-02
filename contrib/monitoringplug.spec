@@ -367,6 +367,7 @@ fi
 %{_mandir}/man1/check_memcached.1.gz
 %{_mandir}/man1/check_multipath.1.gz
 %{_mandir}/man1/check_nrped.1.gz
+%{_mandir}/man1/check_redis.1.gz
 %{_mandir}/man1/check_sockets.1.gz
 
 %if 0%{?rhel} != 5
