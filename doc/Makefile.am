@@ -11,7 +11,7 @@ man_MANS = monitoringplug-eopt.5 \
 EXTRA_DIST = $(doc_DATA) $(man_MANS)
 
 # base
-man_MANS += check_file.1 check_memcached.1 check_nrped.1
+man_MANS += check_file.1 check_memcached.1 check_nrped.1 check_redis.1
 if OS_LINUX
 man_MANS += check_bonding.1 check_dhcp.1 check_mem.1 check_multipath.1 \
 			check_sockets.1
@@ -20,8 +20,8 @@ if HAVE_TERMIOS
 man_MANS += check_gsm_signal.1
 endif
 EXTRA_DIST += check_file.1 check_memcached.1 check_nrped.1 check_bonding.1 \
-			  check_dhcp.1 check_mem.1 check_multipath.1 check_sockets.1 \
-			  check_gsm_signal.1
+			  check_dhcp.1 check_mem.1 check_multipath.1 check_redis.1 \
+			  check_sockets.1 check_gsm_signal.1
 
 # cups
 if HAVE_CUPS
