@@ -127,6 +127,7 @@ int main (int argc, char **argv) {
     } else if (ping_warn) {
         warning("RPC Ping%s", buf);
     } else {
+        free(buf);
         ok("RPC Ping: %s", ping_ok);
     }
 

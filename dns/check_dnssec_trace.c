@@ -166,7 +166,6 @@ int main(int argc, char **argv) {
 
     if (rrl_domain_soa_rrsig == NULL ||
         ldns_rr_list_rr_count(rrl_domain_soa_rrsig) == 0) {
-        free(domainname);
         free(domaintrace);
         ldns_rdf_deep_free(rd_domain);
         ldns_rdf_deep_free(rd_trace);

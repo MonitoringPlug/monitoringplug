@@ -70,11 +70,12 @@ virConnectPtr  virt_connect() {
         }
         critical("Failed to get URI for hypervisor connection.");
     }
-    free(uri);
 
     if (mp_verbose > 0) {
         printf("Connected to hypervisor at \"%s\"\n", uri);
     }
+
+    free(uri);
 
    return conn;
 }
