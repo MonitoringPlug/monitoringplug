@@ -1,15 +1,31 @@
-*.o
-Makefile.in
-Makefile
-configure
+# Object files
 *.a
+*.o
 .deps
-aclocal.m4
+
+# Build System
+Makefile
+Makefile.in
 autom4te.cache
+aclocal.m4
 build-aux
-config.*
-check_*
-!check_*.c
+config.h*
+config.log
+config.status
+configure
+stamp-h1
+
+# Build Output
+doc/*.1
+doc/*.5
 lib/mp_template_lex.c
 lib/mp_template_yacc.c
 lib/mp_template_yacc.h
+notify/notify_*
+!notify/notify_*.[c|xml]
+policy/monitoringplug.if
+policy/monitoringplug.pp
+policy/monitoringplug.te
+policy/tmp
+*/check_*
+!*/check_*.xml
