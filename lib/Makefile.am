@@ -59,6 +59,13 @@ libldnsutils_a_SOURCES = ldns_utils.c ldns_utils.h
 libldnsutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(LDNS_CFLAGS)
 endif
 
+if HAVE_LIBPQ
+noinst_LIBRARIES += libpgsqlutils.a
+
+libpgsqlutils_a_SOURCES = pgsql_utils.c pgsql_utils.h
+libvirtutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(LIBPQ_LIBS)
+endif
+
 if HAVE_LIBVIRT
 noinst_LIBRARIES += libvirtutils.a
 
