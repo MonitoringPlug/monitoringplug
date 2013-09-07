@@ -69,6 +69,7 @@ AX_LIB_EXPAT()
 AX_LIB_LDNS()
 AX_LIB_CUPS([1.4.0])
 AX_LIB_MYSQL()
+AX_CHECK_POSTGRES_DB()
 LIBCURL_CHECK_CONFIG([yes],[7.7.2], [], [AC_MSG_WARN([Skipping curl])])
 # xmlrpc-c
 AX_LIB_XMLRPC()
@@ -162,6 +163,7 @@ AM_CONDITIONAL([HAVE_JSON], [test "x$JSON_LIBS" != x])
 AM_CONDITIONAL([HAVE_LIBVIRT], [test "x$LIBVIRT_LIBS" != x])
 AM_CONDITIONAL([HAVE_SMBCLIENT], [test "x$SMBCLIENT_LIBS" != x])
 AM_CONDITIONAL([HAVE_MYSQL], [test "x$MYSQL_CFLAGS" != x])
+AM_CONDITIONAL([HAVE_LIBPQ], [test "x$HAVE_LIBPQ" != x])
 AM_CONDITIONAL([HAVE_XSLTPROC], [test "x$XSLTPROC" != x])
 AM_CONDITIONAL([HAVE_DEBUILD], [test "x$DEBUILD" != x])
 AM_CONDITIONAL([HAVE_RPMBUILD], [test "x$RPMBUILD" != x])
@@ -222,26 +224,26 @@ AC_CHECK_FUNCS([alarm memset strdup strerror strspn strstr strtol])
 AC_CONFIG_FILES([Makefile
                  lib/Makefile
                  base/Makefile
-		 cups/Makefile
+                 cups/Makefile
                  curl/Makefile
                  dns/Makefile
                  dummy/Makefile
                  gnutls/Makefile
-		 ipmi/Makefile
-		 libvirt/Makefile
-		 mysql/Makefile
-		 oping/Makefile
+                 ipmi/Makefile
+                 libvirt/Makefile
+                 mysql/Makefile
+                 oping/Makefile
                  rhcs/Makefile
                  rpc/Makefile
                  selinux/Makefile
-		 smb/Makefile
+                 smb/Makefile
                  snmp/Makefile
                  xmlrpc/Makefile
                  contrib/Makefile
                  doc/Makefile
-		 policy/Makefile
-		 policy/monitoringplug.te
-		 notify/Makefile
+                 policy/Makefile
+                 policy/monitoringplug.te
+                 notify/Makefile
                  tests/Makefile
-		 tests/replayd/Makefile])
+                 tests/replayd/Makefile])
 AC_OUTPUT
