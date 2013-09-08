@@ -11,6 +11,11 @@ EXTRA_DIST = $(top_builddir)/debian
 MP_DIST_CLEANFILES =
 MP_DIST_CLEANDIRS =
 
+## dist
+dist: dist-gzip
+	md5sum $(PACKAGE)-$(VERSION).tar.gz > $(PACKAGE)-$(VERSION).tar.gz.md5
+	sha1sum $(PACKAGE)-$(VERSION).tar.gz > $(PACKAGE)-$(VERSION).tar.gz.sha1
+
 ## dist-rpm
 if HAVE_RPMBUILD
 MP_DIST_CLEANFILES += $(top_builddir)/$(PACKAGE)-$(VERSION)-*.rpm
