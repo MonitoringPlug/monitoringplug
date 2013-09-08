@@ -16,6 +16,13 @@ configure
 stamp-h1
 
 # Build Output
+monitoringplug*.tar.gz*
+debian/files
+debian/*debhelper.log
+debian/*.substvars
+debian/monitoringplug/
+debian/monitoringplug-*/
+debian/tmp/
 doc/*.1
 doc/*.5
 lib/mp_template_lex.c
@@ -23,9 +30,12 @@ lib/mp_template_yacc.c
 lib/mp_template_yacc.h
 notify/notify_*
 !notify/notify_*.[c|xml]
+package/
 policy/monitoringplug.if
 policy/monitoringplug.pp
 policy/monitoringplug.te
 policy/tmp
 */check_*
 !*/check_*.xml
+tests/replayd/replayd
+tests/test-suite.log
