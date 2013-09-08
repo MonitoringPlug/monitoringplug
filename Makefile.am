@@ -18,8 +18,7 @@ dist: dist-gzip
 
 ## dist-rpm
 if HAVE_RPMBUILD
-MP_DIST_CLEANFILES += $(top_builddir)/$(PACKAGE)-$(VERSION)-*.rpm
-MP_DIST_CLEANDIRS += x86_64 i386 build
+MP_DIST_CLEANDIRS += package build
 
 dist-rpm: rpm
 
@@ -27,15 +26,15 @@ srpm: dist-gzip
 	$(RPMBUILD) --define "_sourcedir $(abs_top_srcdir)" \
 		--define "_specdir $(abs_top_srcdir)/contrib" \
 		--define "_builddir $(abs_top_srcdir)/build" \
-		--define "_srcrpmdir $(abs_top_srcdir)" \
-		--define "_rpmdir $(abs_top_srcdir)" \
+		--define "_srcrpmdir $(abs_top_srcdir)/package" \
+		--define "_rpmdir $(abs_top_srcdir)/package" \
 		--nodeps -bs contrib/monitoringplug.spec
 rpm: dist-gzip
 	$(RPMBUILD) --define "_sourcedir $(abs_top_srcdir)" \
 		--define "_specdir $(abs_top_srcdir)/contrib" \
 		--define "_builddir $(abs_top_srcdir)/build" \
-	   	--define "_srcrpmdir $(abs_top_srcdir)" \
-		--define "_rpmdir $(abs_top_srcdir)" \
+	   	--define "_srcrpmdir $(abs_top_srcdir)/package" \
+		--define "_rpmdir $(abs_top_srcdir)/package" \
 		--nodeps -ba contrib/monitoringplug.spec
 
 endif
