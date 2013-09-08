@@ -82,6 +82,12 @@ man_MANS += check_oping.1
 endif #HAVE_OPING
 EXTRA_DIST += check_oping.1
 
+#postgresql
+if HAVE_LIBPQ
+man_MANS += check_pgsql.1 check_pgsql_slave.1
+endif #HAVE_LIBPQ
+EXTRA_DIST +=  check_pgsql.1 check_pgsql_slave.1
+
 #rhcs
 if HAVE_EXPAT
 man_MANS += check_clustat.1

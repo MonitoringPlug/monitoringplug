@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+]>
+
+<variablelist>
+  <varlistentry>
+    <term><option>-u</option></term>
+    <term><option>--user=<replaceable>USER</replaceable></option></term>
+    <listitem>
+      <para>The PostgreSQL user name to use when connecting to the server.</para>
+    </listitem>
+  </varlistentry> 
+  <varlistentry>
+    <term><option>-p</option></term>
+    <term><option>--password=<replaceable>PASSWORD</replaceable></option></term>
+    <listitem>
+      <para>The password to use when connecting to the server.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><option>-d</option></term>
+    <term><option>--database=<replaceable>DATABASE</replaceable></option></term>
+    <listitem>
+      <para>The Schema to use.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><option>-p</option></term>
+    <term><option>--port=<replaceable>PORT</replaceable></option></term>
+    <listitem>
+      <para>The TCP/IP port number or UNIX-Socketdir  to use for the connection.</para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+<!-- vim: set ts=2 sw=2 expandtab ai syn=docbk : -->
