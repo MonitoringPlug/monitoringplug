@@ -1,8 +1,15 @@
+monitoringplug (0.16) monitoringplug; urgency=low
+
+  * Added PostgreSQL checks
+
+ -- Marius Rieder <marius.rieder@durchmesser.ch>  Sun, 08 Sep 2013 09:43:46 +0200
+
+
 monitoringplug (0.15) monitoringplug; urgency=low
 
   * Added check_redis
 
- -- Marius Rieder <marius.rieder@durchmesser.ch>  Sun, 02 Jun 2012 13:24:39 +0200
+ -- Marius Rieder <marius.rieder@durchmesser.ch>  Sun, 02 Jun 2013 13:24:39 +0200
 
 monitoringplug (0.14) monitoringplug; urgency=low
 

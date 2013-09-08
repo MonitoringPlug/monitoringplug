@@ -1,5 +1,5 @@
 Name:           monitoringplug
-Version:        0.15
+Version:        0.16
 Release:        1%{?dist}
 Summary:        Collection of monitoring plugins for Nagios
 
@@ -19,6 +19,7 @@ BuildRequires:  net-snmp-devel
 BuildRequires:  xmlrpc-c-devel
 BuildRequires:  selinux-policy-devel
 BuildRequires:  OpenIPMI-devel
+BuildRequires:  postgresql-devel
 
 %if 0%{?rhel} == 5
 BuildRequires:  curl-devel
@@ -106,6 +107,12 @@ Group:          Applications/System
 Requires:       liboping
 Requires:       monitoringplug
 %endif
+
+%package postgresql
+Summary:        Collection of PostgreSQL monitoring plugins for Nagios
+Group:          Applications/System
+Requires:       postgresql-libs
+Requires:       monitoringplug
 
 %package rhcs
 Summary:        Collection of RedHat Cluster Suit monitoring plugins for Nagios
@@ -195,6 +202,10 @@ This package contains the libvirt based plugins.
 %description mysql
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the mysql based plugins.
+
+%description postgresql
+Collection of monitoring plugins for Nagios and similar monitoring systems.
+This package contains the PostgreSQL based plugins.
 
 %if 0%{?rhel} != 5
 %description oping
@@ -304,6 +315,9 @@ fi
 
 %post mysql
 /sbin/fixfiles -F -R monitoringplug-mysql restore ||:
+
+%post postgresql
+/sbin/fixfiles -F -R monitoringplug-postgresql restore ||:
 
 %if 0%{?rhel} != 5
 %post oping
@@ -424,6 +438,11 @@ fi
 %{_libdir}/nagios/plugins/check_mysql*
 %{_mandir}/man1/check_mysql*
 
+%files postgresql
+%defattr(-,root,root,-)
+%{_libdir}/nagios/plugins/check_pgsql*
+%{_mandir}/man1/check_pgsql*
+
 %if 0%{?rhel} != 5
 %files oping
 %defattr(-,root,root,-)
@@ -489,6 +508,9 @@ fi
 %{_mandir}/man1/notify_*
 
 %changelog
+* Sun Sep 08 2013 Marius Rieder <marius.rieder@durchmesser.ch> - 0.16-1
+- Added PostgreSQL checks
+
 * Sun Jun 02 2013 Marius Rieder <marius.rieder@durchmesser.ch> - 0.15-1
 - Added check_redis
 
@@ -505,7 +527,7 @@ fi
 - check_ipmi_*: Ignore unreadable sensors.
 - Build system improvments.
 
-* Sun Jul 23 2012 Marius Rieder <marius.rieder@durchmesser.ch> - 0.12-1
+* Mon Jul 23 2012 Marius Rieder <marius.rieder@durchmesser.ch> - 0.12-1
 - Fix a SNMP, eopt, perfdata and clustat bug.
 - Improved check_akcp.
 - Added STARTTLS support to check_ssl_cert
