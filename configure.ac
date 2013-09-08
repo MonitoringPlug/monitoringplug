@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.59])
 
-AC_INIT([monitoringplug],[0.15],[marius.rieder@durchmesser.ch])
+AC_INIT([monitoringplug],[0.16],[marius.rieder@durchmesser.ch])
 AC_CONFIG_AUX_DIR(build-aux)
 AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADERS([config.h])
@@ -233,6 +233,7 @@ AC_CONFIG_FILES([Makefile
                  libvirt/Makefile
                  mysql/Makefile
                  oping/Makefile
+                 pgsql/Makefile
                  rhcs/Makefile
                  rpc/Makefile
                  selinux/Makefile
