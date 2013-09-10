@@ -97,7 +97,7 @@ int main (int argc, char **argv) {
         if (rc == 0)
             break;
 
-        if (strcmp(raid_state, "Normal") == 0) {
+        if ( (strcmp(raid_state, "Normal") == 0) || (strcmp(raid_state, "Checking") == 0) ){
             continue;
         }
 
