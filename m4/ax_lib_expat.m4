@@ -29,6 +29,7 @@
 #
 #     AC_SUBST(EXPAT_CFLAGS)
 #     AC_SUBST(EXPAT_LIBS)
+#     AC_SUBST(EXPAT_LDFLAGS)
 #     AC_SUBST(EXPAT_VERSION)  -- only if version requirement is used
 #
 #   And sets:
@@ -44,7 +45,7 @@
 #   and this notice are preserved. This file is offered as-is, without any
 #   warranty.
 
-#serial 9
+#serial 10
 
 AC_DEFUN([AX_LIB_EXPAT],
 [
@@ -108,7 +109,8 @@ AC_DEFUN([AX_LIB_EXPAT],
 
     if test -n "$expat_prefix"; then
         expat_include_dir="$expat_prefix/include"
-        expat_lib_flags="-L$expat_prefix/lib -lexpat"
+        expat_ld_flags="-L$expat_prefix/lib"
+        expat_lib_flags="-lexpat"
         run_expat_test="yes"
     elif test "$expat_requested" = "yes"; then
         if test -n "$expat_include_dir" -a -n "$expat_lib_flags"; then
@@ -126,15 +128,18 @@ AC_DEFUN([AX_LIB_EXPAT],
         saved_CPPFLAGS="$CPPFLAGS"
         CPPFLAGS="$CPPFLAGS -I$expat_include_dir"
 
+        saved_LIBS="$LIBS"
+        LIBS="$LIBS $expat_lib_flags"
+
         saved_LDFLAGS="$LDFLAGS"
-        LIBS="$LDFLAGS $expat_lib_flags"
+        LDFLAGS="$LDFLAGS $expat_ld_flags"
 
         dnl
         dnl Check Expat headers
         dnl
         AC_MSG_CHECKING([for Expat XML Parser headers in $expat_include_dir])
 
-        AC_LANG_PUSH([C])
+        AC_LANG_PUSH([C++])
         AC_COMPILE_IFELSE([
             AC_LANG_PROGRAM(
                 [[
@@ -152,7 +157,7 @@ AC_DEFUN([AX_LIB_EXPAT],
             AC_MSG_RESULT([not found])
             ]
         )
-        AC_LANG_POP([C])
+        AC_LANG_POP([C++])
 
         dnl
         dnl Check Expat libraries
@@ -161,7 +166,7 @@ AC_DEFUN([AX_LIB_EXPAT],
 
             AC_MSG_CHECKING([for Expat XML Parser libraries])
 
-            AC_LANG_PUSH([C])
+            AC_LANG_PUSH([C++])
             AC_LINK_IFELSE([
                 AC_LANG_PROGRAM(
                     [[
@@ -175,6 +180,7 @@ p = NULL;
                 )],
                 [
                 EXPAT_LIBS="$expat_lib_flags"
+                EXPAT_LDFLAGS="$expat_ld_flags"
                 expat_lib_found="yes"
                 AC_MSG_RESULT([found])
                 ],
@@ -183,11 +189,12 @@ p = NULL;
                 AC_MSG_RESULT([not found])
                 ]
             )
-            AC_LANG_POP([C])
+            AC_LANG_POP([C++])
         fi
 
         CPPFLAGS="$saved_CPPFLAGS"
         LDFLAGS="$saved_LDFLAGS"
+        LIBS="$saved_LIBS"
     fi
 
     AC_MSG_CHECKING([for Expat XML Parser])
@@ -196,6 +203,7 @@ p = NULL;
         if test "$expat_header_found" = "yes" -a "$expat_lib_found" = "yes"; then
 
             AC_SUBST([EXPAT_CFLAGS])
+            AC_SUBST([EXPAT_LDFLAGS])
             AC_SUBST([EXPAT_LIBS])
 
             HAVE_EXPAT="yes"
@@ -273,4 +281,3 @@ p = NULL;
         fi
     fi
 ])
-
