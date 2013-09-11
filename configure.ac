@@ -108,7 +108,12 @@ AC_ARG_WITH([oping], AS_HELP_STRING([--without-oping], [Build without the oping 
 AS_IF([test "x$with_oping" != "xno"], [
        AC_CHECK_HEADERS([oping.h], [], [AC_MSG_WARN([Skipping liboping])])
        ],[AC_MSG_WARN([Skipping liboping])])
-
+# FCGI
+AC_ARG_WITH([fcgi], AS_HELP_STRING([--without-fcgi], [Build without the fcgi library]))
+AS_IF([test "x$with_fcgi" != "xno"], [
+       AC_CHECK_LIB([fcgi], [FCGX_Init], [FCGI_LIBS='-lfcgi'], [AC_MSG_WARN([Skipping libfcgi])])
+       AC_SUBST(FCGI_LIBS)
+       ],[AC_MSG_WARN([Skipping libfcgi])])
 # IPv6 Option
 AC_ARG_WITH([ipv6],
     [AS_HELP_STRING([--with-ipv6], [support IPv6 @<:@default=check@:>@])],
@@ -170,6 +175,7 @@ AM_CONDITIONAL([HAVE_RPMBUILD], [test "x$RPMBUILD" != x])
 AM_CONDITIONAL([HAVE_IPMI], [test "x$IPMI_LIBS" != x])
 AM_CONDITIONAL([HAVE_TERMIOS], [test "x$ac_cv_sys_posix_termios" != x])
 AM_CONDITIONAL([HAVE_OPING], [test "x$ac_cv_header_oping_h" == "xyes"])
+AM_CONDITIONAL([HAVE_FCGI], [test "x$ac_cv_lib_fcgi_FCGX_Init" == "xyes"])
 
 # GCC Opts
 #AX_CFLAGS_WARN_ALL()
@@ -228,6 +234,7 @@ AC_CONFIG_FILES([Makefile
                  curl/Makefile
                  dns/Makefile
                  dummy/Makefile
+                 fcgi/Makefile
                  gnutls/Makefile
                  ipmi/Makefile
                  libvirt/Makefile
