@@ -96,21 +96,25 @@ int is_hostaddr(const char *address) {
 
 int is_url(const char *url) {
     char *buf, *buf2;
-    char *remain = strdup(url);
+    char *ptr, *remain;
+    ptr = remain = strdup(url);
 
     /* Schema */
     buf = strsep(&remain, ":");
-    if (!remain)
+    if (!remain || !isalpha(*buf)) {
+        free(ptr);
         return FALSE;
-    if (!isalpha(*buf))
-        return FALSE;
+    }
     while(*(++buf)) {
         if (isalnum(*buf) || *buf == '+' || *buf == '-' || *buf == '.')
             continue;
+        free(ptr);
         return FALSE;
     }
-    if (*(remain) != '/' || *(remain+1) != '/')
+    if (*(remain) != '/' || *(remain+1) != '/') {
+        free(ptr);
         return FALSE;
+    }
     remain+=2;
 
     /* Authority */
@@ -132,6 +136,7 @@ int is_url(const char *url) {
                     buf2+=2;
                     continue;
                 }
+                free(ptr);
                 return FALSE;
             } while(*(++buf2));
         }
@@ -142,21 +147,28 @@ int is_url(const char *url) {
             buf2 = strsep(&buf, "]");
             if(*buf2 == ':')
                 buf2++;
-            if (!buf)
+            if (!buf) {
+                free(ptr);
                 return FALSE;
+            }
             do {
                 if (isxdigit(*buf2) || *buf2 == ':')
                     continue;
+                free(ptr);
                 return FALSE;
             } while(*(++buf2));
         } else if (isdigit(*buf)) {
             buf2 = strsep(&buf, ":");
-            if (!is_hostaddr(buf2))
+            if (!is_hostaddr(buf2)) {
+                free(ptr);
                 return FALSE;
+            }
         } else {
             buf2 = strsep(&buf, ":");
-            if (!is_hostname(buf2))
+            if (!is_hostname(buf2)) {
+                free(ptr);
                 return FALSE;
+            }
         }
 
         /* Authority - Port */
@@ -164,14 +176,17 @@ int is_url(const char *url) {
             do {
                 if (isdigit(*buf))
                     continue;
+                free(ptr);
                 return FALSE;
             } while(*(++buf));
         }
 
     }
 
-    if (!remain || *remain == '\0')
+    if (!remain || *remain == '\0') {
+        free(ptr);
         return TRUE;
+    }
 
     /* Path */
     buf = strsep(&remain, "?#");
@@ -190,11 +205,14 @@ int is_url(const char *url) {
             buf+=3;
             continue;
         }
+        free(ptr);
         return FALSE;
     }
 
-    if (!remain || *remain == '\0')
+    if (!remain || *remain == '\0') {
+        free(ptr);
         return TRUE;
+    }
 
     /* Query & Fragment */
     buf = remain;
@@ -213,9 +231,11 @@ int is_url(const char *url) {
             buf+=3;
             continue;
         }
+        free(ptr);
         return FALSE;
     }
 
+    free(ptr);
     return TRUE;
 }
 

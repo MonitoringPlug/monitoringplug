@@ -58,8 +58,8 @@ int quick = 0;
 
 int main (int argc, char **argv) {
     /* Local Vars */
-    int			rv;
-    pingobj_t 	*oping;
+    int         rv;
+    pingobj_t   *oping;
     pingobj_iter_t *iter;
 
     uint32_t dropped=0, num=0;
@@ -82,7 +82,7 @@ int main (int argc, char **argv) {
     /* Init liboping */
     oping = ping_construct();
     if (oping == NULL)
-    	unknown("Can't initialize liboping");
+        unknown("Can't initialize liboping");
     
     
     rv = ping_setopt(oping, PING_OPT_AF, &ipv);
@@ -105,54 +105,68 @@ int main (int argc, char **argv) {
 
     rv = ping_host_add(oping, hostname);
     if (rv != 0)
-    	unknown("liboping setup Error: %s", ping_get_error(oping));
-    	
+        unknown("liboping setup Error: %s", ping_get_error(oping));
+        
 
     for (; packets > 0; packets--) {
         rv = ping_send(oping);
         if (rv < 0)
             critical("Send Error: %s", ping_get_error(oping));
 
-	    for (iter = ping_iterator_get(oping); iter != NULL; iter = ping_iterator_next(iter)) {
+        for (iter = ping_iterator_get(oping); iter != NULL; iter = ping_iterator_next(iter)) {
 
-	        buf_len = sizeof(dropped);
-	        rv =  ping_iterator_get_info(iter, PING_INFO_DROPPED,
-	                &dropped, &buf_len);
+            buf_len = sizeof(dropped);
+            rv =  ping_iterator_get_info(iter, PING_INFO_DROPPED,
+                    &dropped, &buf_len);
+            if (rv != 0)
+                unknown("liboping ping_iterator_get_info failed!");
 
             buf_len = sizeof(rt);
-	        rv =  ping_iterator_get_info(iter, PING_INFO_LATENCY,
-    	        &rt, &buf_len);
-	        rta += rt;
+            rv =  ping_iterator_get_info(iter, PING_INFO_LATENCY,
+                &rt, &buf_len);
+            if (rv != 0)
+                unknown("liboping ping_iterator_get_info failed!");
+            rta += rt;
 
             buf_len = sizeof(num);
-	        rv =  ping_iterator_get_info(iter, PING_INFO_SEQUENCE,
-    	        &num, &buf_len);
+            rv =  ping_iterator_get_info(iter, PING_INFO_SEQUENCE,
+                &num, &buf_len);
+            if (rv != 0)
+                unknown("liboping ping_iterator_get_info failed!");
 
-	        data_len = 0;
-	        rv = ping_iterator_get_info (iter, PING_INFO_DATA, NULL, &data_len);
+            data_len = 0;
+            rv = ping_iterator_get_info(iter, PING_INFO_DATA,
+                    NULL, &data_len);
+            if (rv != 0)
+                unknown("liboping ping_iterator_get_info failed!");
 
             buf_len = sizeof(haddr);
-	        rv =  ping_iterator_get_info(iter, PING_INFO_ADDRESS,
-	                haddr, &buf_len);
+            rv =  ping_iterator_get_info(iter, PING_INFO_ADDRESS,
+                    haddr, &buf_len);
+            if (rv != 0)
+                unknown("liboping ping_iterator_get_info failed!");
 
             buf_len = sizeof(ttl);
-	        ping_iterator_get_info (iter, PING_INFO_RECV_TTL, &ttl, &buf_len);
-    	
-	        if (mp_verbose > 0 && ttl > 0)
-	            printf("%zu bytes from %s (%s): icmp_seq=%u ttl=%i time=%.2f ms\n",
-	                data_len, hostname,  haddr, num, ttl, rt);
-	    }
+            rv = ping_iterator_get_info(iter, PING_INFO_RECV_TTL,
+                    &ttl, &buf_len);
+            if (rv != 0)
+                unknown("liboping ping_iterator_get_info failed!");
+        
+            if (mp_verbose > 0 && ttl > 0)
+                printf("%zu bytes from %s (%s): icmp_seq=%u ttl=%i time=%.2f ms\n",
+                    data_len, hostname,  haddr, num, ttl, rt);
+        }
 
-	    if (quick &&
-	        get_status((float)(rta/num), rta_thresholds) == STATE_OK &&
-	        get_status((dropped*100)/num, lost_thresholds) == STATE_OK) {
-	        break;
-	    } else if (packets > 1){
-	        if (interval.tv_sec || interval.tv_nsec)
-	            nanosleep(&interval, NULL);
-	        else
-	            sleep(1);
-	    }
+        if (quick &&
+            get_status((float)(rta/num), rta_thresholds) == STATE_OK &&
+            get_status((dropped*100)/num, lost_thresholds) == STATE_OK) {
+            break;
+        } else if (packets > 1){
+            if (interval.tv_sec || interval.tv_nsec)
+                nanosleep(&interval, NULL);
+            else
+                sleep(1);
+        }
 
     }
 
