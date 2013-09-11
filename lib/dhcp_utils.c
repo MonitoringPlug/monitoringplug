@@ -84,7 +84,7 @@ ssize_t mp_dhcp_send(int sockfd, struct dhcp_pkt *pkt, struct sockaddr_in *from,
 
         // Build IP/UDP Header
         buf = mp_malloc(14 + sizeof(struct ip) + sizeof(struct udphdr));
-        bzero(buf, sizeof(buf));
+        bzero(buf, sizeof(*buf));
         ipHdr = (struct ip *)(void *)(buf + 14);
         udpHdr = (struct udphdr *)(void *)(buf + 14 + sizeof(struct ip));
 

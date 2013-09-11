@@ -399,7 +399,7 @@ int mp_snmp_subtree_query(netsnmp_session *ss,
     int rc;
 
     /* prepare result */
-    memset(subtree, '\0', sizeof(subtree));
+    memset(subtree, '\0', sizeof(*subtree));
     subtree->vars = NULL;
 
     memcpy(last_oid, subtree_oid, subtree_len * sizeof(oid));
