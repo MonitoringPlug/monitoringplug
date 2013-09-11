@@ -52,6 +52,13 @@ librhcsutils_a_SOURCES = rhcs_utils.c rhcs_utils.h
 librhcsutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(EXPAT_CFLAGS)
 endif
 
+if HAVE_FCGI
+noinst_LIBRARIES += libfcgiutils.a
+
+libfcgiutils_a_SOURCES = fcgi_utils.c fcgi_utils.h
+libfcgiutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(FCGI_LIBS)
+endif
+
 if HAVE_LDNS
 noinst_LIBRARIES += libldnsutils.a
 
