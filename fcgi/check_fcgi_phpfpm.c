@@ -48,12 +48,13 @@ const char *progusage = "[-t <timeout>]";
 
 /* Global Vars */
 char *fcgisocket = NULL;
+char *query = "/status2";
 
 int main (int argc, char **argv) {
     int fcgiSock = -1;
     FCGX_Stream *paramsStream;
     char *pool = NULL;
-    char *content, *data, *line;
+    char *content, *data;
     int type, count;
     struct json_object  *obj, *slaveobj;
 
@@ -82,8 +83,8 @@ int main (int argc, char **argv) {
     /* Set FCGI Params */
     paramsStream = FCGX_CreateWriter(fcgiSock, 1, 8192, FCGI_PARAMS);
     mp_fcgi_putkv(paramsStream, "REQUEST_METHOD", "GET");
-    mp_fcgi_putkv(paramsStream, "SCRIPT_NAME", "/status");
-    mp_fcgi_putkv(paramsStream, "SCRIPT_FILENAME", "/status");
+    mp_fcgi_putkv(paramsStream, "SCRIPT_NAME", query);
+    mp_fcgi_putkv(paramsStream, "SCRIPT_FILENAME", query);
     mp_fcgi_putkv(paramsStream, "QUERY_STRING", "json&");
     FCGX_FClose(paramsStream);
     FCGX_FreeStream(&paramsStream);
@@ -104,11 +105,14 @@ int main (int argc, char **argv) {
     /* Skip http headers */
     content = data;
     do {
-        pool = strsep(&data, "\n");
+        (void)strsep(&data, "\n");
     } while (data && data[0] != '\r');
 
     /* Parse JSON */
     obj = json_tokener_parse(data);
+    if (obj == NULL) {
+        critical("PHP-FPM: JSON parsing failed.");
+    }
 
     /* Read pool name */
     slaveobj = json_object_object_get(obj, "pool");
@@ -143,6 +147,7 @@ int process_arguments (int argc, char **argv) {
     static struct option longopts[] = {
         MP_LONGOPTS_DEFAULT,
         {"socket", required_argument, NULL, (int)'s'},
+        {"query", required_argument, NULL, (int)'q'},
         MP_LONGOPTS_END
     };
 
@@ -152,7 +157,7 @@ int process_arguments (int argc, char **argv) {
     }
 
     while (1) {
-        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"s:", longopts, &option);
+        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"s:q:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -160,6 +165,9 @@ int process_arguments (int argc, char **argv) {
         switch (c) {
             case 's':
                 fcgisocket = optarg;
+                break;
+            case 'q':
+                query = optarg;
                 break;
         }
     }
@@ -180,6 +188,11 @@ void print_help (void) {
     print_usage();
 
     print_help_default();
+
+    printf(" -s, --socket=<SOCKET>\n");
+    printf("      FastCGID socket to connect to.\n");
+    printf(" -q, --query=<QUERY>\n");
+    printf("      Query string for the PHP-FPM status. (Default to: /status)\n");
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */

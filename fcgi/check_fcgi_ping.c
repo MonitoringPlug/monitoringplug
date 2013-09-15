@@ -1,8 +1,8 @@
 /***
- * Monitoring Plugin - check_timeout.c
+ * Monitoring Plugin - check_fcgi_ping.c
  **
  *
- * check_timeout - This plugin simulate a plugin timeout.
+ * check_fcgi_ping - This plugin ping a fcgid.
  *
  * Copyright (C) 2012 Marius Rieder <marius.rieder@durchmesser.ch>
  *
@@ -23,8 +23,8 @@
  * $Id$
  */
 
-const char *progname  = "check_timeout";
-const char *progdesc  = "This plugin simulate a plugin timeout.";
+const char *progname  = "check_fcgi_ping";
+const char *progdesc  = "This plugin ping a fcgid.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2010";
 const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
@@ -128,6 +128,9 @@ void print_help (void) {
     print_usage();
 
     print_help_default();
+
+    printf(" -s, --socket=<SOCKET>\n");
+    printf("      FastCGID socket to connect to.\n");
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */
