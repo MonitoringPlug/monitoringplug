@@ -20,6 +20,8 @@ BuildRequires:  xmlrpc-c-devel
 BuildRequires:  selinux-policy-devel
 BuildRequires:  OpenIPMI-devel
 BuildRequires:  postgresql-devel
+BuildRequires:  fcgi-devel
+BuildRequires:  varnish-libs-devel
 
 %if 0%{?rhel} == 5
 BuildRequires:  curl-devel
@@ -70,6 +72,12 @@ Requires:       monitoringplug
 Summary:        Collection of dns monitoring plugins for Nagios
 Group:          Applications/System
 Requires:       ldns
+Requires:       monitoringplug
+
+%package fcgi
+Summary:        Collection of FastCGI monitoring plugins for Nagios
+Group:          Applications/System
+Requires:       fcgi
 Requires:       monitoringplug
 
 %if 0%{?rhel} != 5
@@ -146,6 +154,12 @@ Group:          Applications/System
 Requires:       net-snmp-libs
 Requires:       monitoringplug
 
+%package varnish
+Summary:        Collection of Varnish monitoring plugins for Nagios
+Group:          Applications/System
+Requires:       varnish-libs
+Requires:       monitoringplug
+
 %package xmlrpc
 Summary:        Collection of xmlrpc monitoring plugins for Nagios
 Group:          Applications/System
@@ -182,6 +196,10 @@ This package contains the curl and json based plugins.
 %description dns
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the dns plugins which use the ldns library.
+
+%description fcgi
+Collection of monitoring plugins for Nagios and similar monitoring systems.
+This package contains the dns plugins which use the fcgi library.
 
 %if 0%{?rhel} != 5
 %description gnutls
@@ -234,6 +252,10 @@ This package contains the smb/cifs based plugins.
 %description snmp
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the snmp based plugins.
+
+%description varnish
+Collection of monitoring plugins for Nagios and similar monitoring systems.
+This package contains the varnishapi based plugins.
 
 %description xmlrpc
 Collection of monitoring plugins for Nagios and similar monitoring systems.
@@ -300,6 +322,9 @@ fi
 %post dns
 /sbin/fixfiles -F -R monitoringplug-dns restore ||:
 
+%post fcgi
+/sbin/fixfiles -F -R monitoringplug-fcgi restore ||:
+
 %if 0%{?rhel} != 5
 %post gnutls
 /sbin/fixfiles -F -R monitoringplug-gnutls restore ||:
@@ -340,6 +365,9 @@ fi
 
 %post snmp
 /sbin/fixfiles -F -R monitoringplug-snmp restore ||:
+
+%post varnish
+/sbin/fixfiles -F -R monitoringplug-varnish restore ||:
 
 %post xmlrpc
 /sbin/fixfiles -F -R monitoringplug-xmlrpc restore ||:
@@ -413,6 +441,11 @@ fi
 %{_libdir}/nagios/plugins/check_dnssec_*
 %{_mandir}/man1/check_dns_*
 %{_mandir}/man1/check_dnssec_*
+
+%files fcgi
+%defattr(-,root,root,-)
+%{_libdir}/nagios/plugins/check_fcgi_*
+%{_mandir}/man1/check_fcgi_*
 
 %if 0%{?rhel} != 5
 %files gnutls
@@ -495,6 +528,11 @@ fi
 %{_mandir}/man1/check_qnap_vols.1.gz
 %{_mandir}/man1/check_snmp_ups.1.gz
 
+%files varnish
+%defattr(-,root,root,-)
+%{_libdir}/nagios/plugins/check_varnish
+%{_mandir}/man1/check_varnish.1.gz
+
 %files xmlrpc
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_rhn_entitlements
@@ -509,7 +547,9 @@ fi
 
 %changelog
 * Sun Sep 08 2013 Marius Rieder <marius.rieder@durchmesser.ch> - 0.16-1
-- Added PostgreSQL checks
+- Added PostgreSQL check
+- Added FastCGI checks
+- Added Varnish check
 
 * Sun Jun 02 2013 Marius Rieder <marius.rieder@durchmesser.ch> - 0.15-1
 - Added check_redis
