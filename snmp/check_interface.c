@@ -51,7 +51,7 @@ int         should = 1;
 
 int main (int argc, char **argv) {
     /* Local Vars */
-    int         ifOperStatus = 0;
+    long int    ifOperStatus = 0;
     char        *ifDescr = NULL;
     long int    ifSpeed = 0;
     long int    ifInOctets = 0;
