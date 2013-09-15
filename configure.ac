@@ -252,6 +252,7 @@ AC_CONFIG_FILES([Makefile
                  selinux/Makefile
                  smb/Makefile
                  snmp/Makefile
+                 varnish/Makefile
                  xmlrpc/Makefile
                  contrib/Makefile
                  doc/Makefile
