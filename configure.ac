@@ -114,6 +114,11 @@ AS_IF([test "x$with_fcgi" != "xno"], [
        AC_CHECK_LIB([fcgi], [FCGX_Init], [FCGI_LIBS='-lfcgi'], [AC_MSG_WARN([Skipping libfcgi])])
        AC_SUBST(FCGI_LIBS)
        ],[AC_MSG_WARN([Skipping libfcgi])])
+# Varnish
+AC_ARG_WITH([varnish], AS_HELP_STRING([--without-varnish], [Build without varnish]))
+AS_IF([test "x$with_varnish" != "xno"], [
+       PKG_CHECK_MODULES([VARNISH], [varnishapi],[],[AC_MSG_WARN([Skipping Varnish])])
+       ],[AC_MSG_WARN([Skipping Varnish])])
 # IPv6 Option
 AC_ARG_WITH([ipv6],
     [AS_HELP_STRING([--with-ipv6], [support IPv6 @<:@default=check@:>@])],
@@ -176,6 +181,7 @@ AM_CONDITIONAL([HAVE_IPMI], [test "x$IPMI_LIBS" != x])
 AM_CONDITIONAL([HAVE_TERMIOS], [test "x$ac_cv_sys_posix_termios" != x])
 AM_CONDITIONAL([HAVE_OPING], [test "x$ac_cv_header_oping_h" == "xyes"])
 AM_CONDITIONAL([HAVE_FCGI], [test "x$ac_cv_lib_fcgi_FCGX_Init" == "xyes"])
+AM_CONDITIONAL([HAVE_VARNISH], [test "x$VARNISH_LIBS" != x])
 
 # GCC Opts
 #AX_CFLAGS_WARN_ALL()
@@ -246,6 +252,7 @@ AC_CONFIG_FILES([Makefile
                  selinux/Makefile
                  smb/Makefile
                  snmp/Makefile
+                 varnish/Makefile
                  xmlrpc/Makefile
                  contrib/Makefile
                  doc/Makefile
