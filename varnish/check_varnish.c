@@ -58,7 +58,7 @@ int mp_varnish_stats_cb(void *priv, const struct VSC_point *const pt);
 int main (int argc, char **argv) {
     /* Local vars */
     int  vsock;
-    char *instance = NULL;
+    char *instance = "";
     char *answer = NULL;
     char *admin_host = NULL;
     int admin_port = 6082;
