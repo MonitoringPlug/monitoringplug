@@ -21,14 +21,14 @@ Basic plugins which don't use any library.
 CUPS
 ----
 
-Use CUPS to query CUPS server.
+Use [CUPS](http://www.cups.org)) to query CUPS server.
 
 *  check_cups_jobs -- Check CUPS job count and age. 
 
 CURL
 ----
 
-Use the libcurl to test network servers.
+Use the [libcurl](http://curl.haxx.se/libcurl/) to test network servers.
 
 *  check_apache_status -- Check apache mod_status output.
 *  check_aspsms_credits -- Check available ​ASPSMS credits.
@@ -39,7 +39,7 @@ Use the libcurl to test network servers.
 DNS
 ---
 
-Use the ldns library to query dns servers.
+Use the [ldns](http://www.nlnetlabs.nl/projects/ldns/) library to query dns servers.
 
 *  check_dns_authoritative -- Check a Authoritative DNS server.
 *  check_dns_sync -- Check if a DNS zone is in sync.
@@ -58,14 +58,14 @@ Use the FastCGI library to test fcgi Daemons.
 GNUTLS
 ------
 
-Use the GnuTLS library to check SSL/TLS related things.
+Use the [GnuTLS](http://www.gnutls.org) library to check SSL/TLS related things.
 
 *  check_ssl_cert -- Check expiration and trust of a SSL certificate. 
 
 IPMI
 ----
 
-Use the OpenIPMI library to check BMC Sensors.
+Use the [OpenIPMI](http://openipmi.sourceforge.net/) library to check BMC Sensors.
 
 *  check_ipmi_fan -- Check the give or all FANs by IPMI.
 *  check_ipmi_mem -- Check Memory status by IPMI.
@@ -75,7 +75,7 @@ Use the OpenIPMI library to check BMC Sensors.
 LibVirt
 -------
 
-Use the LibVirt library to check VirtualMachines.
+Use the [LibVirt](http://libvirt.org/) library to check VirtualMachines.
 
 *  check_libvirtd -- Check the libvirtd itself.
 *  check_libvirt_domain -- Check if a given domain is running. 
@@ -135,7 +135,7 @@ Use the ​net-snmp library to query SNMP agents.
 XMLRPC
 ------
 
-Use the xmlrpc-c library to query XMLRPC server.
+Use the [xmlrpc-c](http://xmlrpc-c.sourceforge.net/) library to query XMLRPC server.
 
 *  check_koji_builder -- This plugin check a Koji-Builder.
 *  check_koji_hub -- This plugin check a Koji-Hub.
