@@ -88,6 +88,13 @@ Use libmysqlclient library to check a MySQL Server.
 *  check_mysql -- Check MySQL connectivity and status.
 *  check_mysql_rows -- Check mysql table row count. 
 
+PostgreSQL
+----------
+
+Use the [libpq](http://www.postgresql.org/) library to check PostgreSQL.
+
+*  check_pgsql -- Check PostgreSQL connectivity.
+
 RHCS
 ----
 
@@ -130,7 +137,14 @@ Use the ​net-snmp library to query SNMP agents.
 *  check_interface -- Check Interface state with SNMP IF-MIB.
 *  check_qnap_disks -- Check the dist status of a QNap.
 *  check_qnap_vols -- Check the volume status of a QNap.
-*  check_snmp_ups -- Check status of a UPS conforming to RFC 1628 by SNMP. 
+*  check_snmp_ups -- Check status of a UPS conforming to RFC 1628 by SNMP.
+
+Varnish
+-------
+
+Use the [libvarnish](http://www.varnish-cache.org/) to check Varnish.
+
+*  check_varnish -- Check a Varnish cache server.
 
 XMLRPC
 ------
