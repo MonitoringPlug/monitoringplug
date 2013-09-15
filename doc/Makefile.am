@@ -52,6 +52,15 @@ EXTRA_DIST += check_dns_authoritative.1 check_dns_sync.1 \
 			  check_dnssec_expiration.1 check_dnssec_trace.1 \
 			  check_dnssec_trust_anchor.1
 
+#fcgi
+if HAVE_FCGI
+man_MANS += check_fcgi_ping.1
+if HAVE_JSON
+man_MANS += check_fcgi_php.1
+endif #HAVE_JSON
+endif #HAVE_FCGI
+EXTRA_DIST += check_fcgi_ping.1 check_fcgi_php.1
+
 #gnutls
 if HAVE_GNUTLS
 man_MANS += check_ssl_cert.1

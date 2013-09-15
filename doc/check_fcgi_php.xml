@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+
+  <!ENTITY mpcheckname   "check_fcgi_php">
+
+]>
+
+<refentry xmlns:xi="http://www.w3.org/2001/XInclude">
+  <refentryinfo>
+    <title>Monitoringplug  Manual</title>
+    <productname>&mpcheckname;</productname>
+    <authorgroup>
+      <author>
+       <firstname>Marius</firstname>
+        <surname>Rieder</surname>
+        <address>
+          <email>marius.rieder@durchmesser.ch</email>
+        </address>
+       <contrib>For monitoringplug</contrib>
+      </author>
+    </authorgroup>
+    <copyright>
+      <year>2013</year>
+      <holder>Marius Rieder</holder>
+    </copyright>
+    <legalnotice>
+      <para>This manual page was written for Monitoringplug
+        (and may be used by others).</para>
+      <para>Permission is granted to copy, distribute and/or modify this
+        document under the terms of the GNU General Public License,
+        Version 2 or (at your option) any later version published by
+        the Free Software Foundation.</para>
+    </legalnotice>
+  </refentryinfo>
+  <refmeta>
+    <refentrytitle>CHECK_FCGI_PHP</refentrytitle>
+    <manvolnum>1</manvolnum>
+  </refmeta>
+  <refnamediv>
+    <refname>&mpcheckname;</refname>
+    <refpurpose>Check a PHP-FPM Daemon.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <cmdsynopsis>
+      <command>&mpcheckname;</command>
+      <arg choice="plain">
+        <option>--socket <replaceable>ADDRESS</replaceable></option>
+      </arg>
+      <arg choice="opt">
+        <option>--query <replaceable>QUERY</replaceable></option>
+      </arg>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+  <refsect1 id="description">
+    <title>DESCRIPTION</title>
+    <para>Check a PHP-FPM Daemon by query it's status page.</para>
+    <para>The URI to view the FPM status page must be configured for the
+      pool.</para>
+  </refsect1>
+  <refsect1 id="options">
+    <title>OPTIONS</title>
+    <para>The Monitoringplug default options</para>
+    <xi:include href="mp_opts.xml"/>
+    <para>Check specific options</para>
+    <variablelist>
+      <varlistentry>
+        <term><option>-s</option></term>
+        <term><option>--socket=<replaceable>SOCKET</replaceable></option></term>
+        <listitem>
+          <para>Socket of the FastCGI Daemon to connect to.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-q</option></term>
+        <term><option>--query=<replaceable>QUERY</replaceable></option></term>
+        <listitem>
+          <para>URI of the PHP-FPM status page. (Default to: /status)</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+  <xi:include href="mp_seealso.xml"/>
+</refentry>
+<!-- vim: set ts=2 sw=2 expandtab ai syn=docbk : -->
