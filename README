@@ -47,6 +47,14 @@ Use the ldns library to query dns servers.
 *  check_dnssec_trace -- Check if a DNS zone signatur is traceable from a trust anchor.
 *  check_dnssec_trust_anchor -- Check if the trust anchors in named.conf are valid.
 
+FastCGI
+-------
+
+Use the FastCGI library to test fcgi Daemons.
+
+*  check_fcgi_ping -- Check a FastCGI daemon.
+*  check_fcgi_phpfpm -- Check a PHP-FPM Pool.
+
 GNUTLS
 ------
 
