@@ -70,7 +70,7 @@ if HAVE_LIBPQ
 noinst_LIBRARIES += libpgsqlutils.a
 
 libpgsqlutils_a_SOURCES = pgsql_utils.c pgsql_utils.h
-libvirtutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(LIBPQ_LIBS)
+libpgsqlutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(PQINCPATH) $(LIBPQ_LIBS)
 endif
 
 if HAVE_LIBVIRT
