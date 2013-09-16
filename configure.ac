@@ -117,7 +117,7 @@ AS_IF([test "x$with_fcgi" != "xno"], [
 # Varnish
 AC_ARG_WITH([varnish], AS_HELP_STRING([--without-varnish], [Build without varnish]))
 AS_IF([test "x$with_varnish" != "xno"], [
-       PKG_CHECK_MODULES([VARNISH], [varnishapi],[],[AC_MSG_WARN([Skipping Varnish])])
+       PKG_CHECK_MODULES([VARNISH], [varnishapi >= 3.0.0],[],[AC_MSG_WARN([Skipping Varnish])])
        ],[AC_MSG_WARN([Skipping Varnish])])
 # IPv6 Option
 AC_ARG_WITH([ipv6],
