@@ -69,7 +69,13 @@ AX_LIB_EXPAT()
 AX_LIB_LDNS()
 AX_LIB_CUPS([1.4.0])
 AX_LIB_MYSQL()
+# PostgreSQL
+AS_IF([test "$PQINCPATH" == ""], [
+       AC_PATH_PROGS([PG_CONFIG], [pg_config], [true])
+       PQINCPATH="-I`$PG_CONFIG --includedir` $PQINCPATH"
+       ])
 AX_CHECK_POSTGRES_DB([], [AC_MSG_WARN([Skipping PostgreSQL])])
+# libcurl
 LIBCURL_CHECK_CONFIG([yes],[7.7.2], [], [AC_MSG_WARN([Skipping curl])])
 # xmlrpc-c
 AX_LIB_XMLRPC()
