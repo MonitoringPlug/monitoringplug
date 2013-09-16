@@ -10,7 +10,7 @@ LDADD = ../lib/libmonitoringplug.a $(VARNISH_LIBS)
 bin_PROGRAMS = 
 
 if HAVE_VARNISH
-bin_PROGRAMS += check_varnish
+bin_PROGRAMS += check_varnish check_varnish_backends
 
 endif
 ## vim: set ts=4 sw=4 syn=automake :

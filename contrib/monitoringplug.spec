@@ -539,8 +539,8 @@ fi
 %if 0%{?rhel} == 0
 %files varnish
 %defattr(-,root,root,-)
-%{_libdir}/nagios/plugins/check_varnish
-%{_mandir}/man1/check_varnish.1.gz
+%{_libdir}/nagios/plugins/check_varnish*
+%{_mandir}/man1/check_varnish*
 %endif
 
 %files xmlrpc
