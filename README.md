@@ -94,6 +94,7 @@ PostgreSQL
 Use the [libpq](http://www.postgresql.org/) library to check PostgreSQL.
 
 *  check_pgsql -- Check PostgreSQL connectivity.
+*  check_pgsql_slave -- Check PostgreSQL r/o slave status and delay.
 
 RHCS
 ----
@@ -145,6 +146,7 @@ Varnish
 Use the [libvarnish](http://www.varnish-cache.org/) to check Varnish.
 
 *  check_varnish -- Check a Varnish cache server.
+*  check_varnish_backends -- Check Varnish backend health.
 
 XMLRPC
 ------
