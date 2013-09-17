@@ -132,9 +132,9 @@ EXTRA_DIST += check_akcp.1 check_arc_raid.1 check_apc_pdu.1 check_interface.1 ch
 
 #varnish
 if HAVE_VARNISH
-man_MANS += check_varnish.1
+man_MANS += check_varnish.1 check_varnish_backends.1
 endif
-EXTRA_DIST += check_varnish.1
+EXTRA_DIST += check_varnish.1 check_varnish_backends.1
 
 #xmprpc
 if HAVE_XMLRPC

@@ -43,8 +43,10 @@ const char *progusage = "[-n <varnish_name>]";
 #include <varnishapi.h>
 
 /* Global Vars */
+char **backend = NULL;
+int backends = 0;
 struct VSM_data *vd;
-int short_frame = 5;
+int range_len = 5;
 thresholds *fail_thresholds = NULL;
 thresholds *long_thresholds = NULL;
 char *backends_warning = NULL;
@@ -54,7 +56,7 @@ int mp_varnish_stats_cb(void *priv, const struct VSC_point *const pt);
 
 int main (int argc, char **argv) {
     /* Local vars */
-    //unsigned int status;
+    int i;
 
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
@@ -82,6 +84,18 @@ int main (int argc, char **argv) {
     /* Close SHM */
     VSM_Delete(vd);
 
+    /* Check for unmatched backends */
+    if (backends > 0) {
+        for(i=0; i < backends; i++) {
+            if (backend[i] != NULL && backend[i][strlen(backend[i])-1] != '*') {
+                char *buf;
+                mp_asprintf(&buf, "%s (not found)" , backend[i]);
+                mp_strcat_comma(&backends_critical, buf);
+                free(buf);
+            }
+        }
+    }
+
     if (backends_critical != NULL)
         critical("Varnish-Backends: %s", backends_critical);
     if (backends_warning != NULL)
@@ -94,7 +108,7 @@ int mp_varnish_stats_cb(void *priv, const struct VSC_point *const pt) {
     uint64_t val;
     char *name, *buf;
     int ok = 0;
-    int ok_short = 0;
+    int ok_range = 0;
     float ok_perc;
     int i = 0;
 
@@ -121,32 +135,46 @@ int mp_varnish_stats_cb(void *priv, const struct VSC_point *const pt) {
     name = strdup(pt->ident);
     name = strsep(&name, "(");
 
+    /* Check if backend should be checked */
+    if (backends > 0) {
+        for(i=0; i < backends; i++) {
+            if (mp_strmatch(name, backend[i]) == 0)
+                continue;
+            break;
+        }
+        if (i >= backends)
+            return 0;
+        /* Set to NULL as allready matched */
+        if (backend[i][strlen(backend[i])-1] != '*')
+            backend[i] = NULL;
+    }
+
     /* Count bitmap */
-    for (i = 0; i < short_frame; i++) {
-        ok_short += (val & 0x1);
+    for (i = 0; i < range_len; i++) {
+        ok_range += (val & 0x1);
         val = val >> 1;
     }
-    for (ok = ok_short; i < 64; i++ ) {
+    for (ok = ok_range; i < 64; i++ ) {
         ok += (val & 0x1);
         val = val >> 1;
     }
 
     /* Perfdata */
-    mp_perfdata_int2(name, ok_short, "", fail_thresholds, 1, 0, 1, short_frame);
+    mp_perfdata_int2(name, ok_range, "", fail_thresholds, 1, 0, 1, range_len);
     mp_asprintf(&buf, "%s_long" , name);
     mp_perfdata_int2(buf, ok, "", NULL, 1, 0, 1, 64);
     free(buf);
 
-    ok_perc = ((float)ok_short*100)/((float)short_frame);
+    ok_perc = ((float)ok_range*100)/((float)range_len);
 
     switch(get_status(ok_perc, fail_thresholds)) {
         case STATE_WARNING:
-            mp_asprintf(&buf, "%s (%d/%d)" , name, ok_short, short_frame);
+            mp_asprintf(&buf, "%s (%d/%d)" , name, ok_range, range_len);
             mp_strcat_comma(&backends_warning, buf);
             free(buf);
             break;
         case STATE_CRITICAL:
-            mp_asprintf(&buf, "%s (%d/%d)" , name, ok_short, short_frame);
+            mp_asprintf(&buf, "%s (%d/%d)" , name, ok_range, range_len);
             mp_strcat_comma(&backends_critical, buf);
             free(buf);
             break;
@@ -162,7 +190,8 @@ int process_arguments (int argc, char **argv) {
     int option = 0;
     static struct option longopts[] = {
         MP_LONGOPTS_DEFAULT,
-        {"short", required_argument, 0, 's'},
+        {"range", required_argument, 0, 'r'},
+        {"backend", required_argument, 0, 'b'},
         MP_LONGOPTS_END
     };
 
@@ -170,7 +199,7 @@ int process_arguments (int argc, char **argv) {
     setCrit(&fail_thresholds, "80:", NOEXT);
 
     while (1) {
-        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"s:w:c:"VSC_ARGS, longopts, &option);
+        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"r:b:w:c:"VSC_ARGS, longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -178,11 +207,15 @@ int process_arguments (int argc, char **argv) {
         getopt_wc(c, optarg, &fail_thresholds);
 
         switch (c) {
+            /* Plugin opts */
             case 'n':
                 VSC_Arg(vd, c, optarg);
                 break;
-            case 's':
-                short_frame = (int)strtol(optarg, NULL, 10);
+            case 'r':
+                range_len = (int)strtol(optarg, NULL, 10);
+                break;
+            case 'b':
+                mp_array_push(&backend, optarg, &backends);
                 break;
         }
 
@@ -205,8 +238,10 @@ void print_help (void) {
 
     print_help_default();
 
-    printf(" -s, --short\n");
-    printf("      Short range for evaluation. (Default to: 5)\n");
+    printf(" -r, --range=RANGE\n");
+    printf("      Range of backend checks to evaluate. (Default to: 5)\n");
+    printf(" -b, --backend\n");
+    printf("      Backends to test.\n");
     print_help_warn("OK in %", "90:");
     print_help_crit("OK in %", "80:");
 }
