@@ -12,7 +12,7 @@ MP_DIST_CLEANFILES =
 MP_DIST_CLEANDIRS =
 
 ## dist
-dist: dist-gzip
+tarballs: dist-gzip
 	md5sum $(PACKAGE)-$(VERSION).tar.gz > $(PACKAGE)-$(VERSION).tar.gz.md5
 	sha1sum $(PACKAGE)-$(VERSION).tar.gz > $(PACKAGE)-$(VERSION).tar.gz.sha1
 
@@ -52,11 +52,13 @@ deb: $(PACKAGE)_$(VERSION)_*.deb
 $(PACKAGE)_$(VERSION)_*.deb: dist-gzip
 	$(AMTAR) -zxf $(distdir).tar.gz
 	cd $(distdir); debuild -us -uc -i -I
+	dh_clean
 	rm -rf $(distdir)
 endif
 
 clean-local: clean-mp-dist
 clean-mp-dist:
+	dh_clean ||:
 	-test -z "$(MP_DIST_CLEANFILES)" || rm -f $(MP_DIST_CLEANFILES)
 	-test -z "$(MP_DIST_CLEANDIRS)" || rm -rf $(MP_DIST_CLEANDIRS)
 ## vim: set ts=4 sw=4 syn=automake :
