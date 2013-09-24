@@ -76,6 +76,12 @@
         </listitem>
       </varlistentry>
       <varlistentry>
+        <term><option>--no-sni</option></term>
+        <listitem>
+          <para>Do not use SNI even if --hostname is a hostname.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
         <term><option>-C</option></term>
         <term><option>--trusted-ca=<group choise="opt"><replaceable>NAME</replaceable>:</group><replaceable>FILE</replaceable></option></term>
         <listitem>

@@ -49,11 +49,13 @@ const char *progusage = "--host <HOSTNAME> --port <PORT>";
 #include <gnutls/x509.h>
 
 #define MP_LONGOPT_STARTTLS MP_LONGOPT_PRIV0
+#define MP_LONGOPT_NOSNI MP_LONGOPT_PRIV1
 
 /* Global Vars */
 thresholds *expire_thresholds = NULL;
 const char *hostname = NULL;
 const char *starttls = NULL;
+int sni = 1;
 int port = 0;
 int ipv = AF_UNSPEC;
 char **ca_file = NULL;
@@ -220,6 +222,8 @@ int main (int argc, char **argv) {
     gnutls_global_init ();
     gnutls_certificate_allocate_credentials (&xcred);
     gnutls_init (&session, GNUTLS_CLIENT);
+    if (is_hostname(hostname) && sni)
+        gnutls_server_name_set (session, 1, (void *) hostname, strlen(hostname));
     gnutls_session_set_ptr (session, (void *) hostname);
     gnutls_priority_set_direct(session, "PERFORMANCE", &err);
     gnutls_credentials_set(session, GNUTLS_CRD_CERTIFICATE, xcred);
@@ -346,6 +350,7 @@ int process_arguments (int argc, char **argv) {
         MP_LONGOPTS_PORT,
         // PLUGIN OPTS
         {"starttls", required_argument, NULL, MP_LONGOPT_STARTTLS},
+        {"no-sni", no_argument, NULL, MP_LONGOPT_NOSNI},
         MP_LONGOPTS_WC,
         MP_LONGOPTS_END
     };
@@ -366,6 +371,9 @@ int process_arguments (int argc, char **argv) {
             /* Plugin opts */
             case MP_LONGOPT_STARTTLS:
                 starttls = optarg;
+                break;
+            case MP_LONGOPT_NOSNI:
+                sni = 0;
                 break;
             /* Hostname opt */
             case 'H':
@@ -409,6 +417,8 @@ void print_help (void) {
 #endif //USE_IPV6
     printf("     --starttls=[PROTO]\n");
     printf("      Use named STARTTLS protocol. (smtp, pop or imap)\n");
+    printf("     --no-sni\n");
+    printf("      Do not send servername.\n");
     printf(" -C, --trusted-ca=[NAME:]FILE\n");
     printf("      File to read trust-CAs from.\n");
     print_help_warn_time("30 days");
