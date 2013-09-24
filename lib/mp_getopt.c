@@ -37,6 +37,10 @@ int mp_getopt(int *argc, char **argv[], const char *optstring,
         if (c == -1 || c == EOF)
             return c;
 
+        /* Abort on unknown options */
+        if (c == '?')
+            usage("");
+
         /* Handle default opts */
         switch (c) {
             case 'h':
