@@ -51,6 +51,7 @@ const char *hostname = "localhost";
 int port = 6379;
 int ipv = AF_UNSPEC;
 thresholds *time_thresholds = NULL;
+thresholds *memory_thresholds = NULL;
 
 int main (int argc, char **argv) {
     /* Local Vars */
@@ -59,6 +60,7 @@ int main (int argc, char **argv) {
     char *redis_version = NULL;
     int answer_size = 0;
     int used_memory = -1;              /** < Memory used now. */
+    int max_memory = -1;               /** < Memory allowed. */
     struct timeval start_time;
     double time_delta;
 
@@ -105,10 +107,39 @@ int main (int argc, char **argv) {
                     "c", NULL);
         }
 
-
         answer_size -= strlen(line) + 2;
 
         free(line);
+    }
+
+    // Query maxmemory
+    if (mp_verbose > 3)
+        printf("> CONFIG GET maxmemory\n");
+    send(socket, "CONFIG GET maxmemory\r\n", 22, 0);
+
+    line = mp_recv_line(socket);
+    line = mp_recv_line(socket);
+    if (line[0] != '*')
+        unknown("Redis Server did not respong propperly.");
+  
+    answer_size = strtol(line+1, NULL, 10);
+
+    while (answer_size > 0) {
+        line = mp_recv_line(socket);
+        free(line);
+        line = mp_recv_line(socket);
+        if (strcmp(line, "maxmemory") == 0) {
+            free(line);
+            line = mp_recv_line(socket);
+            free(line);
+            line = mp_recv_line(socket);
+            max_memory = (int)strtol(line, NULL, 10);
+            free(line);
+            break;
+        }
+        free(line);
+
+        answer_size--;
     }
 
     // Dissconnect
@@ -117,10 +148,24 @@ int main (int argc, char **argv) {
     time_delta = mp_time_delta(start_time);
 
     if (mp_showperfdata) {
-        mp_perfdata_int3("bytes", used_memory, "", 0, 0, 0, 0,
-                1, 0, 0, 0);
+        mp_perfdata_int2("bytes", used_memory, "", memory_thresholds,
+                1, 0, max_memory==-1?0:1 , max_memory);
         mp_perfdata_float("time", (float)time_delta, "s", time_thresholds);
     }
+
+    switch(get_status(used_memory, memory_thresholds)) {
+        case STATE_WARNING:
+            free_threshold(memory_thresholds);
+            free_threshold(time_thresholds);
+            warning("Redis Memory Usage: %s", mp_human_size(used_memory));
+            break;
+        case STATE_CRITICAL:
+            free_threshold(memory_thresholds);
+            free_threshold(time_thresholds);
+            critical("Redis Memory Usage: %s", mp_human_size(used_memory));
+            break;
+    }
+    free_threshold(memory_thresholds);
 
     switch(get_status(time_delta, time_thresholds)) {
         case STATE_OK:
@@ -151,6 +196,8 @@ int process_arguments (int argc, char **argv) {
         MP_LONGOPTS_PORT,
         MP_LONGOPTS_WC,
         // PLUGIN OPTS
+        {"warning-memory", required_argument, NULL, (int)'W'},
+        {"critical-memory", required_argument, NULL, (int)'C'},
         MP_LONGOPTS_END
     };
 
@@ -159,7 +206,7 @@ int process_arguments (int argc, char **argv) {
     setCritTime(&time_thresholds, "4s");
 
     while (1) {
-        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"H:P:46w:c:",
+        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"H:P:46w:c:W:C:",
                 longopts, &option);
 
         if (c == -1 || c == EOF)
@@ -169,6 +216,15 @@ int process_arguments (int argc, char **argv) {
         getopt_wc_time(c, optarg, &time_thresholds);
 
         switch (c) {
+            /* Plugin Opts */
+            case 'W':
+                if (setWarn(&memory_thresholds, optarg, BISI) == ERROR)
+                    usage("Illegal -W threshold '%s'.", optarg);
+                break;
+            case 'C':
+                if (setCrit(&memory_thresholds, optarg, BISI) == ERROR)
+                    usage("Illegal -C threshold '%s'.", optarg);
+                break;
             /* Hostname opt */
             case 'H':
                 getopt_host(optarg, &hostname);
@@ -207,6 +263,10 @@ void print_help (void) {
 #endif //USE_IPV6
     print_help_warn_time("3s");
     print_help_crit_time("4s");
+    printf(" -W bytes\n");
+    printf("      Return warning if used memory exceeds value.\n");
+    printf(" -C bytes\n");
+    printf("      Return critical if used memory exceeds value.\n");
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */
