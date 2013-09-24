@@ -79,7 +79,7 @@ int main (int argc, char **argv) {
 
     if (mp_verbose > 3)
         printf("> INFO'\n");
-    send(socket, "INFO\r\n", 7, 0);
+    send(socket, "INFO\r\n", 6, 0);
 
     line = mp_recv_line(socket);
     if (line[0] != '$')
@@ -129,11 +129,11 @@ int main (int argc, char **argv) {
             break;
         case STATE_WARNING:
             free_threshold(time_thresholds);
-            ok("Redis %s is slow.", redis_version);
+            warning("Redis %s is slow.", redis_version);
             break;
         case STATE_CRITICAL:
             free_threshold(time_thresholds);
-            ok("Redis %s is real slow.", redis_version);
+            critical("Redis %s is real slow.", redis_version);
             break;
     }
     free_threshold(time_thresholds);
@@ -149,6 +149,7 @@ int process_arguments (int argc, char **argv) {
         MP_LONGOPTS_DEFAULT,
         MP_LONGOPTS_HOST,
         MP_LONGOPTS_PORT,
+        MP_LONGOPTS_WC,
         // PLUGIN OPTS
         MP_LONGOPTS_END
     };
