@@ -54,6 +54,7 @@ const char *progusage = "--host <HOSTNAME> --port <PORT>";
 /* Global Vars */
 thresholds *expire_thresholds = NULL;
 const char *hostname = NULL;
+const char *servername = NULL;
 const char *starttls = NULL;
 int sni = 1;
 int port = 0;
@@ -219,16 +220,23 @@ int main (int argc, char **argv) {
     }
 
     // GNUTLS init
-    gnutls_global_init ();
-    gnutls_certificate_allocate_credentials (&xcred);
-    gnutls_init (&session, GNUTLS_CLIENT);
-    if (is_hostname(hostname) && sni)
-        gnutls_server_name_set (session, 1, (void *) hostname, strlen(hostname));
-    gnutls_session_set_ptr (session, (void *) hostname);
+    gnutls_global_init();
+    gnutls_certificate_allocate_credentials(&xcred);
+    gnutls_init(&session, GNUTLS_CLIENT);
+    if (servername && sni) {
+        gnutls_server_name_set(session, 1, (void *)servername,
+                strlen(servername));
+        printf("SNI:1\n");
+    }
+    else if (!is_hostaddr(hostname) && sni){
+        gnutls_server_name_set(session, 1, (void *) hostname, strlen(hostname));
+        printf("SNI:2\n");
+    }
+    gnutls_session_set_ptr(session, (void *) hostname);
     gnutls_priority_set_direct(session, "PERFORMANCE", &err);
     gnutls_credentials_set(session, GNUTLS_CRD_CERTIFICATE, xcred);
 
-    gnutls_transport_set_ptr(session, (gnutls_transport_ptr_t) (intptr_t)socket);
+    gnutls_transport_set_ptr(session, (gnutls_transport_ptr_t)(intptr_t)socket);
 
     // SSL Handshake
     ret = gnutls_handshake (session);
@@ -350,6 +358,7 @@ int process_arguments (int argc, char **argv) {
         MP_LONGOPTS_PORT,
         // PLUGIN OPTS
         {"starttls", required_argument, NULL, MP_LONGOPT_STARTTLS},
+        {"sni", required_argument, NULL, (int)'s'},
         {"no-sni", no_argument, NULL, MP_LONGOPT_NOSNI},
         MP_LONGOPTS_WC,
         MP_LONGOPTS_END
@@ -359,7 +368,7 @@ int process_arguments (int argc, char **argv) {
     setCritTime(&expire_thresholds, "10d:");
 
     while (1) {
-        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"H:P:46w:c:C:", longopts, &option);
+        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"H:P:46s:w:c:C:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
@@ -371,6 +380,10 @@ int process_arguments (int argc, char **argv) {
             /* Plugin opts */
             case MP_LONGOPT_STARTTLS:
                 starttls = optarg;
+                break;
+            case 's':
+                sni = 1;
+                getopt_host(optarg, &servername);
                 break;
             case MP_LONGOPT_NOSNI:
                 sni = 0;
@@ -417,6 +430,8 @@ void print_help (void) {
 #endif //USE_IPV6
     printf("     --starttls=[PROTO]\n");
     printf("      Use named STARTTLS protocol. (smtp, pop or imap)\n");
+    printf(" -s. --sni=SERVERNAME\n");
+    printf("      Use SERVERNAME to request Cert by SNI.\n");
     printf("     --no-sni\n");
     printf("      Do not send servername.\n");
     printf(" -C, --trusted-ca=[NAME:]FILE\n");
