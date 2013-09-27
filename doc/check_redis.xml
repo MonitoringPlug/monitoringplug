@@ -82,6 +82,20 @@
             (Default to 4s)</para>
         </listitem>
       </varlistentry>
+      <varlistentry>
+        <term><option>-W</option></term>
+        <term><option>--warning-memory=<replaceable>USAGE</replaceable></option></term>
+        <listitem>
+          <para>Return warning if memory usage exceeds limit.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-C</option></term>
+        <term><option>--critical-memory=<replaceable>USAGE</replaceable></option></term>
+        <listitem>
+          <para>Return critical if memory usage exceeds limit.</para>
+        </listitem>
+      </varlistentry>
     </variablelist>
   </refsect1>
   <xi:include href="mp_seealso.xml"/>

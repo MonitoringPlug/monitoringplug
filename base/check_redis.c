@@ -263,9 +263,9 @@ void print_help (void) {
 #endif //USE_IPV6
     print_help_warn_time("3s");
     print_help_crit_time("4s");
-    printf(" -W bytes\n");
+    printf(" -W, --warning-memory=BYTES\n");
     printf("      Return warning if used memory exceeds value.\n");
-    printf(" -C bytes\n");
+    printf(" -C, --warning-memory=BYTES\n");
     printf("      Return critical if used memory exceeds value.\n");
 }
 
