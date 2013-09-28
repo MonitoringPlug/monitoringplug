@@ -24,6 +24,13 @@
 #include "mpcheck.h"
 #include <limits.h>
 
+static string_int test_is_integer_case[] = {
+    { "42", 1 }, { "-21", 1 },
+    { " 21 ", 1}, { "23.21", 0 },
+    { "nala", 0 }, { "23,21", 0 },
+    { NULL, 0 },
+};
+
 static string_int test_net_addr_case[] = {
     { "127.0.0.1", 1 }, { "127.0.0.256", 0 },
     { "127.0.a.1", 0 }, { "129.132.10.42", 1 },
@@ -46,6 +53,11 @@ static string_int test_net_url_case[] = {
     { "h12-+.://www.durchmesser.ch", 1},
     { "1http://www.durchmesser.ch", 0},
     { "ht?tp://www.durchmesser.ch", 0},
+    { "http:/www.durchmesser.ch", 0},
+    { "http://www..ch", 0},
+    { "http://www.durchmesser.ch:80", 1},
+    { "http://www.durchmesser.ch:port", 0},
+    { "http://www.durchmesser.ch:80p", 0},
     { "http://user@www.durchmesser.ch", 1},
     { "http://user:pass!$&'()*+,;=@www.durchmesser.ch", 1},
     { "http://user:pass!$&'()*?+,;=@www.durchmesser.ch", 0},
@@ -54,11 +66,21 @@ static string_int test_net_url_case[] = {
     { "http://user:pass%2@www.durchmesser.ch", 0},
     { "http://[::1]", 1},
     { "http://[::1]/", 1},
+    { "http://[::1/", 0},
     { "http://[127.0.0.1]", 0},
     { "http://127.0.0.1", 1},
     { "http://127.0.0.1/", 1},
+    { "http://1_?/", 0},
     { "http:///", 1},
     { "http:///path", 1},
+    { "http:///path/(/)/$!~@", 1},
+    { "http:///path/%20%aa", 1},
+    { "http:///path/}", 0},
+    { "http:///path?frag", 1},
+    { "http:///path#frag", 1},
+    { "http:///path/#(/)/$!~@", 1},
+    { "http:///path/?%20%aa", 1},
+    { "http:///path/?}", 0},
     {0,0}
 };
 
@@ -66,6 +88,7 @@ static string_int test_net_url_scheme_case[] = {
     {"http", 1},
     {"htt",  0},
     {"http:", 0},
+    {"ftp", 0},
 };
 
 
@@ -84,6 +107,14 @@ START_TEST (test_is_integer) {
     sprintf(teststring, "%'.0f", (double) INT_MIN - 1);
     fail_unless (is_integer(teststring) == 0,
         "is_integer(%s) failed4", teststring);
+}
+END_TEST
+
+START_TEST (test_is_integer_cases) {
+    string_int *c = &test_is_integer_case[_i];
+
+    fail_unless (is_integer(c->in) == c->out,
+        "Fail: is_integer(%s) is not %0.f", c->in,c->out);
 }
 END_TEST
 
@@ -137,6 +168,8 @@ int main (void) {
     /* String test case */
     TCase *tc_str = tcase_create ("String");
     tcase_add_test(tc_str, test_is_integer);
+    tcase_add_loop_test(tc_str, test_is_integer_cases, 0, 7);
+    suite_add_tcase (s, tc_str);
 
     /* Network test case */
     TCase *tc_net = tcase_create ("Network");
@@ -145,8 +178,8 @@ int main (void) {
     tcase_add_loop_test(tc_net, test_net_addr6, 0, 4);
 #endif /* USE_IPV6*/
     tcase_add_loop_test(tc_net, test_net_name, 0, 5);
-    tcase_add_loop_test(tc_net, test_net_url, 0, 17);
-    tcase_add_loop_test(tc_net, test_net_url_scheme, 0, 3);
+    tcase_add_loop_test(tc_net, test_net_url, 0, 33);
+    tcase_add_loop_test(tc_net, test_net_url_scheme, 0, 4);
     suite_add_tcase (s, tc_net);
 
     sr = srunner_create(s);

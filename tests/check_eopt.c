@@ -75,6 +75,44 @@ START_TEST (test_eopt_section_file) {
 }
 END_TEST
 
+START_TEST (test_eopt_nofile) {
+    char *argv[] = {"test", "--eopt", "sectionB@missing.ini","--last", 0};
+    char **new_argv;
+    int args = 4;
+    int i=0;
+
+    optind = 2;
+
+    new_argv = mp_eopt(&args, argv, NULL);
+
+    for(i=0; i < args; i++) {
+        fail_unless (strcmp(new_argv[i], argv[i]) == 0,
+                "Wrong arg at index: %d", i);
+    }
+}
+END_TEST
+
+START_TEST (test_eopt_longline) {
+    char *argv[] = {"test", "--eopt", "sectionB@eopt_long.ini","--last", 0};
+    char **new_argv;
+    int args = 4;
+    int i=0;
+
+    optind = 2;
+
+    new_argv = mp_eopt(&args, argv, NULL);
+
+    for(i=0; i < args; i++) {
+        fail_unless (strcmp(new_argv[i], argv[i]) == 0,
+                "Wrong arg at index: %d", i);
+    }
+}
+END_TEST
+
+START_TEST (test_eopt_help) {
+    print_help_eopt();
+}
+END_TEST
 
 Suite* make_lib_eopt_suite(void) {
 
@@ -82,12 +120,16 @@ Suite* make_lib_eopt_suite(void) {
 
     /* Range test case */
     TCase *tc_eopt = tcase_create ("EOpt");
-    tcase_add_test (tc_eopt, test_eopt_file);
-    tcase_add_test (tc_eopt, test_eopt_section_file);
+    tcase_add_test(tc_eopt, test_eopt_file);
+    tcase_add_test(tc_eopt, test_eopt_section_file);
+    tcase_add_test(tc_eopt, test_eopt_nofile);
+    tcase_add_test(tc_eopt, test_eopt_longline);
+    tcase_add_test(tc_eopt, test_eopt_help);
 
-    suite_add_tcase (s, tc_eopt);
+    suite_add_tcase(s, tc_eopt);
 
     return s;
 }
+
 
 /* vim: set ts=4 sw=4 et syn=c : */

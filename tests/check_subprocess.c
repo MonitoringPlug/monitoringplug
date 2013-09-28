@@ -37,6 +37,16 @@ const char *progcopy  = "TEST";
 const char *progauth  = "TEST";
 const char *progusage = "TEST";
 
+void subprocess_setup(void);
+void subprocess_teardown(void);
+
+void subprocess_setup(void) {
+    mp_verbose=1;
+}
+
+void subprocess_teardown(void) {
+}
+
 START_TEST (test_subprocess_echo) {
     mp_subprocess_t *sph;
     char *cmd[] = { "/bin/echo", "-n", "TEST", (char *)0 };
@@ -140,29 +150,29 @@ START_TEST (test_subprocess_nonaccess) {
 END_TEST
 
 int main (void) {
+    int number_failed;
+    SRunner *sr;
 
-  int number_failed;
-  SRunner *sr;
+    Suite *s = suite_create("Subprocess");
 
-  Suite *s = suite_create ("Subprocess");
+    /* String test case */
+    TCase *tc = tcase_create("subprocess");
+    tcase_add_checked_fixture(tc, subprocess_setup, subprocess_teardown);
+    tcase_add_test(tc, test_subprocess_echo);
+    tcase_add_test(tc, test_subprocess_cat);
+    tcase_add_test(tc, test_subprocess_false);
+    tcase_add_test(tc, test_subprocess_dir);
+    tcase_add_test(tc, test_subprocess_dev);
+    tcase_add_test(tc, test_subprocess_nonexist);
+    tcase_add_test(tc, test_subprocess_nonexe);
+    tcase_add_test(tc, test_subprocess_nonaccess);
+    suite_add_tcase (s, tc);
 
-  /* String test case */
-  TCase *tc = tcase_create ("subprocess");
-  tcase_add_test(tc, test_subprocess_echo);
-  tcase_add_test(tc, test_subprocess_cat);
-  tcase_add_test(tc, test_subprocess_false);
-  tcase_add_test(tc, test_subprocess_dir);
-  tcase_add_test(tc, test_subprocess_dev);
-  tcase_add_test(tc, test_subprocess_nonexist);
-  tcase_add_test(tc, test_subprocess_nonexe);
-  tcase_add_test(tc, test_subprocess_nonaccess);
-  suite_add_tcase (s, tc);
-
-  sr = srunner_create(s);
-  srunner_run_all(sr, CK_NORMAL);
-  number_failed = srunner_ntests_failed(sr);
-  srunner_free(sr);
-  return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
+    sr = srunner_create(s);
+    srunner_run_all(sr, CK_NORMAL);
+    number_failed = srunner_ntests_failed(sr);
+    srunner_free(sr);
+    return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */

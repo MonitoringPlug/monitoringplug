@@ -86,6 +86,36 @@ START_TEST (test_perfdata_int_threshold_range) {
 }
 END_TEST
 
+START_TEST (test_perfdata_int_label) {
+    mp_showperfdata = 1;
+    mp_perfdata_int("l 1", 1, "", NULL);
+    mp_perfdata_int("l=2", 2, "", NULL);
+    mp_perfdata_int("l+3", 3, "", NULL);
+
+    fail_unless (strcmp(mp_perfdata, "'l 1'=1; 'l=2'=2; 'l+3'=3;") == 0,
+            "Wrong perfdata: '%s'", mp_perfdata);
+}
+END_TEST
+
+START_TEST (test_perfdata_int_minmax) {
+    mp_showperfdata = 1;
+    mp_perfdata_int2("label", 23, "unit", NULL, 1, 21, 1, 42);
+
+    fail_unless (strcmp(mp_perfdata, "label=23unit;;;21;42;") == 0,
+            "Wrong perfdata: '%s'", mp_perfdata);
+}
+END_TEST
+
+START_TEST (test_perfdata_int3) {
+    mp_showperfdata = 1;
+    mp_perfdata_int3("label", 42, "unit",
+            1, 64, 1, 96, 0, 0, 0, 0);
+
+    fail_unless (strcmp(mp_perfdata, "label=42unit;~:64.000;~:96.000;") == 0,
+            "Wrong perfdata: '%s'", mp_perfdata);
+}
+END_TEST
+
 // Float
 START_TEST (test_perfdata_float_none) {
     mp_showperfdata = 0;
@@ -133,6 +163,45 @@ START_TEST (test_perfdata_float_threshold_range) {
 }
 END_TEST
 
+START_TEST (test_perfdata_float_label) {
+    mp_showperfdata = 1;
+    mp_perfdata_float("l 1", 1, "", NULL);
+    mp_perfdata_float("l=2", 2, "", NULL);
+    mp_perfdata_float("l+3", 3, "", NULL);
+
+    fail_unless (strcmp(mp_perfdata, "'l 1'=1.000; 'l=2'=2.000; 'l+3'=3.000;") == 0,
+            "Wrong perfdata: '%s'", mp_perfdata);
+}
+END_TEST
+
+START_TEST (test_perfdata_float_minmax) {
+    mp_showperfdata = 1;
+    mp_perfdata_float2("label", 23, "unit", NULL, 1, 21, 1, 42);
+
+    fail_unless (strcmp(mp_perfdata, "label=23.000unit;;;21.000;42.000;") == 0,
+            "Wrong perfdata: '%s'", mp_perfdata);
+}
+END_TEST
+
+START_TEST (test_perfdata_float3) {
+    mp_showperfdata = 1;
+    mp_perfdata_float3("label", 42, "unit",
+            1, 64, 1, 96, 0, 0, 0, 0);
+
+    fail_unless (strcmp(mp_perfdata, "label=42.000unit;~:64.000;~:96.000;") == 0,
+            "Wrong perfdata: '%s'", mp_perfdata);
+}
+END_TEST
+
+START_TEST (test_perfdata_float_precision) {
+    mp_showperfdata = 1;
+    mp_perfdata_float("label1", 0, "", NULL);
+    mp_perfdata_float("label2", 10000, "", NULL);
+
+    fail_unless (strcmp(mp_perfdata, "label1=0; label2=10000;") == 0,
+            "Wrong perfdata: '%s'", mp_perfdata);
+}
+END_TEST
 
 Suite* make_lib_perfdata_suite(void) {
 
@@ -145,6 +214,9 @@ Suite* make_lib_perfdata_suite(void) {
     tcase_add_test(tc_int, test_perfdata_int);
     tcase_add_test(tc_int, test_perfdata_int_threshold);
     tcase_add_test(tc_int, test_perfdata_int_threshold_range);
+    tcase_add_test(tc_int, test_perfdata_int_label);
+    tcase_add_test(tc_int, test_perfdata_int_minmax);
+    tcase_add_test(tc_int, test_perfdata_int3);
     suite_add_tcase(s, tc_int);
 
     /* Floar test case */
@@ -154,6 +226,10 @@ Suite* make_lib_perfdata_suite(void) {
     tcase_add_test(tc_float, test_perfdata_float);
     tcase_add_test(tc_float, test_perfdata_float_threshold);
     tcase_add_test(tc_float, test_perfdata_float_threshold_range);
+    tcase_add_test(tc_float, test_perfdata_float_label);
+    tcase_add_test(tc_float, test_perfdata_float_minmax);
+    tcase_add_test(tc_float, test_perfdata_float3);
+    tcase_add_test(tc_float, test_perfdata_float_precision);
     suite_add_tcase(s, tc_float);
 
     return s;
