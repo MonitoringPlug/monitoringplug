@@ -196,7 +196,7 @@ void mp_perfdata_float3(const char *label, float value, const char *unit,
         }
     }
 
-    mp_perfdata_int2(label, value, unit, threshold,
+    mp_perfdata_float2(label, value, unit, threshold,
             have_min, min, have_max, max);
 
     free_threshold(threshold);

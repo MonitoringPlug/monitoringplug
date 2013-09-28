@@ -36,13 +36,15 @@
 
 int is_integer(const char *number) {
     long int n;
-    if (!number || (strspn (number, "-0123456789 ") != strlen (number)))
+    if (!number)
+        return FALSE;
+    if (strspn(number, "-0123456789 ") != strlen(number))
         return FALSE;
 
     errno = 0;
     n = strtol(number, NULL, 10);
 
-    if (errno != ERANGE && n > INT_MIN && n < INT_MAX)
+    if (errno != ERANGE && n >= INT_MIN && n <= INT_MAX)
         return TRUE;
     else
         return FALSE;
