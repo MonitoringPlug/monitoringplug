@@ -63,7 +63,7 @@ int main (int argc, char **argv) {
     // PLUGIN CODE
     conn = virt_connect();
 
-    hvType = virConnectGetType(conn);
+    hvType = strdup(virConnectGetType(conn));
     if (hvType == NULL) {
         if (mp_verbose > 0) {
             virt_showError(conn);
