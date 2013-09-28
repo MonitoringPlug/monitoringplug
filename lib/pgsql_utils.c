@@ -25,7 +25,6 @@
 #include "pgsql_utils.h"
 
 #include <libpq-fe.h>
-#include <pg_config.h>
 
 #include <getopt.h>
 #include <string.h>
@@ -105,14 +104,12 @@ void print_help_pgsql(void) {
 }
 
 void print_revision_pgsql(void) {
-#if PG_VERSION_NUM > 90100
+#if HAVE_PQLIBVERSION
     int pqlibversion;
 
     pqlibversion = PQlibVersion();
 
     printf(" libqp v%s\n", mp_pgsql_version(pqlibversion));
-#else
-    printf(" libqp v"PACKAGE_VERSION"\n");
 #endif
 }
 

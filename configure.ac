@@ -75,6 +75,9 @@ AS_IF([test "$PQINCPATH" == ""], [
        PQINCPATH="-I`$PG_CONFIG --includedir` $PQINCPATH"
        ])
 AX_CHECK_POSTGRES_DB([], [AC_MSG_WARN([Skipping PostgreSQL])])
+AC_CHECK_LIB([pq], [PQlibVersion], [
+    AC_DEFINE([HAVE_PQLIBVERSION], [1], [Define to 1 if PQlibVersion is available.])
+    ], [])
 # libcurl
 LIBCURL_CHECK_CONFIG([yes],[7.7.2], [], [AC_MSG_WARN([Skipping curl])])
 # xmlrpc-c
