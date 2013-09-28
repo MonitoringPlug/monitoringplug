@@ -1,6 +1,12 @@
 monitoringplug (0.16) monitoringplug; urgency=low
 
   * Added PostgreSQL checks
+  * Added FastCGI checks
+  * Added Varnish check
+  * Improve Redis check
+  * Added SNI support to check_ssl_cert
+  * Some bugfixes.
+
 
  -- Marius Rieder <marius.rieder@durchmesser.ch>  Sun, 08 Sep 2013 09:43:46 +0200
 

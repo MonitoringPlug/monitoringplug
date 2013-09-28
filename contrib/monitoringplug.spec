@@ -560,6 +560,9 @@ fi
 - Added PostgreSQL check
 - Added FastCGI checks
 - Added Varnish check
+- Improve Redis check
+- Added SNI support to check_ssl_cert
+- Some bugfixes.
 
 * Sun Jun 02 2013 Marius Rieder <marius.rieder@durchmesser.ch> - 0.15-1
 - Added check_redis
