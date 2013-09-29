@@ -48,7 +48,7 @@ const char *progusage = "[-t <timeout>]";
 
 /* Global Vars */
 char *fcgisocket = NULL;
-char *query = "/status2";
+char *query = "/status";
 
 int main (int argc, char **argv) {
     int fcgiSock = -1;
