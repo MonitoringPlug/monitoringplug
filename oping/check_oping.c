@@ -157,7 +157,7 @@ int main (int argc, char **argv) {
                     data_len, hostname,  haddr, num, ttl, rt);
         }
 
-        if (quick &&
+        if (quick && num > 0 &&
             get_status((float)(rta/num), rta_thresholds) == STATE_OK &&
             get_status((dropped*100)/num, lost_thresholds) == STATE_OK) {
             break;
@@ -169,6 +169,9 @@ int main (int argc, char **argv) {
         }
 
     }
+
+    if (num == 0)
+        critical("PING_INFO_SEQUENCE is 0");
 
     mp_perfdata_float("rta", (float)(rta/num), "s", rta_thresholds);
     mp_perfdata_int("pl", (int)(dropped*100)/num, "%", lost_thresholds);

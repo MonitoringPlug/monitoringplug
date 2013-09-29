@@ -111,13 +111,13 @@ int main (int argc, char **argv) {
 
         free(line);
     }
+    mp_recv_line(socket);
 
     // Query maxmemory
     if (mp_verbose > 3)
         printf("> CONFIG GET maxmemory\n");
     send(socket, "CONFIG GET maxmemory\r\n", 22, 0);
 
-    line = mp_recv_line(socket);
     line = mp_recv_line(socket);
     if (line[0] != '*')
         unknown("Redis Server did not respong propperly.");

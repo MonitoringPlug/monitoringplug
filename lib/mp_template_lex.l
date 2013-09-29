@@ -101,8 +101,10 @@ void mp_template_parse_file(FILE *in) {
 }
 
 void mp_template_parse_string(const char *in) {
-    yy_scan_string(in);
+    YY_BUFFER_STATE buf;
+    buf = yy_scan_string(in);
     yyparse();
+    yy_delete_buffer(buf);
 #ifdef FLEX_SUBMINOR_VERSION
     yylex_destroy();
 #endif

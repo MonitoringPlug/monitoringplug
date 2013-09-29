@@ -93,6 +93,7 @@ int main (int argc, char **argv) {
     mp_fcgi_write(fcgiSock, 42, FCGI_STDIN, NULL, 0);
 
     /* Wait for answer */
+    data = NULL;
     do {
         content = NULL;
         type = mp_fcgi_read(fcgiSock, &content, &count);

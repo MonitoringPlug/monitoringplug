@@ -142,8 +142,10 @@ int mp_varnish_stats_cb(void *priv, const struct VSC_point *const pt) {
                 continue;
             break;
         }
-        if (i >= backends)
+        if (i >= backends) {
+            free(name);
             return 0;
+        }
         /* Set to NULL as allready matched */
         if (backend[i][strlen(backend[i])-1] != '*')
             backend[i] = NULL;

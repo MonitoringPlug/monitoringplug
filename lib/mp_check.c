@@ -60,13 +60,17 @@ int is_hostname(const char *address) {
 
         len = strlen(part);
 
-        if (len == 0)
+        if (len == 0) {
+            free(a);
             return FALSE;
+        }
 
         if(strspn (part, "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
             "abcdefghijklmnopqrstuvwxyz"
-            "0123456789-_") != len)
+            "0123456789-_") != len) {
+            free(a);
             return FALSE;
+        }
     }
     free(a);
     return TRUE;
