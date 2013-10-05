@@ -85,12 +85,14 @@ AX_LIB_XMLRPC()
 # selinux
 AC_ARG_WITH([selinux], AS_HELP_STRING([--without-selinux], [Build without selinux]))
 AS_IF([test "x$with_selinux" != "xno"], [
-       PKG_CHECK_MODULES([SELINUX], [libselinux],[],[AC_MSG_WARN([Skipping SELinux])])
+       found_selinux='no'
+       PKG_CHECK_MODULES([SELINUX], [libselinux],[found_selinux='yes'],[AC_MSG_WARN([Skipping SELinux])])
        ],[AC_MSG_WARN([Skipping SELinux])])
 # gnutls
 AC_ARG_WITH([gnutls], AS_HELP_STRING([--without-gnutls], [Build without gnutls]))
 AS_IF([test "x$with_gnutls" != "xno"], [
-       PKG_CHECK_MODULES([GNUTLS], [gnutls >= 2.8.0], [],[AC_MSG_WARN([Skipping gnutls])])
+       found_gnutls='no'
+       PKG_CHECK_MODULES([GNUTLS], [gnutls >= 2.8.0], [found_gnutls='yes'],[AC_MSG_WARN([Skipping gnutls])])
        ],[AC_MSG_WARN([Skipping gnutls])])
 # json-c
 AC_ARG_WITH([json], AS_HELP_STRING([--without-json], [Build without json]))
@@ -100,16 +102,21 @@ AS_IF([test "x$with_json" != "xno"], [
 # libvirt
 AC_ARG_WITH([libvirt], AS_HELP_STRING([--without-libvirt], [Build without libvirt]))
 AS_IF([test "x$with_libvirt" != "xno"], [
-       PKG_CHECK_MODULES([LIBVIRT],[libvirt], [],[AC_MSG_WARN([Skipping libvirt])])
+       found_libvirt='no'
+       PKG_CHECK_MODULES([LIBVIRT],[libvirt], [found_libvirt='yes'],[AC_MSG_WARN([Skipping libvirt])])
        ],[AC_MSG_WARN([Skipping libvirt])])
 # smbclient
-PKG_CHECK_MODULES([SMBCLIENT],[smbclient], [],[AC_MSG_WARN([Skipping libsmbclient])])
+found_smb='no'
+PKG_CHECK_MODULES([SMBCLIENT],[smbclient],
+                  [found_smb='yes'],
+                  [AC_MSG_WARN([Skipping libsmbclient])])
 # RPC
 AX_LIB_RPC()
 # SNMP Option
 AX_LIB_NETSNMP()
 # OpenIPMI
-PKG_CHECK_MODULES([IPMI],[OpenIPMI OpenIPMIposix], [],[AC_MSG_WARN([Skipping OpenIPMI])])
+found_ipmi='no'
+PKG_CHECK_MODULES([IPMI],[OpenIPMI OpenIPMIposix], [found_ipmi='yes'],[AC_MSG_WARN([Skipping OpenIPMI])])
 # Termios
 AC_SYS_POSIX_TERMIOS()
 # oping
@@ -126,7 +133,8 @@ AS_IF([test "x$with_fcgi" != "xno"], [
 # Varnish
 AC_ARG_WITH([varnish], AS_HELP_STRING([--without-varnish], [Build without varnish]))
 AS_IF([test "x$with_varnish" != "xno"], [
-       PKG_CHECK_MODULES([VARNISH], [varnishapi >= 3.0.0],[],[AC_MSG_WARN([Skipping Varnish])])
+       found_varnish='no'
+       PKG_CHECK_MODULES([VARNISH], [varnishapi >= 3.0.0],[found_varnish='yes'],[AC_MSG_WARN([Skipping Varnish])])
        ],[AC_MSG_WARN([Skipping Varnish])])
 # IPv6 Option
 AC_ARG_WITH([ipv6],
@@ -271,3 +279,31 @@ AC_CONFIG_FILES([Makefile
                  tests/Makefile
                  tests/replayd/Makefile])
 AC_OUTPUT
+
+echo "
+--------------------------------------------
+
+${PACKAGE_NAME} ${PACKAGE_VERSION}
+
+Prefix: '${prefix}'
+Compiler '${CC} ${CFLAGS} ${CPPFLAGS}'
+
+Modules
+ CUPS:       ${found_cups}
+ CURL:       ${libcurl_cv_lib_curl_usable}
+ DNS:        ${found_ldns}
+ FCGI:       ${ac_cv_lib_fcgi_FCGX_Init}
+ GnuTLS:     ${found_gnutls}
+ IPMI:       ${found_ipmi}
+ LibVirt:    ${found_libvirt}
+ MySQL:      ${found_mysql}
+ PostgreSQL: ${have_pqlib}
+ SELinux:    ${found_selinux}
+ SMB:        ${found_smb}
+ SNMP:       ${found_netsnmp}
+ Varnish:    ${found_varnish}
+ XMLRPM:     ${found_xmlrpc}
+
+Now type 'make @<:@<target>@:>@'
+
+--------------------------------------------"
