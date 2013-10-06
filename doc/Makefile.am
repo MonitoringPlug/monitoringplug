@@ -4,6 +4,7 @@ docdir = @docdir@
 
 doc_DATA = README-EOPT
 
+if !DISABLE_MAN
 man_MANS = monitoringplug-eopt.5 \
 		   monitoringplug-range.5 \
 		   monitoringplug-template.5
@@ -151,20 +152,27 @@ if HAVE_CURL
 man_MANS += notify_aspsms.1
 endif
 EXTRA_DIST += notify_aspsms.1 notify_mail.1 notify_sms.1 notify_stdout.1
+endif # !DISABLE_MAN
 
-if HAVE_XSLTPROC
-
-CLEANFILES = $(man_MANS)
+DISTCLEANFILES = $(man_MANS)
 
 DB2MAN = --xinclude -nonet http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl
 
 .xml.1:
+if HAVE_XSLTPROC
 	$(XSLTPROC) $(DB2MAN) $<
+else
+	@echo "Error: XSLTPROC not found! Can not build manpages"
+	@echo "       Either try --without-man or the release tarball."
+	@exit 1
+endif
 .xml.5:
+if HAVE_XSLTPROC
 	$(XSLTPROC) $(DB2MAN) $<
-
-.xml.html:
-	$(XSLTPROC) $(DB2HTML) $< > $@
+else
+	@echo "Error: XSLTPROC not found! Can not build manpages"
+	@echo "       Either try --without-man or the release tarball."
+	@exit 1
 endif
 
 ## vim: set ts=4 sw=4 syn=automake :
