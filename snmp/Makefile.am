@@ -2,7 +2,7 @@
 
 bindir = ${libdir}/nagios/plugins
 
-AM_CPPFLAGS = $(NETSNMP_CFLAGS)
+AM_CFLAGS = $(NETSNMP_CFLAGS)
 AM_DEFAULT_SOURCE_EXT = .c
 
 LDADD = ../lib/libmonitoringplug.a ../lib/libsnmputils.a $(NETSNMP_LIBS)

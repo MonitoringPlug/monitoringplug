@@ -2,7 +2,7 @@
 
 bindir = ${libdir}/nagios/plugins
 
-AM_CPPFLAGS = $(IPMI_CFLAGS)
+AM_CFLAGS = $(IPMI_CFLAGS)
 AM_DEFAULT_SOURCE_EXT = .c
 
 LDADD = ../lib/libmonitoringplug.a ../lib/libipmiutils.a $(IPMI_LIBS)

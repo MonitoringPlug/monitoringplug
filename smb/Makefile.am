@@ -2,7 +2,7 @@
 
 bindir = ${libdir}/nagios/plugins
 
-AM_CPPFLAGS = $(SMBCLIENT_CFLAGS)
+AM_CFLAGS = $(SMBCLIENT_CFLAGS)
 AM_DEFAULT_SOURCE_EXT = .c
 
 LDADD = ../lib/libmonitoringplug.a $(SMBCLIENT_LIBS)

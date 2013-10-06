@@ -2,7 +2,7 @@
 
 bindir = ${libdir}/nagios/plugins
 
-AM_CPPFLAGS = $(RPC_CFLAGS)
+AM_CFLAGS = $(RPC_CFLAGS)
 AM_LDFLAGS = $(RPC_LDFLAGS)
 AM_DEFAULT_SOURCE_EXT = .c
 

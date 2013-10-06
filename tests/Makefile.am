@@ -31,7 +31,7 @@ if HAVE_EXPAT
 TESTS += check_rhcs
 
 check_rhcs_LDADD = ../lib/librhcsutils.a $(LDADD)
-check_rhcs_CPPFLAGS = $(EXPAT_CFLAGS)
+check_rhcs_CFLAGS = $(EXPAT_CFLAGS)
 check_rhcs_LDFLAGS = $(AM_LDFLAGS) $(EXPAT_LIBS)
 endif
 
@@ -39,7 +39,7 @@ if HAVE_NET_SNMP
 TESTS += check_snmp
 
 check_snmp_LDADD = ../lib/libsnmputils.a $(LDADD)
-check_snmp_CPPFLAGS = $(NETSNMP_CFLAGS)
+check_snmp_CFLAGS = $(NETSNMP_CFLAGS)
 check_snmp_LDFLAGS = $(AM_LDFLAGS) $(NETSNMP_LIBS)
 endif
 

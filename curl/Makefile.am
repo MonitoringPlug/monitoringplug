@@ -21,7 +21,7 @@ endif
 if HAVE_JSON
 bin_PROGRAMS += check_buildbot_slave
 
-check_buildbot_slave_CPPFLAGS = $(AM_CPPFLAGS) $(JSON_CFLAGS)  -D__STRICT_ANSI__
+check_buildbot_slave_CFLAGS = $(JSON_CFLAGS)  -D__STRICT_ANSI__
 check_buildbot_slave_LDADD = $(LDADD) $(JSON_LIBS)
 endif
 endif
