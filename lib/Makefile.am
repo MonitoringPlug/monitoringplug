@@ -1,7 +1,5 @@
 ## Process this file with automake to produce Makefile.in
 
-AM_CPPFLAGS = -I$(top_srcdir)
-
 noinst_LIBRARIES  = libmonitoringplug.a \
 					libmonitoringplugnotify.a \
 					libmonitoringplugtemplate.a
