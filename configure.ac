@@ -5,7 +5,7 @@ AC_PREREQ([2.59])
 
 AC_INIT([monitoringplug],[0.16],[marius.rieder@durchmesser.ch])
 AC_CONFIG_AUX_DIR(build-aux)
-AC_CONFIG_SRCDIR([config.h.in])
+AC_CONFIG_SRCDIR([lib/mp_common.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 
