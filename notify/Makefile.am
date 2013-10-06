@@ -19,7 +19,7 @@ endif
 if HAVE_CURL
 bin_PROGRAMS += notify_aspsms
 
-notify_aspsms_CPPFLAGS = $(AM_CPPFLAGS) $(LIBCURL_CPPFLAGS)
+notify_aspsms_CPPFLAGS = $(LIBCURL_CPPFLAGS)
 notify_aspsms_LDADD = $(LDADD) ../lib/libcurlutils.a $(LIBCURL)
 endif
 

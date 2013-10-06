@@ -14,7 +14,7 @@ bin_PROGRAMS += check_fcgi_ping
 if HAVE_JSON
 bin_PROGRAMS += check_fcgi_phpfpm
 
-check_fcgi_phpfpm_CPPFLAGS = $(AM_CPPFLAGS) $(JSON_CFLAGS)
+check_fcgi_phpfpm_CPPFLAGS = $(JSON_CFLAGS)
 check_fcgi_phpfpm_LDADD = $(LDADD) $(JSON_LIBS)
 endif
 
