@@ -1,5 +1,4 @@
 /usr/lib/nagios/plugins/check_bonding
-/usr/lib/nagios/plugins/check_dhcp
 /usr/lib/nagios/plugins/check_file
 /usr/lib/nagios/plugins/check_gsm_signal
 /usr/lib/nagios/plugins/check_mem
@@ -10,7 +9,6 @@
 /usr/lib/nagios/plugins/check_sockets
 /usr/lib/nagios/plugins/check_timeout
 /usr/share/man/man1/check_bonding.1
-/usr/share/man/man1/check_dhcp.1
 /usr/share/man/man1/check_gsm_signal.1
 /usr/share/man/man1/check_file.1
 /usr/share/man/man1/check_mem.1

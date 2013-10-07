@@ -30,4 +30,4 @@ override_dh_auto_configure:
 			LDFLAGS="$(shell dpkg-buildflags --get LDFLAGS)"
 
 override_dh_install:
-	dh_install --fail-missing -Xcheck_dummy
+	dh_install --fail-missing -Xcheck_dummy -Xcheck_dhcp
