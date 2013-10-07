@@ -1,3 +1,9 @@
+monitoringplug (0.16.1) monitoringplug; urgency=low
+
+  * Make .deb more interoperable
+
+ -- Marius Rieder <marius.rieder@durchmesser.ch>  Mon, 07 Oct 2013 19:16:05 +0200
+
 monitoringplug (0.16) monitoringplug; urgency=low
 
   * Added PostgreSQL checks
