@@ -96,8 +96,10 @@ int parse_range_string(range *range, const char *str, int multiplier) {
     /* Set defaults */
     range->start = 0;
     range->start_infinity = 0;
+    range->start_percent = 0;
     range->end = 0;
     range->end_infinity = 0;
+    range->end_percent = 0;
     range->alert_on = OUTSIDE;
 
     if (str[0] == '@') {
@@ -120,6 +122,10 @@ int parse_range_string(range *range, const char *str, int multiplier) {
             range->start = strtod(start_str, &eptr);
             if (str == eptr)
                 return ERROR;
+            if (eptr[0] == '%') {
+                range->start /= 100;
+                range->start_percent = 1;
+            }
             switch(multiplier) {
                 case BISI:
                     range->start *= parse_multiplier_string(eptr);
@@ -137,6 +143,10 @@ int parse_range_string(range *range, const char *str, int multiplier) {
         range->end = strtod(end_str, &eptr);
         if (end_str == eptr)
             return ERROR;
+        if (eptr[0] == '%') {
+            range->end /= 100;
+            range->end_percent = 1;
+        }
         switch(multiplier) {
             case BISI:
                 range->end *= parse_multiplier_string(eptr);

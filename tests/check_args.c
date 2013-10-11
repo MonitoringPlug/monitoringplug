@@ -106,6 +106,10 @@ static string_double_int test_range_case[] = {
     {"@0:10", -1, 0}, {"@0:10", 0, 1}, {"@0:10", 10, 1}, {"@0:10", 11, 0},
     {"@10:", 9, 0}, {"@10:", 10, 1},
     {"@10:20", 9, 0}, {"@10:20", 10, 1}, {"@10:20", 20, 1}, {"@10:20", 21, 0},
+    /* Percent */
+    {"10%", 0, 0}, {"10%", 0.01, 0}, {"10%", 0.1, 0}, {"10%", 0.11, 1},
+    {"0:10%", -1, 1}, {"0:10%", 0, 0}, {"0:10%", 0.1, 0}, {"0:10%", 0.11, 1},
+    {"10%:", 0.09, 1}, {"10%:", 0.1, 0},
 };
 
 START_TEST (test_range) {
@@ -184,7 +188,7 @@ int main (void) {
     /* Range test case */
     TCase *tc_range = tcase_create ("Range");
     tcase_add_checked_fixture (tc_range, range_setup, range_teardown);
-    tcase_add_loop_test(tc_range, test_range, 0, 36);
+    tcase_add_loop_test(tc_range, test_range, 0, 46);
     suite_add_tcase (s, tc_range);
 
     /* Threshold test case */

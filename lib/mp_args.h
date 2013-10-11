@@ -26,6 +26,8 @@
 
 #include "mp_eopt.h"
 
+#include <stdint.h>
+
 /**
  * prototype for argument parsing function.
  * Needs to be implemented by checks.
@@ -39,11 +41,13 @@ int process_arguments(int argc, char **argv);
  * Defining a range with start and end
  */
 typedef struct range_struct {
-    double  start;              /**< start of range.    */
-    int     start_infinity;     /**< start in -infinity */
-    double  end;                /**< end of range       */
-    int     end_infinity;       /**< end in infinity    */
-    int     alert_on;           /**< invert range       */
+    double  start;              /**< start of range.     */
+    uint8_t start_infinity;     /**< start in -infinity  */
+    uint8_t start_percent;      /**< start is in percent */
+    double  end;                /**< end of range        */
+    uint8_t end_infinity;       /**< end in infinity     */
+    uint8_t end_percent;        /**< end is in percent   */
+    uint8_t alert_on;           /**< invert range        */
 } range;
 
 /**
