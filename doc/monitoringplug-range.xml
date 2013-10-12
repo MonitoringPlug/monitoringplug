@@ -62,6 +62,8 @@
     <para>'<parameter>TO</parameter>' may be omitted from the definition if
       <parameter>TO</parameter> is infinity.</para>
     <para>'~' specify negativ infinity.</para>
+    <para>Relative values can be specified with a percent sign. They are
+      relative to the max of the value.</para>
   </refsect1>
   <refsect1 id="example">
     <title>EXAMPLE</title>
