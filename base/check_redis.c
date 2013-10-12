@@ -84,10 +84,13 @@ int main (int argc, char **argv) {
     send(socket, "INFO\r\n", 6, 0);
 
     line = mp_recv_line(socket);
-    if (line[0] != '$')
+    if (line[0] != '$') {
+        free(line);
         unknown("Redis Server did not respong propperly.");
+    }
 
     answer_size = strtol(line+1, NULL, 10);
+    free(line);
 
     if (mp_verbose > 1)
         printf("Redis Info is %d byte long\n", answer_size);
@@ -111,7 +114,8 @@ int main (int argc, char **argv) {
 
         free(line);
     }
-    mp_recv_line(socket);
+    line = mp_recv_line(socket);
+    free(line);
 
     // Query maxmemory
     if (mp_verbose > 3)
@@ -119,10 +123,13 @@ int main (int argc, char **argv) {
     send(socket, "CONFIG GET maxmemory\r\n", 22, 0);
 
     line = mp_recv_line(socket);
-    if (line[0] != '*')
+    if (line[0] != '*') {
+        free(line);
         unknown("Redis Server did not respong propperly.");
+    }
   
     answer_size = strtol(line+1, NULL, 10);
+    free(line);
 
     while (answer_size > 0) {
         line = mp_recv_line(socket);

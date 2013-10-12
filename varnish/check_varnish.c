@@ -109,7 +109,7 @@ int main (int argc, char **argv) {
         }
 
         /* Close SHM */
-        VSM_Delete(vd);
+        VSM_Close(vd);
     }
 
     /* Connect to Varnish admin port */
@@ -142,6 +142,8 @@ int main (int argc, char **argv) {
         send(vsock, buf, strlen(buf), 0);
         send(vsock, "\r\n", 2, 0);
 
+        free(buf);
+
         (void)VCLI_ReadResult(vsock, &status, &answer, 10);
         if (mp_verbose > 2)
             printf("[%d] %s\n", status, answer);
@@ -159,6 +161,7 @@ int main (int argc, char **argv) {
     VCLI_ReadResult(vsock, &status, &answer, 10);
     if (mp_verbose > 2)
         printf("[%d] %s\n", status, answer);
+    free(answer);
     if (status != CLIS_OK)
         critical("Varnish: PING failed.");
 

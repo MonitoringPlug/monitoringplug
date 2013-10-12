@@ -151,7 +151,11 @@ int mp_fcgi_read(int socket, char **content, int *contentLength) {
         printf("--------------------------------------------\n");
     }
 
-    return header->type;
+    // Save type for return
+    count = header->type;
+    free(header);
+
+    return count;
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */

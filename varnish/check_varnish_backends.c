@@ -48,7 +48,6 @@ int backends = 0;
 struct VSM_data *vd;
 int range_len = 5;
 thresholds *fail_thresholds = NULL;
-thresholds *long_thresholds = NULL;
 char *backends_warning = NULL;
 char *backends_critical = NULL;
 
@@ -82,7 +81,7 @@ int main (int argc, char **argv) {
     (void)VSC_Iter(vd, mp_varnish_stats_cb, NULL);
 
     /* Close SHM */
-    VSM_Delete(vd);
+    VSM_Close(vd);
 
     /* Check for unmatched backends */
     if (backends > 0) {
@@ -95,6 +94,8 @@ int main (int argc, char **argv) {
             }
         }
     }
+
+    free_threshold(fail_thresholds);
 
     if (backends_critical != NULL)
         critical("Varnish-Backends: %s", backends_critical);

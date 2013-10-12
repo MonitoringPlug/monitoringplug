@@ -73,7 +73,7 @@ int main (int argc, char **argv) {
 
     /* Wait for answer */
     int type, count;
-    char *content;
+    char *content = NULL;
     do {
         type = mp_fcgi_read(fcgiSock, &content, &count);
         free(content);
