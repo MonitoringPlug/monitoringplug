@@ -44,6 +44,8 @@ void mp_perfdata_int2(const char *label, long int value, const char *unit,
         int have_max, long int max) {
     char *buf;
 
+    mp_perfdata_percent_resolv(threshold, have_max?max:0);
+
     if (!mp_showperfdata)
         return;
 
@@ -126,6 +128,8 @@ void mp_perfdata_float2(const char *label, float value, const char *unit,
     char *buf;
     int precision = 3;
 
+    mp_perfdata_percent_resolv(threshold, have_max?max:0);
+
     if (!mp_showperfdata)
         return;
 
@@ -200,6 +204,29 @@ void mp_perfdata_float3(const char *label, float value, const char *unit,
             have_min, min, have_max, max);
 
     free_threshold(threshold);
+}
+
+void mp_perfdata_percent_resolv(thresholds *threshold, float max) {
+    if (threshold && threshold->warning) {
+        if (threshold->warning->start_percent) {
+            threshold->warning->start *= max;
+            threshold->warning->start_percent = 0;
+        }
+        if (threshold->warning->end_percent) {
+            threshold->warning->end *= max;
+            threshold->warning->end_percent = 0;
+        }
+    }
+    if (threshold && threshold->critical) {
+        if (threshold->critical->start_percent) {
+            threshold->critical->start *= max;
+            threshold->critical->start_percent = 0;
+        }
+        if (threshold->critical->end_percent) {
+            threshold->critical->end *= max;
+            threshold->critical->end_percent = 0;
+        }
+    }
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */
