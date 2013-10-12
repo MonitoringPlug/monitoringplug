@@ -203,6 +203,20 @@ START_TEST (test_perfdata_float_precision) {
 }
 END_TEST
 
+START_TEST (test_perfdata_percent) {
+    thresholds *my_thresholds = NULL;
+
+    mp_showperfdata = 1;
+    setWarn(&my_thresholds, "20%:80%", 0);
+    setCrit(&my_thresholds, "10%:90%", 0);
+
+    mp_perfdata_int2("label", 50, "unit", my_thresholds, 1, 0, 1, 100);
+
+    fail_unless (strcmp(mp_perfdata, "label=50unit;20.000:80.000;10.000:90.000;0;100;") == 0,
+            "Wrong perfdata: '%s'", mp_perfdata);
+}
+END_TEST
+
 Suite* make_lib_perfdata_suite(void) {
 
     Suite *s = suite_create ("Perfdata");
@@ -219,7 +233,7 @@ Suite* make_lib_perfdata_suite(void) {
     tcase_add_test(tc_int, test_perfdata_int3);
     suite_add_tcase(s, tc_int);
 
-    /* Floar test case */
+    /* Float test case */
     TCase *tc_float = tcase_create("Float");
     tcase_add_checked_fixture(tc_float, perfdata_setup, perfdata_teardown);
     tcase_add_test(tc_float, test_perfdata_float_none);
@@ -231,6 +245,10 @@ Suite* make_lib_perfdata_suite(void) {
     tcase_add_test(tc_float, test_perfdata_float3);
     tcase_add_test(tc_float, test_perfdata_float_precision);
     suite_add_tcase(s, tc_float);
+
+    TCase *tc_percent = tcase_create("Percent");
+    tcase_add_test(tc_percent, test_perfdata_percent);
+    suite_add_tcase(s, tc_percent);
 
     return s;
 }

@@ -44,6 +44,8 @@ void mp_perfdata_int2(const char *label, long int value, const char *unit,
         int have_max, long int max) {
     char *buf;
 
+    mp_perfdata_percent_resolv(threshold, have_max?max:0);
+
     if (!mp_showperfdata)
         return;
 
@@ -125,6 +127,8 @@ void mp_perfdata_float2(const char *label, float value, const char *unit,
         int have_max, float max) {
     char *buf;
     int precision = 3;
+
+    mp_perfdata_percent_resolv(threshold, have_max?max:0);
 
     if (!mp_showperfdata)
         return;
