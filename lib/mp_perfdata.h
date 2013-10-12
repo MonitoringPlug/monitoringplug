@@ -124,6 +124,13 @@ void mp_perfdata_float3(const char *label, float value, const char *unit,
       int have_warn, float warn, int have_crit, float crit,
       int have_min, float min, int have_max, float max);
 
+/**
+ * Resolve percent values to absolute ones.
+ * \param[in|out] thresholds thresholds to operate on
+ * \para[in] max max value
+ */
+void mp_perfdata_percent_resolv(thresholds *threshold, float max);
+
 #endif /* _MP_PERFDATA_H_ */
 
 /* vim: set ts=4 sw=4 et syn=c : */

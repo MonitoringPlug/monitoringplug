@@ -202,4 +202,27 @@ void mp_perfdata_float3(const char *label, float value, const char *unit,
     free_threshold(threshold);
 }
 
+void mp_perfdata_percent_resolv(thresholds *threshold, float max) {
+    if (threshold && threshold->warning) {
+        if (threshold->warning->start_percent) {
+            threshold->warning->start *= max;
+            threshold->warning->start_percent = 0;
+        }
+        if (threshold->warning->end_percent) {
+            threshold->warning->end *= max;
+            threshold->warning->end_percent = 0;
+        }
+    }
+    if (threshold && threshold->critical) {
+        if (threshold->critical->start_percent) {
+            threshold->critical->start *= max;
+            threshold->critical->start_percent = 0;
+        }
+        if (threshold->critical->end_percent) {
+            threshold->critical->end *= max;
+            threshold->critical->end_percent = 0;
+        }
+    }
+}
+
 /* vim: set ts=4 sw=4 et syn=c : */
