@@ -188,13 +188,13 @@ AS_IF([test "x$have_libvirt" = "xyes"],
              [AC_MSG_ERROR([LibVirt requested but not found.])
       ])
 ])
-AM_CONDITIONAL([HAVE_LIBVIRT], [test "$have_libvirt" = "xyes"])
+AM_CONDITIONAL([HAVE_LIBVIRT], [test "x$have_libvirt" = "xyes"])
 
 ## MySQL
 AX_LIB_MYSQL()
 AS_IF([test "x$want_mysql" = "xno"],
     [have_mysql=disabled], [have_mysql=$found_mysql])
-AM_CONDITIONAL([HAVE_MYSQL], [test "$have_mysql" = "xyes"])
+AM_CONDITIONAL([HAVE_MYSQL], [test "x$have_mysql" = "xyes"])
 
 ## OPing
 AC_ARG_WITH([oping],
@@ -212,7 +212,7 @@ AS_IF([test "x$have_oping" = "xyes"],
              [AC_MSG_ERROR([oping requested but not found.])
       ])
 ])
-AM_CONDITIONAL([HAVE_OPING], [test "$have_oping" = "xyes"])
+AM_CONDITIONAL([HAVE_OPING], [test "x$have_oping" = "xyes"])
 
 ## PostgreSQL
 AS_IF([test "$PQINCPATH" == ""], [
@@ -243,7 +243,7 @@ AS_IF([test "x$have_selinux" = "xyes"],
              [AC_MSG_ERROR([SELinux requested but not found.])
       ])
 ])
-AM_CONDITIONAL([HAVE_SELINUX], [test "$have_selinux" = "xyes"])
+AM_CONDITIONAL([HAVE_SELINUX], [test "x$have_selinux" = "xyes"])
 
 ## SMBClient
 AC_ARG_WITH([smbclient],
@@ -257,7 +257,7 @@ AS_IF([test "x$have_smbclient" = "xyes"],
              [AC_MSG_ERROR([SMB-Client requested but not found.])
       ])
 ])
-AM_CONDITIONAL([HAVE_SMBCLIENT], [test "$have_smbclient" = "xyes"])
+AM_CONDITIONAL([HAVE_SMBCLIENT], [test "x$have_smbclient" = "xyes"])
 
 ## SNMP
 AX_LIB_NETSNMP()
@@ -294,7 +294,7 @@ AS_IF([test "x$have_varnish" = "xyes"],
              [AC_MSG_ERROR([Varnish requested but varnishapi not found.])
       ])
 ])
-AM_CONDITIONAL([HAVE_VARNISH], [test "$have_varnish" = "xyes"])
+AM_CONDITIONAL([HAVE_VARNISH], [test "x$have_varnish" = "xyes"])
 
 
 ## XMLRPC-C
