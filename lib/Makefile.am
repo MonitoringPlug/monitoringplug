@@ -1,7 +1,5 @@
 ## Process this file with automake to produce Makefile.in
 
-AM_CPPFLAGS = -I$(top_srcdir)
-
 noinst_LIBRARIES  = libmonitoringplug.a \
 					libmonitoringplugnotify.a \
 					libmonitoringplugtemplate.a
@@ -32,7 +30,7 @@ if HAVE_CURL
 noinst_LIBRARIES += libcurlutils.a
 
 libcurlutils_a_SOURCES = curl_utils.c curl_utils.h
-libcurlutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(LIBCURL_CPPFLAGS)
+libcurlutils_a_CPPFLAGS = $(LIBCURL_CPPFLAGS)
 endif
 
 if OS_LINUX
@@ -40,84 +38,81 @@ noinst_LIBRARIES += libdhcputils.a
 
 libdhcputils_a_SOURCES = dhcp_utils.c dhcp_utils.h \
 						 mp_net.c mp_net.h
-libdhcputils_a_CPPFLAGS = $(AM_CPPFLAGS)
 endif
 
 if HAVE_EXPAT
 noinst_LIBRARIES += libexpatutils.a librhcsutils.a
 
 libexpatutils_a_SOURCES = expat_utils.c expat_utils.h
-libexpatutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(EXPAT_CFLAGS)
+libexpatutils_a_CPPFLAGS = $(EXPAT_CFLAGS)
 librhcsutils_a_SOURCES = rhcs_utils.c rhcs_utils.h
-librhcsutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(EXPAT_CFLAGS)
+librhcsutils_a_CPPFLAGS = $(EXPAT_CFLAGS)
 endif
 
 if HAVE_FCGI
 noinst_LIBRARIES += libfcgiutils.a
 
 libfcgiutils_a_SOURCES = fcgi_utils.c fcgi_utils.h
-libfcgiutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(FCGI_LIBS)
+libfcgiutils_a_CPPFLAGS = $(FCGI_LIBS)
 endif
 
 if HAVE_LDNS
 noinst_LIBRARIES += libldnsutils.a
 
 libldnsutils_a_SOURCES = ldns_utils.c ldns_utils.h
-libldnsutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(LDNS_CFLAGS)
+libldnsutils_a_CPPFLAGS = $(LDNS_CFLAGS)
 endif
 
 if HAVE_LIBPQ
 noinst_LIBRARIES += libpgsqlutils.a
 
 libpgsqlutils_a_SOURCES = pgsql_utils.c pgsql_utils.h
-libpgsqlutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(PQINCPATH) $(LIBPQ_LIBS)
+libpgsqlutils_a_CPPFLAGS = $(PQINCPATH) $(LIBPQ_LIBS)
 endif
 
 if HAVE_LIBVIRT
 noinst_LIBRARIES += libvirtutils.a
 
 libvirtutils_a_SOURCES = virt_utils.c virt_utils.h
-libvirtutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(LIBVIRT_CFLAGS)
+libvirtutils_a_CPPFLAGS = $(LIBVIRT_CFLAGS)
 endif
 
 if HAVE_MYSQL
 noinst_LIBRARIES += libmysqlutils.a
 
 libmysqlutils_a_SOURCES = mysql_utils.c mysql_utils.h
-libmysqlutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(MYSQL_CFLAGS)
+libmysqlutils_a_CPPFLAGS = $(MYSQL_CFLAGS)
 endif
 
 if HAVE_NET_SNMP
 noinst_LIBRARIES += libsnmputils.a
 
 libsnmputils_a_SOURCES = snmp_utils.c snmp_utils.h
-libsnmputils_a_CPPFLAGS = $(AM_CPPFLAGS) $(NETSNMP_CFLAGS)
+libsnmputils_a_CPPFLAGS = $(NETSNMP_CFLAGS)
 endif
 
 if HAVE_XMLRPC
 noinst_LIBRARIES += libxmlrpcutils.a
 
 libxmlrpcutils_a_SOURCES = xmlrpc_utils.c xmlrpc_utils.h
-libxmlrpcutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(XMLRPC_CFLAGS)
+libxmlrpcutils_a_CPPFLAGS = $(XMLRPC_CFLAGS)
 endif
 
 if HAVE_RPC
 noinst_LIBRARIES += librpcutils.a
 
 librpcutils_a_SOURCES = rpc_utils.c rpc_utils.h
-librpcutils_a_CPPFLAGS = $(AM_CPPFLAGS)
 endif
 
 if HAVE_IPMI
 noinst_LIBRARIES += libipmiutils.a
 
 libipmiutils_a_SOURCES = ipmi_utils.c ipmi_utils.h
-libipmiutils_a_CPPFLAGS = $(AM_CPPFLAGS) $(IPMI_CFLAGS)
+libipmiutils_a_CPPFLAGS = $(IPMI_CFLAGS)
 endif
 
 noinst_LIBRARIES += libsmsutils.a
 
 libsmsutils_a_SOURCES = sms_utils.c sms_utils.h
-libsmsutils_a_CPPFLAGS = $(AM_CPPFLAGS)
 
 ## vim: set ts=4 sw=4 syn=automake :

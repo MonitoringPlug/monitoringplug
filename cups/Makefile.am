@@ -2,7 +2,7 @@
 
 bindir = ${libdir}/nagios/plugins
 
-AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/lib $(CUPS_CFLAGS)
+AM_CFLAGS = $(CUPS_CFLAGS)
 AM_DEFAULT_SOURCE_EXT = .c
 
 LDADD = ../lib/libmonitoringplug.a $(CUPS_LDFLAGS)
