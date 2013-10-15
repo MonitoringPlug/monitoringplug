@@ -4,7 +4,7 @@ bindir = ${libdir}/nagios/plugins
 
 AM_DEFAULT_SOURCE_EXT = .c
 
-LDADD = ../lib/libmonitoringplug.a -loping
+LDADD = ../lib/libmonitoringplug.a $(OPING_LIBS)
 
 bin_PROGRAMS = 
 

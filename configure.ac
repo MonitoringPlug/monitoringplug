@@ -202,6 +202,9 @@ AC_ARG_WITH([oping],
 AS_IF([test "x$with_oping" != "xno"],
       [
        AC_SEARCH_LIBS([ping_construct],[oping],[have_oping=yes],[have_oping=no])
+       LIBS=$ac_func_search_save_LIBS
+       OPING_LIBS=$ac_res
+       AC_SUBST([OPING_LIBS])
        AS_IF([test "x$have_oping" != "xyes"],
              [AC_CHECK_HEADERS([oping.h],[],[have_oping=yes],[have_oping=no])])
       ],
@@ -441,6 +444,7 @@ Dependencies:
  JSON:       ${have_json}
  LibVirt:    ${have_libvirt}
  MySQL:      ${have_mysql}
+ OPING:      ${have_oping}
  PostgreSQL: ${have_pqlib}
  (Sun)RPC:   ${have_rpc}
  SELinux:    ${have_selinux}
