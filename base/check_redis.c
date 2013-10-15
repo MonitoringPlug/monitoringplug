@@ -59,8 +59,8 @@ int main (int argc, char **argv) {
     char *line;
     char *redis_version = NULL;
     int answer_size = 0;
-    int used_memory = -1;              /** < Memory used now. */
-    int max_memory = -1;               /** < Memory allowed. */
+    long int used_memory = -1;              /** < Memory used now. */
+    long int max_memory = -1;               /** < Memory allowed. */
     struct timeval start_time;
     double time_delta;
 
@@ -140,7 +140,7 @@ int main (int argc, char **argv) {
             line = mp_recv_line(socket);
             free(line);
             line = mp_recv_line(socket);
-            max_memory = (int)strtol(line, NULL, 10);
+            max_memory = (long)strtol(line, NULL, 10);
             free(line);
             break;
         }
