@@ -205,8 +205,8 @@ AS_IF([test "x$with_oping" != "xno"],
        LIBS=$ac_func_search_save_LIBS
        OPING_LIBS=$ac_res
        AC_SUBST([OPING_LIBS])
-       AS_IF([test "x$have_oping" != "xyes"],
-             [AC_CHECK_HEADERS([oping.h],[],[have_oping=yes],[have_oping=no])])
+       AS_IF([test "x$have_oping" = "xyes"],
+             [AC_CHECK_HEADERS([oping.h],[have_oping=yes],[have_oping=no])])
       ],
       [have_oping=disabled])
 AS_IF([test "x$have_oping" = "xyes"],
