@@ -253,9 +253,15 @@ AC_ARG_WITH([smbclient],
     [AS_HELP_STRING([--without-smbclient], [Build without SMB-Client support.])])
 AS_IF([test "x$with_smbclient" != "xno"],
       [
-       AC_SEARCH_LIBS([smbc_new_context],[smbclient],[have_smbclient=yes],[have_smbclient=no])
-       AS_IF([test "x$have_smbclient" != "xyes"],
-             [AC_CHECK_HEADERS([libsmbclient.h],[],[have_smbclient=yes],[have_smbclient=no])])
+       PKG_CHECK_MODULES([SMBCLIENT],[smbclient], [have_smbclient=yes], [have_smbclient=no])
+       AS_IF([test "x$have_smbclient" != "xyes"], [
+           AC_SEARCH_LIBS([smbc_new_context],[smbclient],[have_smbclient=yes],[have_smbclient=no])
+           LIBS=$ac_func_search_save_LIBS
+           SMBCLIENT_LIBS=$ac_res
+           AC_SUBST([SMBCLIENT_LIBS])
+           AS_IF([test "x$have_smbclient" = "xyes"],
+             [AC_CHECK_HEADERS([libsmbclient.h],[have_smbclient=yes],[have_smbclient=no])])
+           ])
       ],
       [have_smbclient=disabled])
 AS_IF([test "x$have_smbclient" = "xyes"],
