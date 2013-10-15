@@ -39,8 +39,8 @@ AC_PATH_PROG([RPMBUILD], [rpmbuild])
 AM_CONDITIONAL([HAVE_RPMBUILD], [test "x$RPMBUILD" != x])
 
 ## Buildsystem DEB
-AM_CONDITIONAL([HAVE_DEBUILD], [test "x$DEBUILD" != x])
 AC_PATH_PROG([DEBUILD], [debuild])
+AM_CONDITIONAL([HAVE_DEBUILD], [test "x$DEBUILD" != x])
 
 ## Runtime dependencies
 AC_PATH_PROGS(BIN_FALSE, false)
