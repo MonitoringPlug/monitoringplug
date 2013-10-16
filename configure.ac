@@ -232,7 +232,17 @@ AM_CONDITIONAL([HAVE_LIBPQ], [test "x$LIBPQ_LIBS" != x])
 AC_ARG_WITH([redis],
     [AS_HELP_STRING([--without-redis], [Build without hiredis support.])])
 AS_IF([test "x$with_redis" != "xno"],
-      [PKG_CHECK_MODULES([REDIS], [hiredis], [have_redis=yes], [have_redis=no])],
+      [
+       PKG_CHECK_MODULES([REDIS],[hiredis], [have_redis=yes], [have_redis=no])
+       AS_IF([test "x$have_redis" != "xyes"], [
+           AC_SEARCH_LIBS([redisCommand],[hiredis],[have_redis=yes],[have_redis=no])
+           LIBS=$ac_func_search_save_LIBS
+           REDIS_LIBS=$ac_res
+           AC_SUBST([REDIS_LIBS])
+           AS_IF([test "x$have_redis" = "xyes"],
+             [AC_CHECK_HEADERS([hiredis/hiredis.h],[have_redis=yes],[have_redis=no])])
+           ])
+      ],
       [have_redis=disabled])
 AS_IF([test "x$have_redis" = "xyes"],
       [],
@@ -240,7 +250,7 @@ AS_IF([test "x$have_redis" = "xyes"],
              [AC_MSG_ERROR([Redis requested but hiredis not found.])
       ])
 ])
-AM_CONDITIONAL([HAVE_REDIS], [test "x$have_have" = "xyes"])
+AM_CONDITIONAL([HAVE_REDIS], [test "x$have_redis" = "xyes"])
 
 ## (Sun)RPC
 AX_LIB_RPC()
