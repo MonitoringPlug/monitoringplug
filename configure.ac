@@ -228,6 +228,20 @@ AC_CHECK_LIB([pq], [PQlibVersion], [
     ], [])
 AM_CONDITIONAL([HAVE_LIBPQ], [test "x$LIBPQ_LIBS" != x])
 
+## Redis
+AC_ARG_WITH([redis],
+    [AS_HELP_STRING([--without-redis], [Build without hiredis support.])])
+AS_IF([test "x$with_redis" != "xno"],
+      [PKG_CHECK_MODULES([REDIS], [hiredis], [have_redis=yes], [have_redis=no])],
+      [have_redis=disabled])
+AS_IF([test "x$have_redis" = "xyes"],
+      [],
+      [AS_IF([test "x$with_redis" = "xyes"],
+             [AC_MSG_ERROR([Redis requested but hiredis not found.])
+      ])
+])
+AM_CONDITIONAL([HAVE_REDIS], [test "x$have_have" = "xyes"])
+
 ## (Sun)RPC
 AX_LIB_RPC()
 AS_IF([test "x$rpc_requested" = "xno"],
@@ -411,6 +425,7 @@ AC_CONFIG_FILES([Makefile
                  mysql/Makefile
                  oping/Makefile
                  pgsql/Makefile
+                 redis/Makefile
                  rhcs/Makefile
                  rpc/Makefile
                  selinux/Makefile
@@ -452,6 +467,7 @@ Dependencies:
  MySQL:      ${have_mysql}
  OPING:      ${have_oping}
  PostgreSQL: ${have_pqlib}
+ Redis:      ${have_redis}
  (Sun)RPC:   ${have_rpc}
  SELinux:    ${have_selinux}
  SMB:        ${have_smbclient}
