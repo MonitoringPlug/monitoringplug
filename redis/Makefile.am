@@ -5,11 +5,11 @@ bindir = ${libdir}/nagios/plugins
 AM_CFLAGS = $(REDIS_CFLAGS)
 AM_DEFAULT_SOURCE_EXT = .c
 
-LDADD = ../lib/libmonitoringplug.a $(REDIS_LIBS)
+LDADD = ../lib/libmonitoringplug.a ../lib/libredisutils.a $(REDIS_LIBS)
 
 bin_PROGRAMS = 
 
-if HAVE_SMBCLIENT
+if HAVE_REDIS
 bin_PROGRAMS += check_redis
 
 endif

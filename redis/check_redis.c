@@ -33,6 +33,7 @@ const char *progusage = "[--host <HOSTNAME>] [--port <PORT>]";
 /* MP Includes */
 #include "mp_common.h"
 #include "mp_utils.h"
+#include "redis_utils.h"
 /* Default Includes */
 #include <stdio.h>
 #include <stdlib.h>
@@ -82,7 +83,7 @@ int main (int argc, char **argv) {
     }
 
     /* PING server */
-    reply = redisCommand(c,"PING");
+    reply = mp_redisCommand(c,"PING");
     if (reply == NULL)
         critical("Error: %s", c->errstr);
     if (reply->type == REDIS_REPLY_ERROR)
@@ -90,7 +91,7 @@ int main (int argc, char **argv) {
     freeReplyObject(reply);
 
     /* Read server info */
-    reply = redisCommand(c,"INFO");
+    reply = mp_redisCommand(c,"INFO");
     if (reply == NULL)
         critical("Error: %s", c->errstr);
     if (reply->type == REDIS_REPLY_ERROR)
@@ -113,7 +114,7 @@ int main (int argc, char **argv) {
     freeReplyObject(reply);
 
     // Query maxmemory
-    reply = redisCommand(c,"CONFIG GET maxmemory");
+    reply = mp_redisCommand(c,"CONFIG GET maxmemory");
     if (reply == NULL)
         critical("Error: %s", c->errstr);
     if (reply->type == REDIS_REPLY_ERROR)
@@ -181,6 +182,7 @@ int process_arguments (int argc, char **argv) {
         MP_LONGOPTS_DEFAULT,
         MP_LONGOPTS_HOST,
         MP_LONGOPTS_PORT,
+        {"socket", required_argument, NULL, (int)'s'},
         MP_LONGOPTS_WC,
         // PLUGIN OPTS
         {"warning-memory", required_argument, NULL, (int)'W'},
@@ -193,7 +195,7 @@ int process_arguments (int argc, char **argv) {
     setCritTime(&time_thresholds, "4s");
 
     while (1) {
-        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"H:P:46w:c:W:C:",
+        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"H:P:s:w:c:W:C:",
                 longopts, &option);
 
         if (c == -1 || c == EOF)
@@ -219,18 +221,21 @@ int process_arguments (int argc, char **argv) {
             case 'P':
                 getopt_port(optarg, &port);
                 break;
+            /* Socket opt */
+            case 'S':
+                socket = optarg;
+                break;
         }
     }
 
     /* Check requirements */
-    if (!hostname || !port)
-        usage("Hostname and port mandatory.");
 
     return(OK);
 }
 
 void print_help (void) {
     print_revision();
+    print_revision_redis();
     print_copyright();
 
     printf("\n");
@@ -244,9 +249,8 @@ void print_help (void) {
     print_help_default();
     print_help_host();
     print_help_port("6379");
-#ifdef USE_IPV6
-    print_help_46();
-#endif //USE_IPV6
+    printf(" -s, --socket=<SOCKET>\n");
+    printf("      Unix socket to connect to.\n");
     print_help_warn_time("3s");
     print_help_crit_time("4s");
     printf(" -W, --warning-memory=BYTES\n");
