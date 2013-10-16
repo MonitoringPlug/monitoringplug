@@ -2,7 +2,7 @@
 <!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
 
-  <!ENTITY mpcheckname   "check_redis">
+  <!ENTITY mpcheckname   "check_redis_slave">
 
 ]>
 
@@ -34,12 +34,12 @@
     </legalnotice>
   </refentryinfo>
   <refmeta>
-    <refentrytitle>CHECK_REDIS</refentrytitle>
+    <refentrytitle>CHECK_REDIS_SLAVE</refentrytitle>
     <manvolnum>1</manvolnum>
   </refmeta>
   <refnamediv>
     <refname>&mpcheckname;</refname>
-    <refpurpose>Check Redis status.</refpurpose>
+    <refpurpose>Check Redis slave status.</refpurpose>
   </refnamediv>
   <refsynopsisdiv>
     <cmdsynopsis>
@@ -54,7 +54,7 @@
   </refsynopsisdiv>
   <refsect1 id="description">
     <title>DESCRIPTION</title>
-    <para>Check the status of a redis server.</para>
+    <para>Check the slave status of a redis server.</para>
     <para>Connects to the redis and ask for statistic data.</para>
   </refsect1>
   <refsect1 id="options">
@@ -76,30 +76,16 @@
         <term><option>-w</option></term>
         <term><option>--warning=<replaceable>DURATION</replaceable></option></term>
         <listitem>
-          <para>Return warning if interaction expire time limit.
-            (Default to 3s)</para>
+          <para>Return warning if sync delay expire time limit.
+            (Default to 300s)</para>
         </listitem>
       </varlistentry>
       <varlistentry>
         <term><option>-c</option></term>
         <term><option>--critical=<replaceable>DURATION</replaceable></option></term>
         <listitem>
-          <para>Return critical if interaction expire time limit.
-            (Default to 4s)</para>
-        </listitem>
-      </varlistentry>
-      <varlistentry>
-        <term><option>-W</option></term>
-        <term><option>--warning-memory=<replaceable>USAGE</replaceable></option></term>
-        <listitem>
-          <para>Return warning if memory usage exceeds limit.</para>
-        </listitem>
-      </varlistentry>
-      <varlistentry>
-        <term><option>-C</option></term>
-        <term><option>--critical-memory=<replaceable>USAGE</replaceable></option></term>
-        <listitem>
-          <para>Return critical if memory usage exceeds limit.</para>
+          <para>Return critical if sync expire time limit.
+            (Default to 3600s)</para>
         </listitem>
       </varlistentry>
     </variablelist>

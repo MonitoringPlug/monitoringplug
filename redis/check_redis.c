@@ -33,7 +33,7 @@ const char *progusage = "[--host <HOSTNAME>] [--port <PORT>]";
 /* MP Includes */
 #include "mp_common.h"
 #include "mp_utils.h"
-#include "mp_net.h"
+#include "redis_utils.h"
 /* Default Includes */
 #include <stdio.h>
 #include <stdlib.h>
@@ -41,24 +41,21 @@ const char *progusage = "[--host <HOSTNAME>] [--port <PORT>]";
 #include <signal.h>
 #include <unistd.h>
 #include <sys/types.h>
-#include <sys/socket.h>
-#include <netdb.h>
-#include <arpa/inet.h>
 /* Library Includes */
+#include <hiredis/hiredis.h>
 
 /* Global Vars */
 const char *hostname = "localhost";
 int port = 6379;
-int ipv = AF_UNSPEC;
+const char *socket = NULL;
 thresholds *time_thresholds = NULL;
 thresholds *memory_thresholds = NULL;
 
 int main (int argc, char **argv) {
     /* Local Vars */
-    int socket;
-    char *line;
+    redisContext *c;
+    redisReply *reply;
     char *redis_version = NULL;
-    int answer_size = 0;
     long int used_memory = -1;              /** < Memory used now. */
     long int max_memory = -1;               /** < Memory allowed. */
     struct timeval start_time;
@@ -77,27 +74,31 @@ int main (int argc, char **argv) {
 
     // Connect to Server
     gettimeofday(&start_time, NULL);
-    socket = mp_connect(hostname, port, ipv, SOCK_STREAM);
-
-    if (mp_verbose > 3)
-        printf("> INFO'\n");
-    send(socket, "INFO\r\n", 6, 0);
-
-    line = mp_recv_line(socket);
-    if (line[0] != '$') {
-        free(line);
-        unknown("Redis Server did not respong propperly.");
+    if (socket)
+        c = redisConnectUnix(socket);
+    else
+        c = redisConnect(hostname, port);
+    if (c != NULL && c->err) {
+        critical("Error: %s", c->errstr);
     }
 
-    answer_size = strtol(line+1, NULL, 10);
-    free(line);
+    /* PING server */
+    reply = mp_redisCommand(c,"PING");
+    if (reply == NULL)
+        critical("Error: %s", c->errstr);
+    if (reply->type == REDIS_REPLY_ERROR)
+        critical("Error: %s", reply->str);
+    freeReplyObject(reply);
 
-    if (mp_verbose > 1)
-        printf("Redis Info is %d byte long\n", answer_size);
-
-    while (answer_size > 0) {
-        line = mp_recv_line(socket);
-
+    /* Read server info */
+    reply = mp_redisCommand(c,"INFO");
+    if (reply == NULL)
+        critical("Error: %s", c->errstr);
+    if (reply->type == REDIS_REPLY_ERROR)
+        critical("Error: %s", reply->str);
+    char *str = reply->str;
+    char *line = NULL;
+    while ((line = strsep(&str, "\r\n"))) {
         if (strncmp(line, "redis_version:", 14) == 0) {
             redis_version = strdup(line+14);
         } else if (strncmp(line, "used_memory:", 12) == 0) {
@@ -109,49 +110,29 @@ int main (int argc, char **argv) {
             mp_perfdata_int("commands", strtol(line+25, NULL, 10),
                     "c", NULL);
         }
-
-        answer_size -= strlen(line) + 2;
-
-        free(line);
     }
-    line = mp_recv_line(socket);
-    free(line);
+    freeReplyObject(reply);
 
     // Query maxmemory
-    if (mp_verbose > 3)
-        printf("> CONFIG GET maxmemory\n");
-    send(socket, "CONFIG GET maxmemory\r\n", 22, 0);
-
-    line = mp_recv_line(socket);
-    if (line[0] != '*') {
-        free(line);
-        unknown("Redis Server did not respong propperly.");
-    }
-  
-    answer_size = strtol(line+1, NULL, 10);
-    free(line);
-
-    while (answer_size > 0) {
-        line = mp_recv_line(socket);
-        free(line);
-        line = mp_recv_line(socket);
-        if (strcmp(line, "maxmemory") == 0) {
-            free(line);
-            line = mp_recv_line(socket);
-            free(line);
-            line = mp_recv_line(socket);
-            max_memory = (long)strtol(line, NULL, 10);
-            free(line);
-            break;
+    reply = mp_redisCommand(c,"CONFIG GET maxmemory");
+    if (reply == NULL)
+        critical("Error: %s", c->errstr);
+    if (reply->type == REDIS_REPLY_ERROR)
+        critical("Error: %s", reply->str);
+    int i;
+    for (i=0; i<reply->elements; i++) {
+        if (strcmp(reply->element[i]->str, "maxmemory") != 0) {
+            i++;
+            continue;
         }
-        free(line);
-
-        answer_size--;
+        max_memory = (long)strtol(reply->element[i+1]->str, NULL, 10);
+        break;
     }
+    freeReplyObject(reply);
+
 
     // Dissconnect
-    send(socket, "QUIT\r\n", 6, 0);
-    mp_disconnect(socket);
+    redisFree(c);
     time_delta = mp_time_delta(start_time);
 
     if (mp_showperfdata) {
@@ -201,6 +182,7 @@ int process_arguments (int argc, char **argv) {
         MP_LONGOPTS_DEFAULT,
         MP_LONGOPTS_HOST,
         MP_LONGOPTS_PORT,
+        {"socket", required_argument, NULL, (int)'s'},
         MP_LONGOPTS_WC,
         // PLUGIN OPTS
         {"warning-memory", required_argument, NULL, (int)'W'},
@@ -213,13 +195,12 @@ int process_arguments (int argc, char **argv) {
     setCritTime(&time_thresholds, "4s");
 
     while (1) {
-        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"H:P:46w:c:W:C:",
+        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"H:P:s:w:c:W:C:",
                 longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
 
-        getopt_46(c, &ipv);
         getopt_wc_time(c, optarg, &time_thresholds);
 
         switch (c) {
@@ -240,18 +221,21 @@ int process_arguments (int argc, char **argv) {
             case 'P':
                 getopt_port(optarg, &port);
                 break;
+            /* Socket opt */
+            case 'S':
+                socket = optarg;
+                break;
         }
     }
 
     /* Check requirements */
-    if (!hostname || !port)
-        usage("Hostname and port mandatory.");
 
     return(OK);
 }
 
 void print_help (void) {
     print_revision();
+    print_revision_redis();
     print_copyright();
 
     printf("\n");
@@ -265,9 +249,8 @@ void print_help (void) {
     print_help_default();
     print_help_host();
     print_help_port("6379");
-#ifdef USE_IPV6
-    print_help_46();
-#endif //USE_IPV6
+    printf(" -s, --socket=<SOCKET>\n");
+    printf("      Unix socket to connect to.\n");
     print_help_warn_time("3s");
     print_help_crit_time("4s");
     printf(" -W, --warning-memory=BYTES\n");

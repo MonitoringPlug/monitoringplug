@@ -5,7 +5,6 @@
 /usr/lib/nagios/plugins/check_memcached
 /usr/lib/nagios/plugins/check_multipath
 /usr/lib/nagios/plugins/check_nrped
-/usr/lib/nagios/plugins/check_redis
 /usr/lib/nagios/plugins/check_sockets
 /usr/lib/nagios/plugins/check_timeout
 /usr/share/man/man1/check_bonding.1
@@ -15,5 +14,4 @@
 /usr/share/man/man1/check_memcached.1
 /usr/share/man/man1/check_multipath.1
 /usr/share/man/man1/check_nrped.1
-/usr/share/man/man1/check_redis.1
 /usr/share/man/man1/check_sockets.1
