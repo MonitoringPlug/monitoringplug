@@ -104,6 +104,12 @@ noinst_LIBRARIES += librpcutils.a
 librpcutils_a_SOURCES = rpc_utils.c rpc_utils.h
 endif
 
+if HAVE_REDIS
+noinst_LIBRARIES += libredisutils.a
+
+libredisutils_a_SOURCES = redis_utils.c redis_utils.h
+endif
+
 if HAVE_IPMI
 noinst_LIBRARIES += libipmiutils.a
 
