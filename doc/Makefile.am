@@ -12,7 +12,7 @@ man_MANS = monitoringplug-eopt.5 \
 EXTRA_DIST = $(doc_DATA) $(man_MANS)
 
 # base
-man_MANS += check_file.1 check_memcached.1 check_nrped.1 check_redis.1
+man_MANS += check_file.1 check_memcached.1 check_nrped.1
 if OS_LINUX
 man_MANS += check_bonding.1 check_dhcp.1 check_mem.1 check_multipath.1 \
 			check_sockets.1
@@ -97,6 +97,12 @@ if HAVE_LIBPQ
 man_MANS += check_pgsql.1 check_pgsql_slave.1
 endif #HAVE_LIBPQ
 EXTRA_DIST +=  check_pgsql.1 check_pgsql_slave.1
+
+#redis
+if HAVE_REDIS
+man_MANS += check_redis.1 check_redis_slave.1
+endif #HAVE_REDIS
+EXTRA_DIST += check_redis.1 check_redis_slave.1
 
 #rhcs
 if HAVE_EXPAT
