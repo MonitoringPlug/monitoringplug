@@ -1,5 +1,5 @@
 Name:           monitoringplug
-Version:        0.16
+Version:        0.17
 Release:        1%{?dist}
 Summary:        Collection of monitoring plugins for Nagios
 
@@ -575,6 +575,14 @@ fi
 %{_mandir}/man1/notify_*
 
 %changelog
+* Thu Oct 16 2013 Marius Rieder <marius.rieder@durchmesser.ch> - 0.17-1
+- Rework autotools build system.
+- Allow % sign in ranges and parse them.
+- Use hiredis library for redis checks.
+- Use long for redis memory size.
+- Add check_redis_slave check.
+
+
 * Sun Sep 08 2013 Marius Rieder <marius.rieder@durchmesser.ch> - 0.16-1
 - Added PostgreSQL check
 - Added FastCGI checks
