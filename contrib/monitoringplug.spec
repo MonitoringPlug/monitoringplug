@@ -21,6 +21,7 @@ BuildRequires:  selinux-policy-devel
 BuildRequires:  OpenIPMI-devel
 BuildRequires:  postgresql-devel
 BuildRequires:  fcgi-devel
+BuildRequires:  hiredis-devel
 %if 0%{?rhel} == 0
 BuildRequires:  varnish-libs-devel
 %endif
@@ -117,6 +118,12 @@ Group:          Applications/System
 Requires:       liboping
 Requires:       monitoringplug
 %endif
+
+%package redis
+Summary:        Collection of redis monitoring plugins for Nagios
+Group:          Applications/System
+Requires:       hiredis
+Requires:       monitoringplug
 
 %package postgresql
 Summary:        Collection of PostgreSQL monitoring plugins for Nagios
@@ -234,6 +241,10 @@ This package contains the PostgreSQL based plugins.
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the liboping based plugins.
 %endif
+
+%description redis
+Collection of monitoring plugins for Nagios and similar monitoring systems.
+This package contains the Redis plugins.
 
 %description rhcs
 Collection of monitoring plugins for Nagios and similar monitoring systems.
@@ -354,6 +365,9 @@ fi
 %post oping
 /sbin/fixfiles -F -R monitoringplug-oping restore ||:
 %endif
+
+%post redis
+/sbin/fixfiles -F -R monitoringplug-redis restore ||:
 
 %post rhcs
 /sbin/fixfiles -F -R monitoringplug-rhcs restore ||:
@@ -490,6 +504,11 @@ fi
 %attr(4111, root, root) %{_libdir}/nagios/plugins/check_oping*
 %{_mandir}/man1/check_oping*
 %endif
+
+%files redis
+%defattr(-,root,root,-)
+%{_libdir}/nagios/plugins/check_redis*
+%{_mandir}/man1/check_redis*
 
 %files rhcs
 %defattr(-,root,root,-)

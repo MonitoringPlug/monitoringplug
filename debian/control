@@ -22,7 +22,8 @@ Build-Depends: debhelper (>= 7.0.50~),
                libmysqlclient-dev,
                liboping-dev,
                libopenipmi-dev,
-               libvarnishapi-dev
+               libvarnishapi-dev,
+               libhiredis-dev,
 Standards-Version: 3.9.1
 Homepage: http://svn.durchmesser.ch/trac/monitoringplug/
 
@@ -153,6 +154,17 @@ Description: Collection of PostgreSQL monitoring plugins for Nagios.
   check_pgsql, check_pgsql_slave
  .
  This package provides a basic set of plugins with libpq5 as dependency.
+
+Package: monitoringplug-redis
+Architecture: any
+Depends: monitoringplug, libhiredis0
+Description: Collection of Redis monitoring plugins for Nagios.
+ Collection of Redis monitoring plugins for Nagios. It contains the following
+ plugins:
+ .
+  check_clustat, check_rhcsnmp
+ .
+ This package provides a basic set of plugins with hiredis as dependencies.
 
 Package: monitoringplug-rhcs
 Architecture: any
