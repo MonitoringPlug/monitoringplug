@@ -10,7 +10,7 @@ LDADD = ../lib/libmonitoringplug.a ../lib/libredisutils.a $(REDIS_LIBS)
 bin_PROGRAMS = 
 
 if HAVE_REDIS
-bin_PROGRAMS += check_redis
+bin_PROGRAMS += check_redis check_redis_slave
 
 endif
 ## vim: set ts=4 sw=4 syn=automake :
