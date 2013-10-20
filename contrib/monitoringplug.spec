@@ -1,5 +1,5 @@
 Name:           monitoringplug
-Version:        0.16
+Version:        0.17
 Release:        1%{?dist}
 Summary:        Collection of monitoring plugins for Nagios
 
@@ -21,7 +21,6 @@ BuildRequires:  selinux-policy-devel
 BuildRequires:  OpenIPMI-devel
 BuildRequires:  postgresql-devel
 BuildRequires:  fcgi-devel
-BuildRequires:  hiredis-devel
 %if 0%{?rhel} == 0
 BuildRequires:  varnish-libs-devel
 %endif
@@ -36,6 +35,7 @@ BuildRequires:  gnutls-devel
 BuildRequires:  libvirt-devel
 BuildRequires:  libsmbclient-devel
 BuildRequires:  liboping-devel
+BuildRequires:  hiredis-devel
 %endif
 
 %package base
@@ -117,13 +117,13 @@ Summary:        Collection of liboping monitoring plugins for Nagios
 Group:          Applications/System
 Requires:       liboping
 Requires:       monitoringplug
-%endif
 
 %package redis
 Summary:        Collection of redis monitoring plugins for Nagios
 Group:          Applications/System
 Requires:       hiredis
 Requires:       monitoringplug
+%endif
 
 %package postgresql
 Summary:        Collection of PostgreSQL monitoring plugins for Nagios
@@ -240,11 +240,11 @@ This package contains the PostgreSQL based plugins.
 %description oping
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the liboping based plugins.
-%endif
 
 %description redis
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the Redis plugins.
+%endif
 
 %description rhcs
 Collection of monitoring plugins for Nagios and similar monitoring systems.
@@ -364,10 +364,10 @@ fi
 %if 0%{?rhel} != 5
 %post oping
 /sbin/fixfiles -F -R monitoringplug-oping restore ||:
-%endif
 
 %post redis
 /sbin/fixfiles -F -R monitoringplug-redis restore ||:
+%endif
 
 %post rhcs
 /sbin/fixfiles -F -R monitoringplug-rhcs restore ||:
@@ -419,7 +419,6 @@ fi
 %{_libdir}/nagios/plugins/check_memcached
 %attr(4111, root, root) %{_libdir}/nagios/plugins/check_multipath
 %{_libdir}/nagios/plugins/check_nrped
-%{_libdir}/nagios/plugins/check_redis
 %{_libdir}/nagios/plugins/check_sockets
 %{_libdir}/nagios/plugins/check_dummy_mp
 %{_libdir}/nagios/plugins/check_timeout
@@ -431,7 +430,6 @@ fi
 %{_mandir}/man1/check_memcached.1.gz
 %{_mandir}/man1/check_multipath.1.gz
 %{_mandir}/man1/check_nrped.1.gz
-%{_mandir}/man1/check_redis.1.gz
 %{_mandir}/man1/check_sockets.1.gz
 
 %if 0%{?rhel} != 5
@@ -503,12 +501,12 @@ fi
 %defattr(-,root,root,-)
 %attr(4111, root, root) %{_libdir}/nagios/plugins/check_oping*
 %{_mandir}/man1/check_oping*
-%endif
 
 %files redis
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_redis*
 %{_mandir}/man1/check_redis*
+%endif
 
 %files rhcs
 %defattr(-,root,root,-)
@@ -575,6 +573,13 @@ fi
 %{_mandir}/man1/notify_*
 
 %changelog
+* Thu Oct 16 2013 Marius Rieder <marius.rieder@durchmesser.ch> - 0.17-1
+- Rework autotools build system.
+- Allow % sign in ranges and parse them.
+- Use hiredis library for redis checks.
+- Use long for redis memory size.
+- Add check_redis_slave check.
+
 * Sun Sep 08 2013 Marius Rieder <marius.rieder@durchmesser.ch> - 0.16-1
 - Added PostgreSQL check
 - Added FastCGI checks

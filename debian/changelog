@@ -1,8 +1,18 @@
+monitoringplug (0.17) UNRELEASED; urgency=low
+
+  * Rework autotools build system.
+  * Allow % sign in ranges and parse them.
+  * Use hiredis library for redis checks.
+  * Use long for redis memory size.
+  * Add check_redis_slave check.
+
+ -- Marius Rieder <marius.rieder@durchmesser.ch>  Tue, 16 Oct 2013 20:12:29 +0200
+
 monitoringplug (0.16.1) monitoringplug; urgency=low
 
   * Make .deb more interoperable
 
- -- Marius Rieder <marius.rieder@durchmesser.ch>  Mon, 07 Oct 2013 19:16:05 +0200
+ -- Marius Rieder <marie@pcmarie.nine.ch>  Tue, 15 Oct 2013 17:34:17 +0200
 
 monitoringplug (0.16) monitoringplug; urgency=low
 
