@@ -23,7 +23,7 @@ Build-Depends: debhelper (>= 7.0.50~),
                liboping-dev,
                libopenipmi-dev,
                libvarnishapi-dev,
-               libhiredis-dev,
+               libhiredis-dev | base-files (<= 6.1),
 Standards-Version: 3.9.1
 Homepage: http://svn.durchmesser.ch/trac/monitoringplug/
 

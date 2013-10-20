@@ -16,11 +16,15 @@
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
+ifeq ($(shell lsb_release --short --codename),squeeze) 
+	DHARG=--no-package=monitoringplug-redis
+endif
+
 export SMBCLIENT_LIBS="-lsmbclient"
 export SMBCLIENT_CFLAGS=
 
 %:
-	dh $@
+	dh $(DHARG) $@
 
 override_dh_auto_configure:
 	dh_auto_configure -- CFLAGS="$(shell dpkg-buildflags --get CFLAGS)" \
