@@ -4,6 +4,7 @@ Priority: extra
 Maintainer: Marius Rieder <marius.rieder@durchmesser.ch>
 Build-Depends: debhelper (>= 7.0.50~),
                autoconf, libtool,
+               lsb-release,
                pkg-config,
                bison,
                flex,
