@@ -264,7 +264,7 @@ void print_help (void) {
     printf("      Do not test TCP queries.\n");
     printf("     --noudp\n");
     printf("      Do not test UDP queries.\n");
-    printf("     --noaxfrn\n");
+    printf("     --noaxfr\n");
     printf("      Do not test for disabled AXFR.\n");
 }
 
