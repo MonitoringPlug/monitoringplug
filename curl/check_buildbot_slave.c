@@ -124,7 +124,7 @@ int main (int argc, char **argv) {
     }
 
     /* Parse Answer */
-    buf = mp_malloc(128);
+    buf = mp_malloc(250);
 
     obj = json_tokener_parse(answer.data);
 
@@ -132,7 +132,7 @@ int main (int argc, char **argv) {
         for(i=0; i<slaves; i++) {
             slaveobj = json_object_object_get(obj, slave[i]);
             if(json_object_object_get(slaveobj,"error")) {
-                mp_snprintf(buf, 128, "%s - %s", slave[i], json_object_get_string(json_object_object_get(slaveobj,"error")));
+                mp_snprintf(buf, 250, "%s - %s", slave[i], json_object_get_string(json_object_object_get(slaveobj,"error")));
                 mp_strcat_comma(&failed, buf);
                 continue;
             }
@@ -144,7 +144,13 @@ int main (int argc, char **argv) {
                 slave_host[j] = '\0';
             }
 
-            mp_snprintf(buf, 128, "%s - %s (v%s)", slave[i], slave_host, slave_version);
+            if(mp_verbose > 2) {
+                printf("slave: %s\n", slave[i]);
+                printf("slave_host: %s\n", slave_host);
+                printf("slave_version: %s\n", slave_version);
+            }
+
+            mp_snprintf(buf, 250, "%s - %s (v%s)", slave[i], slave_host, slave_version);
 
             if (slave_connected) {
                 mp_strcat_comma(&connected, buf);
@@ -163,7 +169,7 @@ int main (int argc, char **argv) {
                 slave_host[j] = '\0';
             }
 
-            mp_snprintf(buf, 128, "%s - %s (v%s)", key, slave_host, slave_version);
+            mp_snprintf(buf, 250, "%s - %s (v%s)", key, slave_host, slave_version);
 
             if (slave_connected) {
                 mp_strcat_comma(&connected, buf);
