@@ -38,11 +38,22 @@ extern char *mp_ldap_pass;
 extern char *mp_ldap_basedn;
 
 /** LDAP specific short option string. */
-#define LDAP_OPTSTR "D:W:b:"
+#define LDAP_OPTSTR "H:D:W:b:"
 /** LDAP specific longopt struct. */
 #define LDAP_LONGOPTS {"binddn", required_argument, NULL, (int)'D'}, \
                       {"password", required_argument, NULL, (int)'W'}, \
-                      {"basedb", required_argument, NULL, (int)'b'}, \
+                      {"basedb", required_argument, NULL, (int)'b'}
+
+/**
+ * Initialize a LDAP connection
+ */
+LDAP *mp_ldap_init(char *uri);
+
+/**
+ * Search the LDAP.
+ */
+LDAPMessage *mp_ldap_search(LDAP *ld, const char *base, int scope, const char *filter,
+        char **attrs);
 
 /**
  * Handle LDAP related command line options.
