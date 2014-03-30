@@ -453,6 +453,7 @@ AC_CONFIG_FILES([Makefile
                  fcgi/Makefile
                  gnutls/Makefile
                  ipmi/Makefile
+                 ldap/Makefile
                  libvirt/Makefile
                  mysql/Makefile
                  oping/Makefile
