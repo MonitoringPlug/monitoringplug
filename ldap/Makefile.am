@@ -10,7 +10,7 @@ LDADD = ../lib/libmonitoringplug.a ../lib/libldaputils.a $(LDAP_LIBS)
 bin_PROGRAMS = 
 
 if HAVE_LDAP
-bin_PROGRAMS += check_ldap_replication
+bin_PROGRAMS += check_ldap check_ldap_replication
 endif
 
 
