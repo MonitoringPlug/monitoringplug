@@ -124,16 +124,15 @@ int main (int argc, char **argv) {
     }
 
     /* Parse Answer */
-    buf = mp_malloc(128);
-
     obj = json_tokener_parse(answer.data);
 
     if (slaves) {
         for(i=0; i<slaves; i++) {
             slaveobj = json_object_object_get(obj, slave[i]);
             if(json_object_object_get(slaveobj,"error")) {
-                mp_snprintf(buf, 128, "%s - %s", slave[i], json_object_get_string(json_object_object_get(slaveobj,"error")));
+                mp_asprintf(&buf, "%s - %s", slave[i], json_object_get_string(json_object_object_get(slaveobj,"error")));
                 mp_strcat_comma(&failed, buf);
+                free(buf);
                 continue;
             }
             slave_connected = json_object_get_boolean(json_object_object_get(slaveobj, (const char *)"connected"));
@@ -144,13 +143,14 @@ int main (int argc, char **argv) {
                 slave_host[j] = '\0';
             }
 
-            mp_snprintf(buf, 128, "%s - %s (v%s)", slave[i], slave_host, slave_version);
+            mp_asprintf(&buf, "%s - %s (v%s)", slave[i], slave_host, slave_version);
 
             if (slave_connected) {
                 mp_strcat_comma(&connected, buf);
             } else {
                 mp_strcat_comma(&failed, buf);
             }
+            free(buf);
         }
     } else {
         json_object_object_foreach(obj, key, val) {
@@ -159,16 +159,18 @@ int main (int argc, char **argv) {
             slave_host = (char *)json_object_get_string(json_object_object_get(slaveobj, "host"));
             slave_version = (char *)json_object_get_string(json_object_object_get(slaveobj, "version"));
 
-            for (j = strlen(slave_host) -1; isspace(slave_host[j]); j--) {
-                slave_host[j] = '\0';
+            if (slave_host) {
+                for (j = strlen(slave_host) -1; isspace(slave_host[j]); j--) {
+                    slave_host[j] = '\0';
+                }
             }
 
-            mp_snprintf(buf, 128, "%s - %s (v%s)", key, slave_host, slave_version);
-
             if (slave_connected) {
+                mp_asprintf(&buf, "%s - %s (v%s)", key, slave_host, slave_version);
                 mp_strcat_comma(&connected, buf);
+                free(buf);
             } else {
-                mp_strcat_comma(&failed, buf);
+                mp_strcat_comma(&failed, key);
             }
 
         }
