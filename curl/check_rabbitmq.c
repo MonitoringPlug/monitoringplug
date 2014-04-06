@@ -47,10 +47,6 @@ const char *progusage = "--hostname <RABBITMQHOST>";
 /* Global Vars */
 const char *hostname = NULL;
 int port = 15672;
-int ssl = 0;
-const char *subpath = "";
-const char *httpuser = NULL;
-const char *httppass = NULL;
 thresholds *messages_thresholds = NULL;
 thresholds *messages_ready_thresholds = NULL;
 thresholds *messages_unacknowledged_thresholds = NULL;
@@ -81,8 +77,8 @@ int main (int argc, char **argv) {
     /* Start plugin timeout */
     alarm(mp_timeout);
 
-    /* Build query */
-    mp_asprintf(&url, "http%s://%s%s/api/overview", ssl ? "s": "", hostname, subpath);
+    /* Build URL */
+    url = mp_curl_url("http", hostname, port, "/api/overview");
 
     if (mp_verbose > 0) {
         printf("CURL Version: %s\n", curl_version());
@@ -98,16 +94,6 @@ int main (int argc, char **argv) {
     curl_easy_setopt(curl, CURLOPT_URL, url);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, mp_curl_recv_data);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&answer);
-
-    if (httpuser || httppass) {
-      curl_easy_setopt(curl, CURLOPT_HTTPAUTH, (long)CURLAUTH_ANY);
-      char *userpwd;
-      mp_asprintf(&userpwd, "%s:%s", httpuser, httppass);
-      curl_easy_setopt(curl, CURLOPT_USERPWD, userpwd);
-    }
-
-    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, (long) 0);
-    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, (long) 0);
 
     /* Get url */
     code = mp_curl_perform(curl);
@@ -202,15 +188,12 @@ int process_arguments (int argc, char **argv) {
         MP_LONGOPTS_DEFAULT,
         MP_LONGOPTS_HOST,
         MP_LONGOPTS_PORT,
-        {"ssl", no_argument, 0, 's'},
-        {"user", required_argument, 0, 'u'},
-        {"password", required_argument, 0, 'p'},
-        {"subpath", required_argument, 0, 'S'},
+        CURL_LONGOPTS,
         MP_LONGOPTS_WC,
-        {"warning-ready", required_argument, 0, MP_LONGOPT_PRIV0},
-        {"critical-ready", required_argument, 0, MP_LONGOPT_PRIV1},
-        {"warning-unacknowledged", required_argument, 0, MP_LONGOPT_PRIV2},
-        {"critical-unacknowledged", required_argument, 0, MP_LONGOPT_PRIV3},
+        {"warning-ready", required_argument, 0, MP_LONGOPT_PRIV1},
+        {"critical-ready", required_argument, 0, MP_LONGOPT_PRIV2},
+        {"warning-unacknowledged", required_argument, 0, MP_LONGOPT_PRIV3},
+        {"critical-unacknowledged", required_argument, 0, MP_LONGOPT_PRIV4},
         MP_LONGOPTS_END
     };
 
@@ -223,12 +206,13 @@ int process_arguments (int argc, char **argv) {
 
     while (1) {
         c = mp_getopt(&argc, &argv,
-                MP_OPTSTR_DEFAULT"H:P:su:p:S:"MP_OPTSTR_WC,
+                MP_OPTSTR_DEFAULT"H:P:u:p:"MP_OPTSTR_WC,
                 longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
 
+        getopt_curl(c);
         getopt_wc(c, optarg, &messages_thresholds);
 
         switch (c) {
@@ -239,33 +223,20 @@ int process_arguments (int argc, char **argv) {
             case 'P':
                 getopt_port(optarg, &port);
                 break;
-            /* HTTP opt */
-            case 's':
-                ssl = 1;
-                break;
-            case 'u':
-                httpuser = optarg;
-                break;
-            case 'p':
-                httppass = optarg;
-                break;
-            case 'S':
-                subpath = optarg;
-                break;
             /* Warn/Crit opt */
-            case MP_LONGOPT_PRIV0:
+            case MP_LONGOPT_PRIV1:
                 if (setWarn(&messages_ready_thresholds, optarg, BISI) == ERROR)
                     usage("Illegal --warning-ready threshold '%s'.", optarg);
                 break;
-            case MP_LONGOPT_PRIV1:
+            case MP_LONGOPT_PRIV2:
                 if (setCrit(&messages_ready_thresholds, optarg, BISI) == ERROR)
                     usage("Illegal --critical-ready threshold '%s'.", optarg);
                 break;
-            case MP_LONGOPT_PRIV2:
+            case MP_LONGOPT_PRIV3:
                 if (setWarn(&messages_unacknowledged_thresholds, optarg, BISI) == ERROR)
                     usage("Illegal --warning-unacknowledged threshold '%s'.", optarg);
                 break;
-            case MP_LONGOPT_PRIV3:
+            case MP_LONGOPT_PRIV4:
                 if (setCrit(&messages_unacknowledged_thresholds, optarg, BISI) == ERROR)
                     usage("Illegal --critical-unacknowledged threshold '%s'.", optarg);
                 break;
@@ -294,9 +265,13 @@ void print_help (void) {
 
     print_help_default();
     print_help_host();
-    print_help_port("8010");
-    printf(" -S, --slave=SLAVE\n");
-    printf("      Check state of defines SLAVE(s).\n");
+    print_help_port("15672");
+    printf(" -u, --user=USER\n");
+    printf("      HTTP Basic Auth user.\n");
+    printf(" -p, --password=PASSWWORD\n");
+    printf("      HTTP Basic Auth password.\n");
+    printf("     --subpath=SUBPATH\n");
+    printf("      Prepand subpath to url.\n");
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */
