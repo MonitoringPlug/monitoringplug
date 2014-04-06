@@ -27,6 +27,12 @@
 #include <string.h>
 #include <curl/curl.h>
 
+char *mp_curl_user = NULL;
+char *mp_curl_pass = NULL;
+char *mp_curl_subpath = "";
+int mp_curl_ssl = 0;
+int mp_curl_insecure = 0;
+
 CURL *mp_curl_init(void) {
     CURL        *curl;
     CURLcode    ret;
@@ -57,7 +63,30 @@ CURL *mp_curl_init(void) {
             critical("libcurt setting verbose failed");
     }
 
+    /* Setup HTTP basic auth */
+    if (mp_curl_user != NULL || mp_curl_pass != NULL) {
+        curl_easy_setopt(curl, CURLOPT_HTTPAUTH, (long)CURLAUTH_ANY);
+        char *userpwd;
+        mp_asprintf(&userpwd, "%s:%s", mp_curl_user, mp_curl_pass);
+        curl_easy_setopt(curl, CURLOPT_USERPWD, userpwd);
+    }
+
+    /* Set insecure option */
+    if (mp_curl_insecure == 1) {
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, (long) 0);
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, (long) 0);
+    }
+
     return curl;
+}
+
+char *mp_curl_url(const char *scheme, const char *hostname, int port, const char *path) {
+    char *url;
+
+    mp_asprintf(&url, "%s%s://%s:%d%s%s", scheme, mp_curl_ssl ? "s": "",
+            hostname, port, mp_curl_subpath, path);
+
+    return url;
 }
 
 long mp_curl_perform(CURL *curl) {
@@ -129,6 +158,39 @@ size_t mp_curl_send_data(void *ptr, size_t size, size_t nmemb, void *userdata) {
     data->start += read_size;
 
     return read_size;
+}
+
+void getopt_curl(int c) {
+    switch ( c ) {
+        case 'u':
+            mp_curl_user = optarg;
+            break;
+        case 'p':
+            mp_curl_pass = optarg;
+            break;
+        case MP_LONGOPT_CURL_SUBPATH:
+            mp_curl_subpath = optarg;
+            break;
+    }
+}
+
+void print_help_curl_subpath(void) {
+    printf("     --subpath=SUBPATH\n");
+    printf("      Prepand subpath to url.\n");
+}
+
+void print_help_curl_basic_auth(void) {
+    printf(" -u, --user=USER\n");
+    printf("      HTTP Basic Auth user.\n");
+    printf(" -p, --password=PASSWORD\n");
+    printf("      HTTP Basic Auth password.\n");
+}
+
+void print_help_curl_https(void) {
+    printf("     --https\n");
+    printf("      Use HTTPS.\n");
+    printf("     --insecure\n");
+    printf("      Do not validate SSL Certificates.\n");
 }
 
 void print_revision_curl(void) {
