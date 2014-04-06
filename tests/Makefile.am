@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = replayd
+SUBDIRS = curl replayd
 
 LDADD = ../lib/libmonitoringplug.a
 AM_LDFLAGS = $(CHECK_LIBS)
