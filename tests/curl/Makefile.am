@@ -3,7 +3,8 @@
 if HAVE_CURL
 
 BASE=$abs_top_srcdir
-TESTS = check_rabbitmq.t
+TESTS = check_rabbitmq.t \
+		check_buildbot_slave.t
 
 endif
 
