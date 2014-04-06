@@ -72,6 +72,26 @@
           <para>Check state of defines SLAVE(s).</para>
         </listitem>
       </varlistentry>
+      <varlistentry>
+        <term><option>-u</option></term>
+        <term><option>--user=<replaceable>USER</replaceable></option></term>
+        <listitem>
+          <para>HTTP Basic Auth username.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-p</option></term>
+        <term><option>--password=<replaceable>PASSWORD</replaceable></option></term>
+        <listitem>
+          <para>HTTP Basic Auth password.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>--subpath=<replaceable>SUBPATH</replaceable></option></term>
+        <listitem>
+          <para>Prepend SUBPATH to the url.</para>
+        </listitem>
+      </varlistentry>
     </variablelist>
   </refsect1>
   <xi:include href="mp_seealso.xml"/>
