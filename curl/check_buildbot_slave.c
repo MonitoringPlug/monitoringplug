@@ -129,6 +129,15 @@ int main (int argc, char **argv) {
     if (slaves) {
         for(i=0; i<slaves; i++) {
             slaveobj = json_object_object_get(obj, slave[i]);
+
+            /* Detect missing slave */
+            if (slaveobj == NULL) {
+                mp_asprintf(&buf, "%s not known", slave[i]);
+                mp_strcat_comma(&failed, buf);
+                free(buf);
+                continue;
+            }
+
             if(json_object_object_get(slaveobj,"error")) {
                 mp_asprintf(&buf, "%s - %s", slave[i], json_object_get_string(json_object_object_get(slaveobj,"error")));
                 mp_strcat_comma(&failed, buf);
@@ -177,7 +186,6 @@ int main (int argc, char **argv) {
     }
 
     /* free */
-    free(buf);
     json_object_put(obj);
 
     if (failed && connected) {
