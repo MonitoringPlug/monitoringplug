@@ -169,6 +169,7 @@ int main (int argc, char **argv) {
             } else {
                 mp_strcat_comma(&failed, slave[i]);
             }
+        }
     } else {
         json_object_object_foreach(obj, key, val) {
             slaveobj = val;
