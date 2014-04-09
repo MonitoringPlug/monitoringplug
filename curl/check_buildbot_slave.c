@@ -272,14 +272,11 @@ void print_help (void) {
     print_help_default();
     print_help_host();
     print_help_port("8010");
+    print_help_curl_subpath();
+    print_help_curl_basic_auth();
+    print_help_curl_https();
     printf(" -S, --slave=SLAVE\n");
     printf("      Check state of defines SLAVE(s).\n");
-    printf(" -u, --user=USER\n");
-    printf("      HTTP Basic Auth user.\n");
-    printf(" -p, --password=PASSWWORD\n");
-    printf("      HTTP Basic Auth password.\n");
-    printf("     --subpath=SUBPATH\n");
-    printf("      Prepand subpath to url.\n");
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */

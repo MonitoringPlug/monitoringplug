@@ -34,14 +34,14 @@ EXTRA_DIST += check_cups_jobs.1
 if HAVE_CURL
 man_MANS += check_apache_status.1 check_aspsms_credits.1 check_webdav.1
 if HAVE_JSON
-man_MANS += check_buildbot_slave.1
+man_MANS += check_buildbot_slave.1 check_rabbitmq.1
 endif #HAVE_JSON
 if HAVE_CURL_TFTP
 man_MANS += check_tftp.1
 endif #HAVE_CURL_TFTP
 endif #HAVE_CURL
 EXTRA_DIST += check_apache_status.1 check_aspsms_credits.1 check_webdav.1 \
-			  check_buildbot_slave.1 check_tftp.1
+			  check_buildbot_slave.1 check_rabbitmq.1 check_tftp.1
 
 #dns
 if HAVE_LDNS

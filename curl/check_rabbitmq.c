@@ -266,12 +266,20 @@ void print_help (void) {
     print_help_default();
     print_help_host();
     print_help_port("15672");
-    printf(" -u, --user=USER\n");
-    printf("      HTTP Basic Auth user.\n");
-    printf(" -p, --password=PASSWWORD\n");
-    printf("      HTTP Basic Auth password.\n");
-    printf("     --subpath=SUBPATH\n");
-    printf("      Prepand subpath to url.\n");
+    print_help_curl_subpath();
+    print_help_curl_basic_auth();
+    print_help_curl_https();
+    print_help_warn("message count","INF");
+    print_help_crit("message count","INF");
+    printf("     --warning-ready=LIMIT\n");
+    printf("      Return warning if ready message count exceeds limit. Defaults to INF\n");
+    printf("     --critical-ready=LIMIT\n");
+    printf("      Return critical if ready message count exceeds limit. Defaults to INF\n");
+    printf("     --warning-unacknowledged=LIMIT\n");
+    printf("      Return warning if unacknowledged message count exceeds limit. Defaults to INF\n");
+    printf("     --critical-unacknowledged=LIMIT\n");
+    printf("      Return critical if unacknowledged message count exceeds limit. Defaults to INF\n");
+
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */
