@@ -116,23 +116,23 @@ int main (int argc, char **argv) {
     }
 
     /* Read pool name */
-    slaveobj = json_object_object_get(obj, "pool");
+    slaveobj = json_object_object_get_ex(obj, "pool", NULL);
     pool = strdup(json_object_get_string(slaveobj));
 
     /* Read accepted connections */
-    slaveobj = json_object_object_get(obj, "accepted conn");
+    slaveobj = json_object_object_get_ex(obj, "accepted conn", NULL);
     mp_perfdata_int("accepted_conn", json_object_get_int(slaveobj), "c", NULL);
 
     /* Read listen queue */
-    slaveobj = json_object_object_get(obj, "listen queue");
+    slaveobj = json_object_object_get_ex(obj, "listen queue", NULL);
     mp_perfdata_int("listen_queue", json_object_get_int(slaveobj), "", NULL);
 
     /* Read idle processes */
-    slaveobj = json_object_object_get(obj, "idle processes");
+    slaveobj = json_object_object_get_ex(obj, "idle processes", NULL);
     mp_perfdata_int("idle_processes", json_object_get_int(slaveobj), "", NULL);
 
     /* Read active processes */
-    slaveobj = json_object_object_get(obj, "active processes");
+    slaveobj = json_object_object_get_ex(obj, "active processes", NULL);
     mp_perfdata_int("active_processes", json_object_get_int(slaveobj), "", NULL);
 
     free(content);

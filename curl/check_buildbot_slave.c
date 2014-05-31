@@ -128,16 +128,16 @@ int main (int argc, char **argv) {
 
     if (slaves) {
         for(i=0; i<slaves; i++) {
-            slaveobj = json_object_object_get(obj, slave[i]);
-            if(json_object_object_get(slaveobj,"error")) {
-                mp_asprintf(&buf, "%s - %s", slave[i], json_object_get_string(json_object_object_get(slaveobj,"error")));
+            slaveobj = json_object_object_get_ex(obj, slave[i], NULL);
+            if(json_object_object_get_ex(slaveobj,"error", NULL)) {
+                mp_asprintf(&buf, "%s - %s", slave[i], json_object_get_string(json_object_object_get_ex(slaveobj,"error", NULL)));
                 mp_strcat_comma(&failed, buf);
                 free(buf);
                 continue;
             }
-            slave_connected = json_object_get_boolean(json_object_object_get(slaveobj, (const char *)"connected"));
-            slave_host = (char *)json_object_get_string(json_object_object_get(slaveobj, "host"));
-            slave_version = (char *)json_object_get_string(json_object_object_get(slaveobj, "version"));
+            slave_connected = json_object_get_boolean(json_object_object_get_ex(slaveobj, (const char *)"connected", NULL));
+            slave_host = (char *)json_object_get_string(json_object_object_get_ex(slaveobj, "host", NULL));
+            slave_version = (char *)json_object_get_string(json_object_object_get_ex(slaveobj, "version", NULL));
 
             for (j = strlen(slave_host) -1; isspace(slave_host[j]); j--) {
                 slave_host[j] = '\0';
@@ -155,9 +155,9 @@ int main (int argc, char **argv) {
     } else {
         json_object_object_foreach(obj, key, val) {
             slaveobj = val;
-            slave_connected = json_object_get_boolean(json_object_object_get(slaveobj, "connected"));
-            slave_host = (char *)json_object_get_string(json_object_object_get(slaveobj, "host"));
-            slave_version = (char *)json_object_get_string(json_object_object_get(slaveobj, "version"));
+            slave_connected = json_object_get_boolean(json_object_object_get_ex(slaveobj, "connected", NULL));
+            slave_host = (char *)json_object_get_string(json_object_object_get_ex(slaveobj, "host", NULL));
+            slave_version = (char *)json_object_get_string(json_object_object_get_ex(slaveobj, "version", NULL));
 
             if (slave_host) {
                 for (j = strlen(slave_host) -1; isspace(slave_host[j]); j--) {
