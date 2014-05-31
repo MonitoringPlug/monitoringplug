@@ -1,3 +1,6 @@
+# Temp files
+*.swo
+
 # Object files
 *.a
 *.o
@@ -36,6 +39,8 @@ policy/monitoringplug.pp
 policy/monitoringplug.te
 policy/tmp
 */check_*
-!*/check_*.xml
+!*/check_*.[c|xml]
 tests/replayd/replayd
 tests/test-suite.log
+*.t.trs
+*.t.log

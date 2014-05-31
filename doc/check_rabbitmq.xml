@@ -2,7 +2,7 @@
 <!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
 
-  <!ENTITY mpcheckname   "check_buildbot_slave">
+  <!ENTITY mpcheckname   "check_rabbitmq">
 
 ]>
 
@@ -34,21 +34,18 @@
     </legalnotice>
   </refentryinfo>
   <refmeta>
-    <refentrytitle>CHECK_BUILDBOT_SLAVE</refentrytitle>
+    <refentrytitle>CHECK_RABBITMQ</refentrytitle>
     <manvolnum>1</manvolnum>
   </refmeta>
   <refnamediv>
     <refname>&mpcheckname;</refname>
-    <refpurpose>Check BuildBot slave state by json.</refpurpose>
+    <refpurpose>Check the rabbitmq overview status.</refpurpose>
   </refnamediv>
   <refsynopsisdiv>
     <cmdsynopsis>
       <command>&mpcheckname;</command>
       <arg choice="plain">
         <option>-H <replaceable>HOSTNAME</replaceable></option>
-      </arg>
-      <arg choice="opt">
-        <option>-S <replaceable>SLAVENAME</replaceable></option>
       </arg>
     </cmdsynopsis>
   </refsynopsisdiv>
@@ -67,10 +64,41 @@
       <xi:include href="mp_opts_port.xml"/>
       <xi:include href="mp_opts_curl.xml"/>
       <varlistentry>
-        <term><option>-S</option></term>
-        <term><option>--slave=<replaceable>SLAVE</replaceable></option></term>
+        <term><option>-w</option></term>
+        <term><option>--warning=<replaceable>RANGE</replaceable></option></term>
         <listitem>
-          <para>Check state of defines SLAVE(s).</para>
+          <para>Return warning if message count exceeds range.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-c</option></term>
+        <term><option>--critical=<replaceable>RANGE</replaceable></option></term>
+        <listitem>
+          <para>Return critical if message count exceeds range.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>--warning-ready=<replaceable>RANGE</replaceable></option></term>
+        <listitem>
+          <para>Return warning if ready message count exceeds range.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>--critical-ready=<replaceable>RANGE</replaceable></option></term>
+        <listitem>
+          <para>Return critical if ready message count exceeds range.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>--warning-unacknowledged=<replaceable>RANGE</replaceable></option></term>
+        <listitem>
+          <para>Return warning if unacknowledged message count exceeds range.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>--critical-unacknowledged=<replaceable>RANGE</replaceable></option></term>
+        <listitem>
+          <para>Return critical if unacknowledged message count exceeds range.</para>
         </listitem>
       </varlistentry>
     </variablelist>

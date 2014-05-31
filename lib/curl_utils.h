@@ -2,7 +2,7 @@
  * Monitoring Plugin - curl_utils.h
  **
  *
- * Copyright (C) 2012 Marius Rieder <marius.rieder@durchmesser.ch>
+ * Copyright (C) 2012-2014 Marius Rieder <marius.rieder@durchmesser.ch>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,33 @@
 #include "config.h"
 #include <curl/curl.h>
 
+/* The global mysql vars. */
+/** Holds the username. */
+extern char *mp_curl_user;
+/** Holds the password. */
+extern char *mp_curl_pass;
+/** Holds the subpath string. */
+extern char *mp_curl_subpath;
+/** Holds the SSL flag. */
+extern int mp_curl_ssl;
+/** Holds the curl insecure flag. */
+extern int mp_curl_insecure;
+
+#define MP_LONGOPT_CURL_SUBPATH        MP_LONGOPT_PRIV0
+#define MP_LONGOPT_CURL_SSL            MP_LONGOPT_PRIV1
+
+
+/** Curl specific short option string. */
+#define CURL_OPTSTR "u:p:"
+/** Curl specific longopt struct. */
+#define CURL_LONGOPTS {"user", required_argument, NULL, (int)'u'}, \
+                       {"password", required_argument, NULL, (int)'p'}, \
+                       {"subpath", required_argument, NULL, MP_LONGOPT_PRIV0}, \
+                       {"ssl", no_argument, (int *)&mp_curl_ssl, 1}, \
+                       {"https", no_argument, (int *)&mp_curl_ssl, 1}, \
+                       {"insecure", no_argument, (int *)&mp_curl_insecure, 1}
+
+
 /** Data struct. */
 struct mp_curl_data {
    char *data;          /**< Actual data. */
@@ -45,6 +72,17 @@ struct mp_curl_header {
  * \return Return a pointer to the CURL env.
  */
 CURL *mp_curl_init(void);
+
+/**
+ * Build a URL considering the curl_utils options.
+ * \para[in] scheme URL scheme as string.
+ * \para[in] hostname URL hostname.
+ * \para[in] port URL port.
+ * \para[in] path URL path.
+ * \return Return a URL as NULL-terminated string.
+ */
+char *mp_curl_url(const char *scheme, const char *hostname, int port,
+       const char *path);
 
 /**
  * Perform curl request.
@@ -92,6 +130,27 @@ size_t mp_curl_recv_header(void *contents, size_t size, size_t nmemb, void *user
  * \return Return number of bytes providen.
  */
 size_t mp_curl_send_data(void *ptr, size_t size, size_t nmemb, void *userdata);
+
+/**
+ * Handle libcurl related command line options.
+ * \param[in] c Command line option to handle.
+ */
+void getopt_curl(int c);
+
+/**
+ * Print the help for the subpath command line options.
+ */
+void print_help_curl_subpath(void);
+
+/**
+ * Print the help for the HTTP Basic Auth related command line options.
+ */
+void print_help_curl_basic_auth(void);
+
+/**
+ * Print the help for the HTTPS related command line options.
+ */
+void print_help_curl_https(void);
 
 /**
  * Print the libcurl revision.

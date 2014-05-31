@@ -52,6 +52,15 @@ extern unsigned int mp_timeout;
 /** The global verbose variable. */
 extern unsigned int mp_verbose;
 
+/** The global plugin state. */
+extern int mp_state;
+/** The global ok string. */
+extern char *mp_out_ok;
+/** The global warning string. */
+extern char *mp_out_warning;
+/** The global critical string. */
+extern char *mp_out_critical;
+
 /**
  * Default return values for functions
  */
@@ -85,9 +94,19 @@ enum {
 void ok(const char *fmt, ...) __attribute__((__noreturn__));
 
 /**
+ * Adds a ok message to the stack.
+ */
+void set_ok(const char *fmt, ...);
+
+/**
  * prints to the stdout and exit with STATE_WARNING.
  */
 void warning(const char *fmt, ...) __attribute__((__noreturn__));
+
+/**
+ * Adds a warning message to the stack.
+ */
+void set_warning(const char *fmt, ...);
 
 /**
  * prints to the stdout and exit with STATE_CRITICAL.
@@ -95,9 +114,19 @@ void warning(const char *fmt, ...) __attribute__((__noreturn__));
 void critical(const char *fmt, ...) __attribute__((__noreturn__));
 
 /**
+ * Adds a critical message to the stack.
+ */
+void set_critical(const char *fmt, ...);
+
+/**
  * prints to the stdout and exit with STATE_UNKNOWN.
  */
 void unknown(const char *fmt, ...) __attribute__((__noreturn__));
+
+/**
+ * prints to the stdout and exit with mp_state.
+ */
+void mp_exit(const char *fmt, ...) __attribute__((__noreturn__));
 
 /**
  * prints to the stdout and exit with STATE_UNKNOWN.

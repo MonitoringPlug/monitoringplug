@@ -108,6 +108,75 @@ START_TEST (test_exit_noneroot) {
 }
 END_TEST
 
+START_TEST (test_set_ok) {
+    set_ok("%s", "TEST");
+    set_ok("%d", 0);
+
+    fail_unless (strcmp(mp_out_ok, "TEST, 0") == 0,
+            "Ok String: '%s'", mp_out_ok);
+    fail_unless (mp_state == STATE_OK,
+            "State: %d", mp_state);
+
+    mp_exit("TEST");
+}
+END_TEST
+
+START_TEST (test_set_warning) {
+    set_warning("%s", "TEST");
+    set_warning("%d", 1);
+
+    fail_unless (strcmp(mp_out_warning, "TEST, 1") == 0,
+            "Warning String: '%s'", mp_out_warning);
+    fail_unless (mp_state == STATE_WARNING,
+            "State: %d", mp_state);
+
+    mp_exit("TEST");
+}
+END_TEST
+
+START_TEST (test_set_critical) {
+    set_critical("%s", "TEST");
+    set_critical("%d", 2);
+
+    fail_unless (strcmp(mp_out_critical, "TEST, 2") == 0,
+            "Critical String: '%s'", mp_out_critical);
+    fail_unless (mp_state == STATE_CRITICAL,
+            "State: %d", mp_state);
+
+    mp_exit("TEST");
+}
+END_TEST
+
+START_TEST (test_set_warning_critical) {
+    set_warning("%s", "TEST");
+    set_critical("%d", 2);
+
+    fail_unless (strcmp(mp_out_warning, "TEST") == 0,
+            "Warning String: '%s'",mp_out_warning);
+    fail_unless (strcmp(mp_out_critical, "2") == 0,
+            "Critical String: '%s'", mp_out_critical);
+    fail_unless (mp_state == STATE_CRITICAL,
+            "State: %d", mp_state);
+
+    mp_exit("TEST");
+}
+END_TEST
+
+START_TEST (test_set_critical_warning) {
+    set_critical("%s", "TEST");
+    set_warning("%d", 1);
+
+    fail_unless (strcmp(mp_out_warning, "1") == 0,
+            "Warning String: '%s'",mp_out_warning);
+    fail_unless (strcmp(mp_out_critical, "TEST") == 0,
+            "Critical String: '%s'", mp_out_critical);
+    fail_unless (mp_state == STATE_CRITICAL,
+            "State: %d", mp_state);
+
+    mp_exit("TEST");
+}
+END_TEST
+
 START_TEST (test_print_revision) {
     print_revision();
 }
@@ -137,6 +206,15 @@ Suite* make_lib_common_suite(void) {
     tcase_add_exit_test(tc_exit, test_exit_timeout, 2);
     tcase_add_exit_test(tc_exit, test_exit_noneroot, 3);
     suite_add_tcase (s, tc_exit);
+
+    TCase *tc_set = tcase_create("Set");
+    tcase_add_exit_test(tc_set, test_set_ok, 0);
+    tcase_add_exit_test(tc_set, test_set_warning, 1);
+    tcase_add_exit_test(tc_set, test_set_critical, 2);
+    tcase_add_exit_test(tc_set, test_set_warning_critical, 2);
+    tcase_add_exit_test(tc_set, test_set_critical_warning, 2);
+    suite_add_tcase (s, tc_set);
+
     TCase *tc_print = tcase_create("Print");
     tcase_add_test(tc_print, test_print_revision);
     tcase_add_test(tc_print, test_print_copyright);

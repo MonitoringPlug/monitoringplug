@@ -47,6 +47,9 @@ const char *progusage = "--hostname <BUILDBOTHOST> [--slave <SLAVENAME>]";
 /* Global Vars */
 const char *hostname = NULL;
 int port = 8010;
+const char *subpath = "";
+const char *httpuser = NULL;
+const char *httppass = NULL;
 char **slave = NULL;
 int slaves = 0;
 
@@ -81,16 +84,14 @@ int main (int argc, char **argv) {
     alarm(mp_timeout);
 
     /* Build query */
-    url = mp_malloc(128);
+    url = mp_curl_url("http", hostname, port, "/json/slaves");
     if (slaves) {
-        mp_snprintf(url, 127, "http://%s:%d/json/slaves?select=%s", hostname, port, slave[0]);
+        mp_strcat(&url, "?select=");
+        mp_strcat(&url, slave[0]);
         for(i=1; i<slaves; i++) {
-            url = mp_realloc(url, strlen(url) + strlen(slave[i]) + 8 );
-            strcat(url, "&select=");
-            strcat(url, slave[i]);
+            mp_strcat(&url, "&select=");
+            mp_strcat(&url, slave[i]);
         }
-    } else {
-        mp_snprintf(url, 127, "http://%s:%d/json/slaves", hostname, port);
     }
 
     if (mp_verbose > 0) {
@@ -107,6 +108,13 @@ int main (int argc, char **argv) {
     curl_easy_setopt(curl, CURLOPT_URL, url);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, mp_curl_recv_data);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&answer);
+
+    if (httpuser || httppass) {
+      curl_easy_setopt(curl, CURLOPT_HTTPAUTH, (long)CURLAUTH_ANY);
+      char *userpwd;
+      mp_asprintf(&userpwd, "%s:%s", httpuser, httppass);
+      curl_easy_setopt(curl, CURLOPT_USERPWD, userpwd);
+    }
 
     /* Get url */
     code = mp_curl_perform(curl);
@@ -169,14 +177,13 @@ int main (int argc, char **argv) {
                 slave_version = "unknown";
             }
 
-            mp_asprintf(&buf, "%s - %s (v%s)", slave[i], slave_host, slave_version);
-
             if (slave_connected) {
+                mp_asprintf(&buf, "%s - %s (v%s)", slave[i], slave_host, slave_version);
                 mp_strcat_comma(&connected, buf);
+                free(buf);
             } else {
-                mp_strcat_comma(&failed, buf);
+                mp_strcat_comma(&failed, slave[i]);
             }
-            free(buf);
         }
     } else {
         json_object_object_foreach(obj, key, val) {
@@ -218,7 +225,6 @@ int main (int argc, char **argv) {
     }
 
     /* free */
-    free(buf);
     json_object_put(obj);
 
     if (failed && connected) {
@@ -240,6 +246,7 @@ int process_arguments (int argc, char **argv) {
         MP_LONGOPTS_HOST,
         MP_LONGOPTS_PORT,
         {"slave", required_argument, 0, 'S'},
+        CURL_LONGOPTS,
         MP_LONGOPTS_END
     };
 
@@ -251,10 +258,12 @@ int process_arguments (int argc, char **argv) {
     /* Set default */
 
     while (1) {
-        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"H:P:S:", longopts, &option);
+        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"H:P:u:p:S:", longopts, &option);
 
         if (c == -1 || c == EOF)
             break;
+
+        getopt_curl(c);
 
         switch (c) {
             case 'S':
@@ -293,6 +302,9 @@ void print_help (void) {
     print_help_default();
     print_help_host();
     print_help_port("8010");
+    print_help_curl_subpath();
+    print_help_curl_basic_auth();
+    print_help_curl_https();
     printf(" -S, --slave=SLAVE\n");
     printf("      Check state of defines SLAVE(s).\n");
 }

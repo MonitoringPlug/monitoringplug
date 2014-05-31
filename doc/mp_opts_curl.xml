@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+]>
+
+<variablelist>
+<varlistentry>
+  <term><option>-u</option></term>
+  <term><option>--user=<replaceable>USER</replaceable></option></term>
+  <listitem>
+    <para>HTTP Basic Auth user to use.</para>
+  </listitem>
+</varlistentry>
+<varlistentry>
+  <term><option>-p</option></term>
+  <term><option>--password=<replaceable>PASSWORD</replaceable></option></term>
+  <listitem>
+    <para>HTTP Basic Auth password to use.</para>
+  </listitem>
+</varlistentry>
+<varlistentry>
+  <term><option>--subpath=<replaceable>SUBPATH</replaceable></option></term>
+  <listitem>
+    <para>Prepand SUBPATH to the url path.</para>
+  </listitem>
+</varlistentry>
+<varlistentry>
+  <term><option>--ssl</option></term>
+  <listitem>
+    <para>Use SSL encryption.</para>
+  </listitem>
+</varlistentry>
+<varlistentry>
+  <term><option>--insecure</option></term>
+  <listitem>
+    <para>Do not validate server certificates.</para>
+  </listitem>
+</varlistentry>
+</variablelist>

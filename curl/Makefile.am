@@ -19,10 +19,12 @@ check_webdav_LDADD = $(LDADD)
 endif
 
 if HAVE_JSON
-bin_PROGRAMS += check_buildbot_slave
+bin_PROGRAMS += check_buildbot_slave check_rabbitmq
 
 check_buildbot_slave_CFLAGS = $(JSON_CFLAGS)  -D__STRICT_ANSI__
 check_buildbot_slave_LDADD = $(LDADD) $(JSON_LIBS)
+check_rabbitmq_CFLAGS = $(JSON_CFLAGS)  -D__STRICT_ANSI__
+check_rabbitmq_LDADD = $(LDADD) $(JSON_LIBS)
 endif
 endif
 
