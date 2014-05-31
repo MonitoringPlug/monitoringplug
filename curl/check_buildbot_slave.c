@@ -62,6 +62,7 @@ int main (int argc, char **argv) {
     long int            code;
     struct json_object  *obj;
     struct json_object  *slaveobj;
+    struct json_object  *bufobj;
     unsigned int        slave_connected;
     char                *slave_host;
     char                *slave_version;
@@ -128,19 +129,44 @@ int main (int argc, char **argv) {
 
     if (slaves) {
         for(i=0; i<slaves; i++) {
-            slaveobj = json_object_object_get_ex(obj, slave[i], NULL);
-            if(json_object_object_get_ex(slaveobj,"error", NULL)) {
-                mp_asprintf(&buf, "%s - %s", slave[i], json_object_get_string(json_object_object_get_ex(slaveobj,"error", NULL)));
+            // Get Slave from array
+            if(!json_object_object_get_ex(obj, slave[i], &slaveobj)) {
+                mp_asprintf(&buf, "%s not found", slave[i]);
                 mp_strcat_comma(&failed, buf);
                 free(buf);
                 continue;
             }
-            slave_connected = json_object_get_boolean(json_object_object_get_ex(slaveobj, (const char *)"connected", NULL));
-            slave_host = (char *)json_object_get_string(json_object_object_get_ex(slaveobj, "host", NULL));
-            slave_version = (char *)json_object_get_string(json_object_object_get_ex(slaveobj, "version", NULL));
 
-            for (j = strlen(slave_host) -1; isspace(slave_host[j]); j--) {
-                slave_host[j] = '\0';
+            // Check slave for error
+            if(json_object_object_get_ex(slaveobj, "error", &bufobj)) {
+                mp_asprintf(&buf, "%s - %s", slave[i], json_object_get_string(bufobj));
+                mp_strcat_comma(&failed, buf);
+                free(buf);
+                continue;
+            }
+
+            // Check connection state
+            if(json_object_object_get_ex(slaveobj, "connected", &bufobj)) {
+                slave_connected = json_object_get_boolean(bufobj);
+            } else {
+                slave_connected = 0;
+            }
+
+            // Get host info
+            if(json_object_object_get_ex(slaveobj, "host", &bufobj)) {
+                slave_host = (char *)json_object_get_string(bufobj);
+                for (j = strlen(slave_host) -1; isspace(slave_host[j]); j--) {
+                    slave_host[j] = '\0';
+                }
+            } else {
+                slave_host = "unknown";
+            }
+
+            // Get version info
+            if(json_object_object_get_ex(slaveobj, "version", &bufobj)) {
+                slave_version = (char *)json_object_get_string(bufobj);
+            } else {
+                slave_version = "unknown";
             }
 
             mp_asprintf(&buf, "%s - %s (v%s)", slave[i], slave_host, slave_version);
@@ -155,14 +181,29 @@ int main (int argc, char **argv) {
     } else {
         json_object_object_foreach(obj, key, val) {
             slaveobj = val;
-            slave_connected = json_object_get_boolean(json_object_object_get_ex(slaveobj, "connected", NULL));
-            slave_host = (char *)json_object_get_string(json_object_object_get_ex(slaveobj, "host", NULL));
-            slave_version = (char *)json_object_get_string(json_object_object_get_ex(slaveobj, "version", NULL));
 
-            if (slave_host) {
+            // Check connection state
+            if(json_object_object_get_ex(slaveobj, "connected", &bufobj)) {
+                slave_connected = json_object_get_boolean(bufobj);
+            } else {
+                slave_connected = 0;
+            }
+
+            // Get host info
+            if(json_object_object_get_ex(slaveobj, "host", &bufobj)) {
+                slave_host = (char *)json_object_get_string(bufobj);
                 for (j = strlen(slave_host) -1; isspace(slave_host[j]); j--) {
                     slave_host[j] = '\0';
                 }
+            } else {
+                slave_host = "unknown";
+            }
+
+            // Get version info
+            if(json_object_object_get_ex(slaveobj, "version", &bufobj)) {
+                slave_version = (char *)json_object_get_string(bufobj);
+            } else {
+                slave_version = "unknown";
             }
 
             if (slave_connected) {
