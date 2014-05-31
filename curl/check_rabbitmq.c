@@ -61,10 +61,11 @@ int main (int argc, char **argv) {
     struct mp_curl_data answer;
     long int            code;
     struct json_object  *obj;
+    struct json_object  *bufobj;
     struct json_object  *queue_totals;
-    long queue_messages;
-    long queue_messages_ready;
-    long queue_messages_unacknowledged;
+    long queue_messages = -1;
+    long queue_messages_ready = -1;
+    long queue_messages_unacknowledged = -1;
 
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)
@@ -123,16 +124,22 @@ int main (int argc, char **argv) {
     }
 
     /* Read Server Version */
-    if (json_object_object_get(obj,"rabbitmq_version")) {
-        mp_asprintf(&name, "RabbitMQ %s:", json_object_get_string(json_object_object_get(obj,"rabbitmq_version")));
+    if (json_object_object_get_ex(obj,"rabbitmq_version", &bufobj)) {
+        mp_asprintf(&name, "RabbitMQ %s:", json_object_get_string(bufobj));
     }
 
     /* Get Message Counts */
-    queue_totals = json_object_object_get(obj, "queue_totals");
+    json_object_object_get_ex(obj, "queue_totals", &queue_totals);
     if (queue_totals != NULL ) {
-        queue_messages = json_object_get_int(json_object_object_get(queue_totals,"messages"));
-        queue_messages_ready = json_object_get_int(json_object_object_get(queue_totals,"messages_ready"));
-        queue_messages_unacknowledged = json_object_get_int(json_object_object_get(queue_totals,"messages_unacknowledged"));
+        if(json_object_object_get_ex(queue_totals,"messages", &bufobj))
+            queue_messages = json_object_get_int(bufobj);
+
+        if(json_object_object_get_ex(queue_totals,"messages_ready", &bufobj))
+            queue_messages_ready = json_object_get_int(bufobj);
+
+        if(json_object_object_get_ex(queue_totals,"messages_unacknowledged", &bufobj))
+            queue_messages_unacknowledged = json_object_get_int(bufobj);
+
         mp_perfdata_int("messages", queue_messages, "", messages_thresholds);
         mp_perfdata_int("messages_ready", queue_messages_ready,
                 "", messages_ready_thresholds);
@@ -144,8 +151,9 @@ int main (int argc, char **argv) {
 
     /* Read message counters */
     if (mp_showperfdata) {
-        queue_totals = json_object_object_get(obj, "message_stats");
-        mp_perfdata_int("publish", (long int)json_object_get_int(json_object_object_get(queue_totals,"publish")), "c", NULL);
+        json_object_object_get_ex(obj, "message_stats", &queue_totals);
+        json_object_object_get_ex(queue_totals, "publish", &bufobj);
+        mp_perfdata_int("publish", (long int)json_object_get_int(bufobj), "c", NULL);
     }
 
     /* free */
