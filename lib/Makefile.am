@@ -56,6 +56,13 @@ libfcgiutils_a_SOURCES = fcgi_utils.c fcgi_utils.h
 libfcgiutils_a_CPPFLAGS = $(FCGI_LIBS)
 endif
 
+if HAVE_LDAP
+noinst_LIBRARIES += libldaputils.a
+
+libldaputils_a_SOURCES = ldap_utils.c ldap_utils.h
+libldaputils_a_CPPFLAGS = $(LDAP_CFLAGS)
+endif
+
 if HAVE_LDNS
 noinst_LIBRARIES += libldnsutils.a
 

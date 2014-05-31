@@ -176,6 +176,28 @@ AS_IF([test "x$have_json" = "xyes"],
 ])
 AM_CONDITIONAL([HAVE_JSON], [test "x$have_json" = "xyes"])
 
+## LDAP
+AC_ARG_WITH([ldap],
+    [AS_HELP_STRING([--without-ldap], [Build without LDAP support.])])
+AS_IF([test "x$with_ldap" != "xno"],
+      [
+       AC_SEARCH_LIBS([ldap_initialize],[ldap],[have_ldap=yes],[have_ldap=no])
+       LIBS=$ac_func_search_save_LIBS
+       LDAP_LIBS=$ac_res
+       AC_SUBST([LDAP_LIBS])
+       AS_IF([test "x$have_ldap" = "xyes"],
+             [AC_CHECK_HEADERS([ldap.h],[have_ldap=yes],[have_ldap=no])])
+      ],
+      [have_ldap=disabled])
+AS_IF([test "x$have_ldap" = "xyes"],
+      [],
+      [AS_IF([test "x$with_ldap" = "xyes"],
+             [AC_MSG_ERROR([LDAP requested but not found.])
+      ])
+])
+AM_CONDITIONAL([HAVE_LDAP], [test "x$have_ldap" = "xyes"])
+
+
 ## LibVirt
 AC_ARG_WITH([libvirt],
     [AS_HELP_STRING([--without-libvirt], [Build without LibVirt support.])])
@@ -431,6 +453,7 @@ AC_CONFIG_FILES([Makefile
                  fcgi/Makefile
                  gnutls/Makefile
                  ipmi/Makefile
+                 ldap/Makefile
                  libvirt/Makefile
                  mysql/Makefile
                  oping/Makefile
@@ -474,6 +497,7 @@ Dependencies:
  GnuTLS:     ${have_gnutls}
  IPMI:       ${have_ipmi}
  JSON:       ${have_json}
+ LDAP:       ${have_ldap}
  LibVirt:    ${have_libvirt}
  MySQL:      ${have_mysql}
  OPING:      ${have_oping}

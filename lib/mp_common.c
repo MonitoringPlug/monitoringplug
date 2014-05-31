@@ -234,7 +234,7 @@ void print_revision (void) {
 
 void print_copyright (void) {
     printf("Copyright (c) %s %s\n", progcopy, progauth);
-    printf("Copyright (c) 2010-2012 Monitoring Plugins\n");
+    printf("Copyright (c) 2010-2014 Monitoring Plugins\n");
 }
 
 void timeout_alarm_handler(int signo) {
