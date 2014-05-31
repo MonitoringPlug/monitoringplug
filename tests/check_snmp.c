@@ -39,10 +39,8 @@ const char *progcopy  = "TEST";
 const char *progauth  = "TEST";
 const char *progusage = "TEST";
 
-const char  *hostname = NULL;;
+const char  *hostname = "test.mp.durchmesser.ch";
 int         port = 1661;
-mp_subprocess_t *replayd;
-char *cmd[] = { "replayd/replayd", "-d", "replayd/replays", (char *)0 };
 
 void snmp_replay_setup_v1(void);
 void snmp_replay_setup_v2(void);
@@ -51,20 +49,14 @@ void snmp_replay_teardown(void);
 void snmp_replay_setup_v1(void) {
     mp_snmp_community = "unittest";
     mp_snmp_version = SNMP_VERSION_1;
-    hostname = strdup("localhost");
-    replayd = mp_subprocess(cmd);
 }
 
 void snmp_replay_setup_v2(void) {
     mp_snmp_community = "unittest";
     mp_snmp_version = SNMP_VERSION_2c;
-    hostname = strdup("localhost");
-    replayd = mp_subprocess(cmd);
 }
 
 void snmp_replay_teardown(void) {
-    kill(replayd->pid, SIGINT);
-    mp_subprocess_close(replayd);
 }
 
 START_TEST (test_snmp_query_cmd) {
