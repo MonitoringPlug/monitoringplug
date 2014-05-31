@@ -40,7 +40,8 @@ policy/monitoringplug.te
 policy/tmp
 */check_*
 !*/check_*.[c|xml]
-tests/replayd/replayd
 tests/test-suite.log
+tests/*/test-suite.log
 *.t.trs
 *.t.log
+tests/*/test-results/

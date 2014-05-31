@@ -8,5 +8,5 @@ TESTS = check_rabbitmq.t \
 
 endif
 
-EXTRA_DIST = check_rabbitmq.t
+EXTRA_DIST = check_rabbitmq.t check_buildbot_slave.t
 ## vim: set ts=4 sw=4 syn=automake :
