@@ -163,8 +163,10 @@ int main (int argc, char **argv) {
             // Get host info
             if(json_object_object_get_ex(slaveobj, "host", &bufobj)) {
                 slave_host = (char *)json_object_get_string(bufobj);
-                for (j = strlen(slave_host) -1; isspace(slave_host[j]); j--) {
-                    slave_host[j] = '\0';
+                if (slave_host) {
+                    for (j = strlen(slave_host) -1; isspace(slave_host[j]); j--) {
+                        slave_host[j] = '\0';
+                    }
                 }
             } else {
                 slave_host = "unknown";
@@ -199,8 +201,10 @@ int main (int argc, char **argv) {
             // Get host info
             if(json_object_object_get_ex(slaveobj, "host", &bufobj)) {
                 slave_host = (char *)json_object_get_string(bufobj);
-                for (j = strlen(slave_host) -1; isspace(slave_host[j]); j--) {
-                    slave_host[j] = '\0';
+                if (slave_host) {
+                    for (j = strlen(slave_host) -1; isspace(slave_host[j]); j--) {
+                        slave_host[j] = '\0';
+                    }
                 }
             } else {
                 slave_host = "unknown";
