@@ -297,7 +297,9 @@ Suite* make_lib_utils_suite(void) {
     tcase_add_test(tc_string, test_strcmp_inverse);
     tcase_add_test(tc_string, test_strcmp_inverse_diff);
     tcase_add_test(tc_string, test_sprintf_ok);
+#ifndef OS_FREEBSD
     tcase_add_exit_test(tc_string, test_sprintf_fail, 2);
+#endif
     tcase_add_test(tc_string, test_snprintf_ok);
     tcase_add_exit_test(tc_string, test_snprintf_long, 2);
     tcase_add_test(tc_string, test_asprintf_ok);
