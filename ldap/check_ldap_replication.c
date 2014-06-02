@@ -134,8 +134,8 @@ int main (int argc, char **argv) {
         remote_time = mktime(&csn_tm);
     
         ldap_msgfree(versionmsg);
-    
-        ldap_destroy(masterld);
+   
+        ldap_unbind_s(masterld);
     
         // Calculate slave lag
         lag = difftime(remote_time, local_time);
