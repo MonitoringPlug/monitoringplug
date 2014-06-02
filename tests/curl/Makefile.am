@@ -3,8 +3,11 @@
 if HAVE_CURL
 
 BASE=$abs_top_srcdir
+
+if HAVE_JSON
 TESTS = check_rabbitmq.t \
 		check_buildbot_slave.t
+endif
 
 endif
 
