@@ -1,0 +1,115 @@
+'\" t
+.\"     Title: CHECK_LDAP
+.\"    Author: Marius Rieder <marius.rieder@durchmesser.ch>
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 06/02/2014
+.\"    Manual: Monitoringplug  Manual
+.\"    Source: check_ldap
+.\"  Language: English
+.\"
+.TH "CHECK_LDAP" "1" "06/02/2014" "check_ldap" "Monitoringplug Manual"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+check_ldap \- Check OpenLDAP Monitoring Database\&.
+.SH "SYNOPSIS"
+.HP \w'\fBcheck_ldap\fR\ 'u
+\fBcheck_ldap\fR [\fB\-\-uri\ \fR\fB\fILDAP\-URI\fR\fR]
+.SH "DESCRIPTION"
+.PP
+Check the status of OpenLDAP slapd by query the monitor database\&.
+.SH "OPTIONS"
+.PP
+The Monitoringplug default options
+.PP
+\fB\-h\fR, \fB\-\-help\fR
+.RS 4
+Print detailed help screen\&.
+.RE
+.PP
+\fB\-V\fR, \fB\-\-version\fR
+.RS 4
+Print version information\&.
+.RE
+.PP
+\fB\-v\fR, \fB\-\-verbose\fR
+.RS 4
+Show details for command\-line debugging\&.
+.RE
+.PP
+\fB\-t\fR, \fB\-\-timeout=\fR\fB\fIINTEGER\fR\fR
+.RS 4
+Seconds before the check return with a timeout alert\&.
+.RE
+.PP
+\fB\-\-eopt=\fR\fB[\fIsection\fR]\fR\fB[@\fIfile\fR]\fR
+.RS 4
+Read extended options from file\&.
+.RE
+.PP
+\fB\-\-perfdata\fR
+.RS 4
+Print performance data (if available)\&.
+.RE
+.PP
+Check specific options
+.PP
+\fB\-H\fR, \fB\-\-uri=\fR\fB\fILDAP\-URI\fR\fR
+.RS 4
+The LDAP\-URI to connect to\&.
+.RE
+.PP
+\fB\-D\fR, \fB\-\-binddb=\fR\fB\fIBINDDB\fR\fR
+.RS 4
+The DN to use for binding to the LDAP\&.
+.RE
+.PP
+\fB\-W\fR, \fB\-\-password=\fR\fB\fIPASSWORD\fR\fR
+.RS 4
+The Password to use for bindung\&. to the LDAP\&.
+.RE
+.PP
+\fB\-w\fR, \fB\-\-warning=\fR\fB\fIDURATION\fR\fR
+.RS 4
+Return warning if interaction expire time limit\&. (Default to 2s)
+.RE
+.PP
+\fB\-c\fR, \fB\-\-critical=\fR\fB\fIDURATION\fR\fR
+.RS 4
+Return critical if interaction expire time limit\&. (Default to 5s)
+.RE
+.SH "SEE ALSO"
+.PP
+\fBmonitoringplug-eopt\fR(5),\fBmonitoringplug-range\fR(5)
+.SH "AUTHOR"
+.PP
+\fBMarius Rieder\fR <\&marius\&.rieder@durchmesser\&.ch\&>
+.RS 4
+For monitoringplug
+.RE
+.SH "COPYRIGHT"
+.br
+Copyright \(co 2012 Marius Rieder
+.br
+.PP
+This manual page was written for Monitoringplug (and may be used by others)\&.
+.PP
+Permission is granted to copy, distribute and/or modify this document under the terms of the GNU General Public License, Version 2 or (at your option) any later version published by the Free Software Foundation\&.
+.sp

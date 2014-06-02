@@ -58,10 +58,14 @@ LDAP *mp_ldap_init(char *uri) {
 
     struct berval cred;
     cred.bv_val = (char *) mp_ldap_pass;
-    cred.bv_len = strlen(mp_ldap_pass);
+    if (mp_ldap_pass) {
+        cred.bv_len = strlen(mp_ldap_pass);
+    } else {
+        cred.bv_len = 0;
+    }
     ldap_ret = ldap_sasl_bind_s(ld, mp_ldap_binddn, LDAP_SASL_SIMPLE, &cred, NULL, NULL, NULL);
     if (ldap_ret != LDAP_OPT_SUCCESS) {
-        critical("LDAP Bind failed: %s", ldap_err2string(ldap_ret));
+        critical("LDAP Bind failed: %s: %s", uri, ldap_err2string(ldap_ret));
     }
 
     return ld;

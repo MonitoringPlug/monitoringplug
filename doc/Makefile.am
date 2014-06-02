@@ -74,6 +74,12 @@ man_MANS += check_ipmi_fan.1 check_ipmi_mem.1 check_ipmi_psu.1 check_ipmi_sensor
 endif #HAVE_IPMI
 EXTRA_DIST += check_ipmi_fan.1 check_ipmi_mem.1 check_ipmi_psu.1 check_ipmi_sensor.1
 
+#ldap
+if HAVE_LDAP
+man_MANS += check_ldap.1 check_ldap_replication.1
+endif #HAVE_LDAP
+EXTRA_DIST += check_ldap.1 check_ldap_replication.1
+
 #libvirt
 if HAVE_LIBVIRT
 man_MANS += check_libvirtd.1 check_libvirt_domain.1

@@ -441,7 +441,7 @@ AC_FUNC_STRTOD
 AC_FUNC_VPRINTF
 AC_FUNC_LSTAT
 AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK
-AC_CHECK_FUNCS([alarm memset strdup strerror strspn strstr strtol])
+AC_CHECK_FUNCS([alarm memset strdup strerror strspn strstr strtol strptime])
 
 AC_CONFIG_FILES([Makefile
                  lib/Makefile
@@ -509,7 +509,7 @@ Dependencies:
  SNMP:       ${have_netsnmp}
  Termios:    ${have_termios}
  Varnish:    ${have_varnish}
- XMLRPM:     ${have_xmlrpc}
+ XMLRPC:     ${have_xmlrpc}
 
 Now type 'make @<:@<target>@:>@'
 

@@ -1,8 +1,8 @@
 /***
- * Monitoring Plugin - check_timeout.c
+ * Monitoring Plugin - check_ldap_replication.c
  **
  *
- * check_timeout - This plugin simulate a plugin timeout.
+ * check_ldap_replication - Check a OpenLDAP replication.
  *
  * Copyright (C) 2014 Marius Rieder <marius.rieder@durchmesser.ch>
  *
@@ -23,13 +23,14 @@
  * $Id$
  */
 
-const char *progname  = "check_timeout";
-const char *progdesc  = "This plugin simulate a plugin timeout.";
+const char *progname  = "check_ldap_replication";
+const char *progdesc  = "Check a OpenLDAP replication.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2014";
 const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
-const char *progusage = "[-t <timeout>]";
+const char *progusage = "-H <LDAP-URI> [-b <binddn>] [-w <bindpw>]";
 
+#define _GNU_SOURCE
 /* MP Includes */
 #include "mp_common.h"
 #include "ldap_utils.h"
@@ -186,6 +187,10 @@ int process_arguments (int argc, char **argv) {
         getopt_ldap(c);
         getopt_wc_time(c, optarg, &time_thresholds);
     }
+
+    /* Check requirements */
+    if (!mp_ldap_uri)
+        usage("LDAP-URI is mandatory.");
 
     return(OK);
 }

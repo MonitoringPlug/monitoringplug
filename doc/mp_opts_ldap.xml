@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+]>
+
+<variablelist>
+  <varlistentry>
+    <term><option>-H</option></term>
+    <term><option>--uri=<replaceable>LDAP-URI</replaceable></option></term>
+    <listitem>
+      <para>The LDAP-URI to connect to.</para>
+    </listitem>
+  </varlistentry> 
+  <varlistentry>
+    <term><option>-D</option></term>
+    <term><option>--binddb=<replaceable>BINDDB</replaceable></option></term>
+    <listitem>
+      <para>The DN to use for binding to the LDAP.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><option>-W</option></term>
+    <term><option>--password=<replaceable>PASSWORD</replaceable></option></term>
+    <listitem>
+      <para>The Password to use for bindung. to the LDAP.</para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+<!-- vim: set ts=2 sw=2 expandtab ai syn=docbk : -->

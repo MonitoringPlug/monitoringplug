@@ -154,6 +154,10 @@ int process_arguments (int argc, char **argv) {
         getopt_wc_time(c, optarg, &time_thresholds);
     }
 
+    /* Check requirements */
+    if (!mp_ldap_uri)
+        usage("LDAP-URI is mandatory.");
+
     return(OK);
 }
 

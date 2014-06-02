@@ -21,6 +21,7 @@ BuildRequires:  selinux-policy-devel
 BuildRequires:  OpenIPMI-devel
 BuildRequires:  postgresql-devel
 BuildRequires:  fcgi-devel
+BuildRequires:  openldap-devel
 %if 0%{?rhel} == 0
 BuildRequires:  varnish-libs-devel
 %endif
@@ -95,6 +96,12 @@ Requires:       monitoringplug
 Summary:        Collection of IPMI monitoring plugins for Nagios
 Group:          Applications/System
 Requires:       OpenIPMI-libs
+Requires:       monitoringplug
+
+%package ldap
+Summary:        Collection of LDAP monitoring plugins for Nagios
+Group:          Applications/System
+Requires:       openldap
 Requires:       monitoringplug
 
 %if 0%{?rhel} != 5
@@ -221,6 +228,10 @@ This package contains the plugins which use the gnutls library.
 %description ipmi
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the plugins which use the OpenIPMI library.
+
+%description ldap
+Collection of monitoring plugins for Nagios and similar monitoring systems.
+This package contains the plugins which use the OpenLDAP library.
 
 %if 0%{?rhel} != 5
 %description libvirt
@@ -350,6 +361,9 @@ fi
 %post ipmi
 /sbin/fixfiles -F -R monitoringplug-ipmi restore ||:
 
+%post ldap
+/sbin/fixfiles -F -R monitoringplug-ldap restore ||:
+
 %if 0%{?rhel} != 5
 %post libvirt
 /sbin/fixfiles -F -R monitoringplug-libvirt restore ||:
@@ -454,6 +468,8 @@ fi
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_buildbot_slave
 %{_mandir}/man1/check_buildbot_slave.1.gz
+%{_libdir}/nagios/plugins/check_rabbitmq
+%{_mandir}/man1/check_rabbitmq.1.gz
 
 %files dns
 %defattr(-,root,root,-)
@@ -478,6 +494,11 @@ fi
 %defattr(-,root,root,-)
 %attr(4111, root, root) %{_libdir}/nagios/plugins/check_ipmi_*
 %{_mandir}/man1/check_ipmi_*
+
+%files ldap
+%defattr(-,root,root,-)
+%{_libdir}/nagios/plugins/check_ldap*
+%{_mandir}/man1/check_ldap*
 
 %if 0%{?rhel} != 5
 %files libvirt
@@ -573,12 +594,14 @@ fi
 %{_mandir}/man1/notify_*
 
 %changelog
-* Thu Oct 16 2013 Marius Rieder <marius.rieder@durchmesser.ch> - 0.17-1
+* Mon Jun 02 2014 Marius Rieder <marius.rieder@durchmesser.ch> - 0.17-1
 - Rework autotools build system.
 - Allow % sign in ranges and parse them.
 - Use hiredis library for redis checks.
 - Use long for redis memory size.
 - Add check_redis_slave check.
+- Add RabbitMQ checks.
+- Add LDAP checks.
 
 * Sun Sep 08 2013 Marius Rieder <marius.rieder@durchmesser.ch> - 0.16-1
 - Added PostgreSQL check
