@@ -55,12 +55,10 @@ int main (int argc, char **argv) {
     /* Local Vars */
     int         i, j;
     int         rc;
-    char        *output = NULL;
     char        *vrrp_name;
     long int    vrrp_id;
     long int    vrrp_state = -1;
     long int    vrrp_state_initial = -1;
-    int         status = STATE_OK;
     mp_snmp_subtree         table_state;
     netsnmp_session         *ss;
 
@@ -79,17 +77,15 @@ int main (int argc, char **argv) {
     ss = mp_snmp_init();
 
     /* OIDs to query */
-    status = mp_snmp_subtree_query(ss, MP_OID(1,3,6,1,4,1,9586,100,5,2,3,1),
+    rc = mp_snmp_subtree_query(ss, MP_OID(1,3,6,1,4,1,9586,100,5,2,3,1),
         &table_state);
-    if (status != STAT_SUCCESS) {
+    if (rc != STAT_SUCCESS) {
         char *string;
         snmp_error(ss, NULL, NULL, &string);
         unknown("Keepalived VRRP: Error fetching table: %s", string);
     }
 
     mp_snmp_deinit();
-
-    status = STATE_OK;
 
     vrrp_name = mp_malloc(25);
 
@@ -136,11 +132,7 @@ int main (int argc, char **argv) {
         }
 
         if (vrrp_state != vrrp_state_initial) {
-            char *buf;
-            mp_asprintf(&buf, "%s(%li) is %s", vrrp_name, vrrp_id, STATENAME[vrrp_state]);
-            mp_strcat_comma(&output, buf);
-            free(buf);
-            status = STATE_WARNING;
+            set_warning("%s(%li) is %s", vrrp_name, vrrp_id, STATENAME[vrrp_state]);
         }
 
     }
@@ -150,11 +142,7 @@ int main (int argc, char **argv) {
     if (instances > 0) {
         for(i=0; i < instances; i++) {
             if (instance[i] != NULL && instance[i][strlen(instance[i])-1] != '*') {
-                char *buf;
-                mp_asprintf(&buf, "%s (not found)" , instance[i]);
-                mp_strcat_comma(&output, buf);
-                free(buf);
-                status = STATE_CRITICAL;
+                set_critical("%s (not found)" , instance[i]);
             }
         }
     }
@@ -162,11 +150,7 @@ int main (int argc, char **argv) {
     /* Output and return */
     if (i == 0)
         unknown("Keepalived VRRP: No Instances found.");
-    if (status == STATE_OK)
-        ok("Keepalived VRRP: All Instances OK");
-    else if (status == STATE_WARNING)
-        warning("Keepalived VRRP: %s", output);
-    critical("Keepalived VRRP: %s", output);
+    mp_exit("Keepalived VRRP");
 }
 
 int process_arguments (int argc, char **argv) {
