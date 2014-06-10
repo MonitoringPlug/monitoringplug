@@ -110,6 +110,18 @@ Description: Collection of IPMI monitoring plugins for Nagios.
  This package provides a basic set of plugins with OpenIPMI as
  dependency.
 
+Package: monitoringplug-ldap
+Architecture: any
+Depends: monitoringplug, ${shlibs:Depends}, ${misc:Depends}
+Description: Collection of IPMI monitoring plugins for Nagios.
+ Collection of LDAP monitoring plugins for Nagios using OpenLDAP library.
+ It contains the following plugins:
+ .
+  check_ldap, check_ldap_replication
+ .
+ This package provides a basic set of plugins with OpenLDAP as
+ dependency.
+
 Package: monitoringplug-libvirt
 Architecture: any
 Depends: monitoringplug, libvirt0, ${shlibs:Depends}, ${misc:Depends}
