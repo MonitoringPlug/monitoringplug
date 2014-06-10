@@ -136,6 +136,7 @@ Use the ​net-snmp library to query SNMP agents.
 *  check_apc_pdu -- Check the psu and outlet status of a APC PDU.
 *  check_arc_raid -- Check the raid status of a Areca RAID.
 *  check_interface -- Check Interface state with SNMP IF-MIB.
+*  check_keepalived_vrrp -- Check the VRRP State of Keepalived. 
 *  check_qnap_disks -- Check the dist status of a QNap.
 *  check_qnap_vols -- Check the volume status of a QNap.
 *  check_snmp_ups -- Check status of a UPS conforming to RFC 1628 by SNMP.

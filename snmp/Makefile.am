@@ -14,10 +14,10 @@ bin_PROGRAMS += check_akcp \
 				check_arc_raid \
 				check_apc_pdu \
 				check_interface \
+				check_keepalived_vrrp \
 				check_qnap_disks \
 				check_qnap_vols \
-			\
-			check_snmp_ups
+				check_snmp_ups
 endif
 
 ## vim: set ts=4 sw=4 syn=automake :
