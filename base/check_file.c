@@ -303,11 +303,11 @@ int process_arguments (int argc, char **argv) {
                 accessstring = optarg;
                 break;
             case 'W':
-                if (setWarn(&size_thresholds, optarg, BISI) == ERROR)
+                if (mp_threshold_set_warning(&size_thresholds, optarg, BISI) == ERROR)
                     usage("Illegal -W argument '%s'.", optarg);
                 break;
             case 'C':
-                if (setCrit(&size_thresholds, optarg, BISI) == ERROR)
+                if (mp_threshold_set_critical(&size_thresholds, optarg, BISI) == ERROR)
                     usage("Illegal -C argument '%s'.", optarg);
                 break;
         }

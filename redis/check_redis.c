@@ -191,8 +191,8 @@ int process_arguments (int argc, char **argv) {
     };
 
     /* Set default */
-    setWarnTime(&time_thresholds, "3s");
-    setCritTime(&time_thresholds, "4s");
+    mp_threshold_set_warning_time(&time_thresholds, "3s");
+    mp_threshold_set_critical_time(&time_thresholds, "4s");
 
     while (1) {
         c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"H:P:s:w:c:W:C:",
@@ -206,11 +206,11 @@ int process_arguments (int argc, char **argv) {
         switch (c) {
             /* Plugin Opts */
             case 'W':
-                if (setWarn(&memory_thresholds, optarg, BISI) == ERROR)
+                if (mp_threshold_set_warning(&memory_thresholds, optarg, BISI) == ERROR)
                     usage("Illegal -W threshold '%s'.", optarg);
                 break;
             case 'C':
-                if (setCrit(&memory_thresholds, optarg, BISI) == ERROR)
+                if (mp_threshold_set_critical(&memory_thresholds, optarg, BISI) == ERROR)
                     usage("Illegal -C threshold '%s'.", optarg);
                 break;
             /* Hostname opt */

@@ -281,8 +281,8 @@ int process_arguments (int argc, char **argv) {
     };
 
     /* Set default */
-    setWarn(&free_thresholds, "10:",0);
-    setCrit(&free_thresholds, "5:",0);
+    mp_threshold_set_warning(&free_thresholds, "10:",0);
+    mp_threshold_set_critical(&free_thresholds, "5:",0);
 
     while (1) {
         c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"U:u:p:C:S:w:c:", longopts, &option);

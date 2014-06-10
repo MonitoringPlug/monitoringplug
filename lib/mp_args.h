@@ -95,7 +95,7 @@ enum {
  * \param[in] multiplier Multiplier syntar/function to use.
  * \return \ref OK or \ref ERROR.
  */
-int setWarn(thresholds **threshold, const char *str, int multiplier);
+int mp_threshold_set_warning(thresholds **threshold, const char *str, int multiplier);
 
 /**
  * Set the critical range of the given trashold.
@@ -106,7 +106,7 @@ int setWarn(thresholds **threshold, const char *str, int multiplier);
  * \param[in] multiplier Multiplier syntar/function to use.
  * \return \ref OK or \ref ERROR.
  */
-int setCrit(thresholds **threshold, const char *str, int multiplier);
+int mp_threshold_set_critical(thresholds **threshold, const char *str, int multiplier);
 
 /**
  * Set the warning range of the given trashold using the time multiplier
@@ -117,7 +117,7 @@ int setCrit(thresholds **threshold, const char *str, int multiplier);
  * \param[in] str Range string to parse.
  * \return \ref OK or \ref ERROR.
  */
-int setWarnTime(thresholds **threshold, const char *str);
+int mp_threshold_set_warning_time(thresholds **threshold, const char *str);
 
 /**
  * Set the critical range of the given trashold using the time multiplier
@@ -128,7 +128,7 @@ int setWarnTime(thresholds **threshold, const char *str);
  * \param[in] str Range string to parse.
  * \return \ref OK or \ref ERROR.
  */
-int setCritTime(thresholds **threshold, const char *str);
+int mp_threshold_set_critical_time(thresholds **threshold, const char *str);
 
 void free_threshold(thresholds *threshold);
 

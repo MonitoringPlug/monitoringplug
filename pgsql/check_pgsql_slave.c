@@ -122,8 +122,8 @@ int process_arguments (int argc, char **argv) {
     };
 
     /* Set default */
-    setWarnTime(&delay_thresholds, "300s");
-    setCritTime(&delay_thresholds, "3600s");
+    mp_threshold_set_warning_time(&delay_thresholds, "300s");
+    mp_threshold_set_critical_time(&delay_thresholds, "3600s");
 
     while (1) {
         c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"H:w:c:"PGSQL_OPTSTR, longopts, &option);

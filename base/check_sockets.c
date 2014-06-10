@@ -305,8 +305,8 @@ int process_arguments (int argc, char **argv) {
     };
 
     /* Set default */
-    setWarnTime(&socket_thresholds, "1000");
-    setCritTime(&socket_thresholds, "1024");
+    mp_threshold_set_warning_time(&socket_thresholds, "1000");
+    mp_threshold_set_critical_time(&socket_thresholds, "1024");
 
     while (1) {
         c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"T:U:R:c:w:46", longopts, &option);

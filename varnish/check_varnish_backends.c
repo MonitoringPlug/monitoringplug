@@ -198,8 +198,8 @@ int process_arguments (int argc, char **argv) {
         MP_LONGOPTS_END
     };
 
-    setWarn(&fail_thresholds, "90:", NOEXT);
-    setCrit(&fail_thresholds, "80:", NOEXT);
+    mp_threshold_set_warning(&fail_thresholds, "90:", NOEXT);
+    mp_threshold_set_critical(&fail_thresholds, "80:", NOEXT);
 
     while (1) {
         c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"r:b:w:c:"VSC_ARGS, longopts, &option);

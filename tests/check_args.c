@@ -138,9 +138,9 @@ static string_string_double_int test_threshold_case[] = {
 START_TEST (test_threshold) {
     string_string_double_int *c = &test_threshold_case[_i];
 
-    fail_unless (setWarn(&my_thresholds, c->ina, 0) == 0,
+    fail_unless (mp_threshold_set_warning(&my_thresholds, c->ina, 0) == 0,
         "Parse range string '%s' failed", c->ina);
-    fail_unless (setCrit(&my_thresholds, c->inb, 0) == 0,
+    fail_unless (mp_threshold_set_critical(&my_thresholds, c->inb, 0) == 0,
         "Parse range string '%s' failed", c->inb);
 
     fail_unless(get_status(c->test, my_thresholds) == c->out,

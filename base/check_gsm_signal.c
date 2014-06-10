@@ -226,8 +226,8 @@ int process_arguments (int argc, char **argv) {
     };
 
     /* Set default */
-    setWarn(&dbm_thresholds, "-90:", 0);
-    setCrit(&dbm_thresholds, "-100:", 0);
+    mp_threshold_set_warning(&dbm_thresholds, "-90:", 0);
+    mp_threshold_set_critical(&dbm_thresholds, "-100:", 0);
 
     while (1) {
         c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"P:w:c:"MP_SERIAL_OPTSTR, longopts, &option);

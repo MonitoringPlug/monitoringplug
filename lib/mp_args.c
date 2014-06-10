@@ -31,7 +31,7 @@
  *  helper functions
  */
 
-int setWarn(thresholds **threshold, const char *str, int multiplier) {
+int mp_threshold_set_warning(thresholds **threshold, const char *str, int multiplier) {
     if(*threshold == NULL) {
         *threshold = (thresholds *) mp_malloc(sizeof(thresholds));
         (*threshold)->warning = NULL;
@@ -43,7 +43,7 @@ int setWarn(thresholds **threshold, const char *str, int multiplier) {
     return parse_range_string((*threshold)->warning, str, multiplier);
 }
 
-int setCrit(thresholds **threshold, const char *str, int multiplier) {
+int mp_threshold_set_critical(thresholds **threshold, const char *str, int multiplier) {
     if(*threshold == NULL) {
         *threshold = (thresholds *) mp_malloc(sizeof(thresholds));
         (*threshold)->warning = NULL;
@@ -55,7 +55,7 @@ int setCrit(thresholds **threshold, const char *str, int multiplier) {
     return parse_range_string((*threshold)->critical, str, multiplier);
 }
 
-int setWarnTime(thresholds **threshold, const char *str) {
+int mp_threshold_set_warning_time(thresholds **threshold, const char *str) {
     if(*threshold == NULL) {
         *threshold = (thresholds *) mp_malloc(sizeof(thresholds));
         (*threshold)->warning = NULL;
@@ -67,7 +67,7 @@ int setWarnTime(thresholds **threshold, const char *str) {
     return parse_range_string((*threshold)->warning, str, TIME);
 }
 
-int setCritTime(thresholds **threshold, const char *str) {
+int mp_threshold_set_critical_time(thresholds **threshold, const char *str) {
     if(*threshold == NULL) {
         *threshold = (thresholds *) mp_malloc(sizeof(thresholds));
         (*threshold)->warning = NULL;
@@ -401,32 +401,32 @@ void getopt_url(const char *optarg, const char **url) {
 
 void getopt_wc(int c, const char *optarg, thresholds **threshold) {
     if (c == 'w') {
-        if (setWarn(threshold, optarg, BISI) == ERROR)
+        if (mp_threshold_set_warning(threshold, optarg, BISI) == ERROR)
             usage("Illegal -w threshold '%s'.", optarg);
     } else if (c == 'c') {
-        if (setCrit(threshold, optarg, BISI) == ERROR)
+        if (mp_threshold_set_critical(threshold, optarg, BISI) == ERROR)
             usage("Illegal -c threshold '%s'.", optarg);
     }
 }
 
 void getopt_wc_time(int c, const char *optarg, thresholds **threshold) {
     if (c == 'w') {
-        if (setWarnTime(threshold, optarg) == ERROR)
+        if (mp_threshold_set_warning_time(threshold, optarg) == ERROR)
             usage("Illegal -w threshold '%s'.", optarg);
     } else if (c == 'c') {
-        if (setCritTime(threshold, optarg) == ERROR)
+        if (mp_threshold_set_critical_time(threshold, optarg) == ERROR)
             usage("Illegal -c threshold '%s'.", optarg);
     }
 }
 
 void getopt_wc_at(int c, const char *optarg, thresholds **threshold) {
     if (c == 'w') {
-        if (setWarn(threshold, optarg, BISI) == ERROR)
+        if (mp_threshold_set_warning(threshold, optarg, BISI) == ERROR)
             usage("Illegal -w threshold '%s'.", optarg);
         if (!strchr(optarg, ':'))
             (*threshold)->warning->alert_on = INSIDE;
     } else if (c == 'c') {
-        if (setCrit(threshold, optarg, BISI) == ERROR)
+        if (mp_threshold_set_critical(threshold, optarg, BISI) == ERROR)
             usage("Illegal -c threshold '%s'.", optarg);
         if (!strchr(optarg, ':'))
             (*threshold)->critical->alert_on = INSIDE;
@@ -435,12 +435,12 @@ void getopt_wc_at(int c, const char *optarg, thresholds **threshold) {
 
 void getopt_wc_time_at(int c, const char *optarg, thresholds **threshold) {
     if (c == 'w') {
-        if (setWarnTime(threshold, optarg) == ERROR)
+        if (mp_threshold_set_warning_time(threshold, optarg) == ERROR)
             usage("Illegal -w threshold '%s'.", optarg);
         if (!strchr(optarg, ':'))
             (*threshold)->warning->alert_on = INSIDE;
     } else if (c == 'c') {
-        if (setCritTime(threshold, optarg) == ERROR)
+        if (mp_threshold_set_critical_time(threshold, optarg) == ERROR)
             usage("Illegal -c threshold '%s'.", optarg);
         if (!strchr(optarg, ':'))
             (*threshold)->critical->alert_on = INSIDE;

@@ -174,8 +174,8 @@ int process_arguments (int argc, char **argv) {
     };
 
     /* Set default */
-    setWarn(&usage_thresholds, "90", 0);
-    setCrit(&usage_thresholds, "95", 0);
+    mp_threshold_set_warning(&usage_thresholds, "90", 0);
+    mp_threshold_set_critical(&usage_thresholds, "95", 0);
 
     while (1) {
         c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"c:w:", longopts, &option);

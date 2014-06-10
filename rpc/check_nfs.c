@@ -271,8 +271,8 @@ int process_arguments (int argc, char **argv) {
     };
 
     /* Set default */
-    setWarnTime(&time_threshold, "0.5s");
-    setCritTime(&time_threshold, "1s");
+    mp_threshold_set_warning_time(&time_threshold, "0.5s");
+    mp_threshold_set_critical_time(&time_threshold, "1s");
 
     while (1) {
         c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"H:w:c:e:r:T:", longopts, &option);

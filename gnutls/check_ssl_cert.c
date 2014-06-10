@@ -364,8 +364,8 @@ int process_arguments (int argc, char **argv) {
         MP_LONGOPTS_END
     };
 
-    setWarnTime(&expire_thresholds, "30d:");
-    setCritTime(&expire_thresholds, "10d:");
+    mp_threshold_set_warning_time(&expire_thresholds, "30d:");
+    mp_threshold_set_critical_time(&expire_thresholds, "10d:");
 
     while (1) {
         c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"H:P:46s:w:c:C:", longopts, &option);

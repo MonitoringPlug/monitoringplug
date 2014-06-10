@@ -141,10 +141,10 @@ int main (int argc, char **argv) {
     };
 
     /* set threshold defaults */
-    setWarn(&threshold_charge, DEFAULT_CHARGE_WARNING, NOEXT);
-    setCrit(&threshold_charge, DEFAULT_CHARGE_CRITICAL, NOEXT);
-    setWarn(&threshold_runtime, DEFAULT_RUNTIME_WARNING, NOEXT);
-    setCrit(&threshold_runtime, DEFAULT_RUNTIME_CRITICAL, NOEXT);
+    mp_threshold_set_warning(&threshold_charge, DEFAULT_CHARGE_WARNING, NOEXT);
+    mp_threshold_set_critical(&threshold_charge, DEFAULT_CHARGE_CRITICAL, NOEXT);
+    mp_threshold_set_warning(&threshold_runtime, DEFAULT_RUNTIME_WARNING, NOEXT);
+    mp_threshold_set_critical(&threshold_runtime, DEFAULT_RUNTIME_CRITICAL, NOEXT);
 
     /* Set signal handling and alarm */
     if (signal(SIGALRM, timeout_alarm_handler) == SIG_ERR)

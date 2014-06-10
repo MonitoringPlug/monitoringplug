@@ -226,10 +226,10 @@ int process_arguments (int argc, char **argv) {
     }
 
     /* Set default */
-    setWarn(&rta_thresholds, "~:90", NOEXT);
-    setWarn(&lost_thresholds, "80", NOEXT);
-    setCrit(&rta_thresholds, "~:100", NOEXT);
-    setCrit(&lost_thresholds, "90", NOEXT);
+    mp_threshold_set_warning(&rta_thresholds, "~:90", NOEXT);
+    mp_threshold_set_warning(&lost_thresholds, "80", NOEXT);
+    mp_threshold_set_critical(&rta_thresholds, "~:100", NOEXT);
+    mp_threshold_set_critical(&lost_thresholds, "90", NOEXT);
 
     while (1) {
         c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"H:46p:qi:I:T:w:c:", longopts, &option);
@@ -286,14 +286,14 @@ int process_arguments (int argc, char **argv) {
                     usage("Waring/Critical threshold is <rta>,<pl>%%.");
                 }
                 if (c == 'w') {
-                    if (setWarn(&rta_thresholds, rta, NOEXT) == ERROR)
+                    if (mp_threshold_set_warning(&rta_thresholds, rta, NOEXT) == ERROR)
                         usage("Illegal -w tra threshold '%s'.", rta);
-                    if (setWarn(&lost_thresholds, pl, NOEXT) == ERROR)
+                    if (mp_threshold_set_warning(&lost_thresholds, pl, NOEXT) == ERROR)
                         usage("Illegal -w pl threshold '%s'.", pl);
                 } else {
-                    if (setCrit(&rta_thresholds, rta, NOEXT) == ERROR)
+                    if (mp_threshold_set_critical(&rta_thresholds, rta, NOEXT) == ERROR)
                         usage("Illegal -c tra threshold '%s'.", rta);
-                    if (setCrit(&lost_thresholds, pl, NOEXT) == ERROR)
+                    if (mp_threshold_set_critical(&lost_thresholds, pl, NOEXT) == ERROR)
                         usage("Illegal -c pl threshold '%s'.", pl);
                 }
             }

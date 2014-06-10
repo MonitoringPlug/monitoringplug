@@ -62,8 +62,8 @@ START_TEST (test_perfdata_int_threshold) {
     thresholds *my_thresholds = NULL;
 
     mp_showperfdata = 1;
-    setWarn(&my_thresholds, "10", 0);
-    setCrit(&my_thresholds, "20", 0);
+    mp_threshold_set_warning(&my_thresholds, "10", 0);
+    mp_threshold_set_critical(&my_thresholds, "20", 0);
 
     mp_perfdata_int("label", 42, "unit", my_thresholds);
 
@@ -76,8 +76,8 @@ START_TEST (test_perfdata_int_threshold_range) {
     thresholds *my_thresholds = NULL;
 
     mp_showperfdata = 1;
-    setWarn(&my_thresholds, "23:46", 0);
-    setCrit(&my_thresholds, "21:63", 0);
+    mp_threshold_set_warning(&my_thresholds, "23:46", 0);
+    mp_threshold_set_critical(&my_thresholds, "21:63", 0);
 
     mp_perfdata_int("label", 42, "unit", my_thresholds);
 
@@ -139,8 +139,8 @@ START_TEST (test_perfdata_float_threshold) {
     thresholds *my_thresholds = NULL;
 
     mp_showperfdata = 1;
-    setWarn(&my_thresholds, "10.10", 0);
-    setCrit(&my_thresholds, "20.20", 0);
+    mp_threshold_set_warning(&my_thresholds, "10.10", 0);
+    mp_threshold_set_critical(&my_thresholds, "20.20", 0);
 
     mp_perfdata_float("label", 42.23, "unit", my_thresholds);
 
@@ -153,8 +153,8 @@ START_TEST (test_perfdata_float_threshold_range) {
     thresholds *my_thresholds = NULL;
 
     mp_showperfdata = 1;
-    setWarn(&my_thresholds, "23.23:46.46", 0);
-    setCrit(&my_thresholds, "21.21:63.63", 0);
+    mp_threshold_set_warning(&my_thresholds, "23.23:46.46", 0);
+    mp_threshold_set_critical(&my_thresholds, "21.21:63.63", 0);
 
     mp_perfdata_float("label", 42.23, "unit", my_thresholds);
 
@@ -207,8 +207,8 @@ START_TEST (test_perfdata_percent) {
     thresholds *my_thresholds = NULL;
 
     mp_showperfdata = 1;
-    setWarn(&my_thresholds, "20%:80%", 0);
-    setCrit(&my_thresholds, "10%:90%", 0);
+    mp_threshold_set_warning(&my_thresholds, "20%:80%", 0);
+    mp_threshold_set_critical(&my_thresholds, "10%:90%", 0);
 
     mp_perfdata_int2("label", 50, "unit", my_thresholds, 1, 0, 1, 100);
 

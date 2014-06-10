@@ -183,8 +183,8 @@ int process_arguments (int argc, char **argv) {
     };
 
     /* Set default */
-    setWarnTime(&time_threshold, "5m");
-    setCritTime(&time_threshold, "10m");
+    mp_threshold_set_warning_time(&time_threshold, "5m");
+    mp_threshold_set_critical_time(&time_threshold, "10m");
 
     while (1) {
         c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"P:sw:c:W:C:H:", longopts, &option);
@@ -207,11 +207,11 @@ int process_arguments (int argc, char **argv) {
                 summerize = 1;
                 break;
             case 'W':
-                if (setWarnTime(&time_threshold, optarg) == ERROR)
+                if (mp_threshold_set_warning_time(&time_threshold, optarg) == ERROR)
                     usage("Illegal -c warning '%s'.", optarg);
                 break;
             case 'C':
-                if (setCritTime(&time_threshold, optarg) == ERROR)
+                if (mp_threshold_set_critical_time(&time_threshold, optarg) == ERROR)
                     usage("Illegal -c warning '%s'.", optarg);
                 break;
         }

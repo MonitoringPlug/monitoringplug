@@ -198,8 +198,8 @@ int process_arguments (int argc, char **argv) {
     }
 
     /* Set default */
-    setWarnTime(&credit_thresholds, "100:");
-    setCritTime(&credit_thresholds, "50:");
+    mp_threshold_set_warning_time(&credit_thresholds, "100:");
+    mp_threshold_set_critical_time(&credit_thresholds, "50:");
 
     while (1) {
         c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"U:P:w:c:", longopts, &option);

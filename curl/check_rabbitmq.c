@@ -233,19 +233,19 @@ int process_arguments (int argc, char **argv) {
                 break;
             /* Warn/Crit opt */
             case MP_LONGOPT_PRIV1:
-                if (setWarn(&messages_ready_thresholds, optarg, BISI) == ERROR)
+                if (mp_threshold_set_warning(&messages_ready_thresholds, optarg, BISI) == ERROR)
                     usage("Illegal --warning-ready threshold '%s'.", optarg);
                 break;
             case MP_LONGOPT_PRIV2:
-                if (setCrit(&messages_ready_thresholds, optarg, BISI) == ERROR)
+                if (mp_threshold_set_critical(&messages_ready_thresholds, optarg, BISI) == ERROR)
                     usage("Illegal --critical-ready threshold '%s'.", optarg);
                 break;
             case MP_LONGOPT_PRIV3:
-                if (setWarn(&messages_unacknowledged_thresholds, optarg, BISI) == ERROR)
+                if (mp_threshold_set_warning(&messages_unacknowledged_thresholds, optarg, BISI) == ERROR)
                     usage("Illegal --warning-unacknowledged threshold '%s'.", optarg);
                 break;
             case MP_LONGOPT_PRIV4:
-                if (setCrit(&messages_unacknowledged_thresholds, optarg, BISI) == ERROR)
+                if (mp_threshold_set_critical(&messages_unacknowledged_thresholds, optarg, BISI) == ERROR)
                     usage("Illegal --critical-unacknowledged threshold '%s'.", optarg);
                 break;
         }

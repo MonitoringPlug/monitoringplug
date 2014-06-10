@@ -239,8 +239,8 @@ int process_arguments (int argc, char **argv) {
     }
 
     /* Set default */
-    setWarnTime(&exp_thresholds, "2d:");
-    setCritTime(&exp_thresholds, "1d:");
+    mp_threshold_set_warning_time(&exp_thresholds, "2d:");
+    mp_threshold_set_critical_time(&exp_thresholds, "1d:");
 
     while (1) {
         c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"H:D:k:w:c:"LDNS_OPTSTR, longopts, &option);

@@ -367,8 +367,8 @@ static void mp_ipmi_sensor_thresholds_handler(ipmi_sensor_t *sensor, int err,
     if (err != 0)
         return;
 
-    setWarn(&s->sensorThresholds, "~:", -1);
-    setCrit(&s->sensorThresholds, "~:", -1);
+    mp_threshold_set_warning(&s->sensorThresholds, "~:", -1);
+    mp_threshold_set_critical(&s->sensorThresholds, "~:", -1);
 
     rv = ipmi_threshold_get(th, IPMI_LOWER_CRITICAL, &val);
     if (rv == 0) {
