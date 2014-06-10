@@ -563,6 +563,7 @@ fi
 %{_libdir}/nagios/plugins/check_arc_raid
 %{_libdir}/nagios/plugins/check_apc_pdu
 %{_libdir}/nagios/plugins/check_interface
+%{_libdir}/nagios/plugins/check_keepalived_vrrp
 %{_libdir}/nagios/plugins/check_qnap_disks
 %{_libdir}/nagios/plugins/check_qnap_vols
 %{_libdir}/nagios/plugins/check_snmp_ups
@@ -570,6 +571,7 @@ fi
 %{_mandir}/man1/check_arc_raid.1.gz
 %{_mandir}/man1/check_apc_pdu.1.gz
 %{_mandir}/man1/check_interface.1.gz
+%{_mandir}/man1/check_keepalived_vrrp.1.gz
 %{_mandir}/man1/check_qnap_disks.1.gz
 %{_mandir}/man1/check_qnap_vols.1.gz
 %{_mandir}/man1/check_snmp_ups.1.gz
@@ -602,6 +604,7 @@ fi
 - Add check_redis_slave check.
 - Add RabbitMQ checks.
 - Add LDAP checks.
+- Add Keepalived VRRP check.
 
 * Sun Sep 08 2013 Marius Rieder <marius.rieder@durchmesser.ch> - 0.16-1
 - Added PostgreSQL check
