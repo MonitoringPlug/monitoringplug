@@ -65,7 +65,9 @@
         <term><option>-C</option></term>
         <term><option>--cert=<replaceable>CERT-FILE</replaceable></option></term>
         <listitem>
-          <para>File to load cert from.</para>
+          <para>File to load cert from. Glob is supported, see <citerefentry>
+              <refentrytitle>glob</refentrytitle><manvolnum>7</manvolnum>
+              </citerefentry>.</para>
         </listitem>
       </varlistentry>
       <varlistentry>

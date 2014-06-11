@@ -40,6 +40,7 @@ const char *progusage = "--cert <FILE>";
 #include <string.h>
 #include <signal.h>
 #include <unistd.h>
+#include <glob.h>
 /* Library Includes */
 #include <gnutls/gnutls.h>
 #include <gnutls/x509.h>
@@ -127,6 +128,9 @@ int main (int argc, char **argv) {
 
         int days = (int)difftime(expiration_time, time(0))/86400;
         switch (get_status((expiration_time-time(0)), expire_thresholds)) {
+            case STATE_OK:
+                set_ok(cert_file[i]);
+                break;
             case STATE_WARNING:
                 set_warning("%s expires in %d day%s", cert_file[i], days, days==1?"":"s");
                 break;
@@ -172,9 +176,16 @@ int process_arguments (int argc, char **argv) {
 
         switch (c) {
             /* Plugin opts */
-            case 'C':
-                mp_array_push(&cert_file, optarg, &cert_files);
+            case 'C':  {
+                glob_t globbuf;
+                globbuf.gl_offs = 0;
+                glob(optarg, GLOB_BRACE|GLOB_TILDE, NULL, &globbuf);
+                int i=0;
+                for (i=0; i < globbuf.gl_pathc; i++) {
+                    mp_array_push(&cert_file, globbuf.gl_pathv[i], &cert_files);
+                }
                 break;
+            }
         }
     }
 
@@ -195,7 +206,7 @@ void print_help (void) {
 
     print_help_default();
     printf(" -C, --cert=FILE\n");
-    printf("      x509 Cert File to check.\n");
+    printf("      x509 Cert File to check. (Glob is supported)\n");
     print_help_warn_time("30 days");
     print_help_crit_time("10 days");
 }

@@ -44,4 +44,12 @@ test_expect_success 'check_x509_cert w/ warning and critical cert' "
     test_expect_code 2 $WRAPPER $BASE/gnutls/check_x509_cert -w 220d -c 100d -C test-cert.pem -C test-cert2.pem
 "
 
+test_expect_success 'check_x509_cert glob *' "
+    $WRAPPER $BASE/gnutls/check_x509_cert -C '*cert*.pem'
+"
+
+test_expect_success 'check_x509_cert glob {}' "
+    $WRAPPER $BASE/gnutls/check_x509_cert -C 'test-{cert,cert2}.pem' -v
+"
+
 test_done
