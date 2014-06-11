@@ -135,7 +135,7 @@ int main (int argc, char **argv) {
     
         ldap_msgfree(versionmsg);
    
-        ldap_unbind_s(masterld);
+        ldap_unbind_ext_s(masterld, NULL, NULL);
     
         // Calculate slave lag
         lag = difftime(remote_time, local_time);
