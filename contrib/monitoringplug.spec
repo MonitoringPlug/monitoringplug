@@ -487,7 +487,9 @@ fi
 %files gnutls
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_ssl_cert
+%{_libdir}/nagios/plugins/check_x509_cert
 %{_mandir}/man1/check_ssl_cert.1.gz
+%{_mandir}/man1/check_x509_cert.1.gz
 %endif
 
 %files ipmi

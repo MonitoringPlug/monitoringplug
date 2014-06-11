@@ -10,7 +10,7 @@ LDADD = ../lib/libmonitoringplug.a $(GNUTLS_LIBS)
 bin_PROGRAMS = 
 
 if HAVE_GNUTLS
-bin_PROGRAMS += check_ssl_cert
+bin_PROGRAMS += check_ssl_cert check_x509_cert
 endif
 
 

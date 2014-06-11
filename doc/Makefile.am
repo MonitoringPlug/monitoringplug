@@ -64,9 +64,9 @@ EXTRA_DIST += check_fcgi_ping.1 check_fcgi_php.1
 
 #gnutls
 if HAVE_GNUTLS
-man_MANS += check_ssl_cert.1
+man_MANS += check_ssl_cert.1 check_x509_cert.1
 endif #HAVE_GNUTLS
-EXTRA_DIST += check_ssl_cert.1
+EXTRA_DIST += check_ssl_cert.1 check_x509_cert.1
 
 #ipmi
 if HAVE_IPMI

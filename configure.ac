@@ -473,6 +473,7 @@ AC_CONFIG_FILES([Makefile
                  notify/Makefile
                  tests/Makefile
                  tests/curl/Makefile
+                 tests/gnutls/Makefile
                  tests/snmp/Makefile])
 AC_OUTPUT
 
