@@ -82,8 +82,9 @@ int main (int argc, char **argv) {
         /* Read the Cert */
         gnutls_datum_t data = { NULL, 0 };
         ret = gnutls_load_file(cert_file[i], &data);
-        if (ret < 0) {
+        if (ret != 0) {
             set_critical("Error loading cert file '%s'.\n", cert_file[i]);
+            continue;
         }
 
         /* Load the Cert to a list. */
@@ -93,6 +94,7 @@ int main (int argc, char **argv) {
                 GNUTLS_X509_CRT_LIST_IMPORT_FAIL_IF_EXCEED);
         if (ret < 0) {
             set_critical("%s error: %s", cert_file[i], gnutls_strerror(ret));
+            continue;
         };
 
         /* Read der Cert CN */
@@ -112,6 +114,7 @@ int main (int argc, char **argv) {
         }
         if (ret != 0) {
             set_critical("%s error: %s", cert_file[i], gnutls_strerror(ret));
+            continue;
         }
         if (mp_verbose) {
             printf(" * Subject: %s\n", subject);
