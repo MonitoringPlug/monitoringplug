@@ -24,6 +24,14 @@ test_expect_success 'check_x509_cert' "
     $WRAPPER $BASE/gnutls/check_x509_cert -C test-cert.pem
 "
 
+test_expect_success 'check_x509_cert w/o cert' "
+    test_expect_code 3 $WRAPPER $BASE/gnutls/check_x509_cert
+"
+
+test_expect_success 'check_x509_cert w/ non existing cert' "
+    test_expect_code 2 $WRAPPER $BASE/gnutls/check_x509_cert -C do_not_exist.pem
+"
+
 test_expect_success 'check_x509_cert w/ two certs' "
     $WRAPPER $BASE/gnutls/check_x509_cert -C test-cert.pem -C test-cert2.pem
 "
@@ -49,7 +57,11 @@ test_expect_success 'check_x509_cert glob *' "
 "
 
 test_expect_success 'check_x509_cert glob {}' "
-    $WRAPPER $BASE/gnutls/check_x509_cert -C 'test-{cert,cert2}.pem' -v
+    $WRAPPER $BASE/gnutls/check_x509_cert -C 'test-{cert,cert2}.pem'
+"
+
+test_expect_success 'check_x509_cert w/ not matching glob' "
+    test_expect_code 3 $WRAPPER $BASE/gnutls/check_x509_cert -C 'do_not_exist*.pem'
 "
 
 test_done

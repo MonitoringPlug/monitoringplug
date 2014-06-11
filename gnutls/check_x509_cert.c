@@ -182,7 +182,8 @@ int process_arguments (int argc, char **argv) {
             case 'C':  {
                 glob_t globbuf;
                 globbuf.gl_offs = 0;
-                glob(optarg, GLOB_BRACE|GLOB_TILDE, NULL, &globbuf);
+                glob(optarg, GLOB_BRACE|GLOB_TILDE|GLOB_NOMAGIC,
+                        NULL, &globbuf);
                 int i=0;
                 for (i=0; i < globbuf.gl_pathc; i++) {
                     mp_array_push(&cert_file, globbuf.gl_pathv[i], &cert_files);
@@ -191,6 +192,9 @@ int process_arguments (int argc, char **argv) {
             }
         }
     }
+
+    if (cert_files < 1)
+        usage("At least one cert file is required.");
 
     return(OK);
 }
