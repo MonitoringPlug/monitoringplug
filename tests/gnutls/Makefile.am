@@ -8,5 +8,5 @@ TESTS = check_x509_cert.t
 
 endif
 
-EXTRA_DIST = $(TESTS)
+EXTRA_DIST = $(TESTS) template.cfg template2.cfg
 ## vim: set ts=4 sw=4 syn=automake :
