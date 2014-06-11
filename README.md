@@ -1,7 +1,9 @@
 MonitoringPlug
 ==============
 
-My collection of monitoring plugins for Nagios and similar monitoring systems. 
+My collection of monitoring plugins for Nagios and similar monitoring systems.
+
+* [How to build.](https://github.com/MonitoringPlug/monitoringplug/wiki/HowToBuild)
 
 Base
 ----
@@ -21,7 +23,7 @@ Basic plugins which don't use any library.
 CUPS
 ----
 
-Use [CUPS](http://www.cups.org)) to query CUPS server.
+Use [CUPS](http://www.cups.org) to query CUPS server.
 
 *  check_cups_jobs -- Check CUPS job count and age. 
 
