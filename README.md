@@ -61,6 +61,7 @@ GNUTLS
 Use the [GnuTLS](http://www.gnutls.org) library to check SSL/TLS related things.
 
 *  check_ssl_cert -- Check expiration and trust of a SSL certificate. 
+*  check_x509_cert -- Check expiration date on a X509 Cert from file.
 
 IPMI
 ----

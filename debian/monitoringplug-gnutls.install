@@ -1,2 +1,4 @@
 /usr/lib/nagios/plugins/check_ssl_cert
+/usr/lib/nagios/plugins/check_x509_cert
 /usr/share/man/man1/check_ssl_cert.1
+/usr/share/man/man1/check_x509_cert.1
