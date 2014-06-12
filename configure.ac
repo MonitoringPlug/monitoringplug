@@ -404,6 +404,7 @@ AX_CFLAGS_GCC_OPTION(-Wformat)
 AX_CFLAGS_GCC_OPTION(-Wformat-security)
 AX_CFLAGS_GCC_OPTION(-Winline)
 AX_CFLAGS_GCC_OPTION(-std=c99)
+AC_GNU_SOURCE
 
 # Prevent from overlinking
 AC_ARG_ENABLE([as-needed],
