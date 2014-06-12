@@ -173,6 +173,7 @@ int main (int argc, char **argv) {
     }
 
     switch (status) {
+        case -1:
         case STATE_OK:
             ok("%s: Everithing ok.", filename);
             break;
