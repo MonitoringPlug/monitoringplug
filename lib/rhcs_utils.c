@@ -79,7 +79,7 @@ void rhcs_clustat_startElement(void *clustat, const char *name, const char **att
     if (strcmp(name, "cluster") == 0) {
         for(k = atts, v = atts+1; *k != NULL; k+=2, v+=2) {
             if (strcmp(*k, "name") == 0)
-                ((rhcs_clustat *)clustat)->name = strdup(*v);
+                ((rhcs_clustat *)clustat)->name = mp_strdup(*v);
             else if (strcmp(*k, "id") == 0)
                 ((rhcs_clustat *)clustat)->id = (unsigned int) strtol(*v, NULL, 10);
         }
@@ -92,7 +92,7 @@ void rhcs_clustat_startElement(void *clustat, const char *name, const char **att
         ((rhcs_clustat *)clustat)->node[nodes+1] = NULL;
         for(k = atts, v = atts+1; *k != NULL; k+=2, v+=2) {
             if (strcmp(*k, "name") == 0)
-                ((rhcs_clustat *)clustat)->node[nodes]->name = strdup(*v);
+                ((rhcs_clustat *)clustat)->node[nodes]->name = mp_strdup(*v);
             else if (strcmp(*k, "state") == 0)
                 ((rhcs_clustat *)clustat)->node[nodes]->state = (unsigned int) strtol(*v, NULL, 10);
             else if (strcmp(*k, "rgmanager") == 0)
@@ -112,7 +112,7 @@ void rhcs_clustat_startElement(void *clustat, const char *name, const char **att
         ((rhcs_clustat *)clustat)->group[services+1] = NULL;
         for(k = atts, v = atts+1; *k != NULL; k+=2, v+=2) {
             if (strcmp(*k, "name") == 0) {
-                ((rhcs_clustat *)clustat)->group[services]->name = strdup(*v);
+                ((rhcs_clustat *)clustat)->group[services]->name = mp_strdup(*v);
                 strsep(&((rhcs_clustat *)clustat)->group[services]->name, ":");
             } else if (strcmp(*k, "state") == 0) {
                 ((rhcs_clustat *)clustat)->group[services]->state = (unsigned int) strtol(*v, NULL, 10);
@@ -182,9 +182,9 @@ void rhcs_conf_startElement(void *conf, const char *name, const char **atts) {
     if (strcmp(name, "cluster") == 0) {
         for(k = atts, v = atts+1; *k != NULL; k+=2, v+=2) {
             if (strcmp(*k, "name") == 0)
-                ((rhcs_conf *)conf)->name = strdup(*v);
+                ((rhcs_conf *)conf)->name = mp_strdup(*v);
             else if (strcmp(*k, "alias") == 0)
-                ((rhcs_conf *)conf)->alias = strdup(*v);
+                ((rhcs_conf *)conf)->alias = mp_strdup(*v);
             else if (strcmp(*k, "config_version") == 0)
                 ((rhcs_conf *)conf)->version = (unsigned int) strtol(*v, NULL, 10);
         }
@@ -196,7 +196,7 @@ void rhcs_conf_startElement(void *conf, const char *name, const char **atts) {
         ((rhcs_conf *)conf)->node[nodes+1] = NULL;
         for(k = atts, v = atts+1; *k != NULL; k+=2, v+=2) {
             if (strcmp(*k, "name") == 0)
-                ((rhcs_conf *)conf)->node[nodes]->name = strdup(*v);
+                ((rhcs_conf *)conf)->node[nodes]->name = mp_strdup(*v);
             else if (strcmp(*k, "nodeid") == 0)
                 ((rhcs_conf *)conf)->node[nodes]->id = (unsigned int) strtol(*v, NULL, 10);
             else if (strcmp(*k, "votes") == 0)
@@ -211,7 +211,7 @@ void rhcs_conf_startElement(void *conf, const char *name, const char **atts) {
         ((rhcs_conf *)conf)->fodomain[fodomains+1] = NULL;
         for(k = atts, v = atts+1; *k != NULL; k+=2, v+=2) {
             if (strcmp(*k, "name") == 0)
-                ((rhcs_conf *)conf)->fodomain[fodomains]->name = strdup(*v);
+                ((rhcs_conf *)conf)->fodomain[fodomains]->name = mp_strdup(*v);
             else if (strcmp(*k, "nofailback") == 0)
                 ((rhcs_conf *)conf)->fodomain[fodomains]->failback = (strcmp(*v, "0") == 0);
             else if (strcmp(*k, "ordered") == 0)
@@ -245,7 +245,7 @@ void rhcs_conf_startElement(void *conf, const char *name, const char **atts) {
         ((rhcs_conf *)conf)->service[services+1] = NULL;
         for(k = atts, v = atts+1; *k != NULL; k+=2, v+=2) {
             if (strcmp(*k, "name") == 0)
-                ((rhcs_conf *)conf)->service[services]->name = strdup(*v);
+                ((rhcs_conf *)conf)->service[services]->name = mp_strdup(*v);
             else if (strcmp(*k, "domain") == 0)
                 for (i=0; i < fodomains; i++) {
                     if (strcmp(*v, ((rhcs_conf *)conf)->fodomain[i]->name) == 0) {

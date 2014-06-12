@@ -92,10 +92,10 @@ int main (int argc, char **argv) {
 
         switch (age_status) {
             case STATE_WARNING:
-                output = strdup("age warning");
+                output = mp_strdup("age warning");
                 break;
             case STATE_CRITICAL:
-                output = strdup("age critical");
+                output = mp_strdup("age critical");
                 break;
         }
     }

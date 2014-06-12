@@ -165,7 +165,7 @@ START_TEST (test_snmp_query_string_pre) {
 
     s1 = mp_malloc(24);
     s2 = mp_malloc(24);
-    s3 = strdup("FOOBAR");
+    s3 = mp_strdup("FOOBAR");
     s4 = mp_malloc(24);
     s5 = mp_malloc(24);
 

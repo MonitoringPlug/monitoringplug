@@ -91,7 +91,7 @@ int main (int argc, char **argv) {
             key = strsep(&value, " ");
 
             if (strcmp(key, "version") == 0) {
-                mc_version = strdup(value);
+                mc_version = mp_strdup(value);
             } else if (!mp_showperfdata) {
                 // End
             } else if (strcmp(key, "limit_maxbytes") == 0) {

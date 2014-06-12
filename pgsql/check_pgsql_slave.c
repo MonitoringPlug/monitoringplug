@@ -85,7 +85,7 @@ int main (int argc, char **argv) {
     delay += strtol(++val2, NULL,10) * 60;
     delay += strtof((val2+=3), NULL);
 
-    val = strdup(val);
+    val = mp_strdup(val);
 
     mp_pgsql_deinit(conn);
 

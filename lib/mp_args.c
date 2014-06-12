@@ -107,7 +107,7 @@ int parse_range_string(range *range, const char *str, int multiplier) {
         str++;
     }
 
-    e = end_str = strdup(str);
+    e = end_str = mp_strdup(str);
 
     start_str = strsep(&end_str, ":");
     if (end_str == NULL) {
@@ -272,11 +272,11 @@ char *str_range(range *my_range) {
     int precision = 3;
 
     if (!my_range)
-        return strdup("");
+        return mp_strdup("");
 
     if (my_range->start_infinity == 1) {
         if (my_range->end_infinity == 1) {
-            rstr = strdup("~:");
+            rstr = mp_strdup("~:");
         } else {
             mp_asprintf(&rstr, "~:%.*f", precision, my_range->end);
         }

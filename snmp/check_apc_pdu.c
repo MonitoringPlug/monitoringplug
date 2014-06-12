@@ -106,10 +106,10 @@ int main (int argc, char **argv) {
     // Check for PSU Failure
     if (pdu_psu1 != 1) {
         status = STATE_CRITICAL;
-        output = strdup("Power Supply 1 Failed!");
+        output = mp_strdup("Power Supply 1 Failed!");
     } else if (pdu_psu2 != 1) {
         status = STATE_CRITICAL;
-        output = strdup("Power Supply 2 Failed!");
+        output = mp_strdup("Power Supply 2 Failed!");
     }
 
     outlet_name = mp_malloc(64);
@@ -138,7 +138,7 @@ int main (int argc, char **argv) {
     } else {
         if (stateOn != NULL) {
             char *c, *s, *p;
-            p = s = strdup(stateOn);
+            p = s = mp_strdup(stateOn);
             while((c = strsep(&s, ","))) {
                 i = strtol(c, NULL, 10);
                 if (i == 0) {
@@ -185,7 +185,7 @@ int main (int argc, char **argv) {
         }
         if (stateOff != NULL) {
             char *c, *s, *p;
-            p = s = strdup(stateOff);
+            p = s = mp_strdup(stateOff);
             while((c = strsep(&s, ","))) {
                 i = strtol(c, NULL, 10);
                 if (i == 0) {

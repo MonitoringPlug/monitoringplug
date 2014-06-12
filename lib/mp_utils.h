@@ -58,6 +58,11 @@ void *mp_calloc(size_t nmemb, size_t size);
 void *mp_realloc(void *ptr, size_t size);
 
 /**
+ * Duplicate a strings.
+ */
+char *mp_strdup(const char *source);
+
+/**
  * concat strings.
  */
 void mp_strcat(char **target, char *source);

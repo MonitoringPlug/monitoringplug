@@ -100,7 +100,7 @@ int main (int argc, char **argv) {
     char *line = NULL;
     while ((line = strsep(&str, "\r\n"))) {
         if (strncmp(line, "redis_version:", 14) == 0) {
-            redis_version = strdup(line+14);
+            redis_version = mp_strdup(line+14);
         } else if (strncmp(line, "used_memory:", 12) == 0) {
             used_memory = strtol(line+12, NULL, 10);
         } else if (strncmp(line, "total_connections_received:", 27) == 0) {

@@ -203,7 +203,7 @@ START_TEST (test_array_push_multi) {
     char **array = NULL;
     int num = 0;
 
-    input = strdup("I,LOVE,NALA");
+    input = mp_strdup("I,LOVE,NALA");
 
     mp_array_push(&array, input, &num);
 

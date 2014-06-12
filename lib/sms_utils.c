@@ -150,7 +150,7 @@ int mobile_at_command_input(int fd, const char *cmd, const char *opt,
                     continue;
                 line += strlen(cmd) +2;
                 *answer = mp_realloc(*answer, (sizeof(char **)*((*answers)+2)));
-                (*answer)[*answers] = strdup(line);
+                (*answer)[*answers] = mp_strdup(line);
                 (*answer)[(*answers)+1] = NULL;
                 (*answers)++;
             }

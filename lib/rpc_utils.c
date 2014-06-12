@@ -57,7 +57,7 @@ struct rpcent *rpc_getrpcent(const char *prog) {
        return NULL;
 
     ret = mp_malloc(sizeof(struct rpcent));
-    ret->r_name = strdup(ent->r_name);
+    ret->r_name = mp_strdup(ent->r_name);
     ret->r_number = ent->r_number;
 
     return ret;

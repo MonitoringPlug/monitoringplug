@@ -141,7 +141,7 @@ int main (int argc, char **argv) {
         if (strcmp(c, "ErrorCode") == 0) {
             errorCode = strtol(strsep(&xmlp, "<>"), NULL, 10);
         } else if (strcmp(c, "ErrorDescription") == 0) {
-            errorDescription = strdup(strsep(&xmlp, "<>"));
+            errorDescription = mp_strdup(strsep(&xmlp, "<>"));
         } else if (strcmp(c, "Credits") == 0) {
             credits = (float) strtod(strsep(&xmlp, "<>"), NULL);
         }

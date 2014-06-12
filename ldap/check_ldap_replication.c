@@ -86,7 +86,7 @@ int main (int argc, char **argv) {
                 printf("Skipping %s\n", ldap_get_dn(ld, database));
             continue;
         }
-        namingContexts = strdup(vals[0]->bv_val);
+        namingContexts = mp_strdup(vals[0]->bv_val);
         ldap_value_free_len(vals);
     
         vals = ldap_get_values_len(ld, database, "monitorUpdateRef");
@@ -96,7 +96,7 @@ int main (int argc, char **argv) {
             free(namingContexts);
             continue;
         }
-        updateRef = strdup(vals[0]->bv_val);
+        updateRef = mp_strdup(vals[0]->bv_val);
         ldap_value_free_len(vals);
     
         if (mp_verbose > 0) {
