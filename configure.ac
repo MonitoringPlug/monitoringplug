@@ -403,6 +403,7 @@ AX_CFLAGS_GCC_OPTION(-Wcast-align)
 AX_CFLAGS_GCC_OPTION(-Wformat)
 AX_CFLAGS_GCC_OPTION(-Wformat-security)
 AX_CFLAGS_GCC_OPTION(-Winline)
+AX_CFLAGS_GCC_OPTION(-std=c99)
 
 # Prevent from overlinking
 AC_ARG_ENABLE([as-needed],
