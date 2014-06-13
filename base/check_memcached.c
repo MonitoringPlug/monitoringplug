@@ -215,12 +215,8 @@ void print_help (void) {
 #ifdef USE_IPV6
     print_help_46();
 #endif //USE_IPV6
-    printf("     --starttls=[PROTO]\n");
-    printf("      Use named STARTTLS protocol. (smtp, pop or imap)\n");
-    printf(" -C, --trusted-ca=[NAME:]FILE\n");
-    printf("      File to read trust-CAs from.\n");
-    print_help_warn_time("30 days");
-    print_help_crit_time("10 days");
+    print_help_warn_time("3s");
+    print_help_crit_time("4s");
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */
