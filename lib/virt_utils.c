@@ -109,13 +109,13 @@ int virt_authCallback(virConnectCredentialPtr cred, unsigned int ncred, void *cb
     for (i = 0; i < ncred ; ++i) {
         switch (cred[i].type) {
             case VIR_CRED_AUTHNAME:
-                cred[i].result = strdup(mp_virt_username);
+                cred[i].result = mp_strdup(mp_virt_username);
                 if (cred[i].result == NULL)
                     return -1;
                 cred[i].resultlen = strlen(cred[i].result);
                 break;
             case VIR_CRED_PASSPHRASE:
-                cred[i].result = strdup(mp_virt_password);
+                cred[i].result = mp_strdup(mp_virt_password);
                 if (cred[i].result == NULL)
                     return -1;
                 cred[i].resultlen = strlen(cred[i].result);

@@ -134,7 +134,7 @@ int main (int argc, char **argv) {
     if (noconnection || callfailed || noexport || nfs_crit) {
         char *out = NULL;
         if (noconnection) {
-            out = strdup("Can't connect to:");
+            out = mp_strdup("Can't connect to:");
             mp_strcat_space(&out, noconnection);
         }
         if (callfailed) {

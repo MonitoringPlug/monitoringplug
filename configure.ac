@@ -403,6 +403,8 @@ AX_CFLAGS_GCC_OPTION(-Wcast-align)
 AX_CFLAGS_GCC_OPTION(-Wformat)
 AX_CFLAGS_GCC_OPTION(-Wformat-security)
 AX_CFLAGS_GCC_OPTION(-Winline)
+AX_CFLAGS_GCC_OPTION(-std=c99)
+AC_GNU_SOURCE
 
 # Prevent from overlinking
 AC_ARG_ENABLE([as-needed],
@@ -472,6 +474,7 @@ AC_CONFIG_FILES([Makefile
                  policy/monitoringplug.te
                  notify/Makefile
                  tests/Makefile
+                 tests/base/Makefile
                  tests/curl/Makefile
                  tests/gnutls/Makefile
                  tests/snmp/Makefile])

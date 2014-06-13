@@ -97,9 +97,9 @@ int main (int argc, char **argv) {
     char *line = NULL;
     while ((line = strsep(&str, "\r\n"))) {
         if (strncmp(line, "role:", 5) == 0) {
-            redis_role = strdup(line+5);
+            redis_role = mp_strdup(line+5);
         } else if (strncmp(line, "master_link_status:", 19) == 0) {
-            redis_link_status = strdup(line+19);
+            redis_link_status = mp_strdup(line+19);
         } else if (strncmp(line, "master_last_io_seconds_ago:", 27) == 0 ) {
             redis_delay = strtol(line+27, NULL, 10);
         } else if (strncmp(line, "master_link_down_since_seconds:", 31) == 0) {

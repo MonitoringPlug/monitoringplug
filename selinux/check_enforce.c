@@ -79,23 +79,23 @@ int main (int argc, char **argv) {
             critical("security_getenforce failed!");
 
 	if (se_enforced) {
-	    state_name = strdup("Enforcing");
+	    state_name = mp_strdup("Enforcing");
 	    state = state_enforcing;
 	} else {
-	    state_name = strdup("Permissive");
+	    state_name = mp_strdup("Permissive");
 	    state = state_permissive;
 	}
 
-	pol_name = basename(strdup(selinux_policy_root()));
+	pol_name = basename(mp_strdup(selinux_policy_root()));
 
 	if (policy && strcmp(pol_name, policy) != 0) {
 	   critical("Wrong SELinux policy %s", pol_name);
 	}
     } else {
-       state_name = strdup("Disabled");
+       state_name = mp_strdup("Disabled");
        state = state_disabled;
 
-       pol_name = strdup("no policy");
+       pol_name = mp_strdup("no policy");
     }
 
     switch (state) {

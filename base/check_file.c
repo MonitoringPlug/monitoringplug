@@ -58,9 +58,6 @@ int check_access(mode_t file_stat);
 int main (int argc, char **argv) {
     /* Local Vars */
     int         status;
-    int         age_status = -1;
-    int         size_status = -1;
-    char        *output = NULL;
     struct stat file_stat;
 
     /* Set signal handling and alarm */
@@ -88,40 +85,35 @@ int main (int argc, char **argv) {
     }
 
     if (age_thresholds != NULL) {
-        age_status = get_status((time(0) - file_stat.st_mtime), age_thresholds);
+        status = get_status((time(0) - file_stat.st_mtime), age_thresholds);
 
-        switch (age_status) {
+        switch (status) {
             case STATE_WARNING:
-                output = strdup("age warning");
+                set_warning("age warning");
                 break;
             case STATE_CRITICAL:
-                output = strdup("age critical");
+                set_critical("age critical");
                 break;
         }
     }
 
     if (size_thresholds != NULL) {
-        size_status = get_status(file_stat.st_size, size_thresholds);
+        status = get_status(file_stat.st_size, size_thresholds);
 
-        switch (size_status) {
+        switch (status) {
             case STATE_WARNING:
-                mp_strcat_comma(&output, "size warning");
+                set_warning("size warning");
                 break;
             case STATE_CRITICAL:
-                mp_strcat_comma(&output, "size critical");
+                set_critical("size critical");
                 break;
         }
     }
 
-    status = age_status > size_status ? age_status : size_status;
-
     if (ownername != NULL) {
         if (is_integer(ownername)) {
             if (file_stat.st_uid != (int) strtol(ownername, NULL, 10)) {
-                status = STATE_CRITICAL;
-                mp_strcat_comma(&output, "owner critcal");
-            } else {
-                status = status > STATE_OK ? status : STATE_OK;
+                set_critical("owner critcal");
             }
         } else {
             struct passwd *pwd;
@@ -131,10 +123,7 @@ int main (int argc, char **argv) {
                 printf("Resolv UID: %s => %u\n", ownername, (*pwd).pw_uid);
 
             if (pwd == NULL || file_stat.st_uid != (*pwd).pw_uid) {
-                status = STATE_CRITICAL;
-                mp_strcat_comma(&output, "owner critical");
-            } else {
-                status = status > STATE_OK ? status : STATE_OK;
+                set_critical("owner critical");
             }
         }
     }
@@ -142,10 +131,7 @@ int main (int argc, char **argv) {
     if (groupname != 0 ) {
         if (is_integer(groupname)) {
             if (file_stat.st_gid != (int) strtol(groupname, NULL, 10)) {
-                status = STATE_CRITICAL;
-                mp_strcat_comma(&output, "group critical");
-            } else {
-                status = status > STATE_OK ? status : STATE_OK;
+                set_critical("group critical");
             }
         } else {
             struct group *grp;
@@ -155,36 +141,19 @@ int main (int argc, char **argv) {
                 printf("Resolv GID: %s => %u\n", groupname, (*grp).gr_gid);
 
             if (grp == NULL || file_stat.st_gid != (*grp).gr_gid) {
-                status = STATE_CRITICAL;
-                mp_strcat_comma(&output, "group critical");
-            } else {
-                status = status > STATE_OK ? status : STATE_OK;
+                set_critical("group critical");
             }
         }
     }
 
     if (accessstring != NULL) {
         if (check_access(file_stat.st_mode) != 0) {
-            status = STATE_CRITICAL;
-            mp_strcat_comma(&output, "access critical");
-        } else {
-            status = status > STATE_OK ? status : STATE_OK;
+            set_critical("access critical");
         }
     }
 
-    switch (status) {
-        case STATE_OK:
-            ok("%s: Everithing ok.", filename);
-            break;
-        case STATE_WARNING:
-            warning("%s: %s", filename, output);
-            break;
-        case STATE_CRITICAL:
-            critical("%s: %s", filename, output);
-            break;
-    }
-
-    critical("You should never reach this point.");
+    set_okonly("Everithing ok.");
+    mp_exit("%s: ", filename);
 }
 
 int check_access(mode_t fmode) {

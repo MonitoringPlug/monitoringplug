@@ -102,11 +102,22 @@ void *mp_realloc(void *ptr, size_t size) {
     return p;
 }
 
+char *mp_strdup(const char *source) {
+    size_t str_len;
+    char *new;
+
+    str_len = strlen (source) + 1;
+
+    new = mp_malloc (str_len+1);
+
+    return memcpy (new, source, str_len);
+}
+
 void mp_strcat(char **target, char *source) {
     if(source == NULL) {
         return;
     } else if(*target == NULL) {
-        *target = strdup(source);
+        *target = mp_strdup(source);
     } else {
         *target = mp_realloc(*target, strlen(*target) + strlen(source) + 1);
         strcat(*target, source);
@@ -117,7 +128,7 @@ void mp_strcat_space(char **target, char *source) {
     if(source == NULL) {
         return;
     } else if(*target == NULL) {
-        *target = strdup(source);
+        *target = mp_strdup(source);
     } else {
         *target = mp_realloc(*target, strlen(*target) + strlen(source) + 2);
         strcat(*target, " ");
@@ -129,7 +140,7 @@ void mp_strcat_comma(char **target, char *source) {
     if(source == NULL) {
         return;
     } else if(*target == NULL) {
-        *target = strdup(source);
+        *target = mp_strdup(source);
     } else {
         *target = mp_realloc(*target, strlen(*target) + strlen(source) + 3);
         strcat(*target, ", ");
@@ -220,6 +231,31 @@ int mp_strmatch(const char *string, const char *match) {
     } else {
         return (strcmp(string, match) == 0);
     }
+}
+
+long mp_slurp(const char *filename, char **content) {
+    FILE *infile;
+    long  filesize;
+
+    // Open the file
+    infile = fopen(filename, "r");
+    if (infile == NULL) {
+        return -1;
+    }
+
+    // Get the File size.
+    fseek(infile, 0L, SEEK_END);
+    filesize = ftell(infile);
+    fseek(infile, 0L, SEEK_SET);
+
+    // Allocate memory
+    *content = mp_calloc(filesize+1, sizeof(char));
+
+    // Read the file
+    fread(*content, sizeof(char), filesize, infile);
+    fclose(infile);
+
+    return filesize;
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */

@@ -133,7 +133,7 @@ int mp_varnish_stats_cb(void *priv, const struct VSC_point *const pt) {
         printf("\n");
     }
 
-    name = strdup(pt->ident);
+    name = mp_strdup(pt->ident);
     name = strsep(&name, "(");
 
     /* Check if backend should be checked */

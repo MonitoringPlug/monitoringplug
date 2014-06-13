@@ -41,8 +41,8 @@ char *mp_ip2str(const struct sockaddr *sa, socklen_t len) {
     error = getnameinfo(sa, len, hostname, NI_MAXHOST, NULL, 0, NI_NUMERICHOST);
 
     if (error)
-        return strdup(gai_strerror(error));
-    return strdup(hostname);
+        return mp_strdup(gai_strerror(error));
+    return mp_strdup(hostname);
 }
 
 struct addrinfo *mp_getaddrinfo(const char *hostname, int port, int family, int type) {

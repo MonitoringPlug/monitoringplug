@@ -93,7 +93,7 @@ int main (int argc, char **argv) {
 
         while ((entry = readdir(dir)) != NULL) {
             if (strncmp(entry->d_name, "bond", 4) == 0) {
-                mp_array_push(&bond, strdup(entry->d_name), &bonds);
+                mp_array_push(&bond, mp_strdup(entry->d_name), &bonds);
             }
         }
 
@@ -179,9 +179,9 @@ bonding_info *parseBond(const char *filename) {
         value[strlen(value)-1] = '\0';
 
         if (strcmp(key, "Ethernet Channel Bonding Driver") == 0) {
-            info->version = strdup(value);
+            info->version = mp_strdup(value);
         } else if (strcmp(key, "Bonding Mode") == 0) {
-            info->mode = strdup(value);
+            info->mode = mp_strdup(value);
         } else if (strcmp(key, "MII Status") == 0) {
             if (strcmp(value, "up") == 0) {
                 if(count)
@@ -200,7 +200,7 @@ bonding_info *parseBond(const char *filename) {
             info->slave = mp_realloc(info->slave, (count+1)*sizeof(bonding_slave_info *));
             info->slave[count] = NULL;
             info->slave[count-1] = mp_malloc(sizeof(struct bonding_slave_info_s));
-            info->slave[count-1]->interface = strdup(value);
+            info->slave[count-1]->interface = mp_strdup(value);
         }
     }
     fclose(input);
@@ -227,7 +227,7 @@ int process_arguments (int argc, char **argv) {
 
         switch (c) {
             case 'b':
-                mp_array_push(&bond, strdup(optarg), &bonds);
+                mp_array_push(&bond, mp_strdup(optarg), &bonds);
                 break;
         }
     }

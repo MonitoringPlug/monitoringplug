@@ -58,6 +58,11 @@ void *mp_calloc(size_t nmemb, size_t size);
 void *mp_realloc(void *ptr, size_t size);
 
 /**
+ * Duplicate a strings.
+ */
+char *mp_strdup(const char *source);
+
+/**
  * concat strings.
  */
 void mp_strcat(char **target, char *source);
@@ -114,6 +119,11 @@ char *mp_human_size(float size);
  * Chech if a string matches an other.
  */
 int mp_strmatch(const char *string, const char *match);
+
+/**
+ * Read a file into a string.
+ */
+long mp_slurp(const char *filename, char **content);
 
 #endif /* _MP_UTILS_H_ */
 

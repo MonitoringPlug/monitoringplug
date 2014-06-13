@@ -125,12 +125,12 @@ int main (int argc, char **argv) {
         ptr = answer[0];
         strsep(&ptr, ","); // Mode
         format = (int)strtol(strsep(&ptr, ","), NULL, 10); // Format
-        operator = strdup(strsep(&ptr, ","));
+        operator = mp_strdup(strsep(&ptr, ","));
 
         switch (*ptr) {
             case '0':
             case '1':
-                network = strdup("GSM");
+                network = mp_strdup("GSM");
                 break;
             case '2':
                 network = "UMTS";
@@ -163,7 +163,7 @@ int main (int argc, char **argv) {
                     ptr = answer[i];
                     strsep(&ptr, ",");
                     free(operator);
-                    operator = strdup(ptr);
+                    operator = mp_strdup(ptr);
                     break;
                 }
             }

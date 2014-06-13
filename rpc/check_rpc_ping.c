@@ -112,7 +112,7 @@ int main (int argc, char **argv) {
         }
     }
 
-    buf = strdup(" ");
+    buf = mp_strdup(" ");
     if (ping_warn) {
         mp_strcat_space(&buf, "warn:");
         mp_strcat_space(&buf, ping_warn);

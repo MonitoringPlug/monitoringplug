@@ -117,7 +117,7 @@ int main (int argc, char **argv) {
 
     /* Read pool name */
     json_object_object_get_ex(obj, "pool", &slaveobj);
-    pool = strdup(json_object_get_string(slaveobj));
+    pool = mp_strdup(json_object_get_string(slaveobj));
 
     /* Read accepted connections */
     json_object_object_get_ex(obj, "accepted conn", &slaveobj);

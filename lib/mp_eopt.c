@@ -40,7 +40,7 @@ char **mp_eopt(int *argc, char **orig_argv, char *optarg) {
     int i = 0;
 
     if (optarg == NULL && strncmp(orig_argv[optind], "-",1) != 0) {
-        optarg = strdup(orig_argv[optind]);
+        optarg = mp_strdup(orig_argv[optind]);
         optind++;
     }
 
@@ -129,7 +129,7 @@ char **mp_eopt(int *argc, char **orig_argv, char *optarg) {
             new_argc++;
 
             if(*val) {
-                new_argv[new_argc] = strdup(val);
+                new_argv[new_argc] = mp_strdup(val);
                 new_argc++;
             }
         }

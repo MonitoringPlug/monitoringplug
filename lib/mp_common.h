@@ -99,6 +99,11 @@ void ok(const char *fmt, ...) __attribute__((__noreturn__));
 void set_ok(const char *fmt, ...);
 
 /**
+ * Adds a ok message to the stack top only use if stateis OK to.
+ */
+void set_okonly(const char *fmt, ...);
+
+/**
  * prints to the stdout and exit with STATE_WARNING.
  */
 void warning(const char *fmt, ...) __attribute__((__noreturn__));

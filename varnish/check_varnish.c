@@ -86,7 +86,7 @@ int main (int argc, char **argv) {
         if (VSM_Open(vd, mp_verbose)) {
             critical("Varnish: Could not open shared memory for '%s'", VSM_Name(vd));
         }
-        instance = strdup(VSM_Name(vd));
+        instance = mp_strdup(VSM_Name(vd));
 
         /* Reading the stats */
         (void)VSC_Iter(vd, mp_varnish_stats_cb, NULL);
@@ -96,14 +96,14 @@ int main (int argc, char **argv) {
             answer = VSM_Find_Chunk(vd, "Arg", "-T", "", NULL);
             if (answer == NULL)
                 critical("Varnish: No -T arg in shared memory");
-            admin_socket = strdup(answer);
+            admin_socket = mp_strdup(answer);
             if (mp_verbose > 1)
                 printf("-T from SHM: %s\n", admin_socket);
         }
         if (secret_file == NULL) {
             answer = VSM_Find_Chunk(vd, "Arg", "-S", "", NULL);
             if (answer != NULL)
-                secret_file = strdup(answer);
+                secret_file = mp_strdup(answer);
             if (mp_verbose > 1)
                 printf("-S from SHM: %s\n", secret_file);
         }

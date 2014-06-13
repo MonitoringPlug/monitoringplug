@@ -53,7 +53,7 @@ int is_integer(const char *number) {
 int is_hostname(const char *address) {
     char *a, *addr, *part;
 
-    a = addr = strdup(address);
+    a = addr = mp_strdup(address);
 
     while ((part = strsep(&addr, "."))) {
         size_t len;
@@ -103,7 +103,7 @@ int is_hostaddr(const char *address) {
 int is_url(const char *url) {
     char *buf, *buf2;
     char *ptr, *remain;
-    ptr = remain = strdup(url);
+    ptr = remain = mp_strdup(url);
 
     /* Schema */
     buf = strsep(&remain, ":");

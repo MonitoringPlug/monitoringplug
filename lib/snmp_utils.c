@@ -64,7 +64,7 @@ netsnmp_session *mp_snmp_init(void) {
     snmp_sess_init( &session );
 
     if (mp_snmp_community == NULL)
-        mp_snmp_community = strdup("public");
+        mp_snmp_community = mp_strdup("public");
 
     mp_asprintf(&(session.peername), "%s:%d", hostname, port);
 
@@ -82,12 +82,12 @@ netsnmp_session *mp_snmp_init(void) {
         case SNMP_VERSION_3:
             session.version = SNMP_VERSION_3;
 
-            session.securityName = strdup(mp_snmp_secname);
+            session.securityName = mp_strdup(mp_snmp_secname);
             session.securityNameLen = strlen(session.securityName);
 
             /* set the security level */
             session.securityLevel = mp_snmp_seclevel;
-            session.contextName = strdup(mp_snmp_context);
+            session.contextName = mp_strdup(mp_snmp_context);
 
             session.contextNameLen = strlen(session.contextName);
 

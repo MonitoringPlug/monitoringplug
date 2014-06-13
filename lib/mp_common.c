@@ -34,6 +34,7 @@ unsigned int mp_timeout = 10;
 unsigned int mp_verbose = 0;
 int mp_state   = -1;
 char *mp_out_ok = NULL;
+char *mp_out_okonly = NULL;
 char *mp_out_warning = NULL;
 char *mp_out_critical = NULL;
 
@@ -75,6 +76,28 @@ void set_ok(const char *fmt, ...) {
     // sprintf
     va_start(ap, fmt);
     vsnprintf(mp_out_ok+strlen(mp_out_ok), len+1, fmt, ap);
+    va_end(ap);
+}
+
+void set_okonly(const char *fmt, ...) {
+    if (mp_state > STATE_OK)
+        return;
+
+    int len=0;
+    va_list ap;
+
+    // Estimate len
+    va_start(ap, fmt);
+    len = vsnprintf(NULL, 0, fmt, ap);
+    va_end(ap);
+
+    // Get buffer
+    mp_out_okonly = mp_malloc(len);
+     *mp_out_okonly = '\0';
+
+    // sprintf
+    va_start(ap, fmt);
+    vsnprintf(mp_out_okonly, len+1, fmt, ap);
     va_end(ap);
 }
 
@@ -204,6 +227,9 @@ void mp_exit(const char *fmt, ...) {
         if (mp_state > STATE_OK)
             printf(" OK:");
         printf(" %s", mp_out_ok);
+    }
+    if (mp_out_okonly && mp_state == STATE_OK) {
+        printf(" %s", mp_out_okonly);
     }
     if (mp_showperfdata && mp_perfdata) {
         printf(" | %s", mp_perfdata);

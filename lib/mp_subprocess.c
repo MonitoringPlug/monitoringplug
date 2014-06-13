@@ -33,7 +33,10 @@
 #include "mp_subprocess.h"
 #include "mp_common.h"
 
-sig_t mp_subprocess_alarm;
+/* Type of a signal handler.  */
+typedef void (*sighandler_t) (int);
+
+sighandler_t mp_subprocess_alarm;
 
 void subprocess_timeout_alarm_handler(int signo);
 
@@ -88,7 +91,7 @@ mp_subprocess_t *mp_subprocess(char *command[]) {
 
     /* Parent */
     if (sph->pid > 0) {
-        mp_subprocess_alarm = (sig_t)signal(SIGALRM, subprocess_timeout_alarm_handler);
+        mp_subprocess_alarm = (sighandler_t)signal(SIGALRM, subprocess_timeout_alarm_handler);
 
         return sph;
     }

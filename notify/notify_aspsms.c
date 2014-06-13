@@ -169,7 +169,7 @@ int main (int argc, char **argv) {
         if (strcmp(buf, "ErrorCode") == 0) {
             errorCode = strtol(strsep(&xmlp, "<>"), NULL, 10);
         } else if (strcmp(buf, "ErrorDescription") == 0) {
-            errorDescription = strdup(strsep(&xmlp, "<>"));
+            errorDescription = mp_strdup(strsep(&xmlp, "<>"));
         }
     }
     free(answer.data);

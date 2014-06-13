@@ -85,7 +85,7 @@ int main (int argc, char **argv) {
                 printf("Skipping %s\n", ldap_get_dn(ld, stat));
             continue;
         }
-        cn = strdup(vals[0]->bv_val);
+        cn = mp_strdup(vals[0]->bv_val);
         ldap_value_free_len(vals);
     
         vals = ldap_get_values_len(ld, stat, "monitorCounter");
@@ -95,7 +95,7 @@ int main (int argc, char **argv) {
             free(cn);
             continue;
         }
-        counter = strdup(vals[0]->bv_val);
+        counter = mp_strdup(vals[0]->bv_val);
         ldap_value_free_len(vals);
     
         if (mp_verbose > 0) {
