@@ -120,6 +120,11 @@ char *mp_human_size(float size);
  */
 int mp_strmatch(const char *string, const char *match);
 
+/**
+ * Read a file into a string.
+ */
+long mp_slurp(const char *filename, char **content);
+
 #endif /* _MP_UTILS_H_ */
 
 /* vim: set ts=4 sw=4 et syn=c : */

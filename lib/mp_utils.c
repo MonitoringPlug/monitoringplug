@@ -233,4 +233,29 @@ int mp_strmatch(const char *string, const char *match) {
     }
 }
 
+long mp_slurp(const char *filename, char **content) {
+    FILE *infile;
+    long  filesize;
+
+    // Open the file
+    infile = fopen(filename, "r");
+    if (infile == NULL) {
+        return -1;
+    }
+
+    // Get the File size.
+    fseek(infile, 0L, SEEK_END);
+    filesize = ftell(infile);
+    fseek(infile, 0L, SEEK_SET);
+
+    // Allocate memory
+    *content = mp_calloc(filesize+1, sizeof(char));
+
+    // Read the file
+    fread(*content, sizeof(char), filesize, infile);
+    fclose(infile);
+
+    return filesize;
+}
+
 /* vim: set ts=4 sw=4 et syn=c : */
