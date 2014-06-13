@@ -81,9 +81,10 @@ int main (int argc, char **argv) {
    
         /* Read the Cert */
         gnutls_datum_t data = { NULL, 0 };
-        ret = gnutls_load_file(cert_file[i], &data);
-        if (ret != 0) {
-            set_critical("Error loading cert file '%s'.\n", cert_file[i]);
+        ret = mp_slurp(cert_file[i], &(data.data));
+        data.size = ret;
+        if (ret <= 0) {
+            set_critical("Error loading cert file '%s'.", cert_file[i]);
             continue;
         }
 
