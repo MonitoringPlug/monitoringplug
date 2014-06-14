@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = base curl gnutls snmp
+SUBDIRS = base curl gnutls redis snmp
 
 LDADD = ../lib/libmonitoringplug.a
 AM_LDFLAGS = $(CHECK_LIBS)

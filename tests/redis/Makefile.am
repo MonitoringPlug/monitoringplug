@@ -2,7 +2,9 @@
 
 BASE=$abs_top_srcdir
 
-TESTS = check_file.t check_memcached.t
+if HAVE_REDIS
+TESTS = check_redis.t check_redis_slave.t
+endif
 
-EXTRA_DIST = check_file.t check_memcached.t
+EXTRA_DIST = check_redis.t check_redis_slave.t
 ## vim: set ts=4 sw=4 syn=automake :

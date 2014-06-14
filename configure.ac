@@ -477,6 +477,7 @@ AC_CONFIG_FILES([Makefile
                  tests/base/Makefile
                  tests/curl/Makefile
                  tests/gnutls/Makefile
+                 tests/redis/Makefile
                  tests/snmp/Makefile])
 AC_OUTPUT
 
