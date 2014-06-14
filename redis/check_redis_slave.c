@@ -127,7 +127,7 @@ int main (int argc, char **argv) {
     switch(get_status(redis_delay, time_thresholds)) {
         case STATE_OK:
             free_threshold(time_thresholds);
-            warning("Redis Slave");
+            ok("Redis Slave");
             break;
         case STATE_WARNING:
             free_threshold(time_thresholds);
@@ -180,7 +180,7 @@ int process_arguments (int argc, char **argv) {
                 getopt_port(optarg, &port);
                 break;
             /* Socket opt */
-            case 'S':
+            case 's':
                 socket = optarg;
                 break;
         }

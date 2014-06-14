@@ -222,7 +222,7 @@ int process_arguments (int argc, char **argv) {
                 getopt_port(optarg, &port);
                 break;
             /* Socket opt */
-            case 'S':
+            case 's':
                 socket = optarg;
                 break;
         }
