@@ -1,10 +1,7 @@
 #!/bin/sh
 
-BASE="${PWD}/../.."
+. ./setup.sh
 
-test_description='Test check_tile'
-
-. ../sharness.sh
 
 # Setup Test Files
 touch test_1

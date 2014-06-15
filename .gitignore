@@ -41,6 +41,7 @@ policy/tmp
 */check_*
 !*/check_*.[c|xml]
 tests/test-suite.log
+tests/setup.sh
 tests/*/test-suite.log
 *.t.trs
 *.t.log

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+BASE="${PWD}/.."
+
+cd `dirname $0`
+
+test_description="Test $0"
+  
+. ../sharness.sh
+
+SHARNESS_TEST_FILE=`basename $0`
+
+@HAVE_REDIS_TRUE@test_set_prereq HAVE_REDIS
+@HAVE_NET_SNMP_TRUE@test_set_prereq HAVE_NET_SNMP
+@HAVE_JSON_TRUE@test_set_prereq HAVE_JSON
+@HAVE_EXPAT_TRUE@test_set_prereq HAVE_EXPAT
+@HAVE_CURL_TRUE@test_set_prereq HAVE_CURL
+@HAVE_CURL_TFTP_TRUE@test_set_prereq HAVE_CURL_TFTP

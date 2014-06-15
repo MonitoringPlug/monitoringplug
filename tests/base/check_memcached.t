@@ -1,10 +1,6 @@
 #!/bin/sh
 
-BASE="${PWD}/../.."
-
-test_description='Test check_memcached'
-
-. ../sharness.sh
+. ./setup.sh
 
 # Set MEMCACHED prerequisite if interpreter is available.
 command -v memcached >/dev/null && test_set_prereq MEMCACHED

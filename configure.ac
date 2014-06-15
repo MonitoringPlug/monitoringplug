@@ -474,11 +474,7 @@ AC_CONFIG_FILES([Makefile
                  policy/monitoringplug.te
                  notify/Makefile
                  tests/Makefile
-                 tests/base/Makefile
-                 tests/curl/Makefile
-                 tests/gnutls/Makefile
-                 tests/redis/Makefile
-                 tests/snmp/Makefile])
+                 tests/setup.sh])
 AC_OUTPUT
 
 echo "
