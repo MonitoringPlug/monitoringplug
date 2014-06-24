@@ -44,6 +44,7 @@ endif
 endif
 
 TESTS = $(check_PROGRAMS) \
+		base/check_bonding.t \
 		base/check_file.t \
 		base/check_memcached.t \
 		curl/check_rabbitmq.t \

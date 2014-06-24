@@ -67,6 +67,7 @@ int main (int argc, char **argv) {
     /* Local Vars */
     int             i;
     int             j;
+    char            *bonding_dir = NULL;
     char            *filename;
     bonding_info    *info;
     char            *buf;
@@ -84,12 +85,17 @@ int main (int argc, char **argv) {
     /* Start plugin timeout */
     alarm(mp_timeout);
 
+    /* Read bonding dir */
+    bonding_dir = getenv("PROC_BONDING_DIR");
+    if (!bonding_dir)
+        bonding_dir = mp_strdup("/proc/net/bonding");
+
     if (bonds==0) {
         DIR *dir;
         struct dirent   *entry;
-        dir = opendir("/proc/net/bonding/");
+        dir = opendir(bonding_dir);
         if (dir == NULL)
-            critical("Can't open '/proc/net/bonding/'");
+            critical("Can't open '%s'", bonding_dir);
 
         while ((entry = readdir(dir)) != NULL) {
             if (strncmp(entry->d_name, "bond", 4) == 0) {
@@ -100,11 +106,10 @@ int main (int argc, char **argv) {
         closedir(dir);
     }
 
-    filename = mp_malloc(sizeof(char)*32);
     buf = mp_malloc(sizeof(char)*64);
 
     for(i=0; i < bonds; i++) {
-        mp_sprintf(filename, "/proc/net/bonding/%s", bond[i]);
+        mp_asprintf(&filename, "%s/%s", bonding_dir, bond[i]);
         info = parseBond(filename);
         if (info == NULL) {
             status = STATE_CRITICAL;
@@ -132,7 +137,7 @@ int main (int argc, char **argv) {
             mp_strcat_comma(&output, buf);
             status = STATE_CRITICAL;
         }
-
+        free(filename);
     }
 
     switch (status) {
