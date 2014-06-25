@@ -81,6 +81,8 @@ static string_int test_net_url_case[] = {
     { "http:///path/#(/)/$!~@", 1},
     { "http:///path/?%20%aa", 1},
     { "http:///path/?}", 0},
+    { "http://www.durchmesser.ch/path_with_underscore", 1},
+    { "http://www.durchmesser.ch/path?param_with_underscore", 1},
     {0,0}
 };
 
@@ -178,7 +180,7 @@ int main (void) {
     tcase_add_loop_test(tc_net, test_net_addr6, 0, 4);
 #endif /* USE_IPV6*/
     tcase_add_loop_test(tc_net, test_net_name, 0, 5);
-    tcase_add_loop_test(tc_net, test_net_url, 0, 33);
+    tcase_add_loop_test(tc_net, test_net_url, 0, 35);
     tcase_add_loop_test(tc_net, test_net_url_scheme, 0, 4);
     suite_add_tcase (s, tc_net);
 

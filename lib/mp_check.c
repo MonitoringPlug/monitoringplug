@@ -199,11 +199,11 @@ int is_url(const char *url) {
     while(1) {
         if (*buf == '\0')
             break;
-        if (isalnum(*buf) || *buf == '+' || *buf == '-' || *buf == '.' ||
-                *buf == '~' || *buf == '!' || *buf == '$' || *buf == '&' ||
-                *buf == '\'' || *buf == '(' || *buf == ')' || *buf == '*' ||
-                *buf == ',' || *buf == ';' || *buf == '=' || *buf == ':' ||
-                *buf == '@' || *buf == '/') {
+        if (isalnum(*buf) || *buf == '+' || *buf == '-' || *buf == '_' ||
+                *buf == '.' || *buf == '~' || *buf == '!' || *buf == '$' ||
+                *buf == '&' || *buf == '\'' || *buf == '(' || *buf == ')' ||
+                *buf == '*' || *buf == ',' || *buf == ';' || *buf == '=' ||
+                *buf == ':' || *buf == '@' || *buf == '/') {
             buf++;
             continue;
         }
@@ -225,11 +225,12 @@ int is_url(const char *url) {
     while(1) {
         if (*buf == '\0')
             break;
-        if (isalnum(*buf) || *buf == '+' || *buf == '-' || *buf == '.' ||
-                *buf == '~' || *buf == '!' || *buf == '$' || *buf == '&' ||
-                *buf == '\'' || *buf == '(' || *buf == ')' || *buf == '*' ||
-                *buf == ',' || *buf == ';' || *buf == '=' || *buf == ':' ||
-                *buf == '@' || *buf == '/' || *buf == '?' || *buf == '#') {
+        if (isalnum(*buf) || *buf == '+' || *buf == '-' || *buf == '_' ||
+                *buf == '.' ||*buf == '~' || *buf == '!' || *buf == '$' ||
+                *buf == '&' || *buf == '\'' || *buf == '(' || *buf == ')' ||
+                *buf == '*' || *buf == ',' || *buf == ';' || *buf == '=' ||
+                *buf == ':' || *buf == '@' || *buf == '/' || *buf == '?' ||
+                *buf == '#') {
             buf++;
             continue;
         }
