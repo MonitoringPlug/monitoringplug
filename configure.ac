@@ -183,7 +183,9 @@ AS_IF([test "x$with_ldap" != "xno"],
       [
        AC_SEARCH_LIBS([ldap_initialize],[ldap],[have_ldap=yes],[have_ldap=no])
        LIBS=$ac_func_search_save_LIBS
-       LDAP_LIBS=$ac_res
+       AS_IF([test "x$ac_cv_search_ldap_initialize" != "xnone required"], [
+              LDAP_LIBS=$ac_cv_search_ldap_initialize
+       ])
        AC_SUBST([LDAP_LIBS])
        AS_IF([test "x$have_ldap" = "xyes"],
              [AC_CHECK_HEADERS([ldap.h],[have_ldap=yes],[have_ldap=no])])
@@ -225,7 +227,9 @@ AS_IF([test "x$with_oping" != "xno"],
       [
        AC_SEARCH_LIBS([ping_construct],[oping],[have_oping=yes],[have_oping=no])
        LIBS=$ac_func_search_save_LIBS
-       OPING_LIBS=$ac_res
+       AS_IF([test "x$ac_cv_search_ping_construct" != "xnone required"], [
+              OPING_LIBS=$ac_cv_search_ping_construct
+       ])
        AC_SUBST([OPING_LIBS])
        AS_IF([test "x$have_oping" = "xyes"],
              [AC_CHECK_HEADERS([oping.h],[have_oping=yes],[have_oping=no])])
@@ -259,7 +263,9 @@ AS_IF([test "x$with_redis" != "xno"],
        AS_IF([test "x$have_redis" != "xyes"], [
            AC_SEARCH_LIBS([redisCommand],[hiredis],[have_redis=yes],[have_redis=no])
            LIBS=$ac_func_search_save_LIBS
-           REDIS_LIBS=$ac_res
+           AS_IF([test "x$ac_cv_search_redisCommand" != "xnone required"], [
+                  REDIS_LIBS=$ac_cv_search_redisCommand
+           ])
            AC_SUBST([REDIS_LIBS])
            AS_IF([test "x$have_redis" = "xyes"],
              [AC_CHECK_HEADERS([hiredis/hiredis.h],[have_redis=yes],[have_redis=no])])
@@ -303,7 +309,9 @@ AS_IF([test "x$with_smbclient" != "xno"],
        AS_IF([test "x$have_smbclient" != "xyes"], [
            AC_SEARCH_LIBS([smbc_new_context],[smbclient],[have_smbclient=yes],[have_smbclient=no])
            LIBS=$ac_func_search_save_LIBS
-           SMBCLIENT_LIBS=$ac_res
+           AS_IF([test "x$ac_cv_search_smbc_new_context" != "xnone required"], [
+                  SMBCLIENT_LIBS=$ac_cv_search_smbc_new_context
+           ])
            AC_SUBST([SMBCLIENT_LIBS])
            AS_IF([test "x$have_smbclient" = "xyes"],
              [AC_CHECK_HEADERS([libsmbclient.h],[have_smbclient=yes],[have_smbclient=no])])
