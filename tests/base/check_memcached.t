@@ -11,6 +11,7 @@ if ! test_have_prereq MEMCACHED; then
 fi
 
 memcached -p 7777 -A -d > /dev/null
+sleep 2
 
 test_expect_success 'check_memcached' "
     $WRAPPER $BASE/base/check_memcached -P 7777

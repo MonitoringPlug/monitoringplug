@@ -47,11 +47,11 @@ test_expect_success HAVE_REDIS 'check_redis w/ memory critical' "
 "
 
 test_expect_success HAVE_REDIS 'check_redis w/ low warning time' "
-    test_expect_code 1 $WRAPPER $BASE/redis/check_redis -P 7777 -w 0.001s
+    test_expect_code 1 $WRAPPER $BASE/redis/check_redis -P 7777 -w 0.000s
 "
 
 test_expect_success HAVE_REDIS 'check_redis w/ low critical time' "
-    test_expect_code 2 $WRAPPER $BASE/redis/check_redis -P 7777 -c 0.001s
+    test_expect_code 2 $WRAPPER $BASE/redis/check_redis -P 7777 -c 0.000s
 "
 
 # Shutdown Redis
