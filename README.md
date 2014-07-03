@@ -1,12 +1,18 @@
-MonitoringPlug
-==============
+# MonitoringPlug
+
 
 My collection of monitoring plugins for Nagios and similar monitoring systems.
 
-* [How to build.](https://github.com/MonitoringPlug/monitoringplug/wiki/HowToBuild)
+* [How to build](https://github.com/MonitoringPlug/monitoringplug/wiki/HowToBuild)
 
-Base
-----
+## BuildStatus
+
+ * [![Build Status](https://jenkins.durchmesser.ch/buildStatus/icon?job=monitoringplug)](https://jenkins.durchmesser.ch/job/monitoringplug/)
+  * RPM: [![Build Status](https://jenkins.durchmesser.ch/buildStatus/icon?job=dist-rpm)](https://jenkins.durchmesser.ch/job/dist-rpm/)
+
+## Plugins
+
+### Base
 
 Basic plugins which don't use any library.
 
@@ -20,15 +26,14 @@ Basic plugins which don't use any library.
 *  check_nrped -- Check if run inside of nrpe.
 *  check_sockets -- Check socket count (Linux only). 
 
-CUPS
-----
+### CUPS
+
 
 Use [CUPS](http://www.cups.org) to query CUPS server.
 
 *  check_cups_jobs -- Check CUPS job count and age. 
 
-CURL
-----
+### CURL
 
 Use the [libcurl](http://curl.haxx.se/libcurl/) to test network servers.
 
@@ -38,8 +43,7 @@ Use the [libcurl](http://curl.haxx.se/libcurl/) to test network servers.
 *  check_tftp -- Check if a file can be downloaded from tftp.
 *  check_webdav -- Check a WebDAV share. 
 
-DNS
----
+### DNS
 
 Use the [ldns](http://www.nlnetlabs.nl/projects/ldns/) library to query dns servers.
 
@@ -49,24 +53,21 @@ Use the [ldns](http://www.nlnetlabs.nl/projects/ldns/) library to query dns serv
 *  check_dnssec_trace -- Check if a DNS zone signatur is traceable from a trust anchor.
 *  check_dnssec_trust_anchor -- Check if the trust anchors in named.conf are valid.
 
-FastCGI
--------
+### FastCGI
 
 Use the FastCGI library to test fcgi Daemons.
 
 *  check_fcgi_ping -- Check a FastCGI daemon.
 *  check_fcgi_phpfpm -- Check a PHP-FPM Pool.
 
-GNUTLS
-------
+### GNUTLS
 
 Use the [GnuTLS](http://www.gnutls.org) library to check SSL/TLS related things.
 
 *  check_ssl_cert -- Check expiration and trust of a SSL certificate. 
 *  check_x509_cert -- Check expiration date on a X509 Cert from file.
 
-IPMI
-----
+### IPMI
 
 Use the [OpenIPMI](http://openipmi.sourceforge.net/) library to check BMC Sensors.
 
@@ -75,63 +76,55 @@ Use the [OpenIPMI](http://openipmi.sourceforge.net/) library to check BMC Sensor
 *  check_ipmi_psu -- Check one or all PSU by IPMI sensor.
 *  check_ipmi_sensor -- Check the give or all IPMI Sensors. 
 
-LibVirt
--------
+### LibVirt
 
 Use the [LibVirt](http://libvirt.org/) library to check VirtualMachines.
 
 *  check_libvirtd -- Check the libvirtd itself.
 *  check_libvirt_domain -- Check if a given domain is running. 
 
-MySQL
------
+### MySQL
 
 Use libmysqlclient library to check a MySQL Server.
 
 *  check_mysql -- Check MySQL connectivity and status.
 *  check_mysql_rows -- Check mysql table row count. 
 
-PostgreSQL
-----------
+### PostgreSQL
 
 Use the [libpq](http://www.postgresql.org/) library to check PostgreSQL.
 
 *  check_pgsql -- Check PostgreSQL connectivity.
 *  check_pgsql_slave -- Check PostgreSQL r/o slave status and delay.
 
-RHCS
-----
+### RHCS
 
 Plugins to check state of a RedHat Cluster Suite.
 
 *  check_clustat -- Parse the clustat output. (Requires expat.)
 *  check_rhcsnmp -- Check the state of a RedHat Cluster Suite by snmp. 
 
-(SUN)RPC
---------
+### (SUN)RPC
 
 Plugins to check SUNRPC service state.
 
 *  check_nfs -- Check if the Host is exporting at least one or the named path.
 *  check_rpc_ping -- Check if named RPC program is responding. 
 
-SELinux
--------
+### SELinux
 
 Check SELinux factors.
 
 *  check_enforce -- Check SELinux state and policy.
 *  check_sebool -- Check SELinux boolean state. 
 
-SMB
----
+### SMB
 
 Check SMB/CIFS.
 
 *  check_smb_share -- Check SMB/CIFS share connection. 
 
-SNMP
-----
+### SNMP
 
 Use the ​net-snmp library to query SNMP agents.
 
@@ -144,16 +137,14 @@ Use the ​net-snmp library to query SNMP agents.
 *  check_qnap_vols -- Check the volume status of a QNap.
 *  check_snmp_ups -- Check status of a UPS conforming to RFC 1628 by SNMP.
 
-Varnish
--------
+### Varnish
 
 Use the [libvarnish](http://www.varnish-cache.org/) to check Varnish.
 
 *  check_varnish -- Check a Varnish cache server.
 *  check_varnish_backends -- Check Varnish backend health.
 
-XMLRPC
-------
+### XMLRPC
 
 Use the [xmlrpc-c](http://xmlrpc-c.sourceforge.net/) library to query XMLRPC server.
 
@@ -161,14 +152,12 @@ Use the [xmlrpc-c](http://xmlrpc-c.sourceforge.net/) library to query XMLRPC ser
 *  check_koji_hub -- This plugin check a Koji-Hub.
 *  check_rhn_entitlements -- Check available entitlement on a RedHat Satelite or RHN. 
 
-Dummy
------
+### Dummy
 
 *  check_dummy -- Don't check anything, return arguments.
 *  check_timeout -- Don't check anything, cause a timeout. 
 
-Notify
-------
+## Notify
 
 Some notifications plugins for Nagios.
 
