@@ -56,6 +56,13 @@ libfcgiutils_a_SOURCES = fcgi_utils.c fcgi_utils.h
 libfcgiutils_a_CPPFLAGS = $(FCGI_LIBS)
 endif
 
+if HAVE_JSON
+noinst_LIBRARIES += libjsonutils.a
+
+libjsonutils_a_SOURCES = json_utils.c json_utils.h
+libjsonutils_a_CPPFLAGS = $(JSON_CFLAGS)
+endif
+
 if HAVE_LDAP
 noinst_LIBRARIES += libldaputils.a
 

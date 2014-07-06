@@ -43,6 +43,7 @@ const char *progusage = "--hostname <BUILDBOTHOST> [--slave <SLAVENAME>]";
 /* Library Includes */
 #include <curl/curl.h>
 #include <json/json.h>
+#include "json_utils.h"
 
 /* Global Vars */
 const char *hostname = NULL;
@@ -138,7 +139,7 @@ int main (int argc, char **argv) {
     if (slaves) {
         for(i=0; i<slaves; i++) {
             // Get Slave from array
-            if(!json_object_object_get_ex(obj, slave[i], &slaveobj)) {
+            if(!mp_json_object_object_get(obj, slave[i], &slaveobj)) {
                 mp_asprintf(&buf, "%s not found", slave[i]);
                 mp_strcat_comma(&failed, buf);
                 free(buf);
@@ -146,7 +147,7 @@ int main (int argc, char **argv) {
             }
 
             // Check slave for error
-            if(json_object_object_get_ex(slaveobj, "error", &bufobj)) {
+            if(mp_json_object_object_get(slaveobj, "error", &bufobj)) {
                 mp_asprintf(&buf, "%s - %s", slave[i], json_object_get_string(bufobj));
                 mp_strcat_comma(&failed, buf);
                 free(buf);
@@ -154,14 +155,14 @@ int main (int argc, char **argv) {
             }
 
             // Check connection state
-            if(json_object_object_get_ex(slaveobj, "connected", &bufobj)) {
+            if(mp_json_object_object_get(slaveobj, "connected", &bufobj)) {
                 slave_connected = json_object_get_boolean(bufobj);
             } else {
                 slave_connected = 0;
             }
 
             // Get host info
-            if(json_object_object_get_ex(slaveobj, "host", &bufobj)) {
+            if(mp_json_object_object_get(slaveobj, "host", &bufobj)) {
                 slave_host = (char *)json_object_get_string(bufobj);
                 if (slave_host) {
                     for (j = strlen(slave_host) -1; isspace(slave_host[j]); j--) {
@@ -173,7 +174,7 @@ int main (int argc, char **argv) {
             }
 
             // Get version info
-            if(json_object_object_get_ex(slaveobj, "version", &bufobj)) {
+            if(mp_json_object_object_get(slaveobj, "version", &bufobj)) {
                 slave_version = (char *)json_object_get_string(bufobj);
             } else {
                 slave_version = "unknown";
@@ -192,14 +193,14 @@ int main (int argc, char **argv) {
             slaveobj = val;
 
             // Check connection state
-            if(json_object_object_get_ex(slaveobj, "connected", &bufobj)) {
+            if(mp_json_object_object_get(slaveobj, "connected", &bufobj)) {
                 slave_connected = json_object_get_boolean(bufobj);
             } else {
                 slave_connected = 0;
             }
 
             // Get host info
-            if(json_object_object_get_ex(slaveobj, "host", &bufobj)) {
+            if(mp_json_object_object_get(slaveobj, "host", &bufobj)) {
                 slave_host = (char *)json_object_get_string(bufobj);
                 if (slave_host) {
                     for (j = strlen(slave_host) -1; isspace(slave_host[j]); j--) {
@@ -211,7 +212,7 @@ int main (int argc, char **argv) {
             }
 
             // Get version info
-            if(json_object_object_get_ex(slaveobj, "version", &bufobj)) {
+            if(mp_json_object_object_get(slaveobj, "version", &bufobj)) {
                 slave_version = (char *)json_object_get_string(bufobj);
             } else {
                 slave_version = "unknown";
