@@ -15,7 +15,7 @@ if HAVE_JSON
 bin_PROGRAMS += check_fcgi_phpfpm
 
 check_fcgi_phpfpm_CPPFLAGS = $(JSON_CFLAGS)
-check_fcgi_phpfpm_LDADD = $(LDADD) $(JSON_LIBS)
+check_fcgi_phpfpm_LDADD = $(LDADD) $(JSON_LIBS) ../lib/libjsonutils.a
 endif
 
 endif

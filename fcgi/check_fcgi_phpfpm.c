@@ -45,6 +45,7 @@ const char *progusage = "[-t <timeout>]";
 #include <fcgios.h>
 #include <fcgiapp.h>
 #include <json/json.h>
+#include "json_utils.h"
 
 /* Global Vars */
 char *fcgisocket = NULL;
@@ -116,23 +117,23 @@ int main (int argc, char **argv) {
     }
 
     /* Read pool name */
-    json_object_object_get_ex(obj, "pool", &slaveobj);
+    mp_json_object_object_get(obj, "pool", &slaveobj);
     pool = mp_strdup(json_object_get_string(slaveobj));
 
     /* Read accepted connections */
-    json_object_object_get_ex(obj, "accepted conn", &slaveobj);
+    mp_json_object_object_get(obj, "accepted conn", &slaveobj);
     mp_perfdata_int("accepted_conn", json_object_get_int(slaveobj), "c", NULL);
 
     /* Read listen queue */
-    json_object_object_get_ex(obj, "listen queue", &slaveobj);
+    mp_json_object_object_get(obj, "listen queue", &slaveobj);
     mp_perfdata_int("listen_queue", json_object_get_int(slaveobj), "", NULL);
 
     /* Read idle processes */
-    json_object_object_get_ex(obj, "idle processes", &slaveobj);
+    mp_json_object_object_get(obj, "idle processes", &slaveobj);
     mp_perfdata_int("idle_processes", json_object_get_int(slaveobj), "", NULL);
 
     /* Read active processes */
-    json_object_object_get_ex(obj, "active processes", &slaveobj);
+    mp_json_object_object_get(obj, "active processes", &slaveobj);
     mp_perfdata_int("active_processes", json_object_get_int(slaveobj), "", NULL);
 
     free(content);
@@ -178,6 +179,7 @@ int process_arguments (int argc, char **argv) {
 
 void print_help (void) {
     print_revision();
+    print_revision_json();
     print_copyright();
 
     printf("\n");

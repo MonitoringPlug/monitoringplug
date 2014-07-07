@@ -43,6 +43,7 @@ const char *progusage = "--hostname <RABBITMQHOST>";
 /* Library Includes */
 #include <curl/curl.h>
 #include <json/json.h>
+#include "json_utils.h"
 
 /* Global Vars */
 const char *hostname = NULL;
@@ -124,20 +125,20 @@ int main (int argc, char **argv) {
     }
 
     /* Read Server Version */
-    if (json_object_object_get_ex(obj,"rabbitmq_version", &bufobj)) {
+    if (mp_json_object_object_get(obj,"rabbitmq_version", &bufobj)) {
         mp_asprintf(&name, "RabbitMQ %s:", json_object_get_string(bufobj));
     }
 
     /* Get Message Counts */
-    json_object_object_get_ex(obj, "queue_totals", &queue_totals);
+    mp_json_object_object_get(obj, "queue_totals", &queue_totals);
     if (queue_totals != NULL ) {
-        if(json_object_object_get_ex(queue_totals,"messages", &bufobj))
+        if(mp_json_object_object_get(queue_totals,"messages", &bufobj))
             queue_messages = json_object_get_int(bufobj);
 
-        if(json_object_object_get_ex(queue_totals,"messages_ready", &bufobj))
+        if(mp_json_object_object_get(queue_totals,"messages_ready", &bufobj))
             queue_messages_ready = json_object_get_int(bufobj);
 
-        if(json_object_object_get_ex(queue_totals,"messages_unacknowledged", &bufobj))
+        if(mp_json_object_object_get(queue_totals,"messages_unacknowledged", &bufobj))
             queue_messages_unacknowledged = json_object_get_int(bufobj);
 
         mp_perfdata_int("messages", queue_messages, "", messages_thresholds);
@@ -151,8 +152,8 @@ int main (int argc, char **argv) {
 
     /* Read message counters */
     if (mp_showperfdata) {
-        json_object_object_get_ex(obj, "message_stats", &queue_totals);
-        json_object_object_get_ex(queue_totals, "publish", &bufobj);
+        mp_json_object_object_get(obj, "message_stats", &queue_totals);
+        mp_json_object_object_get(queue_totals, "publish", &bufobj);
         mp_perfdata_int("publish", (long int)json_object_get_int(bufobj), "c", NULL);
     }
 
