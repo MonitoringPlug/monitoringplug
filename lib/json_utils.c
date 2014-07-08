@@ -41,7 +41,9 @@ int mp_json_object_object_get(struct json_object* jso, const char *key, struct j
 }
 
 void print_revision_json(void) {
+#if JSON_C_VERSION_NUM > (10 << 8)
     printf(" json-c v%s\n", json_c_version());
+#endif
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */
