@@ -31,10 +31,10 @@
 int mp_json_object_object_get(struct json_object* jso, const char *key, struct json_object **value) {
 #if JSON_C_VERSION_NUM < (10 << 8)
     *value = json_object_object_get(jso, key);
-    if *value ! == null
-        return 1
+    if (*value != NULL)
+        return 1;
     else
-        return 0
+        return 0;
 #else
     return json_object_object_get_ex(jso, key, value);
 #endif
