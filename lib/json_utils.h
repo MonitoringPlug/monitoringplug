@@ -29,7 +29,7 @@
 /**
  * json_object_object_get(_ex) wrapper to support more json-c versions
  */
-json_bool mp_json_object_object_get(struct json_object* jso, const char *key, struct json_object **value);
+int mp_json_object_object_get(struct json_object* jso, const char *key, struct json_object **value);
 
 /**
  * Print the json revision.

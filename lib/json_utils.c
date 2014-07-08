@@ -28,13 +28,13 @@
 
 #include <json.h>
 
-json_bool mp_json_object_object_get(struct json_object* jso, const char *key, struct json_object **value) {
+int mp_json_object_object_get(struct json_object* jso, const char *key, struct json_object **value) {
 #if JSON_C_VERSION_NUM < (10 << 8)
     *value = json_object_object_get(jso, key);
     if *value ! == null
-        return TRUE
+        return 1
     else
-        return FALSE
+        return 0
 #else
     return json_object_object_get_ex(jso, key, value);
 #endif
