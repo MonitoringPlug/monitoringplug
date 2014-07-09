@@ -116,14 +116,26 @@ int main (int argc, char **argv) {
         rc = mp_snmp_subtree_get_value(&table_state,
                 MP_OID(1,3,6,1,4,1,9586,100,5,2,3,1,3), i,
                 ASN_GAUGE, (void *)&vrrp_id, sizeof(long int));
+        if (rc == 0) {
+            set_warning("Fetching vrrp_if for instance %d failed", i);
+            continue;
+        }
 
         rc = mp_snmp_subtree_get_value(&table_state,
                 MP_OID(1,3,6,1,4,1,9586,100,5,2,3,1,4), i,
                 ASN_INTEGER, (void *)&vrrp_state, sizeof(long int));
+        if (rc == 0) {
+            set_warning("Fetching vrrp_state for instance %d failed", i);
+            continue;
+        }
 
         rc = mp_snmp_subtree_get_value(&table_state,
                 MP_OID(1,3,6,1,4,1,9586,100,5,2,3,1,5), i,
                 ASN_INTEGER, (void *)&vrrp_state_initial, sizeof(long int));
+        if (rc == 0) {
+            set_warning("Fetching vrrp_state_initial for instance %d failed", i);
+            continue;
+        }
 
         if (mp_verbose) {
             printf("vrrpInstanceName %i => %s\n", i, vrrp_name);
