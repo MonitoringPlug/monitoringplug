@@ -412,7 +412,7 @@ AX_CFLAGS_GCC_OPTION(-Wcast-align)
 AX_CFLAGS_GCC_OPTION(-Wformat)
 AX_CFLAGS_GCC_OPTION(-Wformat-security)
 AX_CFLAGS_GCC_OPTION(-Winline)
-AX_CFLAGS_GCC_OPTION(-std=c99)
+AX_CFLAGS_GCC_OPTION(-std=gnu99)
 AC_GNU_SOURCE
 
 # Prevent from overlinking
