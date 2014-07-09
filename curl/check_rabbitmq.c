@@ -114,14 +114,10 @@ int main (int argc, char **argv) {
     }
 
     /* Parse Answer */
-    enum json_tokener_error jerr;
-    obj = json_tokener_parse_verbose(answer.data, &jerr);
-    if (jerr != json_tokener_success) {
-        critical("JSON Parsing failed: %s", json_tokener_error_desc(jerr));
-    }
+    obj = mp_json_tokener_parse(answer.data);
 
     if (mp_verbose > 1) {
-        printf("JSON:\n%s\n", json_object_to_json_string_ext(obj, JSON_C_TO_STRING_PRETTY));
+        printf("JSON:\n%s\n", mp_json_object_to_json_string(obj));
     }
 
     /* Read Server Version */

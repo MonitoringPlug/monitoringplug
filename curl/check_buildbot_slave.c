@@ -134,7 +134,7 @@ int main (int argc, char **argv) {
     }
 
     /* Parse Answer */
-    obj = json_tokener_parse(answer.data);
+    obj = mp_json_tokener_parse(answer.data);
 
     if (slaves) {
         for(i=0; i<slaves; i++) {

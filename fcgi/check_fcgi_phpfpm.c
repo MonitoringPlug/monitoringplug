@@ -111,10 +111,7 @@ int main (int argc, char **argv) {
     } while (data && data[0] != '\r');
 
     /* Parse JSON */
-    obj = json_tokener_parse(data);
-    if (obj == NULL) {
-        critical("PHP-FPM: JSON parsing failed.");
-    }
+    obj = mp_json_tokener_parse(data);
 
     /* Read pool name */
     mp_json_object_object_get(obj, "pool", &slaveobj);

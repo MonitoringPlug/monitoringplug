@@ -28,6 +28,26 @@
 
 #include <json.h>
 
+struct json_object* mp_json_tokener_parse(const char *str) {
+#if JSON_C_VERSION_NUM < (10 << 8)
+    json_object *obj = NULL;
+    obj = json_tokener_parse(str);
+    if (obj == NULL) {
+        critical("JSON Parsing failed!");
+    }
+    return obj;
+#else
+    json_object *obj;
+    enum json_tokener_error jerr;
+
+    obj = json_tokener_parse_verbose(str, &jerr);
+    if (jerr != json_tokener_success) {
+        critical("JSON Parsing failed: %s", json_tokener_error_desc(jerr));
+    }
+    return obj;
+#endif
+}
+
 int mp_json_object_object_get(struct json_object* jso, const char *key, struct json_object **value) {
 #if JSON_C_VERSION_NUM < (10 << 8)
     *value = json_object_object_get(jso, key);
@@ -37,6 +57,14 @@ int mp_json_object_object_get(struct json_object* jso, const char *key, struct j
         return 0;
 #else
     return json_object_object_get_ex(jso, key, value);
+#endif
+}
+
+extern const char* mp_json_object_to_json_string(struct json_object *obj) {
+#if JSON_C_VERSION_NUM < (10 << 8)
+    return json_object_to_json_string(obj);
+#else
+    return json_object_to_json_string_ext(obj, JSON_C_TO_STRING_PRETTY);
 #endif
 }
 

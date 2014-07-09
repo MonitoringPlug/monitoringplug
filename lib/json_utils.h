@@ -27,9 +27,19 @@
 #include <json.h>
 
 /**
+ * json_tokener_parse(_verbose) wrapper to support more json-c versions
+ */
+struct json_object* mp_json_tokener_parse(const char *str);
+
+/**
  * json_object_object_get(_ex) wrapper to support more json-c versions
  */
 int mp_json_object_object_get(struct json_object* jso, const char *key, struct json_object **value);
+
+/**
+  * json_object_to_json_string(_ex) wrapper to support more json-c versions
+  */
+extern const char* mp_json_object_to_json_string(struct json_object *obj);
 
 /**
  * Print the json revision.
