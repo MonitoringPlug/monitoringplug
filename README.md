@@ -7,8 +7,9 @@ My collection of monitoring plugins for Nagios and similar monitoring systems.
 
 ## BuildStatus
 
- * [![Build Status](https://jenkins.durchmesser.ch/buildStatus/icon?job=monitoringplug)](https://jenkins.durchmesser.ch/job/monitoringplug/)
-  * RPM: [![Build Status](https://jenkins.durchmesser.ch/buildStatus/icon?job=dist-rpm)](https://jenkins.durchmesser.ch/job/dist-rpm/)
+ * [![Build Status](https://jenkins.durchmesser.ch/job/monitoringplug/badge/icon)](https://jenkins.durchmesser.ch/job/monitoringplug/)
+  * RPM: [![Build Status](https://jenkins.durchmesser.ch/job/dist-rpm/badge/icon)](https://jenkins.durchmesser.ch/job/dist-rpm/)
+  * DEB: [![Build Status](https://jenkins.durchmesser.ch/job/deb-bin/badge/icon)](https://jenkins.durchmesser.ch/job/deb-bin/)
 
 ## Plugins
 
