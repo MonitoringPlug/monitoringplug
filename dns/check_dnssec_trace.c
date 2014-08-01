@@ -43,7 +43,7 @@ const char *progusage = "[-H host] -D domain [-T domain] [-k file] [-t timeout]"
 /* Global Vars */
 const char *hostname;
 char *domainname;
-char *domaintrace;
+char *domaintrace = ".";
 ldns_rr_list *trusted_keys = NULL;
 int checkState;
 
@@ -81,13 +81,9 @@ int main(int argc, char **argv) {
     if (!rd_domain)
         unknown("Illegal domain name");
 
-    if (domaintrace) {
-        rd_trace = ldns_dname_new_frm_str(domaintrace);
-        if (!rd_trace)
-            unknown("Illegal trace domain name");
-     } else {
-        rd_trace = ldns_dname_new_frm_str(".");
-     }
+    rd_trace = ldns_dname_new_frm_str(domaintrace);
+    if (!rd_trace)
+        unknown("Illegal trace domain name");
 
     /* Check domain is subdomain from trace start */
     if (!ldns_dname_is_subdomain(rd_domain, rd_trace)) {
