@@ -1,0 +1,2 @@
+/usr/lib/nagios/plugins/check_fcgi_*
+/usr/share/man/man1/check_fcgi_*
