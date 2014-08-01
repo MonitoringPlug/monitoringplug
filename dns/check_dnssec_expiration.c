@@ -264,7 +264,7 @@ int process_arguments (int argc, char **argv) {
             case 'k':
                 trusted_keys = loadKeyfile(optarg);
                 if (trusted_keys == NULL)
-                    usage("Parsing keyfiel failed.");
+                    usage("Parsing keyfile failed.");
                 break;
         }
     }
