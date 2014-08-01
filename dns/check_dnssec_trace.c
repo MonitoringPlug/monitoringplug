@@ -356,6 +356,9 @@ void print_help (void) {
     printf("      The name of the domain to trace from. (default: .)\n");
     printf(" -k, --trusted-keys=FILE\n");
     printf("      File to read trust-anchors from.\n");
+
+    printf("\n");
+    print_help_ldns_keyfile();
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */
