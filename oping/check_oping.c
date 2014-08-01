@@ -135,10 +135,7 @@ int main (int argc, char **argv) {
                 unknown("liboping ping_iterator_get_info sequence failed!");
 
             data_len = 0;
-            rv = ping_iterator_get_info(iter, PING_INFO_DATA,
-                    NULL, &data_len);
-            if (rv != 0)
-                unknown("liboping ping_iterator_get_info failed!");
+            ping_iterator_get_info(iter, PING_INFO_DATA, NULL, &data_len);
 
             buf_len = sizeof(haddr);
             rv =  ping_iterator_get_info(iter, PING_INFO_ADDRESS,
