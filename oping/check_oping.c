@@ -119,20 +119,20 @@ int main (int argc, char **argv) {
             rv =  ping_iterator_get_info(iter, PING_INFO_DROPPED,
                     &dropped, &buf_len);
             if (rv != 0)
-                unknown("liboping ping_iterator_get_info failed!");
+                unknown("liboping ping_iterator_get_info dropped failed!");
 
             buf_len = sizeof(rt);
             rv =  ping_iterator_get_info(iter, PING_INFO_LATENCY,
                 &rt, &buf_len);
             if (rv != 0)
-                unknown("liboping ping_iterator_get_info failed!");
+                unknown("liboping ping_iterator_get_info latency failed!");
             rta += rt;
 
             buf_len = sizeof(num);
             rv =  ping_iterator_get_info(iter, PING_INFO_SEQUENCE,
                 &num, &buf_len);
             if (rv != 0)
-                unknown("liboping ping_iterator_get_info failed!");
+                unknown("liboping ping_iterator_get_info sequence failed!");
 
             data_len = 0;
             rv = ping_iterator_get_info(iter, PING_INFO_DATA,
@@ -144,13 +144,13 @@ int main (int argc, char **argv) {
             rv =  ping_iterator_get_info(iter, PING_INFO_ADDRESS,
                     haddr, &buf_len);
             if (rv != 0)
-                unknown("liboping ping_iterator_get_info failed!");
+                unknown("liboping ping_iterator_get_info address failed!");
 
             buf_len = sizeof(ttl);
             rv = ping_iterator_get_info(iter, PING_INFO_RECV_TTL,
                     &ttl, &buf_len);
             if (rv != 0)
-                unknown("liboping ping_iterator_get_info failed!");
+                unknown("liboping ping_iterator_get_info ttl failed!");
         
             if (mp_verbose > 0 && ttl > 0)
                 printf("%zu bytes from %s (%s): icmp_seq=%u ttl=%i time=%.2f ms\n",
