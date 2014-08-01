@@ -135,7 +135,6 @@ int main(int argc, char **argv) {
     if (pkt == NULL || ldns_pkt_get_rcode(pkt) != LDNS_RCODE_NOERROR) {
         ldns_rdf_deep_free(rd_domain);
         ldns_rdf_deep_free(rd_trace);
-        ldns_rr_list_deep_free(rrl_valid_keys);
         ldns_resolver_deep_free(res);
         if (pkt && ldns_pkt_get_rcode(pkt) == LDNS_RCODE_NXDOMAIN) {
             ldns_pkt_free(pkt);
