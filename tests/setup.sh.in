@@ -1,6 +1,8 @@
 #!/bin/bash
 
-BASE="${PWD}/.."
+BASE="@abs_top_builddir@"
+TESTDIR="@abs_top_srcdir@/tests/testdata"
+export root="@abs_builddir@"
 
 cd `dirname $0`
 
