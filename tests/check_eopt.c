@@ -32,9 +32,9 @@
 
 
 START_TEST (test_eopt_file) {
-    char *argv[] = {"test", "--eopt", "@eopt.ini","--last", 0};
+    char *argv[] = {"test", "--eopt", "@"abs_srcdir"/eopt.ini","--last", 0};
     char **new_argv;
-    char *res_argv[] = {"test", "--eopt", "@eopt.ini","-a","b","-c","d","-e",
+    char *res_argv[] = {"test", "--eopt", "@"abs_srcdir"/eopt.ini","-a","b","-c","d","-e",
         "--last", 0};
     int args = 4;
     int res_args = 9;
@@ -54,9 +54,9 @@ START_TEST (test_eopt_file) {
 END_TEST
 
 START_TEST (test_eopt_section_file) {
-    char *argv[] = {"test", "--eopt", "sectionB@eopt.ini","--last", 0};
+    char *argv[] = {"test", "--eopt", "sectionB@"abs_srcdir"/eopt.ini","--last", 0};
     char **new_argv;
-    char *res_argv[] = {"test", "--eopt", "sectionB@eopt.ini","--abc","def","--ghi",
+    char *res_argv[] = {"test", "--eopt", "sectionB@"abs_srcdir"/eopt.ini","--abc","def","--ghi",
         "jkl","--mno","--last", 0};
     int args = 4;
     int res_args = 9;
@@ -93,7 +93,7 @@ START_TEST (test_eopt_nofile) {
 END_TEST
 
 START_TEST (test_eopt_longline) {
-    char *argv[] = {"test", "--eopt", "sectionB@eopt_long.ini","--last", 0};
+    char *argv[] = {"test", "--eopt", "sectionB@"abs_srcdir"/eopt_long.ini","--last", 0};
     char **new_argv;
     int args = 4;
     int i=0;

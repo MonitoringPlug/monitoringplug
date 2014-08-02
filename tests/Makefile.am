@@ -2,7 +2,7 @@
 
 LDADD = ../lib/libmonitoringplug.a
 AM_LDFLAGS = $(CHECK_LIBS)
-AM_CFLAGS = $(CHECK_CFLAGS)
+AM_CFLAGS = $(CHECK_CFLAGS) -Dabs_srcdir="\"$(abs_srcdir)\""
 
 if HAVE_CHECK
 
@@ -27,7 +27,7 @@ if HAVE_EXPAT
 check_PROGRAMS += check_rhcs
 
 check_rhcs_LDADD = ../lib/librhcsutils.a $(LDADD)
-check_rhcs_CFLAGS = $(EXPAT_CFLAGS)
+check_rhcs_CFLAGS = $(AM_CFLAGS) $(EXPAT_CFLAGS)
 check_rhcs_LDFLAGS = $(AM_LDFLAGS) $(EXPAT_LIBS)
 endif
 

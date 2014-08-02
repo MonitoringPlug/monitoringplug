@@ -34,13 +34,13 @@ const char *progauth  = "TEST";
 const char *progusage = "TEST";
 
 const char *clustat_dict[] = {
-    "testdata/rhcs_clustat.xml.1",
-    "testdata/rhcs_clustat.xml.2",
+    abs_srcdir"/testdata/rhcs_clustat.xml.1",
+    abs_srcdir"/testdata/rhcs_clustat.xml.2",
 };
 
 const char *clusterconf_dict[] = {
-    "testdata/rhcs_cluster.conf.1",
-    "testdata/rhcs_cluster.conf.2",
+    abs_srcdir"/testdata/rhcs_cluster.conf.1",
+    abs_srcdir"/testdata/rhcs_cluster.conf.2",
 };
 
 START_TEST (test_parse_rhcs_clustat) {
