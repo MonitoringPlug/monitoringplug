@@ -9,8 +9,10 @@ LDADD = ../lib/libmonitoringplug.a ../lib/libxmlrpcutils.a $(XMLRPC_LDFLAGS)
 
 bin_PROGRAMS = 
 
+if HAVE_CURL
 if HAVE_XMLRPC
 bin_PROGRAMS += check_rhn_entitlements check_koji_hub check_koji_builder
+endif
 endif
 
 
