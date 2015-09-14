@@ -92,7 +92,7 @@ AC_ARG_WITH([check], AS_HELP_STRING(
 AS_IF([test "x$with_check" != "xno"],
       [PKG_CHECK_MODULES([CHECK], [check >= 0.9.4],
                          [have_check=yes], [have_check=no])],
-      [have_ldns=disable])
+      [have_check=disable])
 AM_CONDITIONAL([HAVE_CHECK], [test "x$CHECK_LIBS" != x])
 
 ## CUPS
@@ -355,7 +355,7 @@ AC_ARG_WITH([varnish],
     [AS_HELP_STRING([--without-varnish], [Build without Varnish support.])])
 AS_IF([test "x$with_varnish" != "xno"],
       [PKG_CHECK_MODULES([VARNISH], [varnishapi >= 3.0.0], [have_varnish=yes], [have_varnish=no])],
-      [have_varish=disabled])
+      [have_varnish=disabled])
 AS_IF([test "x$have_varnish" = "xyes"],
       [],
       [AS_IF([test "x$with_varnish" = "xyes"],
