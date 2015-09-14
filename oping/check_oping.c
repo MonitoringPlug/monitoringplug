@@ -32,7 +32,6 @@ const char *progusage = "-H host";
 
 /* MP Includes */
 #include "mp_common.h"
-#include "curl_utils.h"
 /* Default Includes */
 #include <signal.h>
 #include <stdio.h>
