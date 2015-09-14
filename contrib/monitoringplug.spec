@@ -1,5 +1,5 @@
 Name:           monitoringplug
-Version:        0.17
+Version:        0.17.0-rc.1
 Release:        1%{?dist}
 Summary:        Collection of monitoring plugins for Nagios
 
@@ -598,7 +598,7 @@ fi
 %{_mandir}/man1/notify_*
 
 %changelog
-* Mon Jun 02 2014 Marius Rieder <marius.rieder@durchmesser.ch> - 0.17-1
+* Sat Aug 02 2014 Marius Rieder <marius.rieder@durchmesser.ch> - 0.17.0-rc.1-1
 - Rework autotools build system.
 - Allow % sign in ranges and parse them.
 - Use hiredis library for redis checks.

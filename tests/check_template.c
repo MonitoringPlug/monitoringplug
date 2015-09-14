@@ -110,7 +110,7 @@ START_TEST (test_template_file) {
     FILE *in;
     char *out;
 
-    in = fopen("testdata/template_file.tpl", "r");
+    in = fopen(abs_srcdir"/testdata/template_file.tpl", "r");
 
     out = mp_template(in);
 

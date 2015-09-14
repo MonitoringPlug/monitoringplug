@@ -92,6 +92,11 @@
         <term><option>--trusted-keys=<replaceable>FILE</replaceable></option></term>
         <listitem>
           <para>File to read truste-anchors from.</para>
+          <para>
+            The keyfile should be a Zonefile alike list of Trusted Keys or DS.
+            Create the file with 'dig -t <replaceable>DNSKEY|DS</replaceable> +noall +answer <replaceable>ZONE</replaceable> > file'.
+            Do not forget to verify the DNSKEY/DS record against a trustworthy source.
+          </para>
         </listitem>
       </varlistentry>
     </variablelist>

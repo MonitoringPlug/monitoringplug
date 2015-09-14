@@ -2,7 +2,7 @@
 
 LDADD = ../lib/libmonitoringplug.a
 AM_LDFLAGS = $(CHECK_LIBS)
-AM_CFLAGS = $(CHECK_CFLAGS)
+AM_CFLAGS = $(CHECK_CFLAGS) -Dabs_srcdir="\"$(abs_srcdir)\""
 
 if HAVE_CHECK
 
@@ -12,8 +12,6 @@ check_PROGRAMS = check_monitoringplug \
 		check_sms \
 		check_subprocess \
 		check_template
-
-#check_PROGRAMS = $(check_PROGRAMS)
 
 check_monitoringplug_SOURCES = main.c main.h \
     check_common.c \
@@ -29,7 +27,7 @@ if HAVE_EXPAT
 check_PROGRAMS += check_rhcs
 
 check_rhcs_LDADD = ../lib/librhcsutils.a $(LDADD)
-check_rhcs_CFLAGS = $(EXPAT_CFLAGS)
+check_rhcs_CFLAGS = $(AM_CFLAGS) $(EXPAT_CFLAGS)
 check_rhcs_LDFLAGS = $(AM_LDFLAGS) $(EXPAT_LIBS)
 endif
 
@@ -43,20 +41,22 @@ endif
 
 endif
 
-TESTS = $(check_PROGRAMS) \
-		base/check_bonding.t \
-		base/check_file.t \
-		base/check_memcached.t \
-		curl/check_rabbitmq.t \
-		curl/check_buildbot_slave.t \
-		redis/check_redis.t \
-		redis/check_redis_slave.t \
-		snmp/check_akcp.t \
-		snmp/check_apc_pdu.t \
-		snmp/check_arc_raid.t \
-		snmp/check_keepalived_vrrp.t \
-		snmp/check_qnap_disks.t \
-		snmp/check_qnap_vols.t
+SHARNESSSCRIPTS = base/check_bonding.t \
+				   base/check_file.t \
+				   base/check_memcached.t \
+				   curl/check_rabbitmq.t \
+				   curl/check_buildbot_slave.t \
+				   redis/check_redis.t \
+				   redis/check_redis_slave.t \
+				   snmp/check_akcp.t \
+				   snmp/check_apc_pdu.t \
+				   snmp/check_arc_raid.t \
+				   snmp/check_keepalived_vrrp.t \
+				   snmp/check_qnap_disks.t \
+				   snmp/check_qnap_vols.t
 
-EXTRA_DIST = mpcheck.h eopt.ini testdata sharness.sh
+TESTS = $(check_PROGRAMS) \
+		$(SHARNESSSCRIPTS)
+
+EXTRA_DIST = mpcheck.h eopt.ini eopt_long.ini testdata sharness.sh $(SHARNESSSCRIPTS)
 ## vim: set ts=4 sw=4 syn=automake :

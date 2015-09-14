@@ -43,7 +43,7 @@ const char *progusage = "[-H host] -D domain [-T domain] [-k file] [-t timeout]"
 /* Global Vars */
 const char *hostname;
 char *domainname;
-char *domaintrace;
+char *domaintrace = ".";
 ldns_rr_list *trusted_keys = NULL;
 int checkState;
 
@@ -81,13 +81,9 @@ int main(int argc, char **argv) {
     if (!rd_domain)
         unknown("Illegal domain name");
 
-    if (domaintrace) {
-        rd_trace = ldns_dname_new_frm_str(domaintrace);
-        if (!rd_trace)
-            unknown("Illegal trace domain name");
-     } else {
-        rd_trace = ldns_dname_new_frm_str(".");
-     }
+    rd_trace = ldns_dname_new_frm_str(domaintrace);
+    if (!rd_trace)
+        unknown("Illegal trace domain name");
 
     /* Check domain is subdomain from trace start */
     if (!ldns_dname_is_subdomain(rd_domain, rd_trace)) {
@@ -139,7 +135,6 @@ int main(int argc, char **argv) {
     if (pkt == NULL || ldns_pkt_get_rcode(pkt) != LDNS_RCODE_NOERROR) {
         ldns_rdf_deep_free(rd_domain);
         ldns_rdf_deep_free(rd_trace);
-        ldns_rr_list_deep_free(rrl_valid_keys);
         ldns_resolver_deep_free(res);
         if (pkt && ldns_pkt_get_rcode(pkt) == LDNS_RCODE_NXDOMAIN) {
             ldns_pkt_free(pkt);
@@ -321,7 +316,7 @@ int process_arguments (int argc, char **argv) {
             case 'k':
                 trusted_keys = loadKeyfile(optarg);
                 if (trusted_keys == NULL)
-                    usage("Parsing keyfiel failed.");
+                    usage("Parsing keyfile failed.");
                 break;
             case 'T':
                 if (!is_hostname(optarg))
@@ -360,6 +355,9 @@ void print_help (void) {
     printf("      The name of the domain to trace from. (default: .)\n");
     printf(" -k, --trusted-keys=FILE\n");
     printf("      File to read trust-anchors from.\n");
+
+    printf("\n");
+    print_help_ldns_keyfile();
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */

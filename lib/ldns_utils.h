@@ -103,6 +103,11 @@ void getopt_ldns(int c);
 void print_help_ldns(void);
 
 /**
+ * Print the help got the Keyfile format.
+ */
+void print_help_ldns_keyfile(void);
+
+/**
  * Print the ldns revision.
  */
 void print_revision_ldns(void);

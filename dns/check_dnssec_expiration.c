@@ -264,7 +264,7 @@ int process_arguments (int argc, char **argv) {
             case 'k':
                 trusted_keys = loadKeyfile(optarg);
                 if (trusted_keys == NULL)
-                    usage("Parsing keyfiel failed.");
+                    usage("Parsing keyfile failed.");
                 break;
         }
     }
@@ -298,6 +298,9 @@ void print_help (void) {
     printf("      File to read trust-anchors from.\n");
     print_help_warn_time("2 days");
     print_help_crit_time("1 day");
+
+    printf("\n");
+    print_help_ldns_keyfile();
 }
 
 /* vim: set ts=4 sw=4 et syn=c : */

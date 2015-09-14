@@ -366,6 +366,15 @@ void print_help_ldns(void) {
     printf("      Use TCP for DNS queries.\n");
 }
 
+void print_help_ldns_keyfile(void) {
+    printf(
+        "Keyfile Format:\n"
+        " The keyfile should be a Zonefile alike list of Trusted Keys or DS.\n"
+        " Create the file with 'dig -t <DNSKEY|DS> +noall +answer <ZONE> > file'.\n"
+        " Do not forget to verify the DNSKEY/DS record against a trustworthy source.\n"
+    );
+}
+
 void print_revision_ldns(void) {
     printf(" ldns v%s\n", LDNS_VERSION);
 }

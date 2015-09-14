@@ -1,12 +1,15 @@
-monitoringplug (0.17) UNRELEASED; urgency=low
+monitoringplug (0.17.0-rc.1) monitoringplug; urgency=low
 
   * Rework autotools build system.
   * Allow % sign in ranges and parse them.
   * Use hiredis library for redis checks.
   * Use long for redis memory size.
   * Add check_redis_slave check.
+  * Add RabbitMQ checks.
+  * Add LDAP checks.
+  * Add Keepalived VRRP check.
 
- -- Marius Rieder <marius.rieder@durchmesser.ch>  Tue, 16 Oct 2013 20:12:29 +0200
+ -- Marius Rieder <marius.rieder@durchmesser.ch>  Sat, 02 Aug 2014 11:45:05 +0200
 
 monitoringplug (0.16.1) monitoringplug; urgency=low
 

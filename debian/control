@@ -25,6 +25,7 @@ Build-Depends: debhelper (>= 7.0.50~),
                libopenipmi-dev,
                libvarnishapi-dev | base-files (<= 6.1),
                libhiredis-dev | base-files (<= 6.1),
+               libfcgi-dev
 Standards-Version: 3.9.1
 Homepage: http://svn.durchmesser.ch/trac/monitoringplug/
 
@@ -83,8 +84,18 @@ Description: Collection of DNS monitoring plugins for Nagios.
   check_dnssec_expiration, check_dnssec_trace, check_dnssec_trust_anchor,
   check_dns_sync
  .
- This package provides a basic set of plugins with ldns as
- dependency.
+ This package provides a basic set of plugins with ldns as dependency.
+
+Package: monitoringplug-fcgi
+Architecture: any
+Depends: monitoringplug, libfcgi0ldbl, ${shlibs:Depends}, ${misc:Depends}
+Description: Collection of FastCGI monitoring plugins for Nagios.
+ Collection of FastCGI monitoring plugins for Nagios. It contains the following
+ plugins:
+ .
+  check_fcgi_ping, check_fcgi_phpfpm
+ .
+ This package provides a basic set of plugins with libfcgi as dependency.
 
 Package: monitoringplug-gnutls
 Architecture: any
