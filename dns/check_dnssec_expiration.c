@@ -211,7 +211,7 @@ int main (int argc, char **argv) {
             warning("RRSIG for %s expires soon (%s).", domainname, exp_str);
             break;
         case STATE_CRITICAL:
-            critical("RRSIG for %s expires to soon (%s).", domainname, exp_str);
+            critical("RRSIG for %s expires too soon (%s).", domainname, exp_str);
             break;
 
     }
