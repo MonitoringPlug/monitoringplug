@@ -107,10 +107,18 @@ AM_CONDITIONAL([HAVE_CURL], [test "x$have_curl" = "xyes"])
 AM_CONDITIONAL([HAVE_CURL_TFTP], [test "x$libcurl_protocol_TFTP" = "xyes"])
 
 ## lDNS
-AX_LIB_LDNS()
-AS_IF([test "x$want_ldns" = "xno"],
-      [have_ldns=disabled], [have_ldns=$found_ldns])
-AM_CONDITIONAL([HAVE_LDNS], [test "x$have_ldns" = "xyes"])
+AC_ARG_WITH([ldns],
+    [AS_HELP_STRING([--without-ldns], [Build without ldns])])
+AS_IF([test "x$with_ldns" != "xno"],
+      [PKG_CHECK_MODULES([LDNS], [ldns], [have_ldns=yes], [have_ldns=no])],
+      [have_ldns=disabled])
+AS_IF([test "x$have_ldns" = "xyes"],
+      [],
+      [AS_IF([test "x$with_ldns" = "xyes"],
+             [AC_MSG_ERROR([ldns requested but not found.])
+      ])
+])
+AM_CONDITIONAL([HAVE_LDNS], [test "x$have_ldns"  = "xyes"])
 
 ## Expat
 AX_LIB_EXPAT()
@@ -429,7 +437,6 @@ LDFLAGS="$LDFLAGS -L\$(top_srcdir)/lib";
 
 SNMPUTIL_LIBS="-lsnmputils"
 RHCSUTIL_LIBS="-lrhcsutils"
-LDNSUTIL_LIBS="-lldnsutils"
 LIBVIRTUTIL_LIBS="-lvirturils"
 XMLRPCUTIL_LIBS="-lxmlrpcutils"
 
