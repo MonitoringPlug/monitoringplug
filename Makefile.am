@@ -6,7 +6,13 @@ SUBDIRS = lib base cups curl dns dummy fcgi gnutls ipmi ldap libvirt mysql \
 		  oping pgsql redis rhcs rpc selinux smb snmp varnish xmlrpc \
 		  contrib doc policy tests notify
 
-EXTRA_DIST = $(top_builddir)/debian
+EXTRA_DIST = $(top_builddir)/debian $(top_srcdir)/.version
+
+BUILT_SOURCES = $(top_srcdir)/.version
+$(top_srcdir)/.version:
+	echo $(VERSION) > $@-t && mv $@-t $@
+dist-hook:
+	echo $(VERSION) > $(distdir)/.tarball-version
 
 MP_DIST_CLEANFILES =
 MP_DIST_CLEANDIRS =

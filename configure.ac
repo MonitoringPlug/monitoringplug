@@ -3,7 +3,9 @@
 
 AC_PREREQ([2.59])
 
-AC_INIT([monitoringplug],[0.17.0-rc.1],[marius.rieder@durchmesser.ch])
+AC_INIT([monitoringplug],
+        m4_esyscmd([build-aux/git-version-gen .tarball-version]),
+        [marius.rieder@durchmesser.ch])
 AC_CONFIG_AUX_DIR(build-aux)
 AM_INIT_AUTOMAKE([1.9 -Wall -Werror foreign])
 AC_CONFIG_SRCDIR([lib/mp_common.c])
@@ -439,6 +441,12 @@ AS_IF([test "x$enable_as_needed" != "xno"],
 CPPFLAGS="$CPPFLAGS -I\$(top_srcdir) -I\$(top_srcdir)/lib";
 LDFLAGS="$LDFLAGS -L\$(top_srcdir)/lib";
 
+# RPM VARS
+RPM_VERSION="$(echo $PACKAGE_VERSION | cut -d '-' -f 1)"
+RPM_RELEASE="$(echo $PACKAGE_VERSION | cut -d '-' -f 2- | sed 's/-/./g')"
+AC_SUBST([RPM_VERSION])
+AC_SUBST([RPM_RELEASE])
+
 SNMPUTIL_LIBS="-lsnmputils"
 RHCSUTIL_LIBS="-lrhcsutils"
 LIBVIRTUTIL_LIBS="-lvirturils"
@@ -489,6 +497,7 @@ AC_CONFIG_FILES([Makefile
                  varnish/Makefile
                  xmlrpc/Makefile
                  contrib/Makefile
+                 contrib/monitoringplug.spec
                  doc/Makefile
                  policy/Makefile
                  policy/monitoringplug.te

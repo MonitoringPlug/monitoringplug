@@ -1,12 +1,13 @@
-Name:           monitoringplug
-Version:        0.17.0-rc.1
-Release:        1%{?dist}
+Name:           @PACKAGE_NAME@
+Version:        @RPM_VERSION@
+
+Release:        @RPM_RELEASE@%{?dist}
 Summary:        Collection of monitoring plugins for Nagios
 
 Group:          Applications/System
 License:        GPLv2+
 URL:            http://svn.durchmesser.ch/trac/monitoringplug
-Source0:        http://svn.durchmesser.ch/download/%{name}/%{name}-%{version}/%{name}-%{version}.tar.gz
+Source0:        http://svn.durchmesser.ch/download/%{name}/%{name}-%{version}/@PACKAGE_NAME@-@PACKAGE_VERSION@.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  expat-devel
@@ -294,7 +295,7 @@ Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the notification commands.
 
 %prep
-%setup -q
+%setup -q -n @PACKAGE_NAME@-@PACKAGE_VERSION@
 
 %build
 %if 0%{?rhel} == 5
