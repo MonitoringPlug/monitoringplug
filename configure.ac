@@ -368,7 +368,7 @@ AM_CONDITIONAL([HAVE_TERMIOS], [test "x$have_termios" = "xyes"])
 AC_ARG_WITH([varnish],
     [AS_HELP_STRING([--without-varnish], [Build without Varnish support.])])
 AS_IF([test "x$with_varnish" != "xno"],
-      [PKG_CHECK_MODULES([VARNISH], [varnishapi >= 3.0.0], [have_varnish=yes], [have_varnish=no])],
+      [PKG_CHECK_MODULES([VARNISH], [varnishapi >= 3.0.0 varnishapi < 4.0.0], [have_varnish=yes], [have_varnish=no])],
       [have_varnish=disabled])
 AS_IF([test "x$have_varnish" = "xyes"],
       [],
@@ -538,7 +538,7 @@ Dependencies:
  SMB:        ${have_smbclient}
  SNMP:       ${have_netsnmp}
  Termios:    ${have_termios}
- Varnish:    ${have_varnish}
+ Varnish3:   ${have_varnish}
  XMLRPC:     ${have_xmlrpc}
 
 Now type 'make @<:@<target>@:>@'
