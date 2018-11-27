@@ -53,6 +53,9 @@
       <arg choice="opt">
         <option>-T <replaceable>DOMAIN</replaceable></option>
       </arg>
+      <arg choice="opt">
+        <option>-R <replaceable>HOST</replaceable></option>
+      </arg>
     </cmdsynopsis>
   </refsynopsisdiv>
   <refsect1 id="description">
@@ -97,6 +100,14 @@
             Create the file with 'dig -t <replaceable>DNSKEY|DS</replaceable> +noall +answer <replaceable>ZONE</replaceable> > file'.
             Do not forget to verify the DNSKEY/DS record against a trustworthy source.
           </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option>-R</option></term>
+        <term><option>--resolver=<replaceable>HOST</replaceable></option></term>
+        <listitem>
+          <para>The DNS resolver to use for tracing.
+            (Default to the hosts resolver)</para>
         </listitem>
       </varlistentry>
     </variablelist>

@@ -110,7 +110,11 @@ AM_CONDITIONAL([HAVE_CURL_TFTP], [test "x$libcurl_protocol_TFTP" = "xyes"])
 AC_ARG_WITH([ldns],
     [AS_HELP_STRING([--without-ldns], [Build without ldns])])
 AS_IF([test "x$with_ldns" != "xno"],
-      [PKG_CHECK_MODULES([LDNS], [ldns], [have_ldns=yes], [have_ldns=no])],
+      [
+        PKG_CHECK_MODULES([LDNS], [ldns], [have_ldns=yes], [
+          PKG_CHECK_MODULES([LDNS], [libldns], [have_ldns=yes], [have_ldns=no]=)
+        ])
+      ],
       [have_ldns=disabled])
 AS_IF([test "x$have_ldns" = "xyes"],
       [],

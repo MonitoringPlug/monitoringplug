@@ -28,7 +28,7 @@ const char *progdesc  = "Check if the zone signature is tracable.";
 const char *progvers  = "0.1";
 const char *progcopy  = "2009 - 2010";
 const char *progauth  = "Marius Rieder <marius.rieder@durchmesser.ch>";
-const char *progusage = "[-H host] -D domain [-T domain] [-k file] [-t timeout]";
+const char *progusage = "[-H host] -D domain [-T domain] [-R host] [-k file] [-t timeout]";
 
 /* MP Includes */
 #include "mp_common.h"
@@ -45,6 +45,7 @@ const char *hostname;
 char *domainname;
 char *domaintrace = ".";
 ldns_rr_list *trusted_keys = NULL;
+const char *resolver;
 int checkState;
 
 int main(int argc, char **argv) {
@@ -195,6 +196,19 @@ int main(int argc, char **argv) {
         printf("------------------------------------------------------------\n");
     }
 
+
+    /* create a new resolver with dns_server or server from /etc/resolv.conf */
+    ldns_resolver_free(res);
+    res = createResolver(resolver);
+    if (!res) {
+        ldns_rdf_deep_free(rd_domain);
+        ldns_rdf_deep_free(rd_trace);
+        ldns_rr_list_deep_free(rrl_valid_keys);
+        unknown("Creating resolver failed.");
+    }
+    resolverEnableDnssec(res);
+    ldns_resolver_set_dnssec_anchors(res, rrl_valid_keys);
+
     /* Fetch valid keys from top down */
     i = ldns_dname_label_count(rd_domain) - ldns_dname_label_count(rd_trace);
     for (; i>=0; i--) {
@@ -288,6 +302,7 @@ int process_arguments (int argc, char **argv) {
         {"domain", required_argument, 0, 'D'},
         {"trace-from", required_argument, 0, 'T'},
         {"trusted-keys", required_argument, 0, 'k'},
+        {"resolver", required_argument, 0, 'R'},
         MP_LONGOPTS_END
     };
 
@@ -297,7 +312,7 @@ int process_arguments (int argc, char **argv) {
     }
 
     while (1) {
-        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"H:D:T:k:"LDNS_OPTSTR, long_opts, &option);
+        c = mp_getopt(&argc, &argv, MP_OPTSTR_DEFAULT"H:D:T:k:R:"LDNS_OPTSTR, long_opts, &option);
         if (c == -1 || c == EOF)
             break;
 
@@ -322,6 +337,9 @@ int process_arguments (int argc, char **argv) {
                 if (!is_hostname(optarg))
                     usage("Illegal trace domain name.");
                 domaintrace = optarg;
+                break;
+            case 'R':
+                getopt_host_ip(optarg, &resolver);
                 break;
         }
     }
@@ -355,6 +373,8 @@ void print_help (void) {
     printf("      The name of the domain to trace from. (default: .)\n");
     printf(" -k, --trusted-keys=FILE\n");
     printf("      File to read trust-anchors from.\n");
+    printf(" -R, --resolver=HOST\n");
+    printf("      Host name or IP Address of the resolver to use.\n");
 
     printf("\n");
     print_help_ldns_keyfile();
