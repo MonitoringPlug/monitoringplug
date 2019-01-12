@@ -114,7 +114,7 @@ AC_ARG_WITH([ldns],
 AS_IF([test "x$with_ldns" != "xno"],
       [
         PKG_CHECK_MODULES([LDNS], [ldns], [have_ldns=yes], [
-          PKG_CHECK_MODULES([LDNS], [libldns], [have_ldns=yes], [have_ldns=no]=)
+          PKG_CHECK_MODULES([LDNS], [libldns], [have_ldns=yes], [have_ldns=no])
         ])
       ],
       [have_ldns=disabled])
