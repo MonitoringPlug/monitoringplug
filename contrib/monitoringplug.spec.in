@@ -29,7 +29,9 @@ BuildRequires:  gnutls-devel
 BuildRequires:  libvirt-devel
 BuildRequires:  libsmbclient-devel
 BuildRequires:  liboping-devel
+%if 0%{?rhel} != 6
 BuildRequires:  hiredis-devel
+%endif
 %if 0%{?fedora} >= 28
 BuildRequires:  rpcsvc-proto-devel
 %endif
@@ -105,11 +107,13 @@ Group:          Applications/System
 Requires:       liboping
 Requires:       monitoringplug
 
+%if 0%{?rhel} != 6
 %package redis
 Summary:        Collection of redis monitoring plugins for Nagios
 Group:          Applications/System
 Requires:       hiredis
 Requires:       monitoringplug
+%endif
 
 %package postgresql
 Summary:        Collection of PostgreSQL monitoring plugins for Nagios
@@ -214,9 +218,11 @@ This package contains the PostgreSQL based plugins.
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the liboping based plugins.
 
+%if 0%{?rhel} != 6
 %description redis
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the Redis plugins.
+%endif
 
 %description rhcs
 Collection of monitoring plugins for Nagios and similar monitoring systems.
@@ -319,8 +325,10 @@ fi
 %post oping
 /sbin/fixfiles -F -R monitoringplug-oping restore ||:
 
+%if 0%{?rhel} != 6
 %post redis
 /sbin/fixfiles -F -R monitoringplug-redis restore ||:
+%endif
 
 %post rhcs
 /sbin/fixfiles -F -R monitoringplug-rhcs restore ||:
@@ -450,10 +458,12 @@ fi
 %attr(4111, root, root) %{_libdir}/nagios/plugins/check_oping*
 %{_mandir}/man1/check_oping*
 
+%if 0%{?rhel} != 6
 %files redis
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_redis*
 %{_mandir}/man1/check_redis*
+%endif
 
 %files rhcs
 %defattr(-,root,root,-)
