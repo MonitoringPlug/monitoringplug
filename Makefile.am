@@ -67,4 +67,11 @@ clean-mp-dist:
 	dh_clean ||:
 	-test -z "$(MP_DIST_CLEANFILES)" || rm -f $(MP_DIST_CLEANFILES)
 	-test -z "$(MP_DIST_CLEANDIRS)" || rm -rf $(MP_DIST_CLEANDIRS)
+
+
+docker-dist-gzip:
+	 docker run --rm -ti \
+		 -v cache-volume:/var/cache/dnf/ \
+		 -v $(PWD):/src fedora:latest \
+		 /src/docker/build.dist.sh
 ## vim: set ts=4 sw=4 syn=automake :
