@@ -116,6 +116,7 @@ if HAVE_RPC
 noinst_LIBRARIES += librpcutils.a
 
 librpcutils_a_SOURCES = rpc_utils.c rpc_utils.h
+librpcutils_a_CPPFLAGS = $(RPC_CFLAGS)
 endif
 
 if HAVE_REDIS
