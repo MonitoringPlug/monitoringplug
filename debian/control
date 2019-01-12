@@ -23,7 +23,6 @@ Build-Depends: debhelper (>= 7.0.50~),
                libmysqlclient-dev,
                liboping-dev,
                libopenipmi-dev,
-               libvarnishapi-dev | base-files (<= 6.1),
                libhiredis-dev | base-files (<= 6.1),
                libfcgi-dev
 Standards-Version: 3.9.1
@@ -250,17 +249,6 @@ Description: Collection of SNMP monitoring plugins for Nagios.
  .
  This package provides a basic set of plugins with net-snmp as
  dependency.
-
-Package: monitoringplug-varnish
-Architecture: any
-Depends: monitoringplug, libvarnishapi1, ${shlibs:Depends}, ${misc:Depends}
-Description: Collection of Varnish monitoring plugins for Nagios.
- Collection of Varnish monitoring plugins for Nagios. It contains the following
- plugins:
- .
-  check_varnish, check_varnish_backends
- .
- This package provides a set of plugins with libvarnishapi as dependency.
 
 Package: monitoringplug-xmlrpc
 Architecture: any

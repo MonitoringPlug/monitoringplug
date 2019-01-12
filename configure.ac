@@ -376,21 +376,6 @@ AS_IF([test "x$have_termios" = "xyes"],
 ])
 AM_CONDITIONAL([HAVE_TERMIOS], [test "x$have_termios" = "xyes"])
 
-## Varnish
-AC_ARG_WITH([varnish],
-    [AS_HELP_STRING([--without-varnish], [Build without Varnish support.])])
-AS_IF([test "x$with_varnish" != "xno"],
-      [PKG_CHECK_MODULES([VARNISH], [varnishapi >= 3.0.0 varnishapi < 4.0.0], [have_varnish=yes], [have_varnish=no])],
-      [have_varnish=disabled])
-AS_IF([test "x$have_varnish" = "xyes"],
-      [],
-      [AS_IF([test "x$with_varnish" = "xyes"],
-             [AC_MSG_ERROR([Varnish requested but varnishapi not found.])
-      ])
-])
-AM_CONDITIONAL([HAVE_VARNISH], [test "x$have_varnish" = "xyes"])
-
-
 ## XMLRPC-C
 AX_LIB_XMLRPC()
 AS_IF([test "x$want_xmlrpc" = "xno"],
@@ -506,7 +491,6 @@ AC_CONFIG_FILES([Makefile
                  selinux/Makefile
                  smb/Makefile
                  snmp/Makefile
-                 varnish/Makefile
                  xmlrpc/Makefile
                  contrib/Makefile
                  contrib/monitoringplug.spec
@@ -550,7 +534,6 @@ Dependencies:
  SMB:        ${have_smbclient}
  SNMP:       ${have_netsnmp}
  Termios:    ${have_termios}
- Varnish3:   ${have_varnish}
  XMLRPC:     ${have_xmlrpc}
 
 Now type 'make @<:@<target>@:>@'

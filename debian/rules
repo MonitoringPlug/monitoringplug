@@ -16,10 +16,6 @@
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
-ifeq ($(shell lsb_release --short --codename),squeeze) 
-	DHARG=--no-package=monitoringplug-redis --no-package=monitoringplug-varnish
-endif
-
 export SMBCLIENT_LIBS="-lsmbclient"
 export SMBCLIENT_CFLAGS=
 

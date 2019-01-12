@@ -138,13 +138,6 @@ Use the ​net-snmp library to query SNMP agents.
 *  check_qnap_vols -- Check the volume status of a QNap.
 *  check_snmp_ups -- Check status of a UPS conforming to RFC 1628 by SNMP.
 
-### Varnish
-
-Use the [libvarnish](http://www.varnish-cache.org/) to check Varnish.
-
-*  check_varnish -- Check a Varnish cache server.
-*  check_varnish_backends -- Check Varnish backend health.
-
 ### XMLRPC
 
 Use the [xmlrpc-c](http://xmlrpc-c.sourceforge.net/) library to query XMLRPC server.
