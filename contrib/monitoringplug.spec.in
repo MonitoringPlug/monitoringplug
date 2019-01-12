@@ -30,6 +30,9 @@ BuildRequires:  libvirt-devel
 BuildRequires:  libsmbclient-devel
 BuildRequires:  liboping-devel
 BuildRequires:  hiredis-devel
+%if 0%{?fedora} >= 28
+BuildRequires:  rpcsvc-proto-devel
+%endif
 
 %package base
 Summary:        Collection of basic monitoring plugins for Nagios

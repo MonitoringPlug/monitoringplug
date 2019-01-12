@@ -308,9 +308,17 @@ AS_IF([test "x$have_redis" = "xyes"],
 AM_CONDITIONAL([HAVE_REDIS], [test "x$have_redis" = "xyes"])
 
 ## (Sun)RPC
-AX_LIB_RPC()
-AS_IF([test "x$rpc_requested" = "xno"],
-    [have_rpc=disabled], [have_rpc=$HAVE_RPC])
+AC_ARG_WITH([RPC],
+      [AS_HELP_STRING([--without-rpc], [Build without RPC support.])])
+AS_IF([test "x$with_rpc" != "xno"],
+      [PKG_CHECK_MODULES([RPC], [libtirpc], [have_rpc=yes], [have_rpc=no])],
+      [have_rpc=disabled])
+AS_IF([test "x$have_rpc" = "xyes"],
+      [],
+      [AS_IF([test "x$with_rpc" = "xyes"],
+             [AC_MSG_ERROR([(NTI)RPC requested but not found.])
+      ])
+])
 AM_CONDITIONAL([HAVE_RPC], [test "x$have_rpc" = "xyes"])
 
 ## SELinux
