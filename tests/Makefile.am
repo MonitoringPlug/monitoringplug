@@ -55,8 +55,7 @@ SHARNESSSCRIPTS = base/check_bonding.t \
 				   snmp/check_qnap_disks.t \
 				   snmp/check_qnap_vols.t
 
-TESTS = $(check_PROGRAMS) \
-		$(SHARNESSSCRIPTS)
+TESTS = $(check_PROGRAMS)
 
 EXTRA_DIST = mpcheck.h eopt.ini eopt_long.ini testdata sharness.sh $(SHARNESSSCRIPTS)
 ## vim: set ts=4 sw=4 syn=automake :
