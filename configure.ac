@@ -181,7 +181,11 @@ AM_CONDITIONAL([HAVE_IPMI], [test "x$have_ipmi" = "xyes"])
 AC_ARG_WITH([json],
     [AS_HELP_STRING([--without-json], [Build without JSON support.])])
 AS_IF([test "x$with_json" != "xno"],
-      [PKG_CHECK_MODULES([JSON], [json], [have_json=yes], [have_json=no])],
+      [
+        PKG_CHECK_MODULES([JSON], [json], [have_json=yes], [
+          PKG_CHECK_MODULES([JSON], [json-c], [have_json=yes], [have_json=no])
+        ])
+      ],
       [have_json=disabled])
 AS_IF([test "x$have_json" = "xyes"],
       [],
