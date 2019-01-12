@@ -115,13 +115,14 @@ AS_IF([test "x$with_ldns" != "xno"],
       [
         PKG_CHECK_MODULES([LDNS], [ldns], [have_ldns=yes], [
           PKG_CHECK_MODULES([LDNS], [libldns], [have_ldns=yes], [
-            AC_CHECK_PROG([ldnsconfig], [ldns-config], [yes], [no])
-            AS_IF([test "x$ldnsconfig" = "xyes"],
+            AC_PATH_PROG([LDNS_CONFIG], [ldns-config], [no])
+            AS_IF([test "x$LDNS_CONFIG" != "xno"],
                   [
                     LDNS_CFLAGS="`$LDNS_CONFIG --cflags` `$LDNS_CONFIG client --cflags`"
                     LDNS_LIBS="`$LDNS_CONFIG --libs` `$LDNS_CONFIG client --libs`"
                     AC_SUBST([LDNS_CFLAGS])
                     AC_SUBST([LDNS_LIBS])
+                    have_ldns=yes
                   ],
                   [have_ldns=no])
           ])
@@ -140,7 +141,15 @@ AM_CONDITIONAL([HAVE_LDNS], [test "x$have_ldns"  = "xyes"])
 AC_ARG_WITH([expat],
     [AS_HELP_STRING([--without-expat], [Build without expat])])
 AS_IF([test "x$with_expat" != "xno"],
-      [PKG_CHECK_MODULES([EXPAT], [expat], [have_expat=yes], [have_expat=no])],
+      [PKG_CHECK_MODULES([EXPAT], [expat], [have_expat=yes], [
+        AC_CHECK_LIB([expat], [XML_ExpatVersion],
+                     [
+                        EXPAT_LIBS="-lexpat"
+                        AC_SUBST([EXPAT_LIBS])
+                        have_expat=yes
+                     ],
+                     [have_expat=no])
+      ])],
       [have_expat=disabled])
 AS_IF([test "x$have_expat" = "xyes"],
       [],
