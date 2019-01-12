@@ -114,7 +114,17 @@ AC_ARG_WITH([ldns],
 AS_IF([test "x$with_ldns" != "xno"],
       [
         PKG_CHECK_MODULES([LDNS], [ldns], [have_ldns=yes], [
-          PKG_CHECK_MODULES([LDNS], [libldns], [have_ldns=yes], [have_ldns=no])
+          PKG_CHECK_MODULES([LDNS], [libldns], [have_ldns=yes], [
+            AC_CHECK_PROG([ldnsconfig], [ldns-config], [yes], [no])
+            AS_IF([test "x$ldnsconfig" = "xyes"],
+                  [
+                    LDNS_CFLAGS="`$LDNS_CONFIG --cflags` `$LDNS_CONFIG client --cflags`"
+                    LDNS_LIBS="`$LDNS_CONFIG --libs` `$LDNS_CONFIG client --libs`"
+                    AC_SUBST([LDNS_CFLAGS])
+                    AC_SUBST([LDNS_LIBS])
+                  ],
+                  [have_ldns=no])
+          ])
         ])
       ],
       [have_ldns=disabled])
