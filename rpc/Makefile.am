@@ -3,7 +3,7 @@
 bindir = ${libdir}/nagios/plugins
 
 AM_CFLAGS = $(RPC_CFLAGS)
-AM_LDFLAGS = $(RPC_LDFLAGS)
+AM_LDFLAGS = $(RPC_LIBS)
 AM_DEFAULT_SOURCE_EXT = .c
 
 LDADD = ../lib/libmonitoringplug.a ../lib/librpcutils.a

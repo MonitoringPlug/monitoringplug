@@ -26,6 +26,7 @@
 
 #include <rpc/rpc.h>
 #include <rpcsvc/mount.h>
+#include <rpc/netdb.h>
 
 #define RPC_BUF_LEN 128
 
