@@ -23,50 +23,34 @@ BuildRequires:  OpenIPMI-devel
 BuildRequires:  postgresql-devel
 BuildRequires:  fcgi-devel
 BuildRequires:  openldap-devel
-
-%if 0%{?rhel} == 5
-BuildRequires:  curl-devel
-%else
 BuildRequires:  libcurl-devel
-# Thing RHEL5 is to old fore
 BuildRequires:  cups-devel
 BuildRequires:  gnutls-devel
 BuildRequires:  libvirt-devel
 BuildRequires:  libsmbclient-devel
 BuildRequires:  liboping-devel
 BuildRequires:  hiredis-devel
-%endif
 
 %package base
 Summary:        Collection of basic monitoring plugins for Nagios
 Group:          Applications/System
 Requires:       monitoringplug
 
-%if 0%{?rhel} != 5
 %package cups
 Summary:        Collection of cups monitoring plugins for Nagios
 Group:          Applications/System
 Requires:       cups
-%endif
 
 %package curl
 Summary:        Collection of curl-based monitoring plugins for Nagios
 Group:          Applications/System
-%if 0%{?rhel} <= 5
-Requires:       curl
-%else
 Requires:       libcurl
-%endif
 Requires:       monitoringplug
 
 %package curl-json
 Summary:        Collection of curl ans json based monitoring plugins for Nagios
 Group:          Applications/System
-%if 0%{?rhel} <= 5
-Requires:       curl
-%else
 Requires:       libcurl
-%endif
 Requires:       json-c
 Requires:       monitoringplug
 
@@ -82,13 +66,11 @@ Group:          Applications/System
 Requires:       fcgi
 Requires:       monitoringplug
 
-%if 0%{?rhel} != 5
 %package gnutls
 Summary:        Collection of dns monitoring plugins for Nagios
 Group:          Applications/System
 Requires:       gnutls
 Requires:       monitoringplug
-%endif
 
 %package ipmi
 Summary:        Collection of IPMI monitoring plugins for Nagios
@@ -102,13 +84,11 @@ Group:          Applications/System
 Requires:       openldap
 Requires:       monitoringplug
 
-%if 0%{?rhel} != 5
 %package libvirt
 Summary:        Collection of libvirt monitoring plugins for Nagios
 Group:          Applications/System
 Requires:       libvirt-client
 Requires:       monitoringplug
-%endif
 
 %package mysql
 Summary:        Collection of MySQL monitoring plugins for Nagios
@@ -116,7 +96,6 @@ Group:          Applications/System
 Requires:       mysql-libs
 Requires:       monitoringplug
 
-%if 0%{?rhel} != 5
 %package oping
 Summary:        Collection of liboping monitoring plugins for Nagios
 Group:          Applications/System
@@ -128,7 +107,6 @@ Summary:        Collection of redis monitoring plugins for Nagios
 Group:          Applications/System
 Requires:       hiredis
 Requires:       monitoringplug
-%endif
 
 %package postgresql
 Summary:        Collection of PostgreSQL monitoring plugins for Nagios
@@ -154,13 +132,11 @@ Group:          Applications/System
 Requires:       libselinux
 Requires:       monitoringplug
 
-%if 0%{?rhel} != 5
 %package smb
 Summary:        Collection of smb-based monitoring plugins for Nagios
 Group:          Applications/System
 Requires:       libsmbclient
 Requires:       monitoringplug
-%endif
 
 %package snmp
 Summary:        Collection of snmp-based monitoring plugins for Nagios
@@ -187,11 +163,9 @@ Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the base and dummy plugins which don't need any
 additional libraries.
 
-%if 0%{?rhel} != 5
 %description cups
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the cups based plugins.
-%endif
 
 %description curl
 Collection of monitoring plugins for Nagios and similar monitoring systems.
@@ -209,11 +183,9 @@ This package contains the dns plugins which use the ldns library.
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the dns plugins which use the fcgi library.
 
-%if 0%{?rhel} != 5
 %description gnutls
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the plugins which use the gnutls library.
-%endif
 
 %description ipmi
 Collection of monitoring plugins for Nagios and similar monitoring systems.
@@ -223,11 +195,9 @@ This package contains the plugins which use the OpenIPMI library.
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the plugins which use the OpenLDAP library.
 
-%if 0%{?rhel} != 5
 %description libvirt
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the libvirt based plugins.
-%endif
 
 %description mysql
 Collection of monitoring plugins for Nagios and similar monitoring systems.
@@ -237,7 +207,6 @@ This package contains the mysql based plugins.
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the PostgreSQL based plugins.
 
-%if 0%{?rhel} != 5
 %description oping
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the liboping based plugins.
@@ -245,7 +214,6 @@ This package contains the liboping based plugins.
 %description redis
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the Redis plugins.
-%endif
 
 %description rhcs
 Collection of monitoring plugins for Nagios and similar monitoring systems.
@@ -259,11 +227,9 @@ This package contains the SUN RPC plugins.
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the selinux plugins.
 
-%if 0%{?rhel} != 5
 %description smb
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the smb/cifs based plugins.
-%endif
 
 %description snmp
 Collection of monitoring plugins for Nagios and similar monitoring systems.
@@ -281,11 +247,7 @@ This package contains the notification commands.
 %setup -q -n @PACKAGE_NAME@-@PACKAGE_VERSION@
 
 %build
-%if 0%{?rhel} == 5
-%configure SELINUX_CFLAGS=" " SELINUX_LIBS=-lselinux
-%else
 %configure
-%endif
 make %{?_smp_mflags}
 
 cd policy
@@ -294,9 +256,7 @@ bzip2 %{name}.pp
 cd ..
 
 %check
-%if 0%{?rhel} != 5
 make %{?_smp_mflags} check
-%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -320,10 +280,8 @@ fi
 %post base
 /sbin/fixfiles -F -R monitoringplug-base restore ||:
 
-%if 0%{?rhel} != 5
 %post cups
 /sbin/fixfiles -F -R monitoringplug-cups restore ||:
-%endif
 
 %post curl
 /sbin/fixfiles -F -R monitoringplug-curl restore ||:
@@ -337,10 +295,8 @@ fi
 %post fcgi
 /sbin/fixfiles -F -R monitoringplug-fcgi restore ||:
 
-%if 0%{?rhel} != 5
 %post gnutls
 /sbin/fixfiles -F -R monitoringplug-gnutls restore ||:
-%endif
 
 %post ipmi
 /sbin/fixfiles -F -R monitoringplug-ipmi restore ||:
@@ -348,10 +304,8 @@ fi
 %post ldap
 /sbin/fixfiles -F -R monitoringplug-ldap restore ||:
 
-%if 0%{?rhel} != 5
 %post libvirt
 /sbin/fixfiles -F -R monitoringplug-libvirt restore ||:
-%endif
 
 %post mysql
 /sbin/fixfiles -F -R monitoringplug-mysql restore ||:
@@ -359,13 +313,11 @@ fi
 %post postgresql
 /sbin/fixfiles -F -R monitoringplug-postgresql restore ||:
 
-%if 0%{?rhel} != 5
 %post oping
 /sbin/fixfiles -F -R monitoringplug-oping restore ||:
 
 %post redis
 /sbin/fixfiles -F -R monitoringplug-redis restore ||:
-%endif
 
 %post rhcs
 /sbin/fixfiles -F -R monitoringplug-rhcs restore ||:
@@ -376,10 +328,8 @@ fi
 %post selinux
 /sbin/fixfiles -F -R monitoringplug-selinux restore ||:
 
-%if 0%{?rhel} != 5
 %post smb
 /sbin/fixfiles -F -R monitoringplug-smb restore ||:
-%endif
 
 %post snmp
 /sbin/fixfiles -F -R monitoringplug-snmp restore ||:
@@ -425,12 +375,10 @@ fi
 %{_mandir}/man1/check_nrped.1.gz
 %{_mandir}/man1/check_sockets.1.gz
 
-%if 0%{?rhel} != 5
 %files cups
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_cups_*
 %{_mandir}/man1/check_cups_*
-%endif
 
 %files curl
 %defattr(-,root,root,-)
@@ -462,14 +410,12 @@ fi
 %{_libdir}/nagios/plugins/check_fcgi_*
 %{_mandir}/man1/check_fcgi_*
 
-%if 0%{?rhel} != 5
 %files gnutls
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_ssl_cert
 %{_libdir}/nagios/plugins/check_x509_cert
 %{_mandir}/man1/check_ssl_cert.1.gz
 %{_mandir}/man1/check_x509_cert.1.gz
-%endif
 
 %files ipmi
 %defattr(-,root,root,-)
@@ -481,12 +427,10 @@ fi
 %{_libdir}/nagios/plugins/check_ldap*
 %{_mandir}/man1/check_ldap*
 
-%if 0%{?rhel} != 5
 %files libvirt
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_libvirt*
 %{_mandir}/man1/check_libvirt*
-%endif
 
 %files mysql
 %defattr(-,root,root,-)
@@ -498,7 +442,6 @@ fi
 %{_libdir}/nagios/plugins/check_pgsql*
 %{_mandir}/man1/check_pgsql*
 
-%if 0%{?rhel} != 5
 %files oping
 %defattr(-,root,root,-)
 %attr(4111, root, root) %{_libdir}/nagios/plugins/check_oping*
@@ -508,7 +451,6 @@ fi
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_redis*
 %{_mandir}/man1/check_redis*
-%endif
 
 %files rhcs
 %defattr(-,root,root,-)
@@ -531,12 +473,10 @@ fi
 %{_mandir}/man1/check_enforce.1.gz
 %{_mandir}/man1/check_sebool.1.gz
 
-%if 0%{?rhel} != 5
 %files smb
 %defattr(-,root,root,-)
 %{_libdir}/nagios/plugins/check_smb_*
 %{_mandir}/man1/check_smb_*
-%endif
 
 %files snmp
 %defattr(-,root,root,-)
