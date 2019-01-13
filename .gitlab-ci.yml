@@ -17,7 +17,7 @@ build-tar:
     paths:
       - "*.tar.gz"
 
-.build:dev: &build_deb
+.build:deb: &build_deb
   stage: build
   variables:
     GIT_STRATEGY: none
@@ -27,7 +27,7 @@ build-tar:
     - apt-get install -y build-essential devscripts equivs
     - tar xzf *.tar.gz
     - cd monitoringplug*/
-    - yes | mk-build-deps --install --install debian/control
+    - yes | mk-build-deps --install --remove debian/control
     - ./configure
     - make
 
