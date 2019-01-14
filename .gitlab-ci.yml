@@ -27,7 +27,7 @@ build-tar:
     - apt-get install -y build-essential devscripts equivs
     - tar xzf *.tar.gz
     - cd monitoringplug*/
-    - yes | mk-build-deps --install --remove debian/control
+    - DEBIAN_FRONTEND=noninteractive mk-build-deps --install --remove --tool "apt-get -y" debian/control
     - ./configure
     - make
 
