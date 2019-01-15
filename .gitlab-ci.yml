@@ -72,6 +72,35 @@ build:fc28:
       - "RPMS/*/*.rpm"
       - "SRPMS/*.rpm"
 
+.package:deb: &package_deb
+  stage: build
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - apt-get update
+    - apt-get upgrade -y
+    - apt-get install -y build-essential devscripts equivs
+    - tar xzf *.tar.gz
+    - cd monitoringplug*/
+    - DEBIAN_FRONTEND=noninteractive mk-build-deps --install --remove --tool "apt-get -y" debian/contro  l
+    - debuild -us -uc
+
+package:bionic:
+  image: ubuntu:bionic
+  <<: *package_deb
+
+package:xenial:
+  image: ubuntu:xenial
+  <<: *package_deb
+
+package:stable:
+  image: debian:stable
+  <<: *package_deb
+
+package:oldstable:
+  image: debian:oldstable
+  <<: *package_deb
+
 package:fc28:
   image: fedora:28
   <<: *package_fc
