@@ -1,9 +1,11 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.59])
+AC_PREREQ([2.60])
 
-AC_INIT([monitoringplug],[0.17.0-rc.1],[marius.rieder@durchmesser.ch])
+AC_INIT([monitoringplug],
+	m4_esyscmd([build-aux/git-version-gen .tarball-version]),
+	[marius.rieder@durchmesser.ch])
 AC_CONFIG_AUX_DIR(build-aux)
 AM_INIT_AUTOMAKE([1.9 -Wall -Werror foreign])
 AC_CONFIG_SRCDIR([lib/mp_common.c])
