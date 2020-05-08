@@ -153,7 +153,7 @@ AM_CONDITIONAL([HAVE_FCGI], [test "x$have_fcgi" == "xyes"])
 AC_ARG_WITH([gnutls],
     [AS_HELP_STRING([--without-gnutls], [Build without gnutls])])
 AS_IF([test "x$with_gnutls" != "xno"],
-      [PKG_CHECK_MODULES([GNUTLS], [gnutls >= 2.8.0], [have_gnutls=yes], [have_gnutls=no])],
+      [PKG_CHECK_MODULES([GNUTLS], [gnutls], [have_gnutls=yes], [have_gnutls=no])],
       [have_gnutls=disabled])
 AS_IF([test "x$have_gnutls" = "xyes"],
       [],
@@ -181,7 +181,7 @@ AM_CONDITIONAL([HAVE_IPMI], [test "x$have_ipmi" = "xyes"])
 AC_ARG_WITH([json],
     [AS_HELP_STRING([--without-json], [Build without JSON support.])])
 AS_IF([test "x$with_json" != "xno"],
-      [PKG_CHECK_MODULES([JSON], [json], [have_json=yes], [have_json=no])],
+      [PKG_CHECK_MODULES([JSON], [json-c], [have_json=yes], [have_json=no])],
       [have_json=disabled])
 AS_IF([test "x$have_json" = "xyes"],
       [],
