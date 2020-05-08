@@ -29,12 +29,12 @@ check_rhcs_LDADD = ../lib/librhcsutils.a $(EXPAT_LIBS) $(LDADD)
 check_rhcs_CFLAGS = $(AM_CFLAGS) $(EXPAT_CFLAGS)
 endif
 
-if HAVE_NET_SNMP
-check_PROGRAMS += check_snmp
-
-check_snmp_LDADD = ../lib/libsnmputils.a $(NETSNMP_LIBS) $(LDADD)
-check_snmp_CFLAGS = $(NETSNMP_CFLAGS)
-endif
+#if HAVE_NET_SNMP
+#check_PROGRAMS += check_snmp
+#
+#check_snmp_LDADD = ../lib/libsnmputils.a $(NETSNMP_LIBS) $(LDADD)
+#check_snmp_CFLAGS = $(NETSNMP_CFLAGS)
+#endif
 
 endif
 
@@ -52,8 +52,8 @@ SHARNESSSCRIPTS = base/check_bonding.t \
 				   snmp/check_qnap_disks.t \
 				   snmp/check_qnap_vols.t
 
-TESTS = $(check_PROGRAMS) \
-		$(SHARNESSSCRIPTS)
+TESTS = $(check_PROGRAMS)
+#		$(SHARNESSSCRIPTS)
 
 EXTRA_DIST = mpcheck.h eopt.ini eopt_long.ini testdata sharness.sh $(SHARNESSSCRIPTS)
 ## vim: set ts=4 sw=4 syn=automake :
