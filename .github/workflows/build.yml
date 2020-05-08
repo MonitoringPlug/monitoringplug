@@ -45,13 +45,13 @@ jobs:
       - name: Install build env
         run: |
           apt update;
-          apt -y install build-essential devscripts equivs;
+          apt -y install build-essential devscripts equivs check;
           
       - name: Unpack tarball
         run: tar xzf source/monitoringplug-*.tar.gz --strip-components 1
 
       - name: Install build dependencies
-        run: mk-build-deps --install --remove
+        run: yes | mk-build-deps --install --remove
           
       - name: configure
         run: ./configure
