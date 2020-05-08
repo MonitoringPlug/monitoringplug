@@ -1,0 +1,30 @@
+name: build
+
+on: push
+
+jobs:
+  autotools:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+
+    - name: Install build env
+      run: sudo apt -y install build-essential devscripts equivs bison flex xsltproc docbook-xsl
+    - name: git-version
+      run: git tag
+    - name: Prepare Autotools
+      run: ./autogen.sh
+    - name: configure
+      run: ./configure
+    - name: make dist
+      run: make dist
+    
+    - uses: actions/upload-artifact@v2
+      with:
+        name: source
+        path: monitoringplug-*.tar.gz
