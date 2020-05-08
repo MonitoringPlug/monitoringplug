@@ -22,9 +22,6 @@ BuildRequires:  OpenIPMI-devel
 BuildRequires:  postgresql-devel
 BuildRequires:  fcgi-devel
 BuildRequires:  openldap-devel
-%if 0%{?rhel} == 0
-BuildRequires:  varnish-libs-devel
-%endif
 
 %if 0%{?rhel} == 5
 BuildRequires:  curl-devel
@@ -170,14 +167,6 @@ Group:          Applications/System
 Requires:       net-snmp-libs
 Requires:       monitoringplug
 
-%if 0%{?rhel} == 0
-%package varnish
-Summary:        Collection of Varnish monitoring plugins for Nagios
-Group:          Applications/System
-Requires:       varnish-libs
-Requires:       monitoringplug
-%endif
-
 %package xmlrpc
 Summary:        Collection of xmlrpc monitoring plugins for Nagios
 Group:          Applications/System
@@ -278,12 +267,6 @@ This package contains the smb/cifs based plugins.
 %description snmp
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the snmp based plugins.
-
-%if 0%{?rhel} == 0
-%description varnish
-Collection of monitoring plugins for Nagios and similar monitoring systems.
-This package contains the varnishapi based plugins.
-%endif
 
 %description xmlrpc
 Collection of monitoring plugins for Nagios and similar monitoring systems.
@@ -399,11 +382,6 @@ fi
 
 %post snmp
 /sbin/fixfiles -F -R monitoringplug-snmp restore ||:
-
-%if 0%{?rhel} == 0
-%post varnish
-/sbin/fixfiles -F -R monitoringplug-varnish restore ||:
-%endif
 
 %post xmlrpc
 /sbin/fixfiles -F -R monitoringplug-xmlrpc restore ||:
@@ -577,13 +555,6 @@ fi
 %{_mandir}/man1/check_qnap_disks.1.gz
 %{_mandir}/man1/check_qnap_vols.1.gz
 %{_mandir}/man1/check_snmp_ups.1.gz
-
-%if 0%{?rhel} == 0
-%files varnish
-%defattr(-,root,root,-)
-%{_libdir}/nagios/plugins/check_varnish*
-%{_mandir}/man1/check_varnish*
-%endif
 
 %files xmlrpc
 %defattr(-,root,root,-)
