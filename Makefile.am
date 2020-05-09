@@ -3,7 +3,7 @@
 ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = lib base cups curl dns dummy fcgi gnutls ipmi ldap libvirt mysql \
-		  oping pgsql redis rhcs rpc selinux smb snmp varnish xmlrpc \
+		  oping pgsql redis rhcs rpc selinux smb snmp xmlrpc \
 		  contrib doc policy tests notify
 
 EXTRA_DIST = $(top_builddir)/debian

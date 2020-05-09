@@ -145,12 +145,6 @@ endif
 EXTRA_DIST += check_akcp.1 check_arc_raid.1 check_apc_pdu.1 check_interface.1 \
 			  check_keepalived_vrrp.1 check_qnap_disks.1 check_qnap_vols.1 check_snmp_ups.1
 
-#varnish
-if HAVE_VARNISH
-man_MANS += check_varnish.1 check_varnish_backends.1
-endif
-EXTRA_DIST += check_varnish.1 check_varnish_backends.1
-
 #xmprpc
 if HAVE_XMLRPC
 man_MANS += check_rhn_entitlements.1 check_koji_hub.1 check_koji_builder.1

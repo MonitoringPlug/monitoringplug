@@ -1,9 +1,11 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.59])
+AC_PREREQ([2.60])
 
-AC_INIT([monitoringplug],[0.17.0-rc.1],[marius.rieder@durchmesser.ch])
+AC_INIT([monitoringplug],
+	m4_esyscmd([build-aux/git-version-gen .tarball-version]),
+	[marius.rieder@durchmesser.ch])
 AC_CONFIG_AUX_DIR(build-aux)
 AM_INIT_AUTOMAKE([1.9 -Wall -Werror foreign])
 AC_CONFIG_SRCDIR([lib/mp_common.c])
@@ -151,7 +153,7 @@ AM_CONDITIONAL([HAVE_FCGI], [test "x$have_fcgi" == "xyes"])
 AC_ARG_WITH([gnutls],
     [AS_HELP_STRING([--without-gnutls], [Build without gnutls])])
 AS_IF([test "x$with_gnutls" != "xno"],
-      [PKG_CHECK_MODULES([GNUTLS], [gnutls >= 2.8.0], [have_gnutls=yes], [have_gnutls=no])],
+      [PKG_CHECK_MODULES([GNUTLS], [gnutls], [have_gnutls=yes], [have_gnutls=no])],
       [have_gnutls=disabled])
 AS_IF([test "x$have_gnutls" = "xyes"],
       [],
@@ -179,7 +181,7 @@ AM_CONDITIONAL([HAVE_IPMI], [test "x$have_ipmi" = "xyes"])
 AC_ARG_WITH([json],
     [AS_HELP_STRING([--without-json], [Build without JSON support.])])
 AS_IF([test "x$with_json" != "xno"],
-      [PKG_CHECK_MODULES([JSON], [json], [have_json=yes], [have_json=no])],
+      [PKG_CHECK_MODULES([JSON], [json-c], [have_json=yes], [have_json=no])],
       [have_json=disabled])
 AS_IF([test "x$have_json" = "xyes"],
       [],
@@ -362,21 +364,6 @@ AS_IF([test "x$have_termios" = "xyes"],
 ])
 AM_CONDITIONAL([HAVE_TERMIOS], [test "x$have_termios" = "xyes"])
 
-## Varnish
-AC_ARG_WITH([varnish],
-    [AS_HELP_STRING([--without-varnish], [Build without Varnish support.])])
-AS_IF([test "x$with_varnish" != "xno"],
-      [PKG_CHECK_MODULES([VARNISH], [varnishapi >= 3.0.0], [have_varnish=yes], [have_varnish=no])],
-      [have_varnish=disabled])
-AS_IF([test "x$have_varnish" = "xyes"],
-      [],
-      [AS_IF([test "x$with_varnish" = "xyes"],
-             [AC_MSG_ERROR([Varnish requested but varnishapi not found.])
-      ])
-])
-AM_CONDITIONAL([HAVE_VARNISH], [test "x$have_varnish" = "xyes"])
-
-
 ## XMLRPC-C
 AX_LIB_XMLRPC()
 AS_IF([test "x$want_xmlrpc" = "xno"],
@@ -486,7 +473,6 @@ AC_CONFIG_FILES([Makefile
                  selinux/Makefile
                  smb/Makefile
                  snmp/Makefile
-                 varnish/Makefile
                  xmlrpc/Makefile
                  contrib/Makefile
                  doc/Makefile
@@ -529,7 +515,6 @@ Dependencies:
  SMB:        ${have_smbclient}
  SNMP:       ${have_netsnmp}
  Termios:    ${have_termios}
- Varnish:    ${have_varnish}
  XMLRPC:     ${have_xmlrpc}
 
 Now type 'make @<:@<target>@:>@'

@@ -42,7 +42,7 @@ const char *progusage = "--hostname <RABBITMQHOST>";
 #include <ctype.h>
 /* Library Includes */
 #include <curl/curl.h>
-#include <json/json.h>
+#include <json-c/json.h>
 #include "json_utils.h"
 
 /* Global Vars */

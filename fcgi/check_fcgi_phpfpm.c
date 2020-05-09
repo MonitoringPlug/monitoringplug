@@ -44,7 +44,7 @@ const char *progusage = "[-t <timeout>]";
 #include <fastcgi.h>
 #include <fcgios.h>
 #include <fcgiapp.h>
-#include <json/json.h>
+#include <json-c/json.h>
 #include "json_utils.h"
 
 /* Global Vars */

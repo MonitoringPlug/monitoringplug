@@ -1,7 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-LDADD = ../lib/libmonitoringplug.a
-AM_LDFLAGS = $(CHECK_LIBS)
+LDADD = $(CHECK_LIBS) ../lib/libmonitoringplug.a
 AM_CFLAGS = $(CHECK_CFLAGS) -Dabs_srcdir="\"$(abs_srcdir)\""
 
 if HAVE_CHECK
@@ -26,18 +25,16 @@ check_template_LDADD = ../lib/libmonitoringplugtemplate.a $(LDADD)
 if HAVE_EXPAT
 check_PROGRAMS += check_rhcs
 
-check_rhcs_LDADD = ../lib/librhcsutils.a $(LDADD)
+check_rhcs_LDADD = ../lib/librhcsutils.a $(EXPAT_LIBS) $(LDADD)
 check_rhcs_CFLAGS = $(AM_CFLAGS) $(EXPAT_CFLAGS)
-check_rhcs_LDFLAGS = $(AM_LDFLAGS) $(EXPAT_LIBS)
 endif
 
-if HAVE_NET_SNMP
-check_PROGRAMS += check_snmp
-
-check_snmp_LDADD = ../lib/libsnmputils.a $(LDADD)
-check_snmp_CFLAGS = $(NETSNMP_CFLAGS)
-check_snmp_LDFLAGS = $(AM_LDFLAGS) $(NETSNMP_LIBS)
-endif
+#if HAVE_NET_SNMP
+#check_PROGRAMS += check_snmp
+#
+#check_snmp_LDADD = ../lib/libsnmputils.a $(NETSNMP_LIBS) $(LDADD)
+#check_snmp_CFLAGS = $(NETSNMP_CFLAGS)
+#endif
 
 endif
 
@@ -55,8 +52,8 @@ SHARNESSSCRIPTS = base/check_bonding.t \
 				   snmp/check_qnap_disks.t \
 				   snmp/check_qnap_vols.t
 
-TESTS = $(check_PROGRAMS) \
-		$(SHARNESSSCRIPTS)
+TESTS = $(check_PROGRAMS)
+#		$(SHARNESSSCRIPTS)
 
 EXTRA_DIST = mpcheck.h eopt.ini eopt_long.ini testdata sharness.sh $(SHARNESSSCRIPTS)
 ## vim: set ts=4 sw=4 syn=automake :

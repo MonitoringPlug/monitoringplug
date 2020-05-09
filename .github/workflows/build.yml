@@ -1,0 +1,63 @@
+name: build
+
+on: push
+
+jobs:
+  autotools:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+
+    - name: Install build env
+      run: sudo apt -y install build-essential devscripts equivs bison flex xsltproc docbook-xsl
+    - name: Prepare Autotools
+      run: ./autogen.sh
+    - name: configure
+      run: ./configure
+    - name: make dist
+      run: make dist
+    
+    - name: Upload tarball
+      uses: actions/upload-artifact@v2
+      with:
+        name: source
+        path: monitoringplug-*.tar.gz
+
+  build-ubuntu:
+    needs: autotools
+    runs-on: ubuntu-latest
+    container: ubuntu:latest
+
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    
+    steps:
+      - name: Download tarball
+        uses: actions/download-artifact@v1
+        with:
+          name: source
+          
+      - name: Install build env
+        run: |
+          apt update;
+          apt -y install build-essential devscripts equivs check locales-all;
+          
+      - name: Unpack tarball
+        run: tar xzf source/monitoringplug-*.tar.gz --strip-components 1
+
+      - name: Install build dependencies
+        run: yes | mk-build-deps --install --remove
+          
+      - name: configure
+        run: ./configure
+        
+      - name: make
+        run: make
+
+      - name: make check
+        run: make check
