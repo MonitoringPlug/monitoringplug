@@ -73,7 +73,7 @@ START_TEST (test_sms_encode_text) {
 
     c = &test_encode_text[_i];
 
-    setlocale(LC_CTYPE, "en_US.UTF-8");
+    ck_assert(setlocale(LC_CTYPE, "en_US.UTF-8") != NULL);
 
     dest = sms_encode_text(c->in);
 
@@ -87,7 +87,7 @@ END_TEST
 START_TEST (test_sms_encode_pdu) {
     char *pdu;
 
-    setlocale(LC_CTYPE, "en_US.UTF-8");
+    ck_assert(setlocale(LC_CTYPE, "en_US.UTF-8") != NULL);
 
     pdu = sms_encode_pdu(NULL, "+491721234567", "Testtext:€");
 
@@ -99,7 +99,7 @@ END_TEST
 START_TEST (test_sms_encode_pdu_smsc) {
     char *pdu;
 
-    setlocale(LC_CTYPE, "en_US.UTF-8");
+    ck_assert(setlocale(LC_CTYPE, "en_US.UTF-8") != NULL);
 
     pdu = sms_encode_pdu("+491722270333", "+491721234567", "Testtext:€");
 

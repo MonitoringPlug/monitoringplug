@@ -45,7 +45,7 @@ jobs:
       - name: Install build env
         run: |
           apt update;
-          apt -y install build-essential devscripts equivs check;
+          apt -y install build-essential devscripts equivs check locales-all;
           
       - name: Unpack tarball
         run: tar xzf source/monitoringplug-*.tar.gz --strip-components 1
