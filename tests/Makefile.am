@@ -38,22 +38,24 @@ endif
 
 endif
 
-SHARNESSSCRIPTS = base/check_bonding.t \
-				   base/check_file.t \
-				   base/check_memcached.t \
-				   curl/check_rabbitmq.t \
-				   curl/check_buildbot_slave.t \
-				   redis/check_redis.t \
-				   redis/check_redis_slave.t \
-				   snmp/check_akcp.t \
-				   snmp/check_apc_pdu.t \
-				   snmp/check_arc_raid.t \
-				   snmp/check_keepalived_vrrp.t \
-				   snmp/check_qnap_disks.t \
-				   snmp/check_qnap_vols.t
+SHARNESSSCRIPTS = curl/check_rabbitmq.t \
+				   curl/check_buildbot_slave.t
+#  				   base/check_bonding.t \
+#				   base/check_file.t \
+#				   base/check_memcached.t \
+#				   curl/check_rabbitmq.t \
+#				   curl/check_buildbot_slave.t \
+#				   redis/check_redis.t \
+#				   redis/check_redis_slave.t \
+#				   snmp/check_akcp.t \
+#				   snmp/check_apc_pdu.t \
+#				   snmp/check_arc_raid.t \
+#				   snmp/check_keepalived_vrrp.t \
+#				   snmp/check_qnap_disks.t \
+#				   snmp/check_qnap_vols.t
 
-TESTS = $(check_PROGRAMS)
-#		$(SHARNESSSCRIPTS)
+TESTS = $(check_PROGRAMS) \
+		$(SHARNESSSCRIPTS)
 
 EXTRA_DIST = mpcheck.h eopt.ini eopt_long.ini testdata sharness.sh $(SHARNESSSCRIPTS)
 ## vim: set ts=4 sw=4 syn=automake :

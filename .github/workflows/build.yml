@@ -35,6 +35,12 @@ jobs:
 
     env:
       DEBIAN_FRONTEND: noninteractive
+
+    services:
+      httptest:
+        image: docker.pkg.github.com/monitoringplug/testdata/mptestdata:http
+        ports:
+          - 80:80
     
     steps:
       - name: Download tarball
