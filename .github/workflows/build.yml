@@ -62,6 +62,19 @@ jobs:
       - name: make check
         run: make check
 
+      - name: Update changelog
+        run: make dch
+
+      - name: Build deb
+        run: make deb
+
+      - name: Upload rpm
+        uses: actions/upload-artifact@v2
+        with:
+          name: deb
+          path: ./*.deb
+
+
   build-fedora:
     needs: autotools
     runs-on: ubuntu-latest

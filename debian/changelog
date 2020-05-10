@@ -1,4 +1,4 @@
-monitoringplug (0.17.0-rc.1) monitoringplug; urgency=low
+monitoringplug (0.17.0) monitoringplug; urgency=low
 
   * Rework autotools build system.
   * Allow % sign in ranges and parse them.
