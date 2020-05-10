@@ -124,7 +124,7 @@ AC_ARG_WITH([ldns],
 AS_IF([test "x$with_ldns" != "xno"],
       [
         PKG_CHECK_MODULES([LDNS], [ldns], [have_ldns=yes], [
-          PKG_CHECK_MODULES([LDNS], [libldns], [have_ldns=yes], [have_ldns=no]=)
+          PKG_CHECK_MODULES([LDNS], [libldns], [have_ldns=yes], [have_ldns=no])
         ])
       ],
       [have_ldns=disabled])
@@ -137,10 +137,25 @@ AS_IF([test "x$have_ldns" = "xyes"],
 AM_CONDITIONAL([HAVE_LDNS], [test "x$have_ldns"  = "xyes"])
 
 ## Expat
-AX_LIB_EXPAT()
-AS_IF([test "x$expat_requested" = "xno"],
-      [have_expat=disabled], [have_expat=$expat_lib_found])
-AM_CONDITIONAL([HAVE_EXPAT], [test "x$have_expat" = "xyes"])
+AC_ARG_WITH([expat],
+     [AS_HELP_STRING([--without-expat], [Build without expat])])
+AS_IF([test "x$with_expat" != "xno"],
+      [PKG_CHECK_MODULES([EXPAT], [expat], [have_expat=yes], [
+         AC_CHECK_LIB([expat], [XML_ExpatVersion],
+                      [
+                         EXPAT_LIBS="-lexpat"
+                         AC_SUBST([EXPAT_LIBS])
+                         have_expat=yes
+                      ],
+                      [have_expat=no])
+      ])],
+      [have_expat=disabled])
+AS_IF([test "x$have_expat" = "xyes"],
+      [],
+      [AS_IF([test "x$with_expat" = "xyes"],
+             [AC_MSG_ERROR([expat requested but not found.])
+      ]) ])
+AM_CONDITIONAL([HAVE_EXPAT], [test "x$have_expat"  = "xyes"]) 
 
 ## FastCGI
 AC_ARG_WITH([fcgi],
