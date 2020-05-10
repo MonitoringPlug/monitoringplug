@@ -142,10 +142,10 @@ Requires:       net-snmp-libs
 Requires:       expat
 Requires:       monitoringplug
 
-%package rpc
-Summary:        Collection of SUN RPC monitoring plugins for Nagios
-Group:          Applications/System
-Requires:       monitoringplug
+#%package rpc
+#Summary:        Collection of SUN RPC monitoring plugins for Nagios
+#Group:          Applications/System
+#Requires:       monitoringplug
 
 %package selinux
 Summary:        Collection of selinux monitoring plugins for Nagios
@@ -250,9 +250,9 @@ This package contains the Redis plugins.
 Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the RedHat Cluster Suite plugins using snmp and expat.
 
-%description rpc
-Collection of monitoring plugins for Nagios and similar monitoring systems.
-This package contains the SUN RPC plugins.
+#%description rpc
+#Collection of monitoring plugins for Nagios and similar monitoring systems.
+#This package contains the SUN RPC plugins.
 
 %description selinux
 Collection of monitoring plugins for Nagios and similar monitoring systems.
@@ -277,7 +277,7 @@ Collection of monitoring plugins for Nagios and similar monitoring systems.
 This package contains the notification commands.
 
 %prep
-%setup -q
+%setup -q -n @PACKAGE_NAME@-@PACKAGE_VERSION@
 
 %build
 %if 0%{?rhel} == 5
@@ -369,8 +369,8 @@ fi
 %post rhcs
 /sbin/fixfiles -F -R monitoringplug-rhcs restore ||:
 
-%post rpc
-/sbin/fixfiles -F -R monitoringplug-rpc restore ||:
+#%post rpc
+#/sbin/fixfiles -F -R monitoringplug-rpc restore ||:
 
 %post selinux
 /sbin/fixfiles -F -R monitoringplug-selinux restore ||:
@@ -516,12 +516,12 @@ fi
 %{_mandir}/man1/check_clustat.1.gz
 %{_mandir}/man1/check_rhcsnmp.1.gz
 
-%files rpc
-%defattr(-,root,root,-)
-%{_libdir}/nagios/plugins/check_nfs
-%{_libdir}/nagios/plugins/check_rpc_ping
-%{_mandir}/man1/check_nfs.1.gz
-%{_mandir}/man1/check_rpc_ping.1.gz
+#%files rpc
+#%defattr(-,root,root,-)
+#%{_libdir}/nagios/plugins/check_nfs
+#%{_libdir}/nagios/plugins/check_rpc_ping
+#%{_mandir}/man1/check_nfs.1.gz
+#%{_mandir}/man1/check_rpc_ping.1.gz
 
 %files selinux
 %defattr(-,root,root,-)
