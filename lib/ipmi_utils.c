@@ -64,6 +64,9 @@ const char *mp_ipmi_hostname = NULL;
 const char *mp_ipmi_port = "623";
 const char *mp_ipmi_username = NULL;
 const char *mp_ipmi_password = NULL;
+os_handler_t *mp_ipmi_hnd = NULL;
+ipmi_con_t *mp_ipmi_con = NULL;
+ipmi_domain_t *mp_ipmi_dom = NULL;
 #if OS_LINUX
 int mp_ipmi_smi=-1;
 #endif

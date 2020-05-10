@@ -40,6 +40,7 @@ AM_CONDITIONAL([DISABLE_MAN], [test "x$with_man" = "xno"])
 ## Buildsystem RPM
 AC_PATH_PROG([RPMBUILD], [rpmbuild])
 AM_CONDITIONAL([HAVE_RPMBUILD], [test "x$RPMBUILD" != x])
+AC_SUBST([RPM_VERSION], [`echo ${PACKAGE_VERSION} | sed -e 's,-,.,g'`])
 
 ## Buildsystem DEB
 AC_PATH_PROG([DEBUILD], [debuild])
@@ -78,6 +79,15 @@ AC_MSG_RESULT([$ac_system])
 AM_CONDITIONAL([OS_LINUX], [test x$ac_system == xLinux])
 AM_CONDITIONAL([OS_FREEBSD], [test x$ac_system == xFreebsd])
 AM_CONDITIONAL([OS_DARWIN], [test x$ac_system == xDarwin])
+
+AC_MSG_CHECKING(whether fPIC compiler option is accepted)
+SAVED_CFLAGS="$CFLAGS"
+CFLAGS="$CFLAGS -fPIC -Werror"
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([], [return 0;])],
+    [AC_MSG_RESULT(yes)
+     CFLAGS="$SAVED_CFLAGS -fPIC"],
+    [AC_MSG_RESULT(no)
+     CFLAGS="$SAVED_CFLAGS"])
 
 # Checks for libraries.
 ## Don't depend on pkg-config
@@ -480,7 +490,8 @@ AC_CONFIG_FILES([Makefile
                  policy/monitoringplug.te
                  notify/Makefile
                  tests/Makefile
-                 tests/setup.sh])
+                 tests/setup.sh
+                 contrib/monitoringplug.spec])
 AC_OUTPUT
 
 echo "

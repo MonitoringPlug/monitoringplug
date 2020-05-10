@@ -61,3 +61,32 @@ jobs:
 
       - name: make check
         run: make check
+
+  build-fedora:
+    needs: autotools
+    runs-on: ubuntu-latest
+    container: fedora:latest
+
+    steps:
+      - name: Download tarball
+        uses: actions/download-artifact@v1
+        with:
+          name: source
+
+      - name: Install build env
+        run: dnf -y install @buildsys-build @c-development dnf-plugins-core check-devel glibc-langpack-en
+
+      - name: Unpack tarball
+        run: tar xzf source/monitoringplug-*.tar.gz --strip-components 1
+
+      - name: Install build dependencies
+        run: dnf -y builddep --spec contrib/monitoringplug.spec
+
+      - name: configure
+        run: ./configure
+
+      - name: make
+        run: make
+        
+      - name: make check
+        run: make check

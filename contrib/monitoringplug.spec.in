@@ -1,12 +1,12 @@
 Name:           monitoringplug
-Version:        0.17.0.rc.2.13.1b99.dirty
+Version:        @RPM_VERSION@
 Release:        1%{?dist}
 Summary:        Collection of monitoring plugins for Nagios
 
 Group:          Applications/System
 License:        GPLv2+
 URL:            https://github.com/MonitoringPlug/monitoringplug
-Source0:        %{name}-0.17.0.rc.2-13-1b99-dirty.tar.gz
+Source0:        %{name}-@PACKAGE_VERSION@.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  expat-devel
