@@ -87,11 +87,11 @@ extern struct mp_ipmi_sensor_list *mp_ipmi_sensors;
 
 /* Global Vars */
 /** OpenIPMI os handler. */
-os_handler_t    *mp_ipmi_hnd;
+extern os_handler_t    *mp_ipmi_hnd;
 /** OpenIPMI connection. */
-ipmi_con_t      *mp_ipmi_con;
+extern ipmi_con_t      *mp_ipmi_con;
 /** OpenIPMI domain. */
-ipmi_domain_t   *mp_ipmi_dom;
+extern ipmi_domain_t   *mp_ipmi_dom;
 
 /**
  * Init the OpenIPMI library and return a new handler.

@@ -40,6 +40,7 @@ AM_CONDITIONAL([DISABLE_MAN], [test "x$with_man" = "xno"])
 ## Buildsystem RPM
 AC_PATH_PROG([RPMBUILD], [rpmbuild])
 AM_CONDITIONAL([HAVE_RPMBUILD], [test "x$RPMBUILD" != x])
+AC_SUBST([RPM_VERSION], [`echo ${PACKAGE_VERSION} | sed -e 's,-,.,g'`])
 
 ## Buildsystem DEB
 AC_PATH_PROG([DEBUILD], [debuild])
@@ -79,6 +80,15 @@ AM_CONDITIONAL([OS_LINUX], [test x$ac_system == xLinux])
 AM_CONDITIONAL([OS_FREEBSD], [test x$ac_system == xFreebsd])
 AM_CONDITIONAL([OS_DARWIN], [test x$ac_system == xDarwin])
 
+AC_MSG_CHECKING(whether fPIC compiler option is accepted)
+SAVED_CFLAGS="$CFLAGS"
+CFLAGS="$CFLAGS -fPIC -Werror"
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([], [return 0;])],
+    [AC_MSG_RESULT(yes)
+     CFLAGS="$SAVED_CFLAGS -fPIC"],
+    [AC_MSG_RESULT(no)
+     CFLAGS="$SAVED_CFLAGS"])
+
 # Checks for libraries.
 ## Don't depend on pkg-config
 m4_ifdef([PKG_CHECK_MODULES], [], [
@@ -114,7 +124,7 @@ AC_ARG_WITH([ldns],
 AS_IF([test "x$with_ldns" != "xno"],
       [
         PKG_CHECK_MODULES([LDNS], [ldns], [have_ldns=yes], [
-          PKG_CHECK_MODULES([LDNS], [libldns], [have_ldns=yes], [have_ldns=no]=)
+          PKG_CHECK_MODULES([LDNS], [libldns], [have_ldns=yes], [have_ldns=no])
         ])
       ],
       [have_ldns=disabled])
@@ -127,10 +137,25 @@ AS_IF([test "x$have_ldns" = "xyes"],
 AM_CONDITIONAL([HAVE_LDNS], [test "x$have_ldns"  = "xyes"])
 
 ## Expat
-AX_LIB_EXPAT()
-AS_IF([test "x$expat_requested" = "xno"],
-      [have_expat=disabled], [have_expat=$expat_lib_found])
-AM_CONDITIONAL([HAVE_EXPAT], [test "x$have_expat" = "xyes"])
+AC_ARG_WITH([expat],
+     [AS_HELP_STRING([--without-expat], [Build without expat])])
+AS_IF([test "x$with_expat" != "xno"],
+      [PKG_CHECK_MODULES([EXPAT], [expat], [have_expat=yes], [
+         AC_CHECK_LIB([expat], [XML_ExpatVersion],
+                      [
+                         EXPAT_LIBS="-lexpat"
+                         AC_SUBST([EXPAT_LIBS])
+                         have_expat=yes
+                      ],
+                      [have_expat=no])
+      ])],
+      [have_expat=disabled])
+AS_IF([test "x$have_expat" = "xyes"],
+      [],
+      [AS_IF([test "x$with_expat" = "xyes"],
+             [AC_MSG_ERROR([expat requested but not found.])
+      ]) ])
+AM_CONDITIONAL([HAVE_EXPAT], [test "x$have_expat"  = "xyes"]) 
 
 ## FastCGI
 AC_ARG_WITH([fcgi],
@@ -480,7 +505,8 @@ AC_CONFIG_FILES([Makefile
                  policy/monitoringplug.te
                  notify/Makefile
                  tests/Makefile
-                 tests/setup.sh])
+                 tests/setup.sh
+                 contrib/monitoringplug.spec])
 AC_OUTPUT
 
 echo "

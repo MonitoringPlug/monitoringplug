@@ -47,6 +47,9 @@ MP_DIST_CLEANFILES += $(top_builddir)/$(PACKAGE)*_$(VERSION)_*.deb \
 
 dist-deb: deb
 
+dch:
+	dch -v $(RPM_VERSION) "Autoupdate to $(PACKAGE_VERSION)"
+
 deb: $(PACKAGE)_$(VERSION)_*.deb
 
 $(PACKAGE)_$(VERSION)_*.deb: dist-gzip

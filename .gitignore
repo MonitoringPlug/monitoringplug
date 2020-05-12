@@ -20,6 +20,7 @@ stamp-h1
 
 # Build Output
 monitoringplug*.tar.gz*
+contrib/monitoringplug.spec
 debian/files
 debian/*debhelper.log
 debian/*.substvars

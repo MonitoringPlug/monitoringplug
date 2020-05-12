@@ -28,9 +28,9 @@
 #include "mp_template.h"
 
 /** The global notify message variable. */
-const char *mp_notify_msg;
+extern const char *mp_notify_msg;
 /** The global notify file variable. */
-const char *mp_notify_file;
+extern const char *mp_notify_file;
 
 void getopt_notify(int c);
 
